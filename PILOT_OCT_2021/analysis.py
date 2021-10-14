@@ -6,6 +6,9 @@ df = pd.read_csv (r'DataAnalysis.csv')
 buleria  = (df.loc[df["Palo"]=="Buleria"])
 day1 = (df.loc[df['Day']==1])
 day2 = (df.loc[df['Day']==2])
+imp1 = (df.loc[df['Setup']=='IMP1'])
+imp2 = (df.loc[df['Setup']=='IMP2'])
+
 
 
 #Basic operators:
@@ -42,13 +45,11 @@ def estimating_One(x,variable):
     return x, x_stnd
 
 def estimating_sum(x,variable):
-    x_new =np.array(x.shape[0])
-    print('this is a', x.shape[0],'shape')
+    x_new =np.zeros(x.shape[0])
     for i, word in enumerate(variable):
         x_old = np.array(x[word])
         x_new = x_new + x_old
-        print(i,'i',word, x_new)
-    x_new = np.divide(x_new,x.shape[0])
+    x_new = np.divide(x_new,len(variable))
     x, x_stnd = meanStd(x_new)
     return x, x_stnd
 
@@ -69,7 +70,7 @@ def estimating_P(subA,a): #estimates the P value
 
 
 
-def createMatrix(x): #creating PAT
+def createMatrix(x,title): #creating PAT
 # Defining variables
     Pleasure = ['Pleasant','Positive','Good','Unpleasant', 'Negative', 'Bad']
     Awakeness = ["Awake","Alert","Wakeful","Sleepy", "Tired","Drowsy"]
@@ -77,19 +78,23 @@ def createMatrix(x): #creating PAT
     Morten = ["Move","Pleasure experienced"]
     Meaning = ["Meaningful","Valuable"]
     Elevating = ["In awe","Deeply appreciating","Emotionally moved","Morally elevated","Inspired","Enriched","Connected with a greater whole","Part of something greater than myself"]
-
-
+    Carefree = ["Carefree","Free of concern","Detached from my troubles"]
+    Atilla = ['Improvisation','Environment']
+    Bishop = ["Expression","Technique","Harmony"]
 # Operations
     name_col = appendMeanStd(x)
 
     PAT = {
-            'name':name_col,
-            'P': estimating_P(x,Pleasure)[0],
-            'A': estimating_P(x,Awakeness)[0],
-            'T': estimating_P(x,Tension)[0],
-            'P_stnd': estimating_P(x,Pleasure)[1],
-            'A_stnd': estimating_P(x,Awakeness)[1],
-            'T_stnd': estimating_P(x,Tension)[1],
+            'Name':name_col,
+            'Title': title,
+            # 'P': estimating_P(x,Pleasure)[0],
+            # 'A': estimating_P(x,Awakeness)[0],
+            # 'T': estimating_P(x,Tension)[0],
+            # 'P_stnd': estimating_P(x,Pleasure)[1],
+            # 'A_stnd': estimating_P(x,Awakeness)[1],
+            # 'T_stnd': estimating_P(x,Tension)[1],
+            'Impro':estimating_One(x,Atilla[0])[0],
+            'Impro_stnd':estimating_One(x,Atilla[0])[1],
             'Move':estimating_One(x,Morten[0])[0],
             'Move_stnd':estimating_One(x,Morten[0])[1],
             'Pleasure':estimating_One(x,Morten[1])[0],
@@ -97,31 +102,63 @@ def createMatrix(x): #creating PAT
             'Meaning': estimating_sum(x,Meaning)[0],
             'Meaning_stnd': estimating_sum(x,Meaning)[1],
             'Elevating': estimating_sum(x,Elevating)[0],
-
+            'Elevating_stnd': estimating_sum(x,Elevating)[1],
+            'Carefree': estimating_sum(x,Carefree)[0],
+            'Carefree_stnd': estimating_sum(x,Carefree)[1],
+            'Expression':estimating_One(x,Bishop[0])[0],
+            'Expression':estimating_One(x,Bishop[0])[1],
+            'Technique':estimating_One(x,Bishop[1])[0],
+            'Technique':estimating_One(x,Bishop[1])[1],
+            'Harmony':estimating_One(x,Bishop[2])[0],
+            'Harmony':estimating_One(x,Bishop[2])[1],
     }
     return PAT
 
 
 
-def storeDF(x, title): #store values in DataFrame
+def storeDF(x, title, convert): #store values in DataFrame
+    if convert:
+        x_df = pd.DataFrame(data=x)
 
-    dfPAT = pd.DataFrame(data=x)
-    print(f'{title}\n', np.round(dfPAT,decimals = 2))
+    else:
+        x_df = x
+    print(f'{title}\n', np.round(x_df,decimals = 2))
     file_name = str("export/" + title+'.csv')
-    dfPAT.to_csv(file_name,float_format='%.2f', index = False)
-    return dfPAT
+    x_df.to_csv(file_name,float_format='%.2f', index = False)
+    meanSummary = x_df.loc[x['Name']=='mean']
+    meanSummary= meanSummary.append(x_df.loc[x['Name']=='std'])
+    # meanSummary['analysis'] = [title, title]
+    return x_df, meanSummary
 
 
 
 
 def workflow(x, PAT_analysis, store, title):
     if PAT_analysis:
-        PAT = createMatrix(x)
+        PAT = createMatrix(x,title)
     if store:
-        storeDF(PAT,title)
+        x_df, meanSummary = storeDF(PAT,title, True)
+
+    return meanSummary
 
 
-PAT_df = workflow(df, True, True, "All values")
-Day1_df = workflow(day1, True, True, "Day1")
-Day2_df = workflow(day2, True, True, "Day2")
+
+
+meanPAT = workflow(df, True, True, "All")
+meanDay1 = workflow(day1, True, True, "Day1")
+meanDay2 = workflow(day2, True, True, "Day2")
+meanBuleria = workflow (buleria,True, True,"Buleria")
+meanIMP1 = workflow (imp1,True, True,"IMP1")
+meanIMP2 = workflow (imp2,True, True,"IMP2")
+
+#Store means
+dfSummary = meanPAT.append(meanDay1)
+dfSummary = dfSummary.append(meanDay2)
+dfSummary = dfSummary.append(meanBuleria)
+dfSummary = dfSummary.append(meanIMP1)
+dfSummary = dfSummary.append(meanIMP2)
+storeDF(dfSummary,"meanSummary", False)
+print(dfSummary)
+
+
 # PAT_df = createMatrix(day1, True, "Day1")
