@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 from sklearn import preprocessing
-df = pd.read_csv (r'DataAnalysis.csv')
+df = pd.read_csv (r'DuringAssesment.csv')
 
 buleria  = (df.loc[df["Palo"]=="Buleria"])
 day1 = (df.loc[df['Day']==1])
@@ -106,11 +106,11 @@ def createMatrix(x,title): #creating PAT
             'Carefree': estimating_sum(x,Carefree)[0],
             'Carefree_stnd': estimating_sum(x,Carefree)[1],
             'Expression':estimating_One(x,Bishop[0])[0],
-            'Expression':estimating_One(x,Bishop[0])[1],
+            'Expression_stnd':estimating_One(x,Bishop[0])[1],
             'Technique':estimating_One(x,Bishop[1])[0],
-            'Technique':estimating_One(x,Bishop[1])[1],
+            'Technique_stnd':estimating_One(x,Bishop[1])[1],
             'Harmony':estimating_One(x,Bishop[2])[0],
-            'Harmony':estimating_One(x,Bishop[2])[1],
+            'Harmony_stnd':estimating_One(x,Bishop[2])[1],
     }
     return PAT
 
