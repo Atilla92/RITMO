@@ -3,12 +3,6 @@ import numpy as np
 from sklearn import preprocessing
 df = pd.read_csv (r'DuringAssesment.csv')
 
-buleria  = (df.loc[df["Palo"]=="Buleria"])
-day1 = (df.loc[df['Day']==1])
-day2 = (df.loc[df['Day']==2])
-imp1 = (df.loc[df['Setup']=='IMP1'])
-imp2 = (df.loc[df['Setup']=='IMP2'])
-
 
 
 #Basic operators:
@@ -133,32 +127,10 @@ def storeDF(x, title, convert): #store values in DataFrame
 
 
 
-def workflow(x, PAT_analysis, store, title):
+def workflow(x, PAT_analysis, store, title): # (dataset, perform analysis, store data, Title  )
     if PAT_analysis:
         PAT = createMatrix(x,title)
     if store:
         x_df, meanSummary = storeDF(PAT,title, True)
 
     return meanSummary
-
-
-
-
-meanPAT = workflow(df, True, True, "All")
-meanDay1 = workflow(day1, True, True, "Day1")
-meanDay2 = workflow(day2, True, True, "Day2")
-meanBuleria = workflow (buleria,True, True,"Buleria")
-meanIMP1 = workflow (imp1,True, True,"IMP1")
-meanIMP2 = workflow (imp2,True, True,"IMP2")
-
-#Store means
-dfSummary = meanPAT.append(meanDay1)
-dfSummary = dfSummary.append(meanDay2)
-dfSummary = dfSummary.append(meanBuleria)
-dfSummary = dfSummary.append(meanIMP1)
-dfSummary = dfSummary.append(meanIMP2)
-storeDF(dfSummary,"meanSummary", False)
-print(dfSummary)
-
-
-# PAT_df = createMatrix(day1, True, "Day1")
