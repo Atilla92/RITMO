@@ -1,0 +1,11 @@
+Name,Setup,Day,Palo,Improvisation,Awake,Unpleasant,At rest,Tired,Pleasant,Tense,Alert,Restless,Positive,Sleepy,Negative,Calm,Wakeful,Good,Jittery,Relaxed,Bad,Drowsy,Move,Pleasure experienced,Meaningful,Valuable,In awe,Deeply appreciating,Emotionally moved,Morally elevated,Inspired,Enriched,Connected with a greater whole,Part of something greater than myself,Carefree,Free of concern,Detached from my troubles,Expression,Technique,Harmony,Environment,Dancer's influence
+Buleria - IMP1,IMP1,1,Buleria,7,4,2,1,1,4,2,3,2,4,1,1,1,4,3,2,2,1,1,5,4,1,2,3,2,5,1,2,2,1,2,6,2,7,1,4,1,5,
+Buleria - IMP1,IMP1,1,Buleria,7,4,1,3,1,3,1,3,2,4,1,1,1,3,3,1,3,1,1,4,4,4,3,2,2,4,3,3,4,2,4,6,4,7,1,4,2,3,
+Seguirya - IMP1,IMP1,1,Seguirya,6,4,1,1,1,4,4,4,3,3,1,1,1,3,3,1,1,1,1,2,4,4,3,3,4,6,6,4,4,6,6,1,7,7,3,5,4,,
+Solea - IMP1,IMP1,1,Solea,7,3,1,2,1,3,2,2,1,3,1,1,3,3,4,2,4,1,1,4,3,2,2,2,3,5,3,3,3,3,3,7,3,7,5,4,5,3,
+Guajira - IMP1,IMP1,1,Guajira,7,3,3,1,1,2,1,2,1,3,1,2,1,2,2,3,2,2,1,4,2,1,1,1,1,2,1,1,1,1,3,3,2,4,3,6,5,5,
+Buleria - IMP2,IMP2,2,Buleria,4,3,1,3,1,3,1,2,1,3,1,1,1,2,3,1,3,1,1,5,4,1,1,1,1,3,1,3,1,1,3,7,7,7,3,1,1,2,
+Seguirya - IMP2,IMP2,2,Seguirya,4,3,1,1,1,2,2,2,1,2,1,1,1,2,3,1,1,1,1,1,3,3,3,1,2,2,3,3,2,3,3,1,7,7,1,3,1,1,
+Solea - IMP1_2,IMP1,2,Solea,7,2,2,3,1,3,1,1,1,3,1,1,3,2,3,2,3,1,1,4,4,3,3,1,3,3,3,3,2,3,3,5,7,7,3,4,4,4,
+Solea - IMP2,IMP2,2,Solea,4,3,1,1,1,3,1,2,1,3,1,1,2,2,3,1,2,1,1,3,4,2,2,1,1,3,1,3,1,1,3,6,7,7,1,1,1,2,
+Guajira - IMP2,IMP2,2,Guajira,4,3,2,3,1,2,2,2,2,2,1,2,1,2,2,1,2,1,1,2,2,1,1,1,1,1,1,1,1,1,2,4,4,7,3,2,1,3,
