@@ -15,8 +15,24 @@ dataMeanStd = pd.read_csv(r'export/meanSummary.csv')
 
 #Box plots
 
-def plotBoxplotInverse (variable, data, dataLabels, title): #Variables to analyse from X datasets, Labels on graph
 
+def plotBoxplotInverse (variable, data, dataLabels, title): #Variables to analyse from X datasets, Labels on graph
+    """
+    Description:
+    Creates a default boxplot where first loop goes over data then variables
+    So dataset with all variables are plotted in sequence
+    
+    Input Parameters:
+        variable: list
+             variables you want to compare, should be name of column in DataFrame
+        data: list
+             DataFrames you would like to compare, containing the variables e.g. [dataIMP1,
+        dataLables: list
+            Name of datasets you are comparing, will be added to Labels in Figure
+        title: string
+            title of image. Will be stored as png
+
+    """
     dataX =[]
     labelList = []
 
@@ -36,8 +52,31 @@ def plotBoxplotInverse (variable, data, dataLabels, title): #Variables to analys
     plt.show()
     name_file = str('Plots/' + title + '.png')
     fig.savefig(name_file)
+    return
+
 
 def plotBoxplot (variable, data, dataLabels, title, store, plot): #Variables to analyse from X datasets, Labels on graph
+    """
+    Description:
+    Creates a default boxplot where first loop goes over variables, then dataset
+    Different variables for each experiment mode (dataset) are plotted next to eachother. 
+    e.g. Move IMP1, Move IMP2, Pleasure IMP1, Pleasure IMP2
+    
+    Input Parameters:
+        variable: list
+             variables you want to compare, should be name of column in DataFrame
+        data: list
+             DataFrames you would like to compare, containing the variables e.g. [dataIMP1,
+        dataLables: list
+            Name of datasets you are comparing, will be added to Labels in Figure
+        title: string
+            title of image. Will be stored as png
+        store: Boolean 
+            if True stores the images in 'Plots/' as png
+        plot: Boolean
+            if True plots the figures
+
+    """
 
     dataX =[]
     labelList = []
@@ -68,9 +107,31 @@ def plotBoxplot (variable, data, dataLabels, title, store, plot): #Variables to 
 
 
 def histogramErrorPlot(palo, data, variables, store, show, xlim):
-    print(variables, 'variables')
-    for j, column in enumerate(variables):
+    """
+    Description:
+        Creates a mean and std hbar plot, with std plotted as an error line. 
+        Mean and std are exported from last two lines of DataFrames. 
+        Creates a new Dataframe with each of the "palo" or dataset mean and std. 
+        "Palo" becomes the index in the dataframe. 
+        Will create one plot per variable.
 
+    Input Parameters:
+        palo: list of strings 
+            Name of Datasets you want to compare. Becomes index of Dataframe (first column) 
+        data: list
+             DataFrames you would like to compare, containing the variables e.g. [dataIMP1, dataIMP2]
+             "mean" and "std" should be the last two lines of DataFrame
+        variables: list
+             variables (column in DataFrame) you want to plot mean and std for DataFrames. 
+        store: Boolean 
+            if True stores the images in 'Plots/' as png
+        show: Boolean
+            if True plots the figures
+        xlim: int 
+            set upper x limit of plot
+
+    """
+    for j, column in enumerate(variables):
         titles = []
         means = []
         stds = []
@@ -91,10 +152,7 @@ def histogramErrorPlot(palo, data, variables, store, show, xlim):
         x_matrix = pd.DataFrame(data=matrix)
         x_matrix = x_matrix.set_index('title')
 
-        #fig = plt.figure()
-        # x_matrix.plot(kind = "barh", y = "mean", legend = False,
-        #             title = column + ' mean', xerr = "std", xlim = [0,7])
-        # plt.show()
+
 
         if store:
             fig = x_matrix.plot(kind = "barh", y = "mean", legend = False,
@@ -107,8 +165,11 @@ def histogramErrorPlot(palo, data, variables, store, show, xlim):
     return
 
 
+# Define plot
+
 #histogramErrorPlot(['Buleria','Seguirya','Solea','Guajira'],[dataBuleria, dataSeguirya, dataSolea, dataGuajira], ['Move', 'Pleasure'], True, False, 5)
 #histogramErrorPlot(['Buleria','Seguirya','Solea','Guajira'],[dataBuleria, dataSeguirya, dataSolea, dataGuajira], ['Meaning','Elevating','Carefree'], True, False, 7)
+
 histogramErrorPlot(['Buleria','Seguirya','Solea','Guajira'],[dataBuleria, dataSeguirya, dataSolea, dataGuajira], ['Expression','Technique','Harmony'], True, False, 7)
 
 
@@ -117,30 +178,3 @@ histogramErrorPlot(['Buleria','Seguirya','Solea','Guajira'],[dataBuleria, dataSe
 #plotBoxplot(['Expression','Technique','Harmony'], [dataIMP1, dataIMP2], ['IMP1', 'IMP2'], 'IMP1 vs. IMP2 - Expression, Technique, Harmony', True, True )
 
 
-
-
-
-# x = np.array([1, 2, 3, 4, 5])
-# y = np.power(x, 2) # Effectively y = x**2
-# e = np.array([1.5, 2.6, 3.7, 4.6, 5.5])
-#
-# plt.errorbar(x, y, e, linestyle='None', marker='^')
-#
-# plt.show()
-
-# data1 = dataIMP1['Move'][:-2]
-# data2 = dataIMP2['Move'][:-2]
-# data3 = dataIMP1['Pleasure'][:-2]
-# data4 = dataIMP2['Pleasure'][:-2]
-
-
-
-# print('Move IMP1 Mean: ', dataIMP1['Move'].iloc[-2], 'std: ' dataIMP1['Move'].iloc[-2])
-# print('Move IMP2 Mean: ', dataIMP2['Move'].iloc[-2], 'std: ' dataIMP2['Move'].iloc[-2])
-# print('Pleasure IMP1 Mean: ', dataIMP1['Pleasure'].iloc[-2], 'std: ' dataIMP1['Pleasure'].iloc[-2])
-# print('Pleasure IMP1 Mean: ', dataIMP1['Pleasure'].iloc[-2], 'std: ' dataIMP1['Pleasure'].iloc[-2])
-#
-# fig2 = plt.figure()
-# ax = fig2.add_subplot(111)
-# dataIMP1.plot(kind = "barh", y =0.83, legend = False,
-#             title = "Average Prices", xerr = dataIMP1['Move'].iloc[-1])
