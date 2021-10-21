@@ -6,10 +6,10 @@ import pandas as pd
 #import data
 dataIMP1 = pd.read_csv (r'export/IMP1.csv')
 dataIMP2 = pd.read_csv (r'export/IMP2.csv')
-dataBuleria = pd.read_csv (r'export/Buleria.csv')
-dataSeguirya = pd.read_csv(r'export/Seguirya.csv')
-dataSolea = pd.read_csv(r'export/Solea.csv')
-dataGuajira = pd.read_csv(r'export/Guajira.csv')
+dataBuleria = pd.read_csv (r'export_all/Buleria.csv')
+dataSeguirya = pd.read_csv(r'export_all/Seguirya.csv')
+dataSolea = pd.read_csv(r'export_all/Solea.csv')
+dataGuajira = pd.read_csv(r'export_all/Guajira.csv')
 dataMeanStd = pd.read_csv(r'export/meanSummary.csv')
 
 
@@ -99,7 +99,7 @@ def histogramErrorPlot(palo, data, variables, store, show, xlim):
         if store:
             fig = x_matrix.plot(kind = "barh", y = "mean", legend = False,
                                 title = column + ' (mean, std)', xerr = "std", xlim = [0,xlim]).get_figure()
-            name_file = str('Plots/' + column + ' (mean, std)' + '.png')
+            name_file = str('Plots_All/' + column + ' (mean, std)' + '.png')
             fig.savefig(name_file)
         if show:
             plt.show()
@@ -109,12 +109,12 @@ def histogramErrorPlot(palo, data, variables, store, show, xlim):
 
 #histogramErrorPlot(['Buleria','Seguirya','Solea','Guajira'],[dataBuleria, dataSeguirya, dataSolea, dataGuajira], ['Move', 'Pleasure'], True, False, 5)
 #histogramErrorPlot(['Buleria','Seguirya','Solea','Guajira'],[dataBuleria, dataSeguirya, dataSolea, dataGuajira], ['Meaning','Elevating','Carefree'], True, False, 7)
-
+histogramErrorPlot(['Buleria','Seguirya','Solea','Guajira'],[dataBuleria, dataSeguirya, dataSolea, dataGuajira], ['Expression','Technique','Harmony'], True, False, 7)
 
 
 # plotBoxplot(['Move','Pleasure'], [dataIMP1, dataIMP2], ['IMP1', 'IMP2'],'IMP1 vs. IMP2 - Move & Pleasure', True, True)
 # plotBoxplot(['Meaning','Elevating','Carefree'], [dataIMP1, dataIMP2], ['IMP1', 'IMP2'], 'IMP1 vs. IMP2 - Meaning, Elevating, Carefree', True, True )
-plotBoxplot(['Expression','Technique','Harmony'], [dataIMP1, dataIMP2], ['IMP1', 'IMP2'], 'IMP1 vs. IMP2 - Expression, Technique, Harmony', True, True )
+#plotBoxplot(['Expression','Technique','Harmony'], [dataIMP1, dataIMP2], ['IMP1', 'IMP2'], 'IMP1 vs. IMP2 - Expression, Technique, Harmony', True, True )
 
 
 
