@@ -1,0 +1,34 @@
+Label: FSR adapter 16: FSR.A 16 Sampling frequency: 5.185185e+002 Number of points: 1 X start: 0.000000e+000 Unit: % Domain Unit: s
+Label: FSR adapter 16: FSR.B 16 Sampling frequency: 5.185185e+002 Number of points: 1 X start: 0.000000e+000 Unit: % Domain Unit: s
+Label: FSR adapter 16: FSR.C 16 Sampling frequency: 5.185185e+002 Number of points: 1 X start: 0.000000e+000 Unit: % Domain Unit: s
+Label: FSR adapter 16: FSR.D 16 Sampling frequency: 5.185185e+002 Number of points: 1 X start: 0.000000e+000 Unit: % Domain Unit: s
+Start Trigger Method: Trigno Wireless System (start trigger)
+Stop Trigger Method: Trigno Wireless System (stop trigger)
+Use Camera: NO
+Video File Path: 
+System Gain: 3.250000e-002
+A/D card Gain: 1.000000e+000
+Bit Resolution: -1.000000e+000
+Bias: 0.000000e+000
+High pass cutoff frequency: 0.000000e+000
+Low pass cutoff frequency: 0.000000e+000
+System Gain: 3.250000e-002
+A/D card Gain: 1.000000e+000
+Bit Resolution: -1.000000e+000
+Bias: 0.000000e+000
+High pass cutoff frequency: 0.000000e+000
+Low pass cutoff frequency: 0.000000e+000
+System Gain: 3.250000e-002
+A/D card Gain: 1.000000e+000
+Bit Resolution: -1.000000e+000
+Bias: 0.000000e+000
+High pass cutoff frequency: 0.000000e+000
+Low pass cutoff frequency: 0.000000e+000
+System Gain: 3.250000e-002
+A/D card Gain: 1.000000e+000
+Bit Resolution: -1.000000e+000
+Bias: 0.000000e+000
+High pass cutoff frequency: 0.000000e+000
+Low pass cutoff frequency: 0.000000e+000
+X [s],FSR adapter 16: FSR.A 16 [%],FSR adapter 16: FSR.B 16 [%],FSR adapter 16: FSR.C 16 [%],FSR adapter 16: FSR.D 16 [%]
+0.000000e+000,0.000000e+000,0.000000e+000,0.000000e+000,0.000000e+000
