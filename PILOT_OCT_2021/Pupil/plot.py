@@ -35,7 +35,7 @@ x0 = eye_0['pupil_timestamp']
 x1 = eye_1['pupil_timestamp']
 ax.plot(x0, eye_0['diameter'])
 ax.plot(x1,eye_1['diameter'])
-
+# plt.show()
 
 
 
