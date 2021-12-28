@@ -18,39 +18,46 @@ df_start = (df_f2.loc[df_f2["pupil_timestamp"] >= start_time ])
 
 
 #Length of sampling
-
+downsample = 1
+freq_down = frame_rate/downsample
 df_length = int(len(df_start.index))
-
-
 if (df_length % 2 ) != 0:
 
     df_start = df_start.iloc[:-1 , :]
     df_length = int(len(df_start.index))
 
-df_length_half  = int(np.round(df_length/4))
+df_length_half  = int(np.round(df_length/downsample))
 
 # Split in two eyes
 eye_0 = df_start.loc[df_start['eye_id']==0]
 eye_1 = df_start.loc[df_start['eye_id']==1]
+
 # Start time at 0
 eye_0['pupil_timestamp'] = eye_0['pupil_timestamp']-eye_0['pupil_timestamp'].iloc[0]
 eye_1['pupil_timestamp'] = eye_1['pupil_timestamp']-eye_1['pupil_timestamp'].iloc[0]
 
 
+# x-axis elements
 x0 = eye_0['pupil_timestamp']
 x1 = eye_1['pupil_timestamp']
 
+x0_start = x0.iloc[0]
+x0_end =  x0.iloc[-1]
 
 
 
-def downsample(array, npts):
+def downsample(array, npts, x_end):
     interpolated = interp1d(np.arange(len(array)), array, axis = 0, fill_value = 'extrapolate')
     downsampled = interpolated(np.linspace(0, len(array), npts))
-    x = np.linspace(0, len(array), npts)
+    last_el = downsampled[-1,0]
+    #x = np.divide(np.linspace(0, len(array), npts), freq)
+    x = np.linspace(0, last_el, npts)
     return downsampled, x
 
-eye0_down, x0_down = downsample(eye_0, df_length_half)
-eye1_down, x1_down = downsample(eye_0, df_length_half)
+
+#Downsample
+eye0_down, x0_down = downsample(eye_0, df_length_half, x0_end)
+eye1_down, x1_down = downsample(eye_0, df_length_half, x0_end)
 
 # matrix_0 = [x0_down,eye0_down]
 # matrix = matrix_0[(matrix_0[:,0] > 1)]
@@ -60,7 +67,7 @@ eye1_down, x1_down = downsample(eye_0, df_length_half)
 # eye_0['diameter'] = eye0_down
 # eye_1['diameter'] = eye1_down
 
-print(eye_0, eye0_down, x0_down)
+#print(eye_0, eye0_down, x0_down)
 
 # remove zeros
 
@@ -100,7 +107,7 @@ eye0_60_inter = interp1d(x0_60, eye0_60)
 fig = plt.figure()
 ax = plt.axes()
 
-#ax.plot(x0, eye_0['diameter'])
+ax.plot(x0, eye_0['diameter'])
 # ax.plot(x0_f1, eye_0_f1['diameter'], 'r')
 # ax.plot(x0_60, downsampled_y)
 ax.plot(x0_down, eye0_down[:,3])
