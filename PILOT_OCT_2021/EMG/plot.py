@@ -11,21 +11,21 @@ from scipy.signal import argrelextrema
 
 # Input variables
 
-samplingF = 120 #Hz
+#samplingF = 120 #Hz
 
 
 #df = pd.read_csv (r'Data/Buleria_IMP_P1_1_Rep_1_5.csv', sep = ',', skiprows=32) #Good one
-#df = pd.read_csv (r'Data/Buleria_IMP_P1_2_Rep_1_6.csv', sep = ',', skiprows=32)
-#df = pd.read_csv (r'Data/Buleria_IMP_P2_1_Rep_1_4.csv', sep = ',', skiprows=32) #37, 90
+#df = pd.read_csv (r'Data/Buleria_IMP_P1_2_Rep_1_6.csv', sep = ',', skiprows=32) #27, 117
+df = pd.read_csv (r'Data/Buleria_IMP_P2_1_Rep_1_4.csv', sep = ',', skiprows=32) #37, 90
 #df = pd.read_csv (r'Data/Buleria_BAI_P1_1_Rep1_8.csv', sep = ',', skiprows=32) #31, 126
 #df = pd.read_csv (r'Data/GUAJIRA_IMP_P1_1_Rep_1_8.csv', sep = ',', skiprows=32) #103, 174
 #df = pd.read_csv (r'Data/GUAJIRA_IMP_P2_1_Rep_1_6.csv', sep = ',', skiprows=32) #69, 150
-df = pd.read_csv (r'Data/SEGUIRYA_IMP_P1_1_Rep_1_7.csv', sep = ',', skiprows=32) #64, 148
+#df = pd.read_csv (r'Data/SEGUIRYA_IMP_P1_1_Rep_1_7.csv', sep = ',', skiprows=32) #64, 148
 #df = pd.read_csv (r'Data/SEGUIRYA_IMP_P2_1_Rep_1_5.csv', sep = ',', skiprows=32) #80, 143 REAL GOOD
 #df = pd.read_csv (r'Data/SOLEA_IMP_P1_1_Rep_1_4.csv', sep = ',', skiprows=32) #54, 190 crashing
 #df = pd.read_csv (r'Data/SEGUIRYA_COM_P1_1_REP_1_10.csv', sep = ',', skiprows=32)
-#df = pd.read_csv (r'Data/SOLEA_IMP_P1_1_REP_1_7.csv', sep = ',', skiprows=32)
-#df = pd.read_csv (r'Data/SOLEA_IMP_P2_2_REP_1_3.csv', sep = ',', skiprows=32)
+#df = pd.read_csv (r'Data/SOLEA_IMP_P1_1_REP_1_7.csv', sep = ',', skiprows=32) #245,287
+#df = pd.read_csv (r'Data/SOLEA_IMP_P2_2_REP_1_3.csv', sep = ',', skiprows=32) # 123, 191
 #df.rename(index={0: "Time", 1: "A", 2: "B", 3:'C', 4:'D'})
 
 
@@ -105,8 +105,8 @@ def createHeatMap(df_start):
 
 # Execute Functions
 labelColumns(df, False)
-createFigure(df,False)
-df_start, df_length = setTimeWindow (df, 64, 148)
+createFigure(df,True)
+df_start, df_length = setTimeWindow (df, 37, 90)
 sampleRate = calculateSampleRate(df_start,df_length)
 x, y1, y2, y3 = createFigure(df_start, False)
 
@@ -284,9 +284,6 @@ def storeSpikes(y1, y2, y3, p, sampleRate, p_spikes, p_mean, windowSpikes, tEnd,
 
 
 x_array, y1_spikes, y2_spikes, y3_spikes, time_spikes = storeSpikes(y1, y2, y3, True, sampleRate, False, True, True, 50, False)
-
-
-
 
 
 def plotSpikes(y1, y2, y3):

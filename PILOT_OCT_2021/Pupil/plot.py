@@ -5,11 +5,11 @@ from scipy import signal
 from scipy.interpolate import interp1d
 
 # specifications
-frame_rate = 120
+frame_rate = 60
 start_time = 444343.54443876795
 
 
-df = pd.read_csv (r'Data/2021_10_04/007/pupil_positions.csv', sep = ',')
+df = pd.read_csv (r'Data/2021_10_04/004/pupil_positions.csv', sep = ',')
 df_f1 = (df.loc[df["method"]=="pye3d 0.0.4 real-time"])
 df_f2 = df_f1[['pupil_timestamp','world_index','eye_id','diameter']]
 
@@ -94,6 +94,9 @@ eye1_down, x1_down = downsample(eye_0, df_length_half, x0_end)
 
 eye0_60 = signal.resample(eye_0['diameter'], df_length_half)
 x0_60 = np.linspace(x0.iloc[0], x0.iloc[-1], df_length_half)
+
+print(len(x0_60)/120, 'length')
+
 x0_120 = np.linspace(x0.iloc[0], x0.iloc[-1], df_length)
 eye0_60_inter = interp1d(x0_60, eye0_60)
 eye0_60_inter = interp1d(x0_60, eye0_60)
