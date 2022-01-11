@@ -14,9 +14,9 @@ from scipy.signal import argrelextrema
 #samplingF = 120 #Hz
 
 
-#df = pd.read_csv (r'Data/Buleria_IMP_P1_1_Rep_1_5.csv', sep = ',', skiprows=32) #Good one
+df = pd.read_csv (r'Data/Buleria_IMP_P1_1_Rep_1_5.csv', sep = ',', skiprows=32) #Good one
 #df = pd.read_csv (r'Data/Buleria_IMP_P1_2_Rep_1_6.csv', sep = ',', skiprows=32) #27, 117
-df = pd.read_csv (r'Data/Buleria_IMP_P2_1_Rep_1_4.csv', sep = ',', skiprows=32) #37, 90
+#df = pd.read_csv (r'Data/Buleria_IMP_P2_1_Rep_1_4.csv', sep = ',', skiprows=32) #37, 90
 #df = pd.read_csv (r'Data/Buleria_BAI_P1_1_Rep1_8.csv', sep = ',', skiprows=32) #31, 126
 #df = pd.read_csv (r'Data/GUAJIRA_IMP_P1_1_Rep_1_8.csv', sep = ',', skiprows=32) #103, 174
 #df = pd.read_csv (r'Data/GUAJIRA_IMP_P2_1_Rep_1_6.csv', sep = ',', skiprows=32) #69, 150
