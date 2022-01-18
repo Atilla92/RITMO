@@ -166,6 +166,7 @@ def storeSpikes(y1, y2, y3, p, sampleRate, p_spikes, p_mean, windowSpikes, tEnd,
     y2_spikes = np.zeros((nSpikes, max_counter))
     y3_spikes = np.zeros((nSpikes, max_counter))
     time_spikes = np.zeros((nSpikes, max_counter))
+    
     j = 0
 
     for i, item in enumerate(y2_array):
@@ -280,7 +281,7 @@ def storeSpikes(y1, y2, y3, p, sampleRate, p_spikes, p_mean, windowSpikes, tEnd,
 
         plt.show()
     
-    return x_array, y1_spikes, y2_spikes, y3_spikes, time_spikes, 
+    return x_array, y1_spikes, y2_spikes, y3_spikes, time_spikes 
 
 
 x_array, y1_spikes, y2_spikes, y3_spikes, time_spikes = storeSpikes(y1, y2, y3, True, sampleRate, False, True, True, 50, False)
@@ -335,6 +336,9 @@ def plotSpikes(y1, y2, y3):
             # ax.plot()    
 
     plt.show()
+
+
+
 
 
 #zeroLevelSpikes(y1,y2,y3)
