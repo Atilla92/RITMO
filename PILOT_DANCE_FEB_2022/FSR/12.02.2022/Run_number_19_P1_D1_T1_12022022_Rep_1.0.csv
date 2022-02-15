@@ -1,0 +1,146 @@
+Label: FSR adapter 15: FSR.A 15 Sampling frequency: 2.962963e+002 Number of points: 1 X start: 0.000000e+000 Unit: % Domain Unit: s
+Label: FSR adapter 15: FSR.B 15 Sampling frequency: 2.962963e+002 Number of points: 1 X start: 0.000000e+000 Unit: % Domain Unit: s
+Label: FSR adapter 15: FSR.C 15 Sampling frequency: 2.962963e+002 Number of points: 1 X start: 0.000000e+000 Unit: % Domain Unit: s
+Label: FSR adapter 15: FSR.D 15 Sampling frequency: 2.962963e+002 Number of points: 1 X start: 0.000000e+000 Unit: % Domain Unit: s
+Label: FSR adapter 15: ACC.X 15 Sampling frequency: 1.481481e+002 Number of points: 0 X start: 0.000000e+000 Unit: g Domain Unit: s
+Label: FSR adapter 15: ACC.Y 15 Sampling frequency: 1.481481e+002 Number of points: 0 X start: 0.000000e+000 Unit: g Domain Unit: s
+Label: FSR adapter 15: ACC.Z 15 Sampling frequency: 1.481481e+002 Number of points: 0 X start: 0.000000e+000 Unit: g Domain Unit: s
+Label: FSR adapter 15: GYRO.X 15 Sampling frequency: 1.481481e+002 Number of points: 0 X start: 0.000000e+000 Unit: °/s Domain Unit: s
+Label: FSR adapter 15: GYRO.Y 15 Sampling frequency: 1.481481e+002 Number of points: 0 X start: 0.000000e+000 Unit: °/s Domain Unit: s
+Label: FSR adapter 15: GYRO.Z 15 Sampling frequency: 1.481481e+002 Number of points: 0 X start: 0.000000e+000 Unit: °/s Domain Unit: s
+Label: FSR adapter 16: FSR.A 16 Sampling frequency: 2.962963e+002 Number of points: 1 X start: 0.000000e+000 Unit: % Domain Unit: s
+Label: FSR adapter 16: FSR.B 16 Sampling frequency: 2.962963e+002 Number of points: 1 X start: 0.000000e+000 Unit: % Domain Unit: s
+Label: FSR adapter 16: FSR.C 16 Sampling frequency: 2.962963e+002 Number of points: 1 X start: 0.000000e+000 Unit: % Domain Unit: s
+Label: FSR adapter 16: FSR.D 16 Sampling frequency: 2.962963e+002 Number of points: 1 X start: 0.000000e+000 Unit: % Domain Unit: s
+Label: FSR adapter 16: ACC.X 16 Sampling frequency: 1.481481e+002 Number of points: 0 X start: 0.000000e+000 Unit: g Domain Unit: s
+Label: FSR adapter 16: ACC.Y 16 Sampling frequency: 1.481481e+002 Number of points: 0 X start: 0.000000e+000 Unit: g Domain Unit: s
+Label: FSR adapter 16: ACC.Z 16 Sampling frequency: 1.481481e+002 Number of points: 0 X start: 0.000000e+000 Unit: g Domain Unit: s
+Label: FSR adapter 16: GYRO.X 16 Sampling frequency: 1.481481e+002 Number of points: 0 X start: 0.000000e+000 Unit: °/s Domain Unit: s
+Label: FSR adapter 16: GYRO.Y 16 Sampling frequency: 1.481481e+002 Number of points: 0 X start: 0.000000e+000 Unit: °/s Domain Unit: s
+Label: FSR adapter 16: GYRO.Z 16 Sampling frequency: 1.481481e+002 Number of points: 0 X start: 0.000000e+000 Unit: °/s Domain Unit: s
+Start Trigger Method: Trigno Wireless System (start trigger)
+Stop Trigger Method: Trigno Wireless System (stop trigger)
+Use Camera: NO
+Video File Path: 
+System Gain: 3.250000e-002
+A/D card Gain: 1.000000e+000
+Bit Resolution: -1.000000e+000
+Bias: 0.000000e+000
+High pass cutoff frequency: 0.000000e+000
+Low pass cutoff frequency: 0.000000e+000
+System Gain: 3.250000e-002
+A/D card Gain: 1.000000e+000
+Bit Resolution: -1.000000e+000
+Bias: 0.000000e+000
+High pass cutoff frequency: 0.000000e+000
+Low pass cutoff frequency: 0.000000e+000
+System Gain: 3.250000e-002
+A/D card Gain: 1.000000e+000
+Bit Resolution: -1.000000e+000
+Bias: 0.000000e+000
+High pass cutoff frequency: 0.000000e+000
+Low pass cutoff frequency: 0.000000e+000
+System Gain: 3.250000e-002
+A/D card Gain: 1.000000e+000
+Bit Resolution: -1.000000e+000
+Bias: 0.000000e+000
+High pass cutoff frequency: 0.000000e+000
+Low pass cutoff frequency: 0.000000e+000
+System Gain: 2.048000e+003
+A/D card Gain: 1.000000e+000
+Bit Resolution: -1.000000e+000
+Bias: 0.000000e+000
+High pass cutoff frequency: 0.000000e+000
+Low pass cutoff frequency: 0.000000e+000
+System Gain: 2.048000e+003
+A/D card Gain: 1.000000e+000
+Bit Resolution: -1.000000e+000
+Bias: 0.000000e+000
+High pass cutoff frequency: 0.000000e+000
+Low pass cutoff frequency: 0.000000e+000
+System Gain: 2.048000e+003
+A/D card Gain: 1.000000e+000
+Bit Resolution: -1.000000e+000
+Bias: 0.000000e+000
+High pass cutoff frequency: 0.000000e+000
+Low pass cutoff frequency: 0.000000e+000
+System Gain: 1.640000e+001
+A/D card Gain: 1.000000e+000
+Bit Resolution: -1.000000e+000
+Bias: 0.000000e+000
+High pass cutoff frequency: 0.000000e+000
+Low pass cutoff frequency: 0.000000e+000
+System Gain: 1.640000e+001
+A/D card Gain: 1.000000e+000
+Bit Resolution: -1.000000e+000
+Bias: 0.000000e+000
+High pass cutoff frequency: 0.000000e+000
+Low pass cutoff frequency: 0.000000e+000
+System Gain: 1.640000e+001
+A/D card Gain: 1.000000e+000
+Bit Resolution: -1.000000e+000
+Bias: 0.000000e+000
+High pass cutoff frequency: 0.000000e+000
+Low pass cutoff frequency: 0.000000e+000
+System Gain: 3.250000e-002
+A/D card Gain: 1.000000e+000
+Bit Resolution: -1.000000e+000
+Bias: 0.000000e+000
+High pass cutoff frequency: 0.000000e+000
+Low pass cutoff frequency: 0.000000e+000
+System Gain: 3.250000e-002
+A/D card Gain: 1.000000e+000
+Bit Resolution: -1.000000e+000
+Bias: 0.000000e+000
+High pass cutoff frequency: 0.000000e+000
+Low pass cutoff frequency: 0.000000e+000
+System Gain: 3.250000e-002
+A/D card Gain: 1.000000e+000
+Bit Resolution: -1.000000e+000
+Bias: 0.000000e+000
+High pass cutoff frequency: 0.000000e+000
+Low pass cutoff frequency: 0.000000e+000
+System Gain: 3.250000e-002
+A/D card Gain: 1.000000e+000
+Bit Resolution: -1.000000e+000
+Bias: 0.000000e+000
+High pass cutoff frequency: 0.000000e+000
+Low pass cutoff frequency: 0.000000e+000
+System Gain: 2.048000e+003
+A/D card Gain: 1.000000e+000
+Bit Resolution: -1.000000e+000
+Bias: 0.000000e+000
+High pass cutoff frequency: 0.000000e+000
+Low pass cutoff frequency: 0.000000e+000
+System Gain: 2.048000e+003
+A/D card Gain: 1.000000e+000
+Bit Resolution: -1.000000e+000
+Bias: 0.000000e+000
+High pass cutoff frequency: 0.000000e+000
+Low pass cutoff frequency: 0.000000e+000
+System Gain: 2.048000e+003
+A/D card Gain: 1.000000e+000
+Bit Resolution: -1.000000e+000
+Bias: 0.000000e+000
+High pass cutoff frequency: 0.000000e+000
+Low pass cutoff frequency: 0.000000e+000
+System Gain: 1.640000e+001
+A/D card Gain: 1.000000e+000
+Bit Resolution: -1.000000e+000
+Bias: 0.000000e+000
+High pass cutoff frequency: 0.000000e+000
+Low pass cutoff frequency: 0.000000e+000
+System Gain: 1.640000e+001
+A/D card Gain: 1.000000e+000
+Bit Resolution: -1.000000e+000
+Bias: 0.000000e+000
+High pass cutoff frequency: 0.000000e+000
+Low pass cutoff frequency: 0.000000e+000
+System Gain: 1.640000e+001
+A/D card Gain: 1.000000e+000
+Bit Resolution: -1.000000e+000
+Bias: 0.000000e+000
+High pass cutoff frequency: 0.000000e+000
+Low pass cutoff frequency: 0.000000e+000
+X [s],FSR adapter 15: FSR.A 15 [%],X [s],FSR adapter 15: FSR.B 15 [%],X [s],FSR adapter 15: FSR.C 15 [%],X [s],FSR adapter 15: FSR.D 15 [%],X [s],FSR adapter 15: ACC.X 15 [g],X [s],FSR adapter 15: ACC.Y 15 [g],X [s],FSR adapter 15: ACC.Z 15 [g],X [s],FSR adapter 15: GYRO.X 15 [°/s],X [s],FSR adapter 15: GYRO.Y 15 [°/s],X [s],FSR adapter 15: GYRO.Z 15 [°/s],X [s],FSR adapter 16: FSR.A 16 [%],X [s],FSR adapter 16: FSR.B 16 [%],X [s],FSR adapter 16: FSR.C 16 [%],X [s],FSR adapter 16: FSR.D 16 [%],X [s],FSR adapter 16: ACC.X 16 [g],X [s],FSR adapter 16: ACC.Y 16 [g],X [s],FSR adapter 16: ACC.Z 16 [g],X [s],FSR adapter 16: GYRO.X 16 [°/s],X [s],FSR adapter 16: GYRO.Y 16 [°/s],X [s],FSR adapter 16: GYRO.Z 16 [°/s]
+0.00000e+000,0.00000e+000,0.00000e+000,0.00000e+000,0.00000e+000,0.00000e+000,0.00000e+000,0.00000e+000,,,,,,,,,,,,,0.00000e+000,0.00000e+000,0.00000e+000,0.00000e+000,0.00000e+000,0.00000e+000,0.00000e+000,0.00000e+000,,,,,,,,,,,,
