@@ -33,5 +33,3 @@ df = pd.read_csv (r'FSR/12.02.2022/N20_P1_D1_T1_12022022_Rep_1.4.csv', sep = ','
 # P1_D2_T2, Standing
 # df = pd.read_csv (r'FSR/12.02.2022/N24_P1_D2_T2_12022022_Rep_1.8.csv', sep = ',', skiprows=144, encoding= 'unicode_escape') 
 # input_data = read("AUDIO/P1_D2_T2-220212_1818.wav")
-
-

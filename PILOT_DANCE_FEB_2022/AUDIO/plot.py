@@ -37,3 +37,5 @@ plotAudio(audio, sampleRate, True)
 audio_threshold, click_position = audioThreshold(audio,threshold=1.25 * 10**9)
 plotAudio(audio_threshold, sampleRate, True)
 print (click_position/(sampleRate))
+
+

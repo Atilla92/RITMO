@@ -40,9 +40,14 @@ df = pd.read_csv (r'FSR/12.02.2022/N20_P1_D1_T1_12022022_Rep_1.4.csv', sep = ','
 
 
 
+
+
 #print(input_data)
 audio = input_data[1]
 audio_SR = input_data[0]
+x_audio = np.divide(np.arange(len(audio)), audio_SR)
+
+
 
 
 def  labelColumns(df, p):
@@ -89,10 +94,9 @@ df_new = labelColumns(df, True)
 x, y1, y2, y3, y4, y5, y6 = createFigure(df_new,False)
 
 
-def plot_audio_FSR(audio_data, audio_SR, x, y1, y2, y3, y4, y5, y6):
+def plot_audio_FSR(audio_data,x_array, df_new):
+    x, y1, y2, y3, y4, y5, y6 = createFigure(df_new,False)
     f, (ax1, ax2, ax3, ax4, ax5, ax6, ax7) = plt.subplots(7, 1, sharex=True)
-    x_array = np.arange(len(audio_data))
-    x_array = np.divide(x_array,audio_SR)
     ax1.plot(x_array, audio_data, 'g', label = 'Audio')
     ax1.set(ylabel='Audio')
     ax2.plot(x, y1, label = 'L')
@@ -112,7 +116,32 @@ def plot_audio_FSR(audio_data, audio_SR, x, y1, y2, y3, y4, y5, y6):
     f.supylabel('Amplitude [%]')
     plt.show()
 
-plot_audio_FSR(audio, audio_SR, x, y1, y2, y3, y4, y5, y6)
+
+def plot_audio_FSR_split(audio_data,x_array, df_new, startZero, axs):
+    x, y1, y2, y3, y4, y5, y6 = createFigure(df_new,False)
+    if startZero:
+        x= np.array(x)
+        x = x -x[0]
+        x_array = x_array - x_array[0]  
+    axs[0].plot(x_array, audio_data, label = 'Audio')
+    axs[0].set(ylabel='Audio')
+    axs[1].plot(x, y1, label = 'L')
+    #ax2.legend(loc="upper right")
+    axs[1].set(ylabel= 'Toe')
+    axs[2].plot(x, y4, label = 'R')
+    #ax3.legend(loc="upper right")
+    axs[3].plot(x, y2, label = 'LB')
+    axs[3].set(ylabel= 'Meta')
+    #ax4.legend(loc="upper right")
+    axs[4].plot(x, y5, label = 'RB')
+    #ax5.legend(loc = "upper right")
+    axs[5].plot(x, y3)
+    axs[5].set(ylabel= 'Heel')
+    axs[6].plot(x, y6)
+
+    #plt.show()
+
+#plot_audio_FSR(audio, x_audio, audio_SR, x, y1, y2, y3, y4, y5, y6)
 
 
 
@@ -123,8 +152,8 @@ plot_audio_FSR(audio, audio_SR, x, y1, y2, y3, y4, y5, y6)
 
 def get_sec(time_str):
     """Get Seconds from time."""
-    m, s = time_str.split(':')
-    return int(m) * 60 + int(s)
+    m, s, ms = time_str.split(':')
+    return int(m) * 60 + int(s) + np.divide(int(ms),(100))
 
 def list_sec (step_times):
     '''Get new list in seconds'''
@@ -141,21 +170,24 @@ def list_sec (step_times):
 
 #df_peaks = df_new.loc[(df["Time"] >= start_reaper_D1 )] 
 
-
-
 # Step times P1_D1_T2
+n_splits = 2
 start_reaper = 10.868
 step_labels = [1,2,3,4]
-step_times = ['0:57','3:01','4:37','5:02']
+step_times = ['0:59:32','3:01:00','4:37:00','5:02:00']
 duration_s = [5.7,16.5,8.50,6.90]
 steps_start_s = list_sec(step_times)
 
 # Step times P1_D2_T1
+# n_splits = 11
 # start_reaper = 10.868- 4.536
 # step_labels = [1,2,5,6]
-# step_times = ['0:37','1:35','4:37','4:57']
+# step_times = ['0:37:00','1:35:00','4:37:00','4:57:00']
 # duration_s = [30.2,59.4,20.7,23.3]
 # steps_start_s = list_sec(step_times)
+
+
+
 
 #audio_threshold, click_time = alignClapper(audio, audio_SR, threshold_clap)
 
@@ -169,14 +201,86 @@ def setTimeWindow(df,t_peaks, t0,t1):
     df_start = df.loc[(df["Time"] >= tStart ) &(df["Time"] <= tEnd ) ]
     print(df_start)
     df_length = int(len(df_start.index))
-
     return df_start, df_length
 
+def setWindowAudio(audio, audio_SR, t_peaks, t0,t1):
+    '''Reduce dataset to a certain time window '''
+    x_audio = np.divide(np.arange(len(audio)), audio_SR)
+    tStart = t0 + t_peaks
+    tStart_index = np.argmax(x_audio >=tStart)
+    tEnd = t1 + t0 + t_peaks
+    tEnd_index = np.argmax(x_audio >=tEnd)
+    audio_start = audio[tStart_index:tEnd_index]
+    x_audio_start = x_audio[tStart_index:tEnd_index]
+    #print(audio_start)
+    return audio_start, x_audio_start 
 
+audio_start, x_audio_start = setWindowAudio(audio, audio_SR, start_reaper,steps_start_s[0], duration_s[0] )
+print(len(audio))
+print(len(audio_start))
 # Get time window for specific step and plot. 
 step1_data, df_length = setTimeWindow(df_new, start_reaper, steps_start_s[0], duration_s[0] )
-print(step1_data['Time'])
-x, y1, y2, y3, y4, y5, y6 = createFigure(step1_data,False)
-plot_audio_FSR(audio, audio_SR, x, y1, y2, y3, y4, y5, y6)
 
+#x, y1, y2, y3, y4, y5, y6 = createFigure(step1_data,False)
+#plot_audio_FSR(audio_start,x_audio_start, audio_SR, x, y1, y2, y3, y4, y5, y6)
+
+
+
+
+##### Split into section
+# Define the number of splits you want
+#n_splits = 11
+split_y_FSR = np.array_split(step1_data, n_splits)
+#split_x_FSR = np.array_split(x, 4)
+split_y_audio = np.array_split(audio_start, n_splits)
+split_x_audio = np.array_split(x_audio_start,n_splits)
+
+
+
+
+def plotFig_SetCoord(x, y):
+    fig = plt.figure()
+    plt.plot(x, y)
+
+    def onclick(event):
+        global ix, iy
+        ix, iy = event.xdata, event.ydata
+        print ('x = %d, y = %d'%(
+            ix, iy))
+
+        global coords
+        coords = [ix, iy]
+
+        return coords
+
+
+    cid = fig.canvas.mpl_connect('button_press_event', onclick)
+    plt.show()
+
+
+
+
+
+def initiateSubplots():
+    f, axs = plt.subplots(7, 1, sharex=True)
+    f.supxlabel('Time [s]')
+    f.supylabel('Amplitude [%]') 
+    return f, axs
+
+###Set thresholds out of loop. 
+
+f, axs = initiateSubplots()
+for i, item in enumerate(split_y_FSR):
+    coords = plotFig_SetCoord(split_x_audio[i], split_y_audio[i])
+    threshold_coord = coords[1]
+    gradient_audio = np.gradient(split_y_audio[i],split_x_audio[i])
+    tStart_index = np.argmax(split_y_audio[i] >threshold_coord)
+    print(tStart_index,'START', len(split_y_audio[i]))
+    item_start = item.loc[(item["Time"] >= split_x_audio[i][tStart_index] ) ]
+    
+    
+    plot_audio_FSR_split(split_y_audio[i][tStart_index:-1], split_x_audio[i][tStart_index:-1], item_start, True, axs)
+
+plt.show()
+#for i in split_list:
 
