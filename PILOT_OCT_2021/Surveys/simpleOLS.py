@@ -29,7 +29,8 @@ def sklearnOls (dataIMP1):
     print('intercept:', model.intercept_)
     print('slope:', model.coef_)
 
-x = data[['Like', 'Improvise', 'Express', 'Preference']]
+# x = data[['Like', 'Improvise', 'Express', 'Preference']]
+x = data[['Like','Express']]
 y = data['Complexity']
 
 x = sm.add_constant(x)
@@ -37,6 +38,6 @@ est = sm.OLS(y,x).fit()
 print(est.summary())
 fig = sm.graphics.plot_partregress_grid(est)
 fig.tight_layout(pad=1.0)
-plt.plot()
+plt.show()
 
 #https://www.statsmodels.org/stable/examples/notebooks/generated/regression_plots.html
