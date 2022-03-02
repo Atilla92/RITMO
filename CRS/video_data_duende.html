@@ -15,12 +15,12 @@
         <div id="player"></div>
 
         <div class="linkert">
-            <h3 class="linkert__subheader">To which degree did you feel in a state of duende (trans)?</h3>
+            <h3 class="linkert__subheader">Did you feel you were in a state of duende (trans)?</h3>
 
             <div class="linkert__checkboxes">
                 <div class="linkert__checkbox voice-item">
                     <h3 class=" linkert__checkbox__header">
-                        <span>Not at all</span>
+                        <span>No</span>
                     </h3>
 
                     <span class="check-box-square" role="button" onclick="clickLikert(1)" tabIndex={0}>
@@ -31,7 +31,7 @@
                 </div>
                 <div class="linkert__checkbox voice-item">
                     <h3 class=" linkert__checkbox__header">
-                        <span>Slightly </span>
+                        <span>Yes </span>
                     </h3>
 
                     <span class="check-box-square" role="button" onclick="clickLikert(2)" tabIndex={0}>
@@ -39,39 +39,6 @@
                         <span class="checkmark"></span>
                     </span>
                     <h3 class="linkert__checkbox__subheader">2</h3>
-                </div>
-                <div class="linkert__checkbox voice-item">
-                    <h3 class=" linkert__checkbox__header">
-                        <span>Somewhat</span>
-                    </h3>
-
-                    <span class="check-box-square" role="button" onclick="clickLikert(3)" tabIndex={0}>
-                        <input id="3" type="checkbox"></input>
-                        <span class="checkmark"></span>
-                    </span>
-                    <h3 class="linkert__checkbox__subheader">3</h3>
-                </div>
-                <div class="linkert__checkbox voice-item">
-                    <h3 class=" linkert__checkbox__header">
-                        <span>Very much </span>
-                    </h3>
-
-                    <span class="check-box-square" role="button" onclick="clickLikert(4)" tabIndex={0}>
-                        <input id="4" type="checkbox"></input>
-                        <span class="checkmark"></span>
-                    </span>
-                    <h3 class="linkert__checkbox__subheader">4</h3>
-                </div>
-                <div class="linkert__checkbox voice-item">
-                    <h3 class=" linkert__checkbox__header">
-                        <span>Extremely much</span>
-                    </h3>
-
-                    <span class="check-box-square" role="button" onclick="clickLikert(5)" tabIndex={0}>
-                        <input id="5" type="checkbox"></input>
-                        <span class="checkmark"></span>
-                    </span>
-                    <h3 class="linkert__checkbox__subheader">5</h3>
                 </div>
             </div>
         </div>
@@ -84,7 +51,7 @@
     </div>
 
     <script>
-        var NUMBER_CHECKBOXES = 5;
+        var NUMBER_CHECKBOXES = 2;
         var HEADER_CSV = "Time, Value\n";
         var video_playing = false;
         var user_id = "";
@@ -104,7 +71,7 @@
             player = new YT.Player('player', {
                 height: '360',
                 width: '640',
-                videoId: 'AZq-hnKLLj8',
+                videoId: '9OrtNwKCPZE',
                 events: {
                     'onReady': onPlayerReady,
                     'onStateChange': onPlayerStateChange,
