@@ -1,3 +1,4 @@
+from fileinput import filename
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -32,91 +33,80 @@ for filepath in glob.iglob('AUDIO/*.wav'):
 for filepath in glob.iglob('FSR/*.csv'):
     if filepath.endswith('.csv'):
         FSR_files.append(filepath)
+print(name_files)
 
 
-currentFile = name_files[3]
-input_data = read(audio_files[3])
-df = pd.read_csv (FSR_files[3], sep = ',', skiprows=144, encoding= 'unicode_escape') 
+step_number = 0
+
+for i_file, fileName in enumerate(name_files):
+    currentFile = fileName
+    print(fileName, 'filename')
+    file_number = i_file
+    print(FSR_files, FSR_files[file_number], '!!!!!')
+
+    # LOAD FSR DATA
+    df = pd.read_csv (FSR_files[file_number], sep = ',', skiprows=144, encoding= 'unicode_escape') 
+    df_new = labelColumns(df, False)
 
 
-# Load variables steps P1_D1_T2
-for item in variables['details_files']:
-    if item['name'] == currentFile:
-        print ('TRUE', currentFile)
-        n_splits = item["n_splits"]
-        start_reaper = item["start_reaper"]
-        step_labels = item["step_labels"]
-        step_times =item["step_times"]
-        duration_s = item["duration_s"]
-        steps_start_s = list_sec(step_times)
-    else: 
-        print ('False', currentFile)
+    #Load audio files
+    input_data = read(audio_files[file_number])
+    audio = input_data[1]
+    audio_SR = input_data[0]
+    x_audio = np.divide(np.arange(len(audio)), audio_SR)
+
+    # Load variables steps P1_D1_T2
+    for item in variables['details_files']:
+        if item['name'] == currentFile:
+            
+            print ('TRUE', currentFile)
+            n_splits = item["n_splits"]
+            start_reaper = item["start_reaper"]
+            step_labels = item["step_labels"]
+            step_times =item["step_times"]
+            duration_s = item["duration_s"]
+            steps_start_s = list_sec(step_times)
+
+            # Get steps data, split per step  
+            for step_number, step_id in enumerate(step_labels):
+
+                audio_start, x_audio_start = setWindowAudio(audio, audio_SR, start_reaper,steps_start_s[step_number], duration_s[step_number] )
+                step1_data, df_length = setTimeWindow(df_new, start_reaper, steps_start_s[step_number], duration_s[step_number] )
+                split_y_FSR = np.array_split(step1_data, n_splits[step_number])
+                split_y_audio = np.array_split(audio_start, n_splits[step_number])
+                split_x_audio = np.array_split(x_audio_start,n_splits[step_number])
+
+                if not item["threshold"][step_number]:
+                    audio_coord_th = setThreshold(split_x_audio, split_y_audio)
+                    #print(audio_coord_th, 'hello threshold')
+                    item["threshold"][step_number] = audio_coord_th
+                    audio_coord_th = item["threshold"][step_number]
+                    with open("variables.json", "w+") as f_json: 
+                        f_json.write(json.dumps(variables))
+
+                else:
+                    audio_coord_th = item["threshold"][step_number]
+                
+                print(audio_coord_th)
 
 
-#print(input_data)
-audio = input_data[1]
-audio_SR = input_data[0]
-x_audio = np.divide(np.arange(len(audio)), audio_SR)
+                f, axs = initiateSubplots()
+                for i_step, item_step in enumerate(split_y_FSR):
+                    threshold_coord = audio_coord_th[i_step][1]
+                    print(threshold_coord, 'threshold taken')
+                    gradient_audio = np.gradient(split_y_audio[i_step],split_x_audio[i_step])
+                    tStart_index = np.argmax(split_y_audio[i_step] >threshold_coord)
+                    item_start = item_step.loc[(item_step["Time"] >= split_x_audio[i_step][tStart_index] ) ]  
 
+                    plot_audio_FSR_split(split_y_audio[i_step][tStart_index:-1], split_x_audio[i_step][tStart_index:-1], item_start, True, axs)
+                plt.title('Step number '+ str(step_id) + " " + str(currentFile))
+                plt.show()
 
-df_new = labelColumns(df, True)
-
-
-
-
-    #plt.show()
-
-#plot_audio_FSR(audio, x_audio, audio_SR, x, y1, y2, y3, y4, y5, y6)
-# Paritioning data in steps
-
-# Align with Beaper start D1
+        else: 
+            print ('False', currentFile)
 
 
 
-
-#audio_threshold, click_time = alignClapper(audio, audio_SR, threshold_clap)
-
-##### Will have to find a way to loop this. 
-
-
-audio_start, x_audio_start = setWindowAudio(audio, audio_SR, start_reaper,steps_start_s[0], duration_s[0] )
-# Get time window for specific step and plot. 
-step1_data, df_length = setTimeWindow(df_new, start_reaper, steps_start_s[0], duration_s[0] )
-
-#plot_audio_FSR(audio_start,x_audio_start, audio_SR)
-
-
-
-
-##### Split into section
-# Define the number of splits you want
-#n_splits = 11
-split_y_FSR = np.array_split(step1_data, n_splits)
-#split_x_FSR = np.array_split(x, 4)
-split_y_audio = np.array_split(audio_start, n_splits)
-split_x_audio = np.array_split(x_audio_start,n_splits)
-
-
-
-if not variables['details_files'][0]["threshold"]:
-    audio_coord_th = setThreshold(split_x_audio, split_y_audio)
-    variables['details_files'][0]["threshold"] = audio_coord_th
-    with open("variables.json", "w+") as f_json: 
-        f_json.write(json.dumps(variables))
-
-
-f, axs = initiateSubplots()
-for i, item in enumerate(split_y_FSR):
-    threshold_coord = audio_coord_th[i][1]
-    gradient_audio = np.gradient(split_y_audio[i],split_x_audio[i])
-    tStart_index = np.argmax(split_y_audio[i] >threshold_coord)
-    print(tStart_index,'START', len(split_y_audio[i]))
-    item_start = item.loc[(item["Time"] >= split_x_audio[i][tStart_index] ) ]
-    
-    
-    plot_audio_FSR_split(split_y_audio[i][tStart_index:-1], split_x_audio[i][tStart_index:-1], item_start, True, axs)
-
-plt.show()
 
 
 
@@ -144,3 +134,20 @@ plt.show()
 #df = pd.read_csv (r'FSR/12.02.2022/N21_P1_D1_T1_12022022_Rep_1.5.csv', sep = ',', skiprows=144, encoding= 'unicode_escape') 
 
 # P1_D1_T2, Standing
+
+
+
+
+    #plt.show()
+
+#plot_audio_FSR(audio, x_audio, audio_SR, x, y1, y2, y3, y4, y5, y6)
+# Paritioning data in steps
+
+# Align with Beaper start D1
+
+
+
+
+#audio_threshold, click_time = alignClapper(audio, audio_SR, threshold_clap)
+
+##### Will have to find a way to loop this. 

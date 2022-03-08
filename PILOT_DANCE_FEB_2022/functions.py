@@ -58,16 +58,16 @@ def plot_audio_FSR(audio_data,x_array, df_new):
     ax1.set(ylabel='Audio')
     ax2.plot(x, y1, label = 'L')
     #ax2.legend(loc="upper right")
-    ax2.set(ylabel= 'Toe')
+    ax2.set(ylabel= 'Toe - L')
     ax3.plot(x, y4, 'r', label = 'R')
     #ax3.legend(loc="upper right")
     ax4.plot(x, y2, label = 'LB')
-    ax4.set(ylabel= 'Meta')
+    ax4.set(ylabel= 'Meta - L')
     #ax4.legend(loc="upper right")
     ax5.plot(x, y5, 'r', label = 'RB')
     #ax5.legend(loc = "upper right")
     ax6.plot(x, y3)
-    ax6.set(ylabel= 'Heel')
+    ax6.set(ylabel= 'Heel - L')
     ax7.plot(x, y6, 'r')
     f.supxlabel('Time [s]')
     f.supylabel('Amplitude [%]')
@@ -121,7 +121,6 @@ def setTimeWindow(df,t_peaks, t0,t1):
     tStart = t0 + t_peaks
     tEnd = t1 + t0 + t_peaks
     df_start = df.loc[(df["Time"] >= tStart ) &(df["Time"] <= tEnd ) ]
-    print(df_start)
     df_length = int(len(df_start.index))
     return df_start, df_length
 
@@ -152,6 +151,7 @@ def setThreshold(split_x_audio, split_y_audio):
             coords = plotFig_SetCoord(split_x_audio[i], split_y_audio[i])
             print(coords, 'coords')
             audio_coord_th.append(coords)
+    return audio_coord_th
 
 
 def plotFig_SetCoord(x, y):
