@@ -83,17 +83,28 @@ def plot_audio_FSR_split(audio_data,x_array, df_new, startZero, axs):
     axs[0].set(ylabel='Audio')
     axs[1].plot(x, y1, label = 'L')
     #ax2.legend(loc="upper right")
-    axs[1].set(ylabel= 'Toe')
+    axs[1].set(ylabel= 'Toe_L')
     axs[2].plot(x, y4, label = 'R')
     #ax3.legend(loc="upper right")
     axs[3].plot(x, y2, label = 'LB')
-    axs[3].set(ylabel= 'Meta')
+    axs[3].set(ylabel= 'Meta_L')
     #ax4.legend(loc="upper right")
     axs[4].plot(x, y5, label = 'RB')
     #ax5.legend(loc = "upper right")
     axs[5].plot(x, y3)
-    axs[5].set(ylabel= 'Heel')
+    axs[5].set(ylabel= 'Heel_L')
     axs[6].plot(x, y6)
+
+
+def get_average_FSR(df):
+    x, y1, y2, y3, y4, y5, y6 = createFigure(df,False)
+    av_std = [[np.mean(y1), np.std(y1)],[np.mean(y2), np.std(y2)],[np.mean(y3), np.std(y3)] ,[np.mean(y4), np.std(y4)],[np.mean(y5) ,np.mean(y5)],[np.mean(y6), np.std(y6)]]
+
+
+
+
+
+
 
 
 def get_sec(time_str):

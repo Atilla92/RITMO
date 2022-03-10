@@ -14,8 +14,14 @@ from functions import *
 import json
 import glob
 
+f_out = open('variables.json')
+variables_export = json.load(f_out)
+
+
+dateFile = '12.02.2022'
 f_json = open('variables.json')
 variables = json.load(f_json)
+
 
 
 name_files = []
@@ -23,14 +29,16 @@ audio_files = []
 FSR_files = []
 
 
-for filepath in glob.iglob('AUDIO/*.wav'):
+for filepath in glob.iglob('AUDIO/'+ dateFile+'/*.wav'):
     if filepath.endswith('.wav'):
         filepath_split = filepath.partition('/')
+        filepath_split = filepath_split[2].partition('/')
+        print(filepath_split,'hola caracola')
         filepath_split = filepath_split[2].partition('-')
         name_files.append(filepath_split[0])
         audio_files.append(filepath)
 
-for filepath in glob.iglob('FSR/*.csv'):
+for filepath in glob.iglob('FSR/'+ dateFile + '/*.csv'):
     if filepath.endswith('.csv'):
         FSR_files.append(filepath)
 print(name_files)
@@ -55,9 +63,13 @@ for i_file, fileName in enumerate(name_files):
     audio_SR = input_data[0]
     x_audio = np.divide(np.arange(len(audio)), audio_SR)
 
+    empty_dict = []
+
     # Load variables steps P1_D1_T2
     for item in variables['details_files']:
         if item['name'] == currentFile:
+
+            std_json = [{'name':currentFile}]
             
             print ('TRUE', currentFile)
             n_splits = item["n_splits"]
@@ -93,14 +105,22 @@ for i_file, fileName in enumerate(name_files):
                 f, axs = initiateSubplots()
                 for i_step, item_step in enumerate(split_y_FSR):
                     threshold_coord = audio_coord_th[i_step][1]
-                    print(threshold_coord, 'threshold taken')
+                    #print(threshold_coord, 'threshold taken')
                     gradient_audio = np.gradient(split_y_audio[i_step],split_x_audio[i_step])
                     tStart_index = np.argmax(split_y_audio[i_step] >threshold_coord)
                     item_start = item_step.loc[(item_step["Time"] >= split_x_audio[i_step][tStart_index] ) ]  
-
                     plot_audio_FSR_split(split_y_audio[i_step][tStart_index:-1], split_x_audio[i_step][tStart_index:-1], item_start, True, axs)
-                plt.title('Step number '+ str(step_id) + " " + str(currentFile))
-                plt.show()
+                axs[0].set_title(str(currentFile)+ " - " + 'Step '+ str(step_id), fontsize = 14 )
+                plt.savefig('./Figures/'+dateFile + '/'+ str(currentFile)+ "_"+'FSR_Audio_Step_'+ str(step_id))
+                std_json.append({str(step_id):[1]})
+                
+                #plt.show()
+            print(std_json)
+            empty_dict.append(std_json)
+            
+            print(empty_dict,'dictionary')
+
+
 
         else: 
             print ('False', currentFile)
