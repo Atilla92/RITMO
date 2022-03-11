@@ -99,11 +99,16 @@ def plot_audio_FSR_split(audio_data,x_array, df_new, startZero, axs):
 def get_average_FSR(df):
     x, y1, y2, y3, y4, y5, y6 = createFigure(df,False)
     av_std = [[np.mean(y1), np.std(y1)],[np.mean(y2), np.std(y2)],[np.mean(y3), np.std(y3)] ,[np.mean(y4), np.std(y4)],[np.mean(y5) ,np.mean(y5)],[np.mean(y6), np.std(y6)]]
+    return av_std
 
+def plot_average_FSR(df, axs2, step, label_list):
+    x, y1, y2, y3, y4, y5, y6 = createFigure(df,False)
+    label_step = str(step)
+    label_list = label_list.append(label_step)
+    axs2[0].boxplot(y1, labels =label_step) 
+    #plt.show()
 
-
-
-
+    return
 
 
 
@@ -160,7 +165,7 @@ def setThreshold(split_x_audio, split_y_audio):
     coords = []
     for i, item in enumerate(split_y_audio):
             coords = plotFig_SetCoord(split_x_audio[i], split_y_audio[i])
-            print(coords, 'coords')
+            #print(coords, 'coords')
             audio_coord_th.append(coords)
     return audio_coord_th
 
@@ -179,8 +184,7 @@ def plotFig_SetCoord(x, y):
     def onclick(event):
         global ix, iy
         ix, iy = event.xdata, event.ydata
-        print ('x = %d, y = %d'%(
-            ix, iy))
+        #print ('x = %d, y = %d'%(ix, iy))
 
         global coords
         coords = [ix, iy]
@@ -196,3 +200,28 @@ def initiateSubplots():
     f.supxlabel('Time [s]')
     f.supylabel('Amplitude [%]') 
     return f, axs
+
+
+def initiateSubplots2():
+    f, axs = plt.subplots(6, 1, sharex=True)
+    f.supxlabel('Repetition number')
+    f.supylabel('Average intensity') 
+    return f, axs
+
+
+def plot_Steps(split_y_FSR,audio_coord_th,split_y_audio,split_x_audio,currentFile,step_id,dateFile):
+    f, axs = initiateSubplots()
+    
+    av_steps = []
+    label_list = []
+    for i_step, item_step in enumerate(split_y_FSR):
+        threshold_coord = audio_coord_th[i_step][1]
+        gradient_audio = np.gradient(split_y_audio[i_step],split_x_audio[i_step])
+        tStart_index = np.argmax(split_y_audio[i_step] >threshold_coord)
+        item_start = item_step.loc[(item_step["Time"] >= split_x_audio[i_step][tStart_index] ) ]  
+        plot_audio_FSR_split(split_y_audio[i_step][tStart_index:-1], split_x_audio[i_step][tStart_index:-1], item_start, True, axs)
+
+
+    
+    axs[0].set_title(str(currentFile)+ " - " + 'Step '+ str(step_id), fontsize = 14 )
+    plt.savefig('./Figures/'+dateFile + '/'+ str(currentFile)+ "_"+'FSR_Audio_Step_'+ str(step_id))

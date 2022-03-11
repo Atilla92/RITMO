@@ -1,4 +1,6 @@
+import enum
 from fileinput import filename
+from turtle import color
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -46,6 +48,7 @@ print(name_files)
 
 step_number = 0
 
+empty_dict = []
 for i_file, fileName in enumerate(name_files):
     currentFile = fileName
     print(fileName, 'filename')
@@ -63,13 +66,13 @@ for i_file, fileName in enumerate(name_files):
     audio_SR = input_data[0]
     x_audio = np.divide(np.arange(len(audio)), audio_SR)
 
-    empty_dict = []
+  
 
     # Load variables steps P1_D1_T2
     for item in variables['details_files']:
+        
         if item['name'] == currentFile:
 
-            std_json = [{'name':currentFile}]
             
             print ('TRUE', currentFile)
             n_splits = item["n_splits"]
@@ -85,6 +88,7 @@ for i_file, fileName in enumerate(name_files):
                 audio_start, x_audio_start = setWindowAudio(audio, audio_SR, start_reaper,steps_start_s[step_number], duration_s[step_number] )
                 step1_data, df_length = setTimeWindow(df_new, start_reaper, steps_start_s[step_number], duration_s[step_number] )
                 split_y_FSR = np.array_split(step1_data, n_splits[step_number])
+                #rint (split_y_FSR)
                 split_y_audio = np.array_split(audio_start, n_splits[step_number])
                 split_x_audio = np.array_split(x_audio_start,n_splits[step_number])
 
@@ -98,32 +102,82 @@ for i_file, fileName in enumerate(name_files):
 
                 else:
                     audio_coord_th = item["threshold"][step_number]
+
+
+                #f, axs = initiateSubplots()
                 
-                print(audio_coord_th)
+                
+    
+                # for i_step, item_step in enumerate(split_y_FSR):
+                #     threshold_coord = audio_coord_th[i_step][1]
+                #     gradient_audio = np.gradient(split_y_audio[i_step],split_x_audio[i_step])
+                #     tStart_index = np.argmax(split_y_audio[i_step] >threshold_coord)
+                #     item_start = item_step.loc[(item_step["Time"] >= split_x_audio[i_step][tStart_index] ) ]  
+                #     plot_audio_FSR_split(split_y_audio[i_step][tStart_index:-1], split_x_audio[i_step][tStart_index:-1], item_start, True, axs)
 
 
-                f, axs = initiateSubplots()
+                
+                # axs[0].set_title(str(currentFile)+ " - " + 'Step '+ str(step_id), fontsize = 14 )
+                # #plt.savefig('./Figures/'+dateFile + '/'+ str(currentFile)+ "_"+'FSR_Audio_Step_'+ str(step_id))
+                # #plt.show()
+                av_steps = []
+                av_y_steps = []
+                av_x_steps = []
+                means = []
+                f,axs2 = initiateSubplots2()
                 for i_step, item_step in enumerate(split_y_FSR):
-                    threshold_coord = audio_coord_th[i_step][1]
-                    #print(threshold_coord, 'threshold taken')
-                    gradient_audio = np.gradient(split_y_audio[i_step],split_x_audio[i_step])
-                    tStart_index = np.argmax(split_y_audio[i_step] >threshold_coord)
-                    item_start = item_step.loc[(item_step["Time"] >= split_x_audio[i_step][tStart_index] ) ]  
-                    plot_audio_FSR_split(split_y_audio[i_step][tStart_index:-1], split_x_audio[i_step][tStart_index:-1], item_start, True, axs)
-                axs[0].set_title(str(currentFile)+ " - " + 'Step '+ str(step_id), fontsize = 14 )
-                plt.savefig('./Figures/'+dateFile + '/'+ str(currentFile)+ "_"+'FSR_Audio_Step_'+ str(step_id))
-                std_json.append({str(step_id):[1]})
-                
-                #plt.show()
-            print(std_json)
-            empty_dict.append(std_json)
+                    av_step = get_average_FSR(item_step)
+                    av_steps.append(av_step)
+        
+
+                    #print(av_step,'!!!!!average step')
+                    # av_y_steps.append(av_step[0][0])
+                    # av_x_steps.append(i_step)
             
-            print(empty_dict,'dictionary')
+                    axs2[0].errorbar(i_step,av_step[0][0],av_step[0][1], marker='^')
+                    
+                    axs2[1].errorbar(i_step,av_step[1][0],av_step[1][1], marker='^')
+                    axs2[2].errorbar(i_step,av_step[2][0],av_step[2][1], marker='^')
+                    axs2[3].errorbar(i_step,av_step[3][0],av_step[3][1], marker='^')
+                    axs2[4].errorbar(i_step,av_step[4][0],av_step[4][1], marker='^')
+                    axs2[5].errorbar(i_step,av_step[5][0],av_step[5][1], marker='^')
+                    #axs2[0].boxplot(split_y_audio[1], positions = [i_step])
+                print(av_steps, 'average')
+                
+
+                # for i_loc, item_loc in enumerate(av_steps):
+                #     print (item_loc, 'item loc', i_loc)
+                #     y1_av = [item[0] for item in item_loc]
+                #     print(y1_av, 'y1 average')
+                #     axs2[i_loc].plot(np.arange(len(y1_av)), y1_av, '--', color = 'k')
+                
+                for j in np.arange(6):
+                    y1_av2 = [item[j] for item in av_steps]
+                    print(y1_av2, 'second average')
+                    y1_av = [item[0] for item in y1_av2]
+                    print (j, 'j!!')
+                #print(y1_av, 'y1 average')
+                    axs2[j].plot(np.arange(len(y1_av)), y1_av, '--', color = 'k')
+                # axs2[1].plot(av_x_steps, av_y_steps, '--', color = 'k')
+                # axs2[2].plot(av_x_steps, av_y_steps, '--', color = 'k')
+                # axs2[3].plot(av_x_steps, av_y_steps, '--', color = 'k')
+                # axs2[4].plot(av_x_steps, av_y_steps, '--', color = 'k')
+                #plt.show()
+                axs2[0].set_title(str(currentFile)+ " - " + 'Step '+ str(step_id), fontsize = 14 )
+                plt.savefig('./Figures/'+dateFile + '/'+ str(currentFile)+ "_"+'Average_Step_'+ str(step_id))
+                #f2,axs2 = initiateSubplots()
+
+
+                item[str(step_id)] = av_steps
+                with open("variables.json", "w+") as f_json: 
+                    f_json.write(json.dumps(variables))
+            #print(item, 'is it working?')
 
 
 
         else: 
             print ('False', currentFile)
+        
 
 
 
