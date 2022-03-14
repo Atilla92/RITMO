@@ -34,8 +34,8 @@ df = pd.read_csv (currentFile+'.csv', sep = ',', skiprows=144, encoding= 'unicod
 fs = 1.481481*10**2
 
 
-#df_left = df[['X_acc [s]','FSR adapter 15: ACC.X 15 [g]', 'FSR adapter 15: ACC.Y 15 [g]', 'FSR adapter 15: ACC.Z 15 [g]']].copy()
-df_left =df[['X_acc [s]','FSR adapter 16: ACC.X 16 [g]', 'FSR adapter 16: ACC.Y 16 [g]', 'FSR adapter 16: ACC.Z 16 [g]']].copy() 
+df_left = df[['X_acc [s]','FSR adapter 15: ACC.X 15 [g]', 'FSR adapter 15: ACC.Y 15 [g]', 'FSR adapter 15: ACC.Z 15 [g]']].copy()
+#df_left =df[['X_acc [s]','FSR adapter 16: ACC.X 16 [g]', 'FSR adapter 16: ACC.Y 16 [g]', 'FSR adapter 16: ACC.Z 16 [g]']].copy() 
 
 
 
@@ -57,9 +57,9 @@ for item in variables['details_files']:
         print ('False', currentFile)
 
 # First step [0]
-id = 0
+id = 1
 step = str(step_labels[id])
-fileNameSave = str(currentFile + '_step_' + step +'_Right_')
+fileNameSave = str(currentFile + '_step_' + step +'_Left_')
 
 df_left = setTimeWindow(df_left, start_reaper, steps_start_s[id], duration_s[id] )
 #df_right = setTimeWindow(df_right, start_reaper, steps_start_s[id], duration_s[id] )

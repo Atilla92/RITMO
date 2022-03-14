@@ -9,7 +9,7 @@ frame_rate = 60
 start_time = 444343.54443876795
 
 
-df = pd.read_csv (r'Data/2021_10_04/004/pupil_positions.csv', sep = ',')
+df = pd.read_csv (r'Data/2021_10_04/005/pupil_positions.csv', sep = ',')
 df_f1 = (df.loc[df["method"]=="pye3d 0.0.4 real-time"])
 df_f2 = df_f1[['pupil_timestamp','world_index','eye_id','diameter']]
 

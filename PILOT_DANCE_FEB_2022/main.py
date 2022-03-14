@@ -20,7 +20,7 @@ f_out = open('variables.json')
 variables_export = json.load(f_out)
 
 
-dateFile = '12.02.2022'
+dateFile = '01.03.2022'
 f_json = open('variables.json')
 variables = json.load(f_json)
 
@@ -50,13 +50,18 @@ step_number = 0
 empty_dict = []
 for i_file, fileName in enumerate(name_files):
     currentFile = fileName
+    
     print(fileName, 'filename')
     file_number = i_file
     print(FSR_files, FSR_files[file_number], '!!!!!')
 
     # LOAD FSR DATA
     df = pd.read_csv (FSR_files[file_number], sep = ',', skiprows=144, encoding= 'unicode_escape') 
+    #df.columns.values[0] = "Time"
+    #print(df)
+    #print(len(df.columns), 'size of df')
     df_new = labelColumns(df, False)
+    print(df_new)
 
 
     #Load audio files
@@ -103,27 +108,27 @@ for i_file, fileName in enumerate(name_files):
                     audio_coord_th = item["threshold"][step_number]
 
 
-                #f, axs = initiateSubplots()
+                f, axs = initiateSubplots()
                 
                 
     
-                # for i_step, item_step in enumerate(split_y_FSR):
-                #     threshold_coord = audio_coord_th[i_step][1]
-                #     gradient_audio = np.gradient(split_y_audio[i_step],split_x_audio[i_step])
-                #     tStart_index = np.argmax(split_y_audio[i_step] >threshold_coord)
-                #     item_start = item_step.loc[(item_step["Time"] >= split_x_audio[i_step][tStart_index] ) ]  
-                #     plot_audio_FSR_split(split_y_audio[i_step][tStart_index:-1], split_x_audio[i_step][tStart_index:-1], item_start, True, axs)
+                for i_step, item_step in enumerate(split_y_FSR):
+                    threshold_coord = audio_coord_th[i_step][1]
+                    gradient_audio = np.gradient(split_y_audio[i_step],split_x_audio[i_step])
+                    tStart_index = np.argmax(split_y_audio[i_step] >threshold_coord)
+                    item_start = item_step.loc[(item_step["Time"] >= split_x_audio[i_step][tStart_index] ) ]  
+                    plot_audio_FSR_split(split_y_audio[i_step][tStart_index:-1], split_x_audio[i_step][tStart_index:-1], item_start, True, axs)
 
 
-                
-                # axs[0].set_title(str(currentFile)+ " - " + 'Step '+ str(step_id), fontsize = 14 )
-                # #plt.savefig('./Figures/'+dateFile + '/'+ str(currentFile)+ "_"+'FSR_Audio_Step_'+ str(step_id))
-                # #plt.show()
+                step_string = str(step_id) +"_" + str(step_number)
+                axs[0].set_title(str(currentFile)+ " - " + 'Step '+ str(step_string), fontsize = 14 )
+                plt.savefig('./Figures/'+dateFile + '/'+ str(currentFile)+ "_"+'FSR_Audio_Step_'+ str(step_string))
+                #plt.show()
                 av_steps = []
                 av_y_steps = []
                 av_x_steps = []
                 means = []
-                f,axs2 = initiateSubplots2()
+                f,axs2 = initiateSubplots2(labelx='Repetition number', labely='Average intensity', number=6)
                 for i_step, item_step in enumerate(split_y_FSR):
                     av_step = get_average_FSR(item_step)
                     av_steps.append(av_step)
@@ -162,12 +167,14 @@ for i_file, fileName in enumerate(name_files):
                 # axs2[3].plot(av_x_steps, av_y_steps, '--', color = 'k')
                 # axs2[4].plot(av_x_steps, av_y_steps, '--', color = 'k')
                 #plt.show()
-                axs2[0].set_title(str(currentFile)+ " - " + 'Step '+ str(step_id), fontsize = 14 )
-                plt.savefig('./Figures/'+dateFile + '/'+ str(currentFile)+ "_"+'Average_Step_'+ str(step_id))
+
+                step_string = str(step_id) +"_" + str(step_number)
+                axs2[0].set_title(str(currentFile)+ " - " + 'Step '+ str(step_string), fontsize = 14 )
+                plt.savefig('./Figures/'+dateFile + '/Average/'+ str(currentFile)+ "_"+'Average_Step_'+ str(step_string))
                 #f2,axs2 = initiateSubplots()
+                
 
-
-                item[str(step_id)] = av_steps
+                item[step_string] = av_steps
                 with open("variables.json", "w+") as f_json: 
                     f_json.write(json.dumps(variables))
             #print(item, 'is it working?')

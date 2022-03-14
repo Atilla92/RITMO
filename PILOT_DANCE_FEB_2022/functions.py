@@ -24,7 +24,22 @@ def  labelColumns(df, p):
     df.columns.values[23] = "RB"
     df.columns.values[25] = "RC"
     df.columns.values[27] = "RD"
-    df_new = df.filter(['Time', 'LA', 'LB', 'LC', 'RA', 'RB', 'RC'])
+    df_new = df.filter(['Time', 'LA', 'LB', 'LC', 'RA', 'RB', 'RC']).copy()
+    print(df_new, 'new')
+    if p:
+        print(df)
+    return df_new
+
+def  labelColumns_2(df, p):
+    #print(df.columns[0], 'what are you')
+    df.columns.values[0] = "Time"
+   # print(df.columns[0], 'what are you')
+    df.columns.values[1] = "RA"
+    df.columns.values[3] = "RB"
+    df.columns.values[5] = "RC"
+    print(df)
+    
+    df_new = df.filter(['Time','RA', 'RB', 'RC'])
     if p:
         print(df)
     return df_new
@@ -50,6 +65,15 @@ def createFigure (df, p):
         plt.show()
 
     return x, y1, y2, y3, y4, y5, y6 
+
+def createFigure_2 (df):
+    ''' Plot raw data'''
+    x = df['Time']
+    y1 = df['RA']
+    y2 = df['RB']
+    y3 = df['RC']
+    #y4 = df['D']
+    return x, y1, y2, y3
 
 def plot_audio_FSR(audio_data,x_array, df_new):
     x, y1, y2, y3, y4, y5, y6 = createFigure(df_new,False)
@@ -95,10 +119,38 @@ def plot_audio_FSR_split(audio_data,x_array, df_new, startZero, axs):
     axs[5].set(ylabel= 'Heel_L')
     axs[6].plot(x, y6)
 
+def plot_audio_FSR_split_2(audio_data,x_array, df_new, startZero, axs):
+    x, y1, y2, y3 = createFigure_2(df_new)
+    if startZero:
+        x= np.array(x)
+        x = x -x[0]
+        x_array = x_array - x_array[0]  
+    axs[0].plot(x_array, audio_data, label = 'Audio')
+    axs[0].set(ylabel='Audio')
+    axs[1].plot(x, y1, label = 'R')
+    #ax2.legend(loc="upper right")
+    axs[1].set(ylabel= 'Toe_R')
+    axs[2].plot(x, y2, label = 'R')
+    axs[2].set(ylabel= 'Meta_R')
+    #ax3.legend(loc="upper right")
+    axs[3].plot(x, y3, label = 'LB')
+    axs[3].set(ylabel= 'Heel_R')
+    #ax4.legend(loc="upper right")
+    # axs[4].plot(x, y5, label = 'RB')
+    #ax5.legend(loc = "upper right")
+    # axs[5].plot(x, y3)
+    # axs[5].set(ylabel= 'Heel_L')
+    # axs[6].plot(x, y6)
+
 
 def get_average_FSR(df):
     x, y1, y2, y3, y4, y5, y6 = createFigure(df,False)
     av_std = [[np.mean(y1), np.std(y1)],[np.mean(y2), np.std(y2)],[np.mean(y3), np.std(y3)] ,[np.mean(y4), np.std(y4)],[np.mean(y5) ,np.mean(y5)],[np.mean(y6), np.std(y6)]]
+    return av_std
+
+def get_average_FSR_2(df):
+    x, y1, y2, y3 = createFigure_2(df)
+    av_std = [[np.mean(y1), np.std(y1)],[np.mean(y2), np.std(y2)],[np.mean(y3), np.std(y3)]]
     return av_std
 
 def plot_average_FSR(df, axs2, step, label_list):
@@ -109,6 +161,16 @@ def plot_average_FSR(df, axs2, step, label_list):
     #plt.show()
 
     return
+
+def plot_average_FSR_2(df, axs2, step, label_list):
+    x, y1, y2, y3 = createFigure_2(df)
+    label_step = str(step)
+    label_list = label_list.append(label_step)
+    axs2[0].boxplot(y1, labels =label_step) 
+    #plt.show()
+
+    return
+
 
 
 
@@ -149,6 +211,7 @@ def setWindowAudio(audio, audio_SR, t_peaks, t0,t1):
        t1 : end of step
      '''
     x_audio = np.divide(np.arange(len(audio)), audio_SR)
+    print(t0, t_peaks, 'times')
     tStart = t0 + t_peaks
     tStart_index = np.argmax(x_audio >=tStart)
     tEnd = t1 + t0 + t_peaks
@@ -204,11 +267,11 @@ def initiateSubplots():
     return f, axs
 
 
-def initiateSubplots2():
+def initiateSubplots2(labelx, labely, number):
     """Create a subplots of 6"""
-    f, axs = plt.subplots(6, 1, sharex=True)
-    f.supxlabel('Repetition number')
-    f.supylabel('Average intensity') 
+    f, axs = plt.subplots(number, 1, sharex=True)
+    f.supxlabel(labelx)
+    f.supylabel(labely) 
     return f, axs
 
 
