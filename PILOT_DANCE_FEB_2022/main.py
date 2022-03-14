@@ -35,7 +35,6 @@ for filepath in glob.iglob('AUDIO/'+ dateFile+'/*.wav'):
     if filepath.endswith('.wav'):
         filepath_split = filepath.partition('/')
         filepath_split = filepath_split[2].partition('/')
-        print(filepath_split,'hola caracola')
         filepath_split = filepath_split[2].partition('-')
         name_files.append(filepath_split[0])
         audio_files.append(filepath)

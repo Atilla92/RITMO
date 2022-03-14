@@ -161,6 +161,7 @@ def setWindowAudio(audio, audio_SR, t_peaks, t0,t1):
 
 
 def setThreshold(split_x_audio, split_y_audio):
+    """"Set threshold for analysis"""
     audio_coord_th = []
     coords = []
     for i, item in enumerate(split_y_audio):
@@ -196,6 +197,7 @@ def plotFig_SetCoord(x, y):
 
 
 def initiateSubplots():
+    """Create a subplots of 7"""
     f, axs = plt.subplots(7, 1, sharex=True)
     f.supxlabel('Time [s]')
     f.supylabel('Amplitude [%]') 
@@ -203,6 +205,7 @@ def initiateSubplots():
 
 
 def initiateSubplots2():
+    """Create a subplots of 6"""
     f, axs = plt.subplots(6, 1, sharex=True)
     f.supxlabel('Repetition number')
     f.supylabel('Average intensity') 
