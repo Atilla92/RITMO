@@ -301,7 +301,7 @@ def cut_points(x, set_name, n_axis, plot=False, fig_size=(10, 5), saveFig = Fals
         plt.xticks(range(1, len(x) + 1))
 
         plt.suptitle("Physical activity counts and intensity", size=16)
-        plt.xlabel("Epoch (length: 60 seconds)")
+        plt.xlabel("Epoch [s]")
         plt.ylabel("PA count")
         if saveFig:
             plt.savefig('./Figures/Phys_Act_Int_'+ fileName +'.png')

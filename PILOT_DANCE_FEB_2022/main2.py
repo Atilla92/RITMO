@@ -48,11 +48,10 @@ print(name_files)
 step_number = 0
 
 empty_dict = []
-for i_file, fileName in enumerate(name_files):
+for file_number, fileName in enumerate(name_files):
     currentFile = fileName
     
     print(fileName, 'filename')
-    file_number = i_file
     print(FSR_files, FSR_files[file_number], '!!!!!')
 
     # LOAD FSR DATA
@@ -60,7 +59,7 @@ for i_file, fileName in enumerate(name_files):
     df = pd.read_csv (FSR_files[file_number], sep = ',', skiprows=74, encoding= 'unicode_escape') 
     #print(df)
     df_new = labelColumns_2(df, False)
-    print(df_new)
+    #print(df_new)
 
     #Load audio files
     input_data = read(audio_files[file_number])
@@ -68,7 +67,9 @@ for i_file, fileName in enumerate(name_files):
     audio_SR = input_data[0]
     x_audio = np.divide(np.arange(len(audio)), audio_SR)
 
-  
+ 
+    #labelColumns_2(df, False)
+    #plotAudio_FSR(audio, audio_SR, df, p=True)
 
     # Load variables steps P1_D1_T2
     for item in variables['details_files']:
@@ -84,6 +85,10 @@ for i_file, fileName in enumerate(name_files):
             duration_s = item["duration_s"]
             steps_start_s = list_sec(step_times)
 
+            if item["threshold"] == []:
+                item["threshold"] = [[]]*len(step_labels)
+                print(item['threshold'], 'true', len(step_labels))
+
             # Get steps data, split per step  
             for step_number, step_id in enumerate(step_labels):
 
@@ -95,6 +100,8 @@ for i_file, fileName in enumerate(name_files):
                 #rint (split_y_FSR)
                 split_y_audio = np.array_split(audio_start, n_splits[step_number])
                 split_x_audio = np.array_split(x_audio_start,n_splits[step_number])
+
+                #print(split_y_audio,'audio', split_x_audio)
 
                 if not item["threshold"][step_number]:
                     audio_coord_th = setThreshold(split_x_audio, split_y_audio)

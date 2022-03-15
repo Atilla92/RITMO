@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 from scipy.signal import argrelextrema
 
 
+
+
 def alignClapper(audio, sampleRate, threshold):
     click_position = np.argmax(audio > threshold)
     audio_threshold = audio[click_position:]
@@ -66,13 +68,21 @@ def createFigure (df, p):
 
     return x, y1, y2, y3, y4, y5, y6 
 
-def createFigure_2 (df):
+def createFigure_2 (df, p):
     ''' Plot raw data'''
     x = df['Time']
     y1 = df['RA']
     y2 = df['RB']
     y3 = df['RC']
     #y4 = df['D']
+    if p:
+        fig = plt.figure()
+        ax = plt.axes()
+        ax.plot(x,y1)
+        ax.plot(x,y2)
+        ax.plot(x,y3)
+        #ax.plot(x,y4)
+        plt.show()
     return x, y1, y2, y3
 
 def plot_audio_FSR(audio_data,x_array, df_new):
@@ -120,7 +130,7 @@ def plot_audio_FSR_split(audio_data,x_array, df_new, startZero, axs):
     axs[6].plot(x, y6)
 
 def plot_audio_FSR_split_2(audio_data,x_array, df_new, startZero, axs):
-    x, y1, y2, y3 = createFigure_2(df_new)
+    x, y1, y2, y3 = createFigure_2(df_new, False)
     if startZero:
         x= np.array(x)
         x = x -x[0]
@@ -149,7 +159,7 @@ def get_average_FSR(df):
     return av_std
 
 def get_average_FSR_2(df):
-    x, y1, y2, y3 = createFigure_2(df)
+    x, y1, y2, y3 = createFigure_2(df, False)
     av_std = [[np.mean(y1), np.std(y1)],[np.mean(y2), np.std(y2)],[np.mean(y3), np.std(y3)]]
     return av_std
 
@@ -163,7 +173,7 @@ def plot_average_FSR(df, axs2, step, label_list):
     return
 
 def plot_average_FSR_2(df, axs2, step, label_list):
-    x, y1, y2, y3 = createFigure_2(df)
+    x, y1, y2, y3 = createFigure_2(df, False)
     label_step = str(step)
     label_list = label_list.append(label_step)
     axs2[0].boxplot(y1, labels =label_step) 
@@ -218,7 +228,7 @@ def setWindowAudio(audio, audio_SR, t_peaks, t0,t1):
     tEnd_index = np.argmax(x_audio >=tEnd)
     audio_start = audio[tStart_index:tEnd_index]
     x_audio_start = x_audio[tStart_index:tEnd_index]
-    #print(audio_start)
+    print(audio_start)
     return audio_start, x_audio_start 
 
 
@@ -291,3 +301,23 @@ def plot_Steps(split_y_FSR,audio_coord_th,split_y_audio,split_x_audio,currentFil
     
     axs[0].set_title(str(currentFile)+ " - " + 'Step '+ str(step_id), fontsize = 14 )
     plt.savefig('./Figures/'+dateFile + '/'+ str(currentFile)+ "_"+'FSR_Audio_Step_'+ str(step_id))
+
+
+
+def plotAudio_FSR(audio, sampleRate, df, p):
+    f, axs = initiateSubplots2(labelx = 'Time [s]', labely = 'Amplitude', number = 4)
+    x, y1, y2, y3 = createFigure_2(df,False)
+    x_array = np.arange(len(audio))
+    x_array = np.divide(x_array,sampleRate)
+    axs[0].plot(x_array, audio)
+    axs[1].plot(x,y1)
+    axs[2].plot(x,y2)
+    axs[3].plot(x,y3)
+    # label the axes
+    # plt.ylabel("Amplitude")
+    # plt.xlabel("Time [s]")
+    # set the title  
+    plt.title("Hello")
+    # display the plot
+    if p:
+        plt.show()

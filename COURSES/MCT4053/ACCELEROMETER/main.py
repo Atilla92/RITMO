@@ -26,14 +26,17 @@ from cut_points import cut_points
 #Load json variables
 f_json = open('variables.json')
 variables = json.load(f_json)
+dateFiles = '12.02.2022'
+
 
 # Load data
 
-currentFile = 'P1_D1_T2'
+currentFile = 'P1_D2_T2'
 df = pd.read_csv (currentFile+'.csv', sep = ',', skiprows=144, encoding= 'unicode_escape') 
 fs = 1.481481*10**2
 
 
+foot_side = 'Left'
 df_left = df[['X_acc [s]','FSR adapter 15: ACC.X 15 [g]', 'FSR adapter 15: ACC.Y 15 [g]', 'FSR adapter 15: ACC.Z 15 [g]']].copy()
 #df_left =df[['X_acc [s]','FSR adapter 16: ACC.X 16 [g]', 'FSR adapter 16: ACC.Y 16 [g]', 'FSR adapter 16: ACC.Z 16 [g]']].copy() 
 
@@ -57,9 +60,9 @@ for item in variables['details_files']:
         print ('False', currentFile)
 
 # First step [0]
-id = 1
+id = 2
 step = str(step_labels[id])
-fileNameSave = str(currentFile + '_step_' + step +'_Left_')
+fileNameSave = str(currentFile + '_step_' + step +'_'+ foot_side +'_')
 
 df_left = setTimeWindow(df_left, start_reaper, steps_start_s[id], duration_s[id] )
 #df_right = setTimeWindow(df_right, start_reaper, steps_start_s[id], duration_s[id] )
