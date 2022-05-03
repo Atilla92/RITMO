@@ -284,6 +284,13 @@ def initiateSubplots2(labelx, labely, number):
     f.supylabel(labely) 
     return f, axs
 
+def initiateSubplots3(labelx, labely, number):
+    """Create a subplots of 6"""
+    f, axs = plt.subplots(3, 2, sharex=True, sharey=False, )
+    f.supxlabel(labelx)
+    f.supylabel(labely) 
+    return f, axs
+
 
 def plot_Steps(split_y_FSR,audio_coord_th,split_y_audio,split_x_audio,currentFile,step_id,dateFile):
     f, axs = initiateSubplots()

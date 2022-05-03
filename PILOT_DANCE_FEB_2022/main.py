@@ -10,23 +10,29 @@ import seaborn as sns; sns.set_theme()
 from sklearn import preprocessing
 from scipy.signal import argrelextrema
 from scipy.io.wavfile import read
+from scipy.stats import norm
 import matplotlib.pyplot as plt
 import numpy as np
 from functions import *
 import json
 import glob
+from scipy.stats import entropy
 
+### Set date of files to fetch 
 dateFile = '12.02.2022'
+
+### Load JSON with information of files 
 f_json = open('variables.json')
 variables = json.load(f_json)
 
-
-
+### Initiate variables
 name_files = []
 audio_files = []
 FSR_files = []
+step_number = 0
+empty_dict = []
 
-
+### Fetch all files for analysis
 for filepath in glob.iglob('AUDIO/'+ dateFile+'/*.wav'):
     if filepath.endswith('.wav'):
         filepath_split = filepath.partition('/')
@@ -41,30 +47,24 @@ for filepath in glob.iglob('FSR/'+ dateFile + '/*.csv'):
 
 
 
-step_number = 0
-
-empty_dict = []
+### Loop through files
 for i_file, fileName in enumerate(name_files):
-    currentFile = fileName
-    
-    print(fileName, 'filename')
+    currentFile = fileName  
     file_number = i_file
     
-
-    # LOAD FSR DATA
+    ### LOAD FSR DATA
     df = pd.read_csv (FSR_files[file_number], sep = ',', skiprows=144, encoding= 'unicode_escape') 
     df_new = labelColumns(df, False)
     #print(df_new)
 
-
-    #Load audio files
+    ### Load audio files
     input_data = read(audio_files[file_number])
     audio = input_data[1]
     audio_SR = input_data[0]
     x_audio = np.divide(np.arange(len(audio)), audio_SR)
 
 
-    # Load variables steps
+    ### Load variables steps
     for item in variables['details_files']:
         
         store_avs = []
@@ -77,7 +77,7 @@ for i_file, fileName in enumerate(name_files):
             duration_s = item["duration_s"]
             steps_start_s = list_sec(step_times)
 
-            # Get steps data, split per step  
+            ### Get steps data, split per step  
             for step_number, step_id in enumerate(step_labels):
 
                 audio_start, x_audio_start = setWindowAudio(audio, audio_SR, start_reaper,steps_start_s[step_number], duration_s[step_number] )
@@ -85,7 +85,10 @@ for i_file, fileName in enumerate(name_files):
                 split_y_FSR = np.array_split(step1_data, n_splits[step_number])
                 split_y_audio = np.array_split(audio_start, n_splits[step_number])
                 split_x_audio = np.array_split(x_audio_start,n_splits[step_number])
+                print(np.shape(np.array(step1_data).tolist()),'FSR')
+                print(step1_data)
 
+                ### Set threshold for step onset
                 if not item["threshold"][step_number]:
                     audio_coord_th = setThreshold(split_x_audio, split_y_audio)
                     item["threshold"][step_number] = audio_coord_th
@@ -96,11 +99,9 @@ for i_file, fileName in enumerate(name_files):
                 else:
                     audio_coord_th = item["threshold"][step_number]
 
-
+                ### Split audio in equal sections for number of repetitions per step
+                ### Plot audio and FSR for step repititions
                 f, axs = initiateSubplots()
-                
-                
-    
                 for i_step, item_step in enumerate(split_y_FSR):
                     threshold_coord = audio_coord_th[i_step][1]
                     gradient_audio = np.gradient(split_y_audio[i_step],split_x_audio[i_step])
@@ -108,11 +109,15 @@ for i_file, fileName in enumerate(name_files):
                     item_start = item_step.loc[(item_step["Time"] >= split_x_audio[i_step][tStart_index] ) ]  
                     plot_audio_FSR_split(split_y_audio[i_step][tStart_index:-1], split_x_audio[i_step][tStart_index:-1], item_start, True, axs)
 
-
+                ### Save plots per step
                 step_string = str(step_id) +"_" + str(step_number)
                 axs[0].set_title(str(currentFile)+ " - " + 'Step '+ str(step_string), fontsize = 14 )
                 plt.savefig('./Figures/'+dateFile + '/'+ str(currentFile)+ "_"+'FSR_Audio_Step_'+ str(step_string))
                 #plt.show()
+
+
+                ### Estimate average and std
+                ### Initiate variables for storage
                 av_steps = []
                 av_y_steps = []
                 av_x_steps = []
@@ -128,51 +133,73 @@ for i_file, fileName in enumerate(name_files):
                     axs2[2].errorbar(i_step,av_step[2][0],av_step[2][1], marker='^')
                     axs2[3].errorbar(i_step,av_step[3][0],av_step[3][1], marker='^')
                     axs2[4].errorbar(i_step,av_step[4][0],av_step[4][1], marker='^')
-                    axs2[5].errorbar(i_step,av_step[5][0],av_step[5][1], marker='^')
-                    #axs2[0].boxplot(split_y_audio[1], positions = [i_step])
-                #print(av_steps, 'average')
-                
+                    axs2[5].errorbar(i_step,av_step[5][0],av_step[5][1], marker='^') 
+
                 for j in np.arange(6):
                     y1_av2 = [item[j] for item in av_steps]
-                    #print(y1_av2, 'second average')
                     y1_av = [item[0] for item in y1_av2]
-
                     axs2[j].plot(np.arange(len(y1_av)), y1_av, '--', color = 'k')
-                # axs2[1].plot(av_x_steps, av_y_steps, '--', color = 'k')
-                # axs2[2].plot(av_x_steps, av_y_steps, '--', color = 'k')
-                # axs2[3].plot(av_x_steps, av_y_steps, '--', color = 'k')
-                # axs2[4].plot(av_x_steps, av_y_steps, '--', color = 'k')
-                #plt.show()
 
-                print(np.shape(avs), np.mean(avs, axis =0), 'Average!', step_string)    
+                
+                ### Additional Computations ####
+                ### Compute average intensity per step
                 avs_mean = np.mean(avs, axis = 0)
+                store_avs.append(avs_mean.tolist())
+
+                ### Entropy
+
+                f,axs3 = initiateSubplots3(labelx='Hist Bins', labely='Counts', number=6)
+                #print(np.array(step1_data)[:,0], 'STEPS DATA')
+                #counts_1, bins_count_1 = np.histogram(np.array(step1_data)[:,2], bins = 100)
+                #pdf_1 = counts_1/sum(counts_1)
+                #entropy_1 = entropy(pdf_1, base= 2)
+                #print(entropy_1, 'ENTROPY 1')
+                #fig1 = plt.figure()
+                _, bins, _ = axs3[0,0].hist(np.array(step1_data)[:,1], bins = 100,  range=(5, 60))
+                mu, sigma = norm.fit(np.array(step1_data)[:,1])
+                print(mu, sigma, 'mu sigma') # will need to filter the data for the ranges, as the histogram is now based on different values.
+                best_fit_line = norm.pdf(bins, mu, sigma)
+                axs3[0,0].plot(bins, best_fit_line)
+                axs3[0,0].set_ylim([0,100])
+                axs3[1,0].set_ylim([0,100])
+                axs3[2,0].set_ylim([0,100])
+                axs3[0,1].set_ylim([0,100])
+                axs3[1,1].set_ylim([0,100])
+                axs3[2,1].set_ylim([0,100])
+                axs3[1,0].hist(np.array(step1_data)[:,2], bins = 100,  range=(5, 60))
+                axs3[2,0].hist(np.array(step1_data)[:,3], bins = 50,  range=(1, 25))
+                axs3[0,1].hist(np.array(step1_data)[:,4], bins = 100,  range=(5, 60))
+                axs3[1,1].hist(np.array(step1_data)[:,5], bins = 100,  range=(5, 60))
+                axs3[2,1].hist(np.array(step1_data)[:,6], bins = 50,  range=(1, 25))
+
+                #plt.hist(np.array(step1_data)[:,2], bins = 100)
+                plt.show()
+                
+                
+                
+
+
+
+                ### Save figures
                 step_string = str(step_id) +"_" + str(step_number)
                 axs2[0].set_title(str(currentFile)+ " - " + 'Step '+ str(step_string), fontsize = 14 )
                 plt.savefig('./Figures_2/'+dateFile + '/Average/'+ str(currentFile)+ "_"+'Average_Step_'+ str(step_string))
-                #f2,axs2 = initiateSubplots()
-                
-                #item[step_string] = av_steps
 
-                
-                item[step_string] = avs # Write average to json
-                
+                ### Store average per step in json
+                item[step_string] = avs
                 with open("variables.json", "w+") as f_json: 
                     f_json.write(json.dumps(variables))
-        
-            
 
-                store_avs.append(avs_mean.tolist())
                 
-            print(np.shape(store_avs), store_avs, "AVS!!!")
 
-            
-            item["avs_mean"] = store_avs
-            
+            ### Store average all steps per file in json
+            item["avs_mean"] = store_avs 
+            #item[""]    
             with open("variables.json", "w+") as f_json: 
                 f_json.write(json.dumps(variables))
             
-
-
+            #print(np.shape(split_y_FSR), 'FSR ')
+            
 
         else: 
             print ('False', currentFile)
