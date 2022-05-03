@@ -16,11 +16,7 @@ from functions import *
 import json
 import glob
 
-f_out = open('variables.json')
-variables_export = json.load(f_out)
-
-
-dateFile = '01.03.2022'
+dateFile = '12.02.2022'
 f_json = open('variables.json')
 variables = json.load(f_json)
 
@@ -42,7 +38,7 @@ for filepath in glob.iglob('AUDIO/'+ dateFile+'/*.wav'):
 for filepath in glob.iglob('FSR/'+ dateFile + '/*.csv'):
     if filepath.endswith('.csv'):
         FSR_files.append(filepath)
-print(name_files)
+
 
 
 step_number = 0
@@ -53,15 +49,12 @@ for i_file, fileName in enumerate(name_files):
     
     print(fileName, 'filename')
     file_number = i_file
-    print(FSR_files, FSR_files[file_number], '!!!!!')
+    
 
     # LOAD FSR DATA
     df = pd.read_csv (FSR_files[file_number], sep = ',', skiprows=144, encoding= 'unicode_escape') 
-    #df.columns.values[0] = "Time"
-    #print(df)
-    #print(len(df.columns), 'size of df')
     df_new = labelColumns(df, False)
-    print(df_new)
+    #print(df_new)
 
 
     #Load audio files
@@ -70,14 +63,12 @@ for i_file, fileName in enumerate(name_files):
     audio_SR = input_data[0]
     x_audio = np.divide(np.arange(len(audio)), audio_SR)
 
-  
 
-    # Load variables steps P1_D1_T2
+    # Load variables steps
     for item in variables['details_files']:
         
-        if item['name'] == currentFile:
-
-            
+        store_avs = []
+        if item['name'] == currentFile: 
             print ('TRUE', currentFile)
             n_splits = item["n_splits"]
             start_reaper = item["start_reaper"]
@@ -92,13 +83,11 @@ for i_file, fileName in enumerate(name_files):
                 audio_start, x_audio_start = setWindowAudio(audio, audio_SR, start_reaper,steps_start_s[step_number], duration_s[step_number] )
                 step1_data, df_length = setTimeWindow(df_new, start_reaper, steps_start_s[step_number], duration_s[step_number] )
                 split_y_FSR = np.array_split(step1_data, n_splits[step_number])
-                #rint (split_y_FSR)
                 split_y_audio = np.array_split(audio_start, n_splits[step_number])
                 split_x_audio = np.array_split(x_audio_start,n_splits[step_number])
 
                 if not item["threshold"][step_number]:
                     audio_coord_th = setThreshold(split_x_audio, split_y_audio)
-                    #print(audio_coord_th, 'hello threshold')
                     item["threshold"][step_number] = audio_coord_th
                     audio_coord_th = item["threshold"][step_number]
                     with open("variables.json", "w+") as f_json: 
@@ -128,39 +117,26 @@ for i_file, fileName in enumerate(name_files):
                 av_y_steps = []
                 av_x_steps = []
                 means = []
+                avs = []
                 f,axs2 = initiateSubplots2(labelx='Repetition number', labely='Average intensity', number=6)
                 for i_step, item_step in enumerate(split_y_FSR):
-                    av_step = get_average_FSR(item_step)
+                    av_step, av = get_average_FSR(item_step)
                     av_steps.append(av_step)
-        
-
-                    #print(av_step,'!!!!!average step')
-                    # av_y_steps.append(av_step[0][0])
-                    # av_x_steps.append(i_step)
-            
-                    axs2[0].errorbar(i_step,av_step[0][0],av_step[0][1], marker='^')
-                    
+                    avs.append(av)
+                    axs2[0].errorbar(i_step,av_step[0][0],av_step[0][1], marker='^')   
                     axs2[1].errorbar(i_step,av_step[1][0],av_step[1][1], marker='^')
                     axs2[2].errorbar(i_step,av_step[2][0],av_step[2][1], marker='^')
                     axs2[3].errorbar(i_step,av_step[3][0],av_step[3][1], marker='^')
                     axs2[4].errorbar(i_step,av_step[4][0],av_step[4][1], marker='^')
                     axs2[5].errorbar(i_step,av_step[5][0],av_step[5][1], marker='^')
                     #axs2[0].boxplot(split_y_audio[1], positions = [i_step])
-                print(av_steps, 'average')
-                
-
-                # for i_loc, item_loc in enumerate(av_steps):
-                #     print (item_loc, 'item loc', i_loc)
-                #     y1_av = [item[0] for item in item_loc]
-                #     print(y1_av, 'y1 average')
-                #     axs2[i_loc].plot(np.arange(len(y1_av)), y1_av, '--', color = 'k')
+                #print(av_steps, 'average')
                 
                 for j in np.arange(6):
                     y1_av2 = [item[j] for item in av_steps]
-                    print(y1_av2, 'second average')
+                    #print(y1_av2, 'second average')
                     y1_av = [item[0] for item in y1_av2]
-                    print (j, 'j!!')
-                #print(y1_av, 'y1 average')
+
                     axs2[j].plot(np.arange(len(y1_av)), y1_av, '--', color = 'k')
                 # axs2[1].plot(av_x_steps, av_y_steps, '--', color = 'k')
                 # axs2[2].plot(av_x_steps, av_y_steps, '--', color = 'k')
@@ -168,16 +144,33 @@ for i_file, fileName in enumerate(name_files):
                 # axs2[4].plot(av_x_steps, av_y_steps, '--', color = 'k')
                 #plt.show()
 
+                print(np.shape(avs), np.mean(avs, axis =0), 'Average!', step_string)    
+                avs_mean = np.mean(avs, axis = 0)
                 step_string = str(step_id) +"_" + str(step_number)
                 axs2[0].set_title(str(currentFile)+ " - " + 'Step '+ str(step_string), fontsize = 14 )
-                plt.savefig('./Figures/'+dateFile + '/Average/'+ str(currentFile)+ "_"+'Average_Step_'+ str(step_string))
+                plt.savefig('./Figures_2/'+dateFile + '/Average/'+ str(currentFile)+ "_"+'Average_Step_'+ str(step_string))
                 #f2,axs2 = initiateSubplots()
                 
+                #item[step_string] = av_steps
 
-                item[step_string] = av_steps
+                
+                item[step_string] = avs # Write average to json
+                
                 with open("variables.json", "w+") as f_json: 
                     f_json.write(json.dumps(variables))
-            #print(item, 'is it working?')
+        
+            
+
+                store_avs.append(avs_mean.tolist())
+                
+            print(np.shape(store_avs), store_avs, "AVS!!!")
+
+            
+            item["avs_mean"] = store_avs
+            
+            with open("variables.json", "w+") as f_json: 
+                f_json.write(json.dumps(variables))
+            
 
 
 

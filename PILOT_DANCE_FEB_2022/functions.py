@@ -27,7 +27,7 @@ def  labelColumns(df, p):
     df.columns.values[25] = "RC"
     df.columns.values[27] = "RD"
     df_new = df.filter(['Time', 'LA', 'LB', 'LC', 'RA', 'RB', 'RC']).copy()
-    print(df_new, 'new')
+    #print(df_new, 'new')
     if p:
         print(df)
     return df_new
@@ -39,7 +39,6 @@ def  labelColumns_2(df, p):
     df.columns.values[1] = "RA"
     df.columns.values[3] = "RB"
     df.columns.values[5] = "RC"
-    print(df)
     
     df_new = df.filter(['Time','RA', 'RB', 'RC'])
     if p:
@@ -156,7 +155,8 @@ def plot_audio_FSR_split_2(audio_data,x_array, df_new, startZero, axs):
 def get_average_FSR(df):
     x, y1, y2, y3, y4, y5, y6 = createFigure(df,False)
     av_std = [[np.mean(y1), np.std(y1)],[np.mean(y2), np.std(y2)],[np.mean(y3), np.std(y3)] ,[np.mean(y4), np.std(y4)],[np.mean(y5) ,np.mean(y5)],[np.mean(y6), np.std(y6)]]
-    return av_std
+    av = [np.mean(y1),np.mean(y2), np.mean(y3),np.mean(y4), np.mean(y5), np.mean(y6) ]
+    return av_std, av
 
 def get_average_FSR_2(df):
     x, y1, y2, y3 = createFigure_2(df, False)
@@ -221,14 +221,14 @@ def setWindowAudio(audio, audio_SR, t_peaks, t0,t1):
        t1 : end of step
      '''
     x_audio = np.divide(np.arange(len(audio)), audio_SR)
-    print(t0, t_peaks, 'times')
+    #print(t0, t_peaks, 'times')
     tStart = t0 + t_peaks
     tStart_index = np.argmax(x_audio >=tStart)
     tEnd = t1 + t0 + t_peaks
     tEnd_index = np.argmax(x_audio >=tEnd)
     audio_start = audio[tStart_index:tEnd_index]
     x_audio_start = x_audio[tStart_index:tEnd_index]
-    print(audio_start)
+    #print(audio_start)
     return audio_start, x_audio_start 
 
 
@@ -279,7 +279,7 @@ def initiateSubplots():
 
 def initiateSubplots2(labelx, labely, number):
     """Create a subplots of 6"""
-    f, axs = plt.subplots(number, 1, sharex=True)
+    f, axs = plt.subplots(number, 1, sharex=True, sharey=True)
     f.supxlabel(labelx)
     f.supylabel(labely) 
     return f, axs

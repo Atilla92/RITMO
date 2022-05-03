@@ -3,11 +3,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # read audio samples
-input_data = read("P1_D2_T2-220212_1818.wav")
+input_data = read("12.02.2022/P1_D2_T2-220212_1818.wav")
 #print(input_data)
 audio = input_data[1]
 sampleRate = input_data[0]
-
+print(sampleRate,'sampelrate')
 
 print(len(audio)/(sampleRate*60))
 
