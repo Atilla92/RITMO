@@ -16,7 +16,6 @@ import numpy as np
 from functions import *
 import json
 import glob
-from scipy.stats import entropy
 import matplotlib.mlab as mlab  
 
 ### Set date of files to fetch 
@@ -147,27 +146,7 @@ for i_file, fileName in enumerate(name_files):
                 avs_mean = np.mean(avs, axis = 0)
                 store_avs.append(avs_mean.tolist())
 
-                ### Entropy
 
-                f,axs3 = initiateSubplots3(labelx='Pressure - Intensity', labely='Counts', number=6)
-                #print(np.array(step1_data)[:,0], 'STEPS DATA')
-                #counts_1, bins_count_1 = np.histogram(np.array(step1_data)[:,2], bins = 100)
-                #pdf_1 = counts_1/sum(counts_1)
-                #entropy_1 = entropy(pdf_1, base= 2)
-                #print(entropy_1, 'ENTROPY 1')
-                #fig1 = plt.figure()
-                
-
-
-                plotNDF(step1_data, 1, 5, 60, 100, axs3, 0,0, 0.25 )
-                plotNDF(step1_data, 2, 5, 60, 100, axs3, 1,0, 0.25 )
-                plotNDF(step1_data, 3, 1, 60, 25, axs3, 2,0, 0.25 )
-                plotNDF(step1_data, 4, 5, 60, 100, axs3, 0,1, 0.25 )
-                plotNDF(step1_data, 5, 5, 60, 100, axs3, 1,1, 0.25 )
-                plotNDF(step1_data, 6, 1, 60, 25, axs3, 2,1, 0.25 )
-                axs3[0,0].set_title('Left Foot', fontsize = 14 )
-                axs3[0,1].set_title('Right Foot', fontsize = 14 )
-                f.suptitle("Histogram Plot " + str(currentFile)+ " - " + 'Step '+ str(step_id), fontsize=16)
                 # axs3[1,0].set_ylim([0,0.25])
                 # axs3[2,0].set_ylim([0,0.25])
                 # axs3[0,1].set_ylim([0,0.25])
@@ -180,7 +159,7 @@ for i_file, fileName in enumerate(name_files):
                 # axs3[2,1].hist(np.array(step1_data)[:,6], bins = 50,  range=(1, 25),  density= True)
 
                     #plt.hist(np.array(step1_data)[:,2], bins = 100)
-                plt.show()
+                #plt.show()
                 
                 
                 
@@ -197,6 +176,29 @@ for i_file, fileName in enumerate(name_files):
                 item[step_string] = avs
                 with open("variables.json", "w+") as f_json: 
                     f_json.write(json.dumps(variables))
+                
+
+                                ### Entropy
+
+                f,axs3 = initiateSubplots3(labelx='Pressure - Intensity', labely='', number=6)
+
+            
+                plotNDF(step1_data, 1, 5, 60, 100, axs3, 0,0, 0.15 )
+                plotNDF(step1_data, 2, 5, 60, 100, axs3, 1,0, 0.15 )
+                plotNDF(step1_data, 3, 2, 60, 100, axs3, 2,0, 0.25 )
+                plotNDF(step1_data, 4, 5, 60, 100, axs3, 0,1, 0.15 )
+                plotNDF(step1_data, 5, 5, 60, 100, axs3, 1,1, 0.15 )
+                plotNDF(step1_data, 6, 2, 60, 100, axs3, 2,1, 0.25 )
+                axs3[0,0].set_title('Left Foot', fontsize = 14 )
+                axs3[0,1].set_title('Right Foot', fontsize = 14 )
+                axs3[0,0].set( ylabel = 'Toe' )
+                axs3[1,0].set( ylabel = 'Metatarsal' )
+                axs3[2,0].set( ylabel = 'Heel' )
+ 
+ 
+                f.suptitle("Histogram Plot " + str(currentFile)+ " - " + 'Step '+ str(step_id), fontsize=16)
+                plt.savefig('./Figures_2/'+dateFile + '/Histogram/'+ str(currentFile)+ "_"+'Histogram_Step_'+ str(step_string))
+
 
                 
 

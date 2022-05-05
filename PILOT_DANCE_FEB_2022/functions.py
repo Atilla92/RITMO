@@ -4,7 +4,10 @@ from scipy.io.wavfile import read
 import matplotlib.pyplot as plt
 from scipy.signal import argrelextrema
 from scipy.stats import norm
-
+from scipy.stats import entropy
+from scipy.stats import shapiro
+from scipy.stats import normaltest
+from scipy.stats import anderson
 
 
 
@@ -348,11 +351,60 @@ def plotNDF(data, i_data, min_val, max_val, n_bins, axs3, plot_r, plot_c, y_lim 
     data_1 = np.array(data)[:,i_data]
     data_1 = data_1[np.where(data_1> min_val)]
     data_1 = data_1[np.where(data_1 < max_val)]
-    _, bins, _ = axs3[plot_r,plot_c].hist(data_1, bins = n_bins,  range=(min_val, max_val), density= True)
+    ### Compute histogram values
+    counts, bins, _ = axs3[plot_r,plot_c].hist(data_1, bins = n_bins,  range=(min_val, max_val), density= True)
     mu, sigma = norm.fit(data_1)
+    
+    ### Compute entropy values
+    pdf_hist  = counts/ sum(counts)
+    entropy_hist = entropy(pdf_hist, base = 2)
     print(mu, sigma, 'mu sigma') 
+
+    ### Shapiro-Wilk Test
+    stat, p = shapiro(data_1)
+    print('Statistics=%.3f, p=%.3f' % (stat, p))
+    alpha = 0.05
+    if p > alpha:
+        print('Sample looks Gaussian (fail to reject H0) [Shapiro-Wilk]')
+    else:
+        print('Sample does not look Gaussian (reject H0) [Shapiro-Wilk]')
+    
+    stat, p = normaltest(data_1)
+    print('Statistics=%.3f, p=%.3f' % (stat, p))
+    
+    
+    ### D'Agostino K^2 Test
+    if p > alpha:
+        print('Sample looks Gaussian (fail to reject H0) [dAgoistino]')
+    else:
+        print('Sample does not look Gaussian (reject H0)[dAgostino]')
+    
+    ### Anderson Darling test
+    result = anderson(data_1)
+    print('Statistic: %.3f' % result.statistic)
+    p = 0
+    for i in range(len(result.critical_values)):
+        sl, cv = result.significance_level[i], result.critical_values[i]
+        if result.statistic < result.critical_values[i]:
+            print('%.3f: %.3f, data looks normal (fail to reject H0) [Anderson]' % (sl, cv))
+        else:
+            print('%.3f: %.3f, data does not look normal (reject H0) [Anderson]' % (sl, cv))
+
+
+    label_name = "m= " + str(round(mu,1)) + " s= " + str(round(sigma,1)) + " e= " + str (round(entropy_hist,1))
+   
+
     best_fit_line = norm.pdf(bins, mu, sigma)
     axs3[plot_r,plot_c].hist(data_1, bins = n_bins,  range=(min_val, max_val),  density= True)         
-    axs3[plot_r,plot_c].plot(bins, best_fit_line, label = str(mu))
+    axs3[plot_r,plot_c].plot(bins, best_fit_line, label = str(label_name))
     axs3[plot_r,plot_c].set_ylim([0,y_lim])
-    axs3[plot_r, plot_c].vlines( mu, 0, y_lim,  color = 'b', linestyles = 'dashed', label = str('mu =' + str(mu)))
+    axs3[plot_r, plot_c].vlines( mu, 0, y_lim,  color = 'b', linestyles = 'dashed')
+    axs3[plot_r,plot_c].legend(loc="upper right")
+
+
+    #print(np.array(step1_data)[:,0], 'STEPS DATA')
+    #counts_1, bins_count_1 = np.histogram(np.array(step1_data)[:,2], bins = 100)
+    #pdf_1 = counts_1/sum(counts_1)
+    #entropy_1 = entropy(pdf_1, base= 2)
+    #print(entropy_1, 'ENTROPY 1')
+    #fig1 = plt.figure()
