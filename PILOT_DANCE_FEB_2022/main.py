@@ -17,6 +17,7 @@ from functions import *
 import json
 import glob
 from scipy.stats import entropy
+import matplotlib.mlab as mlab  
 
 ### Set date of files to fetch 
 dateFile = '12.02.2022'
@@ -148,32 +149,39 @@ for i_file, fileName in enumerate(name_files):
 
                 ### Entropy
 
-                f,axs3 = initiateSubplots3(labelx='Hist Bins', labely='Counts', number=6)
+                f,axs3 = initiateSubplots3(labelx='Pressure - Intensity', labely='Counts', number=6)
                 #print(np.array(step1_data)[:,0], 'STEPS DATA')
                 #counts_1, bins_count_1 = np.histogram(np.array(step1_data)[:,2], bins = 100)
                 #pdf_1 = counts_1/sum(counts_1)
                 #entropy_1 = entropy(pdf_1, base= 2)
                 #print(entropy_1, 'ENTROPY 1')
                 #fig1 = plt.figure()
-                _, bins, _ = axs3[0,0].hist(np.array(step1_data)[:,1], bins = 100,  range=(5, 60))
-                mu, sigma = norm.fit(np.array(step1_data)[:,1])
-                print(mu, sigma, 'mu sigma') # will need to filter the data for the ranges, as the histogram is now based on different values.
-                best_fit_line = norm.pdf(bins, mu, sigma)
-                axs3[0,0].plot(bins, best_fit_line)
-                axs3[0,0].set_ylim([0,100])
-                axs3[1,0].set_ylim([0,100])
-                axs3[2,0].set_ylim([0,100])
-                axs3[0,1].set_ylim([0,100])
-                axs3[1,1].set_ylim([0,100])
-                axs3[2,1].set_ylim([0,100])
-                axs3[1,0].hist(np.array(step1_data)[:,2], bins = 100,  range=(5, 60))
-                axs3[2,0].hist(np.array(step1_data)[:,3], bins = 50,  range=(1, 25))
-                axs3[0,1].hist(np.array(step1_data)[:,4], bins = 100,  range=(5, 60))
-                axs3[1,1].hist(np.array(step1_data)[:,5], bins = 100,  range=(5, 60))
-                axs3[2,1].hist(np.array(step1_data)[:,6], bins = 50,  range=(1, 25))
+                
 
-                #plt.hist(np.array(step1_data)[:,2], bins = 100)
+
+                plotNDF(step1_data, 1, 5, 60, 100, axs3, 0,0, 0.25 )
+                plotNDF(step1_data, 2, 5, 60, 100, axs3, 1,0, 0.25 )
+                plotNDF(step1_data, 3, 1, 60, 25, axs3, 2,0, 0.25 )
+                plotNDF(step1_data, 4, 5, 60, 100, axs3, 0,1, 0.25 )
+                plotNDF(step1_data, 5, 5, 60, 100, axs3, 1,1, 0.25 )
+                plotNDF(step1_data, 6, 1, 60, 25, axs3, 2,1, 0.25 )
+                axs3[0,0].set_title('Left Foot', fontsize = 14 )
+                axs3[0,1].set_title('Right Foot', fontsize = 14 )
+                f.suptitle("Histogram Plot " + str(currentFile)+ " - " + 'Step '+ str(step_id), fontsize=16)
+                # axs3[1,0].set_ylim([0,0.25])
+                # axs3[2,0].set_ylim([0,0.25])
+                # axs3[0,1].set_ylim([0,0.25])
+                # axs3[1,1].set_ylim([0,0.25])
+                # axs3[2,1].set_ylim([0,0.25])
+                # axs3[1,0].hist(np.array(step1_data)[:,2], bins = 100,  range=(5, 60),  density= True)
+                # axs3[2,0].hist(np.array(step1_data)[:,3], bins = 50,  range=(1, 25),  density= True)
+                # axs3[0,1].hist(np.array(step1_data)[:,4], bins = 100,  range=(5, 60),  density= True)
+                # axs3[1,1].hist(np.array(step1_data)[:,5], bins = 100,  range=(5, 60),  density= True)
+                # axs3[2,1].hist(np.array(step1_data)[:,6], bins = 50,  range=(1, 25),  density= True)
+
+                    #plt.hist(np.array(step1_data)[:,2], bins = 100)
                 plt.show()
+                
                 
                 
                 

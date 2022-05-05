@@ -3,6 +3,7 @@ import pyloudnorm as pyln
 from scipy.io.wavfile import read
 import matplotlib.pyplot as plt
 from scipy.signal import argrelextrema
+from scipy.stats import norm
 
 
 
@@ -290,6 +291,7 @@ def initiateSubplots3(labelx, labely, number):
     f.supxlabel(labelx)
     f.supylabel(labely) 
     return f, axs
+    
 
 
 def plot_Steps(split_y_FSR,audio_coord_th,split_y_audio,split_x_audio,currentFile,step_id,dateFile):
@@ -328,3 +330,29 @@ def plotAudio_FSR(audio, sampleRate, df, p):
     # display the plot
     if p:
         plt.show()
+
+def plotNDF(data, i_data, min_val, max_val, n_bins, axs3, plot_r, plot_c, y_lim ):
+    '''' Plot histogram and normal distribution of data
+
+        data: ndarray of data
+        i_data: row of data you want to analyse
+        min_val: lower threshold for data values to include
+        max_val: upper threshold for data values to include
+        n_bins: number of bins for histogram
+        axs3: subplots axes
+        plot_r : row of subplot to plot data on
+        plot_c : column of subplots to plot data on
+        y_lim : upper limit of yaxis for all subplots
+    
+    '''
+    data_1 = np.array(data)[:,i_data]
+    data_1 = data_1[np.where(data_1> min_val)]
+    data_1 = data_1[np.where(data_1 < max_val)]
+    _, bins, _ = axs3[plot_r,plot_c].hist(data_1, bins = n_bins,  range=(min_val, max_val), density= True)
+    mu, sigma = norm.fit(data_1)
+    print(mu, sigma, 'mu sigma') 
+    best_fit_line = norm.pdf(bins, mu, sigma)
+    axs3[plot_r,plot_c].hist(data_1, bins = n_bins,  range=(min_val, max_val),  density= True)         
+    axs3[plot_r,plot_c].plot(bins, best_fit_line, label = str(mu))
+    axs3[plot_r,plot_c].set_ylim([0,y_lim])
+    axs3[plot_r, plot_c].vlines( mu, 0, y_lim,  color = 'b', linestyles = 'dashed', label = str('mu =' + str(mu)))
