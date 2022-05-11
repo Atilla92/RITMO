@@ -8,6 +8,7 @@ from scipy.stats import entropy
 from scipy.stats import shapiro
 from scipy.stats import normaltest
 from scipy.stats import anderson
+from scipy.signal import butter, lfilter
 
 
 
@@ -243,8 +244,10 @@ def setThreshold(split_x_audio, split_y_audio):
     coords = []
     for i, item in enumerate(split_y_audio):
             coords = plotFig_SetCoord(split_x_audio[i], split_y_audio[i])
-            #print(coords, 'coords')
+            print(coords, 'coords', i)
             audio_coord_th.append(coords)
+    
+    plt.close()
     return audio_coord_th
 
 
@@ -361,35 +364,7 @@ def plotNDF(data, i_data, min_val, max_val, n_bins, axs3, plot_r, plot_c, y_lim 
     print(mu, sigma, 'mu sigma') 
 
     ### Shapiro-Wilk Test
-    stat, p = shapiro(data_1)
-    print('Statistics=%.3f, p=%.3f' % (stat, p))
-    alpha = 0.05
-    if p > alpha:
-        print('Sample looks Gaussian (fail to reject H0) [Shapiro-Wilk]')
-    else:
-        print('Sample does not look Gaussian (reject H0) [Shapiro-Wilk]')
-    
-    stat, p = normaltest(data_1)
-    print('Statistics=%.3f, p=%.3f' % (stat, p))
-    
-    
-    ### D'Agostino K^2 Test
-    if p > alpha:
-        print('Sample looks Gaussian (fail to reject H0) [dAgoistino]')
-    else:
-        print('Sample does not look Gaussian (reject H0)[dAgostino]')
-    
-    ### Anderson Darling test
-    result = anderson(data_1)
-    print('Statistic: %.3f' % result.statistic)
-    p = 0
-    for i in range(len(result.critical_values)):
-        sl, cv = result.significance_level[i], result.critical_values[i]
-        if result.statistic < result.critical_values[i]:
-            print('%.3f: %.3f, data looks normal (fail to reject H0) [Anderson]' % (sl, cv))
-        else:
-            print('%.3f: %.3f, data does not look normal (reject H0) [Anderson]' % (sl, cv))
-
+    shapiroWilk_test(data_1)
 
     label_name = "m= " + str(round(mu,1)) + " s= " + str(round(sigma,1)) + " e= " + str (round(entropy_hist,1))
    
@@ -402,9 +377,71 @@ def plotNDF(data, i_data, min_val, max_val, n_bins, axs3, plot_r, plot_c, y_lim 
     axs3[plot_r,plot_c].legend(loc="upper right")
 
 
-    #print(np.array(step1_data)[:,0], 'STEPS DATA')
-    #counts_1, bins_count_1 = np.histogram(np.array(step1_data)[:,2], bins = 100)
-    #pdf_1 = counts_1/sum(counts_1)
-    #entropy_1 = entropy(pdf_1, base= 2)
-    #print(entropy_1, 'ENTROPY 1')
-    #fig1 = plt.figure()
+
+
+def shapiroWilk_test(data):
+    ###https://machinelearningmastery.com/a-gentle-introduction-to-normality-tests-in-python/
+    ###https://www.datacamp.com/community/tutorials/probability-distributions-python 
+    ### Shapiro-Wilk Test
+    stat, p = shapiro(data)
+    print('Statistics=%.3f, p=%.3f' % (stat, p))
+    alpha = 0.05
+    if p > alpha:
+        print('Sample looks Gaussian (fail to reject H0) [Shapiro-Wilk]')
+    else:
+        print('Sample does not look Gaussian (reject H0) [Shapiro-Wilk]')
+    
+    stat, p = normaltest(data)
+    print('Statistics=%.3f, p=%.3f' % (stat, p))
+    
+def dAgostino_test (data):    
+    ### D'Agostino K^2 Test
+    alpha = 0.05
+
+    stat, p = normaltest(data)
+    print('Statistics=%.3f, p=%.3f' % (stat, p))
+    if p > alpha:
+        print('Sample looks Gaussian (fail to reject H0) [dAgoistino]')
+    else:
+        print('Sample does not look Gaussian (reject H0)[dAgostino]')
+
+
+def AndersonDarlingTest(data):   
+    ### Anderson Darling test
+    result = anderson(data)
+    print('Statistic: %.3f' % result.statistic)
+    p = 0
+    for i in range(len(result.critical_values)):
+        sl, cv = result.significance_level[i], result.critical_values[i]
+        if result.statistic < result.critical_values[i]:
+            print('%.3f: %.3f, data looks normal (fail to reject H0) [Anderson]' % (sl, cv))
+        else:
+            print('%.3f: %.3f, data does not look normal (reject H0) [Anderson]' % (sl, cv))
+
+
+### BandPass Filter
+
+def butter_bandpass(lowcut, highcut, fs, order=5):
+    nyq = 0.5 * fs
+    low = lowcut / nyq
+    high = highcut / nyq
+    b, a = butter(order, [low, high], btype='band')
+    return b, a
+
+
+def butter_bandpass_filter(data, lowcut, highcut, fs, order=5):
+    b, a = butter_bandpass(lowcut, highcut, fs, order=order)
+    y = lfilter(b, a, data)
+    return y
+
+def BandPassFilterData(df, f_low, f_high, fs, orderN):
+    '''Creating filters for human movement data frequencies
+    Using filters on data'''
+
+    df['LA'] = butter_bandpass_filter(df['LA'], f_low, f_high, fs, order=orderN)
+    df['LB'] = butter_bandpass_filter(df['LB'], f_low, f_high, fs, order=orderN)
+    df['LC'] = butter_bandpass_filter(df['LC'], f_low, f_high, fs, order=orderN)
+    df['RA'] = butter_bandpass_filter(df['RA'], f_low, f_high, fs, order=orderN)
+    df['RB'] = butter_bandpass_filter(df['RB'], f_low, f_high, fs, order=orderN)
+    df['RC'] = butter_bandpass_filter(df['RC'], f_low, f_high, fs, order=orderN)
+       

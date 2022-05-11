@@ -37,8 +37,12 @@ fs = 1.481481*10**2
 
 
 foot_side = 'Left'
-df_left = df[['X_acc [s]','FSR adapter 15: ACC.X 15 [g]', 'FSR adapter 15: ACC.Y 15 [g]', 'FSR adapter 15: ACC.Z 15 [g]']].copy()
-#df_left =df[['X_acc [s]','FSR adapter 16: ACC.X 16 [g]', 'FSR adapter 16: ACC.Y 16 [g]', 'FSR adapter 16: ACC.Z 16 [g]']].copy() 
+
+if foot_side == "Left":
+    df_left = df[['X_acc [s]','FSR adapter 15: ACC.X 15 [g]', 'FSR adapter 15: ACC.Y 15 [g]', 'FSR adapter 15: ACC.Z 15 [g]']].copy()
+
+if foot_side == "Right":
+    df_left =df[['X_acc [s]','FSR adapter 16: ACC.X 16 [g]', 'FSR adapter 16: ACC.Y 16 [g]', 'FSR adapter 16: ACC.Z 16 [g]']].copy() 
 
 
 
@@ -163,9 +167,9 @@ df_counts = pd.DataFrame(data=counts)
 df_sum_acc = pd.DataFrame(data = sum_acc)
 
 #print(sumacc_x.index)
-df_pos_vel_acc.to_csv('./Analysis/'+'pos_vel_acc'+ currentFile +'_'+ 'step_'+step + '.csv')
-df_counts.to_csv('./Analysis/'+'counts_'+ currentFile +'_'+ 'step_'+step + '.csv')
-df_sum_acc.to_csv('./Analysis/'+'sum_acc_'+ currentFile +'_'+ 'step_'+step + '.csv')
+df_pos_vel_acc.to_csv('./Analysis/'+'pos_vel_acc_'+ currentFile +'_'+ 'step_'+step + '_'+ foot_side +'.csv')
+df_counts.to_csv('./Analysis/'+'counts_'+ currentFile +'_'+ 'step_'+step +'_'+ foot_side + '.csv')
+df_sum_acc.to_csv('./Analysis/'+'sum_acc_'+ currentFile +'_'+ 'step_'+step + '_' + foot_side + '.csv')
 
 
 

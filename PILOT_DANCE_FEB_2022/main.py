@@ -21,6 +21,13 @@ import matplotlib.mlab as mlab
 ### Set date of files to fetch 
 dateFile = '12.02.2022'
 
+
+# Bandpass filter
+f_low = 0.5
+f_high = 10
+fs = 1.481481*10**2
+
+
 ### Load JSON with information of files 
 f_json = open('variables.json')
 variables = json.load(f_json)
@@ -55,7 +62,10 @@ for i_file, fileName in enumerate(name_files):
     ### LOAD FSR DATA
     df = pd.read_csv (FSR_files[file_number], sep = ',', skiprows=144, encoding= 'unicode_escape') 
     df_new = labelColumns(df, False)
-    #print(df_new)
+
+    ### Apply Bandpass Filter, set f_low, f_high
+    BandPassFilterData(df, f_low, f_high, fs, 4)
+ 
 
     ### Load audio files
     input_data = read(audio_files[file_number])
@@ -93,8 +103,10 @@ for i_file, fileName in enumerate(name_files):
                     audio_coord_th = setThreshold(split_x_audio, split_y_audio)
                     item["threshold"][step_number] = audio_coord_th
                     audio_coord_th = item["threshold"][step_number]
+                    print(audio_coord_th)
                     with open("variables.json", "w+") as f_json: 
                         f_json.write(json.dumps(variables))
+                        print('Coordinates Saved')
 
                 else:
                     audio_coord_th = item["threshold"][step_number]
@@ -106,8 +118,9 @@ for i_file, fileName in enumerate(name_files):
                     threshold_coord = audio_coord_th[i_step][1]
                     gradient_audio = np.gradient(split_y_audio[i_step],split_x_audio[i_step])
                     tStart_index = np.argmax(split_y_audio[i_step] >threshold_coord)
-                    item_start = item_step.loc[(item_step["Time"] >= split_x_audio[i_step][tStart_index] ) ]  
+                    item_start = item_step.loc[(item_step["Time"] >= split_x_audio[i_step][tStart_index] ) ] 
                     plot_audio_FSR_split(split_y_audio[i_step][tStart_index:-1], split_x_audio[i_step][tStart_index:-1], item_start, True, axs)
+
 
                 ### Save plots per step
                 step_string = str(step_id) +"_" + str(step_number)
@@ -145,25 +158,6 @@ for i_file, fileName in enumerate(name_files):
                 ### Compute average intensity per step
                 avs_mean = np.mean(avs, axis = 0)
                 store_avs.append(avs_mean.tolist())
-
-
-                # axs3[1,0].set_ylim([0,0.25])
-                # axs3[2,0].set_ylim([0,0.25])
-                # axs3[0,1].set_ylim([0,0.25])
-                # axs3[1,1].set_ylim([0,0.25])
-                # axs3[2,1].set_ylim([0,0.25])
-                # axs3[1,0].hist(np.array(step1_data)[:,2], bins = 100,  range=(5, 60),  density= True)
-                # axs3[2,0].hist(np.array(step1_data)[:,3], bins = 50,  range=(1, 25),  density= True)
-                # axs3[0,1].hist(np.array(step1_data)[:,4], bins = 100,  range=(5, 60),  density= True)
-                # axs3[1,1].hist(np.array(step1_data)[:,5], bins = 100,  range=(5, 60),  density= True)
-                # axs3[2,1].hist(np.array(step1_data)[:,6], bins = 50,  range=(1, 25),  density= True)
-
-                    #plt.hist(np.array(step1_data)[:,2], bins = 100)
-                #plt.show()
-                
-                
-                
-                
 
 
 
