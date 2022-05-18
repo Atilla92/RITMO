@@ -31,7 +31,7 @@ dateFiles = '12.02.2022'
 
 # Load data
 
-currentFile = 'P1_D2_T2'
+currentFile = 'P1_D1_T2'
 df = pd.read_csv (currentFile+'.csv', sep = ',', skiprows=144, encoding= 'unicode_escape') 
 fs = 1.481481*10**2
 
@@ -64,7 +64,7 @@ for item in variables['details_files']:
         print ('False', currentFile)
 
 # First step [0]
-id = 2
+id = 3
 step = str(step_labels[id])
 fileNameSave = str(currentFile + '_step_' + step +'_'+ foot_side +'_')
 
