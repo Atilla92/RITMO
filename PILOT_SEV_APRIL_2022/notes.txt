@@ -1,0 +1,25 @@
+# Experiment notes
+
+## Take into account when analysing data
+During the experiments of P3 and G1, wrong paper was used for 2 experiments. Should be reversed in video and audio nomenclature. 
+P3_D5_G1_M5_R1_T1--> P3_D1_G1_M1_R1_T1
+P3_D1_G1_M1_R1_T1--> P3_D5_G1_M5_R1_T1
+
+## Observations during experiments
+Day 1 participants seemed to be much more enthousiastic and enjoying the improvisation tasks. 
+What could be the cause of this?
+- Connectedness between participants could be a crucial factor --> Ask in future cuestionnaire
+- See whether this is linked with how much the person enjoyed the task?
+
+G2 has not performed in tablao settings. According to P4, G2 did not follow her in her movements. 
+Everytime she proposed something in her dance, the guitarist would not follow. Instead G2 was constantly proposing new material which she needed to follow.
+This made the improvisation task quite hard for her. 
+
+--> Make it even clearer that the guitarist should follow the dancer. 
+
+
+## For next experiment
+- Amount of pleasure
+- Connectedness
+- FSR?
+
