@@ -7,48 +7,71 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 df = pd.read_csv ('Responses/DuringExperiments.csv')
-#print(df.loc[:, ~df.columns.isin(['Name', 'Participant'])])
-ch_alpha = pg.cronbach_alpha(data=df.loc[:, ~df.columns.isin(['Name', 'Participant'])])
-#print(df)
-print('chronbach alpha',ch_alpha )
-#df['Impr_Av'] =df['Q1a']/7 * df['Q1b']
-df['Impr_Av'] = df[['Q1a', 'Q1b']].mean(axis = 1)
-print(df)
-#df['Impr_Av'] = df[['Q1b']].mean(axis = 1)
-
-df['Flow_Av'] = df[['Q3a', 'Q3b']].mean(axis = 1) 
-#df['Flow_Av'] = df[['Q3b']].mean(axis = 1) 
-df['Abs_Av'] = df[['Q2a', 'Q2c', 'Q2f', 'Q2j']].mean(axis = 1) 
-df['Perf_Av'] = df[['Q2b','Q2d','Q2e','Q2g','Q2h','Q2i']].mean(axis = 1)
-df['SFS'] = df[['Abs_Av', 'Perf_Av']].mean(axis= 1)
-#print(df)
 
 
-pearson_Imp_Imp = pearsonr(df['Q1a'], df['Q1b'])
-pearson_Impr_Flow = pearsonr(df['Impr_Av'], df['Flow_Av'])
-pearson_Impr_Abs_Av = pearsonr(df['Impr_Av'], df['Abs_Av'])
-pearson_Impr_Perf_Av = pearsonr(df['Impr_Av'], df['Perf_Av'])
-pearson_Impr_SFS = pearsonr(df['Impr_Av'], df['SFS'])
-
-pearson_Flow_Abs = pearsonr(df['Flow_Av'], df['Abs_Av'])
-pearson_Flow_Perf = pearsonr(df['Flow_Av'], df['Perf_Av'])
-pearson_Flow_FLow = pearsonr(df['Q3a'], df['Q3b'])
 
 
-print('Imp_Imp', pearson_Imp_Imp, 'Impr_Flow', pearson_Impr_Flow, 'Impr_Abs', pearson_Impr_Abs_Av, 'Impr_Perf', pearson_Impr_Perf_Av, 'Impr_SPS', pearson_Impr_SFS )
-print('Flow_Flow', pearson_Flow_FLow, 'Flow_Abs', pearson_Flow_Abs, 'Flow_Perf', pearson_Flow_Perf)
+def CronchbachAlpha(df):
+    #https://www.statisticshowto.com/probability-and-statistics/statistics-definitions/cronbachs-alpha-spss/#:~:text=A%20low%20value%20for%20alpha,more%20than%20one%20latent%20variable.
+    # a > 0.9 Excellent, 0.9>a>=0.8 Good, 0.8>a>0.7 Acceptable,
+    # 0.7>a>0.6 Questionable, 0.6>a>0.5 Poor, 0.5>a Unacceptable
+    df_filter = filterOut(df,['Name', 'Participant'])
+    ch_alpha = pg.cronbach_alpha(data=df_filter)
+    print('chronbach alpha',ch_alpha )
 
-df_small = df.loc[:, ~df.columns.isin(['Name', 'Participant'])]
+def AverageFlowtoDF(df):
+    df['Abs_Av'] = df[['Q2a', 'Q2c', 'Q2f', 'Q2j']].mean(axis = 1) 
+    df['Perf_Av'] = df[['Q2b','Q2d','Q2e','Q2g','Q2h','Q2i']].mean(axis = 1)
+    df['SFS'] = df[['Abs_Av', 'Perf_Av']].mean(axis= 1)
 
-correlation_mat = df_small.corr()
-sns.heatmap(correlation_mat, annot = True)
+def correlMatrix(df, p):
+    df_filter = filterOut(df,['Name', 'Participant'])
+    if p: 
+        correlation_mat = df_filter.corr()
+        sns.heatmap(correlation_mat, annot = True) 
+        plt.show()      
+    r_corr = df_filter.rcorr()
+    print(r_corr) 
 
-#sns.pairplot(df_small)
-plt.show()
+def filterOut(df, listFilter):
+    df_filter = df.loc[:, ~df.columns.isin(listFilter)]
+    return df_filter
 
-r_corr = df_small.rcorr()
-#sns.heatmap(r_corr, annot= True)
+
+CronchbachAlpha(df)
+AverageFlowtoDF(df)
+correlMatrix(df, False)
+
+
+
 #plt.show()
-print(r_corr)
+#sns.pairplot(df_small)
+
+
+
 
 #https://blog.4dcu.be/programming/2021/03/16/Code-Nugget-Correlation-Heatmaps.html
+
+df_P = df.loc[df['Participant'].isin(['P3', 'P4'])]
+CronchbachAlpha(df_P)
+correlMatrix(df_P, False)
+
+df_G = df.loc[df['Participant'].isin(['G1', 'G2'])]
+CronchbachAlpha(df_G)
+correlMatrix(df_G, True)
+
+
+# pearson_Imp_Imp = pearsonr(df['Q1a'], df['Q1b'])
+# pearson_Impr_Flow = pearsonr(df['Impr_Av'], df['Flow_Av'])
+# pearson_Impr_Abs_Av = pearsonr(df['Impr_Av'], df['Abs_Av'])
+# pearson_Impr_Perf_Av = pearsonr(df['Impr_Av'], df['Perf_Av'])
+# pearson_Impr_SFS = pearsonr(df['Impr_Av'], df['SFS'])
+
+# pearson_Flow_Abs = pearsonr(df['Flow_Av'], df['Abs_Av'])
+# pearson_Flow_Perf = pearsonr(df['Flow_Av'], df['Perf_Av'])
+# pearson_Flow_FLow = pearsonr(df['Q3a'], df['Q3b'])
+
+
+# print('Imp_Imp', pearson_Imp_Imp, 'Impr_Flow', pearson_Impr_Flow, 'Impr_Abs', pearson_Impr_Abs_Av, 'Impr_Perf', pearson_Impr_Perf_Av, 'Impr_SPS', pearson_Impr_SFS )
+# print('Flow_Flow', pearson_Flow_FLow, 'Flow_Abs', pearson_Flow_Abs, 'Flow_Perf', pearson_Flow_Perf)
+
