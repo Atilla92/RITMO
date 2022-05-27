@@ -43,15 +43,6 @@ AverageFlowtoDF(df)
 correlMatrix(df, False)
 
 
-
-#plt.show()
-#sns.pairplot(df_small)
-
-
-
-
-#https://blog.4dcu.be/programming/2021/03/16/Code-Nugget-Correlation-Heatmaps.html
-
 df_P = df.loc[df['Participant'].isin(['P3', 'P4'])]
 CronchbachAlpha(df_P)
 correlMatrix(df_P, False)
@@ -60,6 +51,9 @@ df_G = df.loc[df['Participant'].isin(['G1', 'G2'])]
 CronchbachAlpha(df_G)
 correlMatrix(df_G, True)
 
+
+
+#https://blog.4dcu.be/programming/2021/03/16/Code-Nugget-Correlation-Heatmaps.html
 
 # pearson_Imp_Imp = pearsonr(df['Q1a'], df['Q1b'])
 # pearson_Impr_Flow = pearsonr(df['Impr_Av'], df['Flow_Av'])
