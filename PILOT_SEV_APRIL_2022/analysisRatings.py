@@ -78,6 +78,8 @@ for filepath in glob.iglob('Ratings/'+'*.csv'):
 
         # need to normalize values and plot on the same graph, and store in df, see whether makes sense.
         # Make one big df, where everything is stored. Will get many data points.  
+        # Talk with Fernando whether some other entropic analysis could be done? 
+        # Get matrices from anna maria. 
         plt.show()
 
             
