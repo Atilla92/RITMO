@@ -17,4 +17,4 @@ print (audio_files[0])
 
 #for i, item in enumerate(audio_files):
 
-#data_audio = read(str(audio_files[0]))
+data_audio = read(str(audio_files[0]))

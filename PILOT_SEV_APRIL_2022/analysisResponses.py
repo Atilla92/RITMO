@@ -38,10 +38,11 @@ def filterOut(df, listFilter):
     return df_filter
 
 
+print(df)
 CronchbachAlpha(df)
 AverageFlowtoDF(df)
 correlMatrix(df, False)
-
+print(df)
 
 df_P = df.loc[df['Participant'].isin(['P3', 'P4'])]
 CronchbachAlpha(df_P)
@@ -52,6 +53,26 @@ CronchbachAlpha(df_G)
 correlMatrix(df_G, True)
 
 
+
+def InfotoColumns(df):
+    dance_array = []
+    music_array = []
+    palo_array = []
+    for i, item in enumerate(df['Name']):
+
+        split_array = item.split('_')
+        dance_array.append(split_array[1])
+        music_array.append(split_array[3])
+        palo_array.append(split_array[4])
+        print(split_array)
+
+    df['Dance_mode'] = dance_array
+    df['Music_mode'] = music_array
+    df['Palo'] = palo_array
+
+InfotoColumns(df)
+print(df)
+df.to_csv('output/DuringExperiments_Edited.csv', index=False)
 
 #https://blog.4dcu.be/programming/2021/03/16/Code-Nugget-Correlation-Heatmaps.html
 
