@@ -1,0 +1,23 @@
+library(lme4)
+library(lmerTest)
+#load("~/RITMO/Mixed_Models/mixed-models-with-r-workshop-2019-master/data/gpa.RData")
+data1 <- read.csv("~/Ritmo/R_FILES/DuringExperiments_Edited.csv", header=TRUE, stringsAsFactors=FALSE)
+
+
+# Linear model
+#gpa_lm = lm(gpa ~ occasion, data = gpa)
+#summary(gpa_lm)
+
+#data_lm = lm(Q1a ~ Dance, data = data1)
+#summary(data_lm)
+
+
+# Mixed model
+#gpa_mixed = lmer(gpa ~ occasion + (1 | student), data = gpa)
+#summary(gpa_mixed)
+#confint(gpa_mixed)
+data1$Dance_mode<-as.factor(data1$Dance_mode)
+data1$Palo <-as.factor(data1$Palo)
+data_mixed = lmer(Q1b ~ Dance_mode + Palo + (1 | Participant), data = data1)
+summary(data_mixed)
+
