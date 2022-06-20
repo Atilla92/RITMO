@@ -8,7 +8,7 @@ from scipy.io.wavfile import read
 from scipy.stats import entropy
 from scipy.stats import norm
 from sklearn import preprocessing
-
+from functions import *
 
 # Initial Variables
 
@@ -48,6 +48,7 @@ for filepath in glob.iglob('Ratings/'+'*.csv'):
 
         t_start = 0
         entropy_values = []
+        mu_values = []
         name_array = []
         for i in df['Time']:
             axs[0].axvline(x=(i), color ='red')
@@ -67,6 +68,7 @@ for filepath in glob.iglob('Ratings/'+'*.csv'):
             entropy_hist = entropy(pdf_hist, base = 2)
             #print(entropy_hist,'ENTROPY Value')
             entropy_values.append(entropy_hist)
+            mu_values.append(mu)
 
             t_start = i
         
@@ -77,6 +79,7 @@ for filepath in glob.iglob('Ratings/'+'*.csv'):
             'Time' : df['Time'], 
             'Value': df[' Value'],
             'Entropy': entropy_values,
+            'mu': mu,
             'Name': np.arange(len(entropy_values))
 
         })
@@ -86,7 +89,10 @@ for filepath in glob.iglob('Ratings/'+'*.csv'):
         df_store = pd.concat([df_intermediate, df_store])
        # print(d_store)
         #print (d_intermediate)
-        plt.show()
+        #plt.show()
+
+InfotoColumns(df_store)
+
 
 print(df_store)
 df_store.to_csv('output/Ratings_Entropy.csv', index=False)
