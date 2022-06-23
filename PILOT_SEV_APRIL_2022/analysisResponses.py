@@ -6,7 +6,7 @@ import pingouin as pg
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-df = pd.read_csv ('Responses/DuringExperiments.csv')
+df = pd.read_csv ('Responses/DuringExperiments_Oslo.csv')
 
 
 
@@ -72,7 +72,7 @@ def InfotoColumns(df):
 
 InfotoColumns(df)
 print(df)
-df.to_csv('output/DuringExperiments_Edited.csv', index=False)
+df.to_csv('output/DuringExperiments_Oslo.csv', index=False)
 
 #https://blog.4dcu.be/programming/2021/03/16/Code-Nugget-Correlation-Heatmaps.html
 
