@@ -4,6 +4,7 @@ library(lmerTest)
 data1 <- read.csv("~/Ritmo/R_FILES/DuringExperiments_Edited.csv", header=TRUE, stringsAsFactors=FALSE)
 data2 <- read.csv("~/CODE/RITMO/PILOT_SEV_APRIL_2022/output/Ratings_Entropy.csv")
 data3 <- read.csv("~/CODE/RITMO/PILOT_SEV_APRIL_2022/output/DuringExperiments_Oslo.csv")
+data4 <- read.csv('~/CODE/RITMO/MIR/output/Average_rms_ent.csv')
 # Linear model
 #gpa_lm = lm(gpa ~ occasion, data = gpa)
 #summary(gpa_lm)
@@ -30,8 +31,18 @@ data2$Participant <- as.factor(data2$Participant)
 data_mixed_2 = lmer(Value ~ Entropy + (1 | Participant),  data = data2)
 summary(data_mixed_2)
 
+
+#Dataset 3 Analysis
 data3$Dance_mode<- as.factor(data3$Dance_mode)
 data3$Palo <- as.factor(data3$Palo)
 data3$Participant <- as.factor(data3$Participant)
-data_mixed_3 = lmer(Q3b~ Dance_mode + (1 | Participant),  data = data3)
+data_mixed_3 = lmer(Q1a~ Q3a + (1 | Participant),  data = data3)
 summary(data_mixed_3)
+
+
+#Dataset 4 Analysis
+data4$Dance_mode <- as.factor(data4$Dance_mode)
+data4$Palo <- as.factor(data4$Palo)
+data4$Participant <- as.factor(data4$Participant)
+data_mixed_4 = lmer(RMS_Av~ Dance_mode + (1 | Participant),  data = data4)
+summary(data_mixed_4)

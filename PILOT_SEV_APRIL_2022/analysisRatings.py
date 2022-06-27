@@ -18,10 +18,11 @@ df_store = pd.DataFrame()
 ### Fetch all files for analysis
 path = '/Users/atillajv/CODE/FILES/PILOT_SEV_APRIL_2022/Audio'
 paths_audio = glob.glob(os.path.join(path, '*.wav'))
-
 audio_files = os.listdir(path)
-#print(paths_audio)
-# print(filelist)
+
+
+
+
 
 #filelist = []
 for filepath in glob.iglob('Ratings/'+'*.csv'):
