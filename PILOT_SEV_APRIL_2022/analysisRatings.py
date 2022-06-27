@@ -25,6 +25,7 @@ audio_files = os.listdir(path)
 
 #filelist = []
 for filepath in glob.iglob('Ratings/'+'*.csv'):
+    '''Computing simple Shannon's entropy for audio file, based on histograms '''
     
   
     if (filepath.endswith('_IMPRO.csv')):
@@ -85,10 +86,9 @@ for filepath in glob.iglob('Ratings/'+'*.csv'):
         })
 
         df_intermediate['Name'] = current_file
-        #print(df_intermediate)
+        
         df_store = pd.concat([df_intermediate, df_store])
-       # print(d_store)
-        #print (d_intermediate)
+
         #plt.show()
 
 InfotoColumns(df_store)

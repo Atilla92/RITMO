@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Video Scale POC</title>
+    <link rel="stylesheet" href="video_data.css">
+</head>
+
+<body>
+    <!-- cbP2N1BQdYc video id -->
+    <div class="main_area">
+      <h3 class=" linkert__header">
+          <span>Duende</span>
+      </h3>
+        <div id="player"></div>
+
+        <div class="linkert">
+            <h3 class="linkert__subheader">Did you feel you were in a state of duende (trans)?</h3>
+
+            <div class="linkert__checkboxes">
+                <div class="linkert__checkbox voice-item">
+                    <h3 class=" linkert__checkbox__header">
+                        <span>No</span>
+                    </h3>
+
+                    <span class="check-box-square" role="button" onclick="clickLikert(1)" tabIndex={0}>
+                        <input id="1" type="checkbox"></input>
+                        <span class="checkmark"></span>
+                    </span>
+                    <h3 class="linkert__checkbox__subheader">1</h3>
+                </div>
+                <div class="linkert__checkbox voice-item">
+                    <h3 class=" linkert__checkbox__header">
+                        <span>Yes </span>
+                    </h3>
+
+                    <span class="check-box-square" role="button" onclick="clickLikert(2)" tabIndex={0}>
+                        <input id="2" type="checkbox"></input>
+                        <span class="checkmark"></span>
+                    </span>
+                    <h3 class="linkert__checkbox__subheader">2</h3>
+                </div>
+            </div>
+        </div>
+        <button class ="startButton" onclick="start()">Start</button>
+        <button class = "resetButton" onclick="resetData()">Reset</button>
+        <h3 class="fileName">Specify File Name and Participant</h3>
+        <input class="fileNameBox" id="userIdInput" onkeyup="storeUserId()" type="text">
+        <button class = "downloadButton" id="downloadCsv" onclick="downloadCsv()" disabled=true>Download</button>
+
+    </div>
+
+    <script>
+        var NUMBER_CHECKBOXES = 2;
+        var HEADER_CSV = "Time, Value\n";
+        var video_playing = false;
+        var user_id = "";
+
+
+        // 2. This code loads the IFrame Player API code asynchronously.
+        var tag = document.createElement('script');
+
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        // 3. This function creates an <iframe> (and YouTube player)
+        //    after the API code downloads.
+        var player;
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+                height: '360',
+                width: '640',
+                videoId: 'fl_6kVtYaU0',
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange,
+
+                }
+            });
+        }
+
+
+        // 4. The API will call this function when the video player is ready.
+        function onPlayerReady(event) {
+            event.target.cueVideoById();
+        }
+
+        // 5. The API calls this function when the player's state changes.
+        //    The function indicates that when playing a video (state=1),
+        //    the player should play for six seconds and then stop.
+        var done = false;
+        function onPlayerStateChange(event) {
+            console.log(console.log(document.activeElement))
+            // Give the document focus
+            window.focus();
+
+            // Remove focus from any focused element
+            if (document.activeElement) {
+                document.activeElement.blur();
+            }
+            switch (event.data) {
+                case 0:
+                    console.log('video ended');
+                    video_playing = false;
+                    break;
+                case 1:
+                    console.log('video playing from ' + player.getCurrentTime());
+                    video_playing = true;
+                    break;
+                case 2:
+                    console.log('video paused at ' + player.getCurrentTime());
+                    video_playing = false
+            }
+
+        }
+
+        function stopVideo() {
+            player.stopVideo();
+        }
+
+        var data = HEADER_CSV;
+        function clickLikert(value) {
+            var currentVideoTime = player.getCurrentTime()
+            console.log("video_playing", video_playing)
+            if (video_playing) {
+                data = data + currentVideoTime + "," + value + "\n";
+            }
+            for (var i = 1; i <= NUMBER_CHECKBOXES; i++) {
+                document.getElementById(i).checked = false;
+            }
+            document.getElementById(value).checked = true;
+            console.log(data);
+            activateOrDeactivateDownloadButton();
+        }
+        function resetData() {
+            data = HEADER_CSV;
+            player.seekTo(0);
+            console.log(data);
+            activateOrDeactivateDownloadButton();
+
+        }
+
+        function start() {
+            player.playVideo();
+            console.log(data);
+        }
+
+        function downloadCsv() {
+            var blob = new Blob([data]);
+
+            var a = window.document.createElement("a");
+
+            a.href = window.URL.createObjectURL(blob, {
+                type: "text/csv"
+            });
+            var today = new Date()
+            a.download = user_id + "_" + today.toISOString().slice(0, 10) + " " + today.getHours() + ":" + today.getMinutes() + "_DUENDE.csv";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+
+        }
+
+        function activateOrDeactivateDownloadButton() {
+            var downloadButton = document.getElementById("downloadCsv");
+            if (user_id != "" && data != HEADER_CSV) {
+                downloadButton.disabled = false;
+            } else {
+                downloadButton.disabled = true;
+            }
+        }
+
+        function storeUserId() {
+            user_id = document.getElementById("userIdInput").value;
+            console.log("value was", user_id);
+            activateOrDeactivateDownloadButton();
+
+        }
+
+        window.onkeypress = function (event) {
+            var keyPressed = String.fromCharCode(event.keyCode)
+            if (isFinite(keyPressed) && (keyPressed <= NUMBER_CHECKBOXES) && (keyPressed > 0)) {
+                console.log("We passed condition")
+                clickLikert(keyPressed);
+            }
+        }
+
+
+    </script>
+
+
+</body>
+
+</html>

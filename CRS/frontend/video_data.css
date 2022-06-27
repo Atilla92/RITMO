@@ -1,0 +1,200 @@
+.main_area {
+    margin-right: auto;
+    margin-left: auto;
+    width: 600px;
+    flex-direction: column;
+    display: flex;
+    margin-top:50px;
+}
+
+
+
+.linkert {
+    flex-direction: column;
+    margin-top: 50px;
+}
+
+.linkert__checkboxes {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+  }
+
+  .linkert__checkbox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .linkert__header
+ {
+    margin: 0 0 1rem 0;
+    font-size: 1.8rem;
+    font-family: Lato, Arial, sans-serif;
+    color: var(--black);
+  }
+  .linkert__subheader
+  {
+    margin: 0 0 1rem 0;
+    font-size: 1.2rem;
+    font-family: Lato, Arial, sans-serif;
+    color: var(--black);
+  }
+
+  .fileName{
+    margin-top: 2rem;
+    font-size: 1.2rem;
+    font-family: Lato, Arial, sans-serif;
+    color: var(--black);
+  }
+
+  .linkert__checkbox__header,
+  .linkert__checkbox__subheader {
+    margin: 0 0 1rem 0;
+    font-size: 1.0rem;
+    font-family: Lato, Arial, sans-serif;
+    color: var(--black);
+    max-width: 70px;
+
+  }
+
+  .linkert__checkbox__subheader {
+    font-size: 1.3rem!important;
+  }
+
+  @media (max-width: 640px) {
+    .linkert__checkbox__header {
+      font-size: 1.4rem;
+      line-height: 1.7rem;
+    }
+    .linkert__checkbox__header {
+      display: table;
+      max-width: 7rem;
+      min-width: 6rem;
+      min-height: 5rem;
+      text-align: center;
+    }
+    .linkert__checkbox__header.--wide {
+      font-size: 1.6rem;
+      min-height: 4rem;
+    }
+    .linkert__checkbox__header span {
+      display: table-cell;
+      vertical-align: middle;
+    }
+  }
+
+  .check-box-square {
+    height: 2.35rem;
+    width: 2rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin-bottom: 0.5rem;
+    padding: 0;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    text-align: left;
+  }
+
+  /* Hide the browser's default checkbox */
+
+  .check-box-square input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+
+  /* Create a custom checkbox */
+
+  .check-box-square .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 22.27px;
+    width: 21.95px;
+    background-color: #eee;
+    border: solid 2px #000000;
+    border-radius: unset;
+  }
+
+  /* On mouse-over, add a grey background color */
+
+  .check-box-square:active input ~ .checkmark {
+    background-color: #ccc;
+  }
+
+  /* When the checkbox is checked, add a blue background */
+
+  .check-box-square input:checked ~ .checkmark {
+    background-color: var(--white);
+  }
+
+  /* Create the checkmark/indicator (hidden when not checked) */
+
+  .check-box-square .checkmark:after {
+    content: '';
+    position: absolute;
+    display: none;
+  }
+
+  /* Show the checkmark when checked */
+
+  .check-box-square input:checked ~ .checkmark:after {
+    display: block;
+  }
+
+  /* Style the checkmark/indicator */
+
+  .check-box-square .checkmark:after {
+    left: 4.2px;
+    top: 0px;
+    width: 9px;
+    height: 14px;
+    border: solid #000000;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }
+
+  .startButton{
+    background-color: #c4df9b;
+    padding: 15px 32px;
+  }
+
+  .resetButton{
+    background-color: #f26d7d;
+    padding: 15px 32px;
+  }
+
+  .downloadButton{
+    background-color: #94defa;
+    padding: 15px 32px;
+  }
+
+  .fileNameBox{
+    padding: 10px 15px;
+  }
+
+
+  button {
+      box-shadow: 5 5 5 5 black;
+      margin-top: 20px;
+      font-size: 1.0rem;
+  }
+
+  input {
+      margin-top: 20px;
+  }
