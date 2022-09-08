@@ -5,6 +5,7 @@ data1 <- read.csv("~/Ritmo/R_FILES/DuringExperiments_Edited.csv", header=TRUE, s
 data2 <- read.csv("~/CODE/RITMO/PILOT_SEV_APRIL_2022/output/Ratings_Entropy.csv")
 data3 <- read.csv("~/CODE/RITMO/PILOT_SEV_APRIL_2022/output/DuringExperiments_Oslo.csv")
 data4 <- read.csv('~/CODE/RITMO/MIR/output/Average_rms_ent.csv')
+data5 <- read.csv("~/CODE/RITMO/PILOT_SEV_APRIL_2022/output/ratingsAnalysis/DuringExperiments_Edited.csv")
 # Linear model
 #gpa_lm = lm(gpa ~ occasion, data = gpa)
 #summary(gpa_lm)
@@ -17,18 +18,18 @@ data4 <- read.csv('~/CODE/RITMO/MIR/output/Average_rms_ent.csv')
 #gpa_mixed = lmer(gpa ~ occasion + (1 | student), data = gpa)
 #summary(gpa_mixed)
 #confint(gpa_mixed)
-#data1$Dance_mode<-as.factor(data1$Dance_mode)
-#data1$Palo <-as.factor(data1$Palo)
-#data_mixed = lmer(Q1b ~ Dance_mode + Palo + (1 | Participant), data = data1)
+data1$Dance_mode<-as.factor(data1$Dance_mode)
+data1$Palo <-as.factor(data1$Palo)
+data_mixed = lmer(Q1a ~ Dance_mode + (1 | Participant), data = data1)
 #data_mixed = lmer(Q1a ~ Q3a + (1 | Participant),  data = data1)
-#summary(data_mixed)
+summary(data_mixed)
 
 
 #data2$Value<- as.factor(data2$Value)
 data2$Dance_mode<- as.factor(data2$Dance_mode)
 data2$Palo <- as.factor(data2$Palo)
 data2$Participant <- as.factor(data2$Participant)
-data_mixed_2 = lmer(Value ~ Entropy + (1 | Participant),  data = data2)
+data_mixed_2 = lmer(Q1b ~ Palo + (1 | Participant),  data = data2)
 summary(data_mixed_2)
 
 
@@ -36,13 +37,20 @@ summary(data_mixed_2)
 data3$Dance_mode<- as.factor(data3$Dance_mode)
 data3$Palo <- as.factor(data3$Palo)
 data3$Participant <- as.factor(data3$Participant)
-data_mixed_3 = lmer(Q1a~ Q3a + (1 | Participant),  data = data3)
+data_mixed_3 = lmer(Q1b~ Q3b + (1 | Participant),  data = data3)
 summary(data_mixed_3)
+
+#Dataset 5 Analysis
+data5$Dance_mode<- as.factor(data5$Dance_mode)
+data5$Palo <- as.factor(data5$Palo)
+data5$Participant <- as.factor(data5$Participant)
+data_mixed_5 = lmer(Abs_Av~ Dance_mode + (1 | Participant),  data = data5)
+summary(data_mixed_5)
 
 
 #Dataset 4 Analysis
 data4$Dance_mode <- as.factor(data4$Dance_mode)
 data4$Palo <- as.factor(data4$Palo)
 data4$Participant <- as.factor(data4$Participant)
-data_mixed_4 = lmer(RMS_Av~ Dance_mode + (1 | Participant),  data = data4)
+data_mixed_4 = lmer(Entropy_Av~ Dance_mode + (1 | Participant),  data = data4)
 summary(data_mixed_4)
