@@ -3,7 +3,7 @@ library(lmerTest)
 #load("~/RITMO/Mixed_Models/mixed-models-with-r-workshop-2019-master/data/gpa.RData")
 data1 <- read.csv("~/Ritmo/R_FILES/DuringExperiments_Edited.csv", header=TRUE, stringsAsFactors=FALSE)
 data2 <- read.csv("~/CODE/RITMO/PILOT_SEV_APRIL_2022/output/Ratings_Entropy.csv")
-data3 <- read.csv("~/CODE/RITMO/PILOT_SEV_APRIL_2022/output/DuringExperiments_Oslo.csv")
+data3 <- read.csv("~/CODE/RITMO/PILOT_SEV_APRIL_2022/output/ratingsAnalysis/DuringExperiments_Oslo.csv")
 data4 <- read.csv('~/CODE/RITMO/MIR/output/Average_rms_ent.csv')
 data5 <- read.csv("~/CODE/RITMO/PILOT_SEV_APRIL_2022/output/ratingsAnalysis/DuringExperiments_Edited.csv")
 # Linear model
@@ -37,8 +37,18 @@ summary(data_mixed_2)
 data3$Dance_mode<- as.factor(data3$Dance_mode)
 data3$Palo <- as.factor(data3$Palo)
 data3$Participant <- as.factor(data3$Participant)
-data_mixed_3 = lmer(Q1b~ Q3b + (1 | Participant),  data = data3)
+data_mixed_3 = lmer(Q1b~ Dance_mode    +   (1 | Participant),  data = data3)
+data_mixed_3b = lmer(Q1b  ~ Dance_mode + Q3b   + (1 | Participant),  data = data3)
+AIC(data_mixed_3,data_mixed_3b)
 summary(data_mixed_3)
+summary(data_mixed_3b)
+
+# Model comparison with AIC
+# The smallest one is the best. 
+# When you have more variables you will be able to explain more. So you need to check that the complexity is justified.
+# Since you are comparing two models of different DOF. Need to check the models complexity. 
+# The less complexity the better. 
+AIC(data_mixed_3,data_mixed_3b)
 
 #Dataset 5 Analysis
 data5$Dance_mode<- as.factor(data5$Dance_mode)
@@ -54,3 +64,5 @@ data4$Palo <- as.factor(data4$Palo)
 data4$Participant <- as.factor(data4$Participant)
 data_mixed_4 = lmer(Entropy_Av~ Dance_mode + (1 | Participant),  data = data4)
 summary(data_mixed_4)
+
+

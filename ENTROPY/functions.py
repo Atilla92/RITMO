@@ -29,7 +29,19 @@ if not jp.isJVMStarted():
     jp.startJVM(jv_path, '-ea', '-Xmx2048m', '-Djava.class.path=vmm.jar:trove.jar')
 jstr = jp.JPackage('java.lang').String
 assert(jp.isJVMStarted())
-javify = lambda py_str, ab_dict: jstr(bytearray([ab_dict[s] for s in py_str]))
+
+##Original version
+#javify = lambda py_str, ab_dict: jstr(bytearray([ab_dict[s] for s in py_str])) 
+
+## Small change to pass string instead of bytearray
+#javify = lambda py_str, ab_dict: jstr(str([ab_dict[s] for s in py_str]))
+
+def javify(py_str, ab_dict):
+    s = bytes([ab_dict[s] for s in py_str])
+    #print(s, jstr(s), 'hello')
+    return jstr(s) 
+
+
 #
 #
 #
@@ -69,13 +81,12 @@ def quantize_vector(data):
 #
 #
 def lz_entropy(S):
-    print('started 2')
     X = quantize_vector(S.values)
     N = len(X)
     return LZ76(X) * np.log2(N)/N
 #
 #
-def ctw_entropy(X, vmm_order=100):
+def ctw_entropy(X, vmm_order=2):
 ## Set training string and build alphabet dictionary (used extensively later)
     time = X.index.values
     Xq = quantize_vector(X.values)
@@ -85,9 +96,10 @@ def ctw_entropy(X, vmm_order=100):
     #
     ## Initialise and train model
     vmm = jp.JPackage('vmm.algs').DCTWPredictor()
-    vmm.init(ab_size, vmm_order)
+    vmm.init( ab_size, vmm_order) # perhaps change order of these
+    #print(Xq, javify(Xq, ab_dict),'JAVIFY!!!!!!!!!!!!!!!!!!!!!')
     vmm.learn(javify(Xq, ab_dict))
-    #
+ 
     res = vmm.logEval(javify( Xq, ab_dict)) / len(Xq)
     return res
 #
@@ -97,7 +109,6 @@ def calc_lz_df(df, style='LZ', hil=False, window=2000, max_windows=np.inf):
     #n_windows = int( len(df) / window ) 
     #n_windows = int( np.min( [max_windows, n_windows] ) )
     lz = pd.Series(index=df.columns, dtype=float)
-    print('Started')
     for c in df.columns:
         data = df[c]
         data = data.dropna()
@@ -150,7 +161,7 @@ def calc_lz_df_2(df, style='LZ', hil=False, window=2000, max_windows=np.inf):
                 temp.append( lz_entropy( w ) )
             if style=='CTW':
                 temp.append( ctw_entropy( w ) )
-        print(temp,'TEMP!!!')
+        #print(temp,'TEMP!!!', len(temp), 'length temp')
         lz[c] = np.array(temp).mean()
     return lz
 
