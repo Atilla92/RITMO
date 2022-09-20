@@ -147,6 +147,7 @@ def calc_lz_df_2(df, style='LZ', hil=False, window=2000, max_windows=np.inf):
         #print('Going with channel ',c)
         data = df[c]
         temp = []
+        window_array = []
         for n in range(n_windows):
             w = data.iloc[ n*window : (n+1)*window ]
             #
@@ -159,11 +160,12 @@ def calc_lz_df_2(df, style='LZ', hil=False, window=2000, max_windows=np.inf):
             w = pd.Series(index=w.index, data=w_vals)
             if style=='LZ':
                 temp.append( lz_entropy( w ) )
+                
             if style=='CTW':
                 temp.append( ctw_entropy( w ) )
-        #print(temp,'TEMP!!!', len(temp), 'length temp')
+
         lz[c] = np.array(temp).mean()
-    return lz
+    return lz, temp
 
 
 

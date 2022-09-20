@@ -1,3 +1,4 @@
+from curses import window
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -6,6 +7,13 @@ from functions import *
 from scipy.io.wavfile import read
 import matplotlib.pyplot as plt
 import numpy as np
+import time
+
+# starting time
+start = time.time()
+
+
+
 
 
 # Load Data
@@ -33,18 +41,73 @@ def plotAudio(data, samplerate):
     plt.ylabel("Amplitude")
     plt.show()
 
+def plotAudio_2(data, samplerate, length_df, ax):
+    """Plot left and right channel of Audio Data"""
+    data = data[0:length_df]
+    length = data.shape[0] / samplerate
+    time = np.linspace(0., length, data.shape[0])
+    ax.plot(time, data[:,0], label="Left channel")
+    #ax.plot(time, data[:, 1], label="Right channel")
+    #ax.legend()
+    #ax.xlabel("Time [s]")
+    #ax.ylabel("Amplitude")
+    #plt.show()
+
+
+# Initiate variables
+length_df = []
+step_size = 400000
+
+#Empty lists
+output_lz_array = []
+output_ctw_array = []
+
 #Create a pandas dataframe for estimating LZ. Need to place 
-df = pd.DataFrame({
-    #"Left" : data[:4000,0],
-    "Right": data [0:3000,1]
-})
+if length_df:
+    df = pd.DataFrame({
+        #"Left" : data[:4000,0],
+        "Right": data [:length_df,1]
+    })
 
-print(df)
+else:
+    df = pd.DataFrame({
+        #"Left" : data[:4000,0],
+        "Right": data [:,1]
+    })
 
-output  =calc_lz_df_2(df, style='LZ', window=100)
-output_2 =calc_lz_df_2(df, style='LZ', window=100)
+print(len(df), 'Length df')
 
-print(output, len(output), 'length')
+
+
+
+# Calculate Entropy
+output_lz, temp_lz  =calc_lz_df_2(df, style='LZ', window=step_size)
+output_ctw, temp_ctw =calc_lz_df_2(df, style='CTW', window=step_size)
+
+
+
+# Plot 
+# Create time array for entropy, divide by samplerate of audio. 
+n_windows = int( len(df) / step_size ) 
+time_array  = np.divide(np.arange(0,n_windows* step_size ,step_size), samplerate)
+
+f, (ax1, ax2, ax3) = plt.subplots(3, 1, sharex=True)
+ax1.plot(time_array ,temp_lz, label = 'LZ' )
+ax2.plot(time_array,temp_ctw, label = 'CTW' )
+plotAudio_2(data, samplerate, length_df, ax3)
+plt.legend()
+plt.show()
+
+
+# end time
+end = time.time()
+# total time taken
+print (end-start, 'runtime')
+print(f"Runtime of the program is {end - start}")
+
+
+
+
 
 
 ### What has to be done: Align with ratings. See how big of intervals. One could perhaps estimate the entropy based on the intervals of the sections?
