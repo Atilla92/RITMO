@@ -27,7 +27,8 @@ start = time.time()
 
 
 # Read Audio WAV file
-samplerate, data = read('/Users/atillajv/CODE/FILES/PILOT_SEV_APRIL_2022/Audio/P3_D0_G1_M6_R2_T1.wav')
+file_name = "P3_D1_G1_M6_R2_T1.wav"
+samplerate, data = read(str('/Users/atillajv/CODE/FILES/PILOT_SEV_APRIL_2022/Audio/'+ file_name))
 
 
 def plotAudio(data, samplerate):
@@ -47,16 +48,11 @@ def plotAudio_2(data, samplerate, length_df, ax):
     length = data.shape[0] / samplerate
     time = np.linspace(0., length, data.shape[0])
     ax.plot(time, data[:,0], label="Left channel")
-    #ax.plot(time, data[:, 1], label="Right channel")
-    #ax.legend()
-    #ax.xlabel("Time [s]")
-    #ax.ylabel("Amplitude")
-    #plt.show()
 
 
 # Initiate variables
 length_df = []
-step_size = 400000
+step_size = 4000
 
 #Empty lists
 output_lz_array = []
@@ -90,14 +86,24 @@ output_ctw, temp_ctw =calc_lz_df_2(df, style='CTW', window=step_size)
 # Create time array for entropy, divide by samplerate of audio. 
 n_windows = int( len(df) / step_size ) 
 time_array  = np.divide(np.arange(0,n_windows* step_size ,step_size), samplerate)
+df_out = pd.DataFrame(index = time_array, columns=['t0', 'LZ','CTW'])
+df_out['t0']= time_array
+df_out['LZ'] = temp_lz
+df_out['CTW'] = temp_ctw
+df_out = pd.DataFrame([[len(df),output_lz.values[0], output_ctw.values[0]]], index = ['mean'], columns=df_out.columns).append(df_out)
+file_output = "/Users/atillajv/CODE/RITMO/ENTROPY/output/"
+df_out.to_csv(file_output + 'test1_' + file_name + '.csv')
+
+
+
 
 f, (ax1, ax2, ax3) = plt.subplots(3, 1, sharex=True)
 ax1.plot(time_array ,temp_lz, label = 'LZ' )
 ax2.plot(time_array,temp_ctw, label = 'CTW' )
 plotAudio_2(data, samplerate, length_df, ax3)
 plt.legend()
-plt.show()
-
+#plt.show()
+plt.savefig(file_output + 'Entropy_LZ_CTW_'+ file_name +'.png')
 
 # end time
 end = time.time()
