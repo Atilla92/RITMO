@@ -139,6 +139,7 @@ def calc_lz_df_2(df, style='LZ', hil=False, window=2000, max_windows=np.inf):
     n_windows = int( len(df) / window ) 
     n_windows = int( np.min( [max_windows, n_windows] ) )
     lz = pd.Series(index=df.columns, dtype=float)
+    temp = []
     for c in df.columns:
         data = df[c]
         data = data.dropna()
@@ -146,7 +147,6 @@ def calc_lz_df_2(df, style='LZ', hil=False, window=2000, max_windows=np.inf):
             continue
         #print('Going with channel ',c)
         data = df[c]
-        temp = []
         window_array = []
         for n in range(n_windows):
             w = data.iloc[ n*window : (n+1)*window ]
@@ -169,6 +169,25 @@ def calc_lz_df_2(df, style='LZ', hil=False, window=2000, max_windows=np.inf):
 
 
 
+def plotAudio_2(data, samplerate, length_df, ax, start_time = 0):
+    """Plot left and right channel of Audio Data"""
+    if length_df:
+        data = data[start_time:(start_time + length_df)]
+    length = data.shape[0] / samplerate
+    time = np.linspace(0., length, data.shape[0])
+    ax.plot(time, data[:,0], label="Left channel")
+
+
+def plotAudio(data, samplerate):
+    """Plot left and right channel of Audio Data"""
+    length = data.shape[0] / samplerate
+    time = np.linspace(0., length, data.shape[0])
+    plt.plot(time, data[:, 0], label="Left channel")
+    plt.plot(time, data[:, 1], label="Right channel")
+    plt.legend()
+    plt.xlabel("Time [s]")
+    plt.ylabel("Amplitude")
+    plt.show()
 
 
 
