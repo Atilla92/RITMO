@@ -30,7 +30,7 @@ print(audio_files, 'audio_files')
 
 
 # Initiate variables
-length_df = 35000
+length_df = []
 step_size = 4000
 
 #Empty lists

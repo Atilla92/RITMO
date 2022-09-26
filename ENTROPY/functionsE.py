@@ -23,7 +23,7 @@ from lz76 import LZ76
 sys.path.append(path_name)
 import os
 os.chdir(path_name)
-import jpype as jp
+import jpype as jpq
 jv_path = '/Library/Java/JavaVirtualMachines/jdk-18.0.2.1.jdk/Contents/MacOS/libjli.dylib'
 if not jp.isJVMStarted():
     jp.startJVM(jv_path, '-ea', '-Xmx2048m', '-Djava.class.path=vmm.jar:trove.jar')
