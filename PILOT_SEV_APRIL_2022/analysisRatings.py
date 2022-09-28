@@ -7,7 +7,7 @@ import numpy as np
 from scipy.io.wavfile import read
 from scipy.stats import entropy
 from scipy.stats import norm
-from sklearn import preprocessing
+#from sklearn import preprocessing
 from functions import *
 
 # Initial Variables
@@ -90,7 +90,7 @@ for filepath in glob.iglob('Ratings/'+'*.csv'):
         
         df_store = pd.concat([df_intermediate, df_store])
 
-        #plt.show()
+        plt.show()
 
 InfotoColumns(df_store)
 
