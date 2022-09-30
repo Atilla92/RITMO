@@ -10,7 +10,7 @@ from scipy.io.wavfile import read
 import matplotlib.pyplot as plt
 import numpy as np
 import time
-from functionsE import plotAudio_2, calc_lz_df_2
+from functionsE import plotAudio_2, calc_lz_df_2, quantize_vector
 
 # Code settings:
 
@@ -22,7 +22,8 @@ channel_num= 1 # 0 for Left channel, 1 for Right Channel.
 # Initiate variables
 length_df = 40000 # Takes subset samples. Set to [] if you want to whole length. 
 step_size = 4000  # Window of LZ/CTW estimation. 
-
+preBinarise_on= True #If you want to binarise data prior to passing dataframe to LZ
+absolute_on = True #Takes the absolute value of input data. 
 
 ##Empty lists
 output_lz_array = []
@@ -55,6 +56,16 @@ for i, item in enumerate(audio_files):
 
     if downsample_on:
         data = scipy.signal.decimate(data, downsample_factor)
+    print(data)
+    if absolute_on:
+        data = np.abs(data)
+    
+    print(data, 'AFTER ABSOLUTE')
+
+    if preBinarise_on:
+        data = quantize_vector(data)
+    
+    print(data, 'AFTER BINARISE')
 
     #Create a pandas dataframe for estimating LZ. Need to place 
     if length_df:
@@ -71,12 +82,9 @@ for i, item in enumerate(audio_files):
 
     print(len(df), 'Length df')
 
-    print(data)
-
-
     # Calculate Entropy
-    output_lz, temp_lz  =calc_lz_df_2(df, style='LZ', window=step_size, binarise=True)
-    output_ctw, temp_ctw =calc_lz_df_2(df, style='CTW', window=step_size)
+    output_lz, temp_lz  =calc_lz_df_2(df, style='LZ', window=step_size)
+    output_ctw, temp_ctw =calc_lz_df_2(df, style='CTW', window=step_size, binarise=preBinarise_on)
 
     
     # Create time array for entropy, divide by samplerate of audio. 

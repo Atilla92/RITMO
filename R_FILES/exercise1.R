@@ -6,6 +6,9 @@ data2 <- read.csv("~/CODE/RITMO/PILOT_SEV_APRIL_2022/output/Ratings_Entropy.csv"
 data3 <- read.csv("~/CODE/RITMO/PILOT_SEV_APRIL_2022/output/ratingsAnalysis/DuringExperiments_Oslo.csv")
 data4 <- read.csv('~/CODE/RITMO/MIR/output/Average_rms_ent.csv')
 data5 <- read.csv("~/CODE/RITMO/PILOT_SEV_APRIL_2022/output/ratingsAnalysis/DuringExperiments_Edited.csv")
+dataSub <- subset(data3, Dance_mode!="D0")
+
+
 # Linear model
 #gpa_lm = lm(gpa ~ occasion, data = gpa)
 #summary(gpa_lm)
@@ -36,12 +39,16 @@ summary(data_mixed_2)
 #Dataset 3 Analysis
 data3$Dance_mode<- as.factor(data3$Dance_mode)
 data3$Palo <- as.factor(data3$Palo)
+data3$Dance_mode <- relevel(data3$Dance_mode, "D6")
+data3$Palo <- relevel(data3$Palo, "R2")
 data3$Participant <- as.factor(data3$Participant)
 data_mixed_3 = lmer(Q1b~ Dance_mode    +   (1 | Participant),  data = data3)
-data_mixed_3b = lmer(Q1b  ~ Dance_mode + Q3b   + (1 | Participant),  data = data3)
+data_mixed_3b = lmer(Q1b  ~ Dance_mode + Palo   + (1 | Participant),  data = data3)
+data_mixed_3c = lmer(Q1b  ~ Dance_mode * Palo   + (1 | Participant),  data = data3)
 AIC(data_mixed_3,data_mixed_3b)
 summary(data_mixed_3)
 summary(data_mixed_3b)
+summary(data_mixed_3c)
 
 # Model comparison with AIC
 # The smallest one is the best. 

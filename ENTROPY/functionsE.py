@@ -23,7 +23,7 @@ from lz76 import LZ76
 sys.path.append(path_name)
 import os
 os.chdir(path_name)
-import jpype as jpq
+import jpype as jp
 jv_path = '/Library/Java/JavaVirtualMachines/jdk-18.0.2.1.jdk/Contents/MacOS/libjli.dylib'
 if not jp.isJVMStarted():
     jp.startJVM(jv_path, '-ea', '-Xmx2048m', '-Djava.class.path=vmm.jar:trove.jar')
@@ -86,13 +86,16 @@ def lz_entropy(S):
     return LZ76(X) * np.log2(N)/N
 #
 #
-def ctw_entropy(X, vmm_order=2):
+def ctw_entropy(X, vmm_order=2, binarise = False, ab_dict ={}, ab_size = 0):
 ## Set training string and build alphabet dictionary (used extensively later)
     time = X.index.values
-    Xq = quantize_vector(X.values)
-    alphabet = set(Xq)
-    ab_size = len(alphabet)
-    ab_dict = {cc: i for cc,i in zip(sorted(alphabet), range(ab_size))}
+    if binarise: 
+        Xq = X.values
+    else:
+        Xq = quantize_vector(X.values)
+        # alphabet = set(Xq)
+        # ab_size = len(alphabet)
+        # ab_dict = {cc: i for cc,i in zip(sorted(alphabet), range(ab_size))}
     #
     ## Initialise and train model
     vmm = jp.JPackage('vmm.algs').DCTWPredictor()
@@ -104,37 +107,50 @@ def ctw_entropy(X, vmm_order=2):
     return res
 #
 #
-def calc_lz_df(df, style='LZ', hil=False, window=2000, max_windows=np.inf):
+
+def calc_lz_df_2(df, style='LZ', hil=False, window=2000, max_windows=np.inf, binarise = False):
+  
+    
     # find time indices
-    #n_windows = int( len(df) / window ) 
-    #n_windows = int( np.min( [max_windows, n_windows] ) )
+    n_windows = int( len(df) / window ) 
+    n_windows = int( np.min( [max_windows, n_windows] ) )
     lz = pd.Series(index=df.columns, dtype=float)
+    temp = []
     for c in df.columns:
         data = df[c]
         data = data.dropna()
         if len(data) <= 30:
             continue
-        temp = []
+        #print('Going with channel ',c)
+        data = df[c]
 
-        # for n in range(n_windows):
-        #     w = data.iloc[ n*window : (n+1)*window ]
-        #     #
-        #     if hil:
-        #         w_vals = np.abs( hilbert(w) )
-        #     else:
-        #         w_vals = w.values
-        #     #
-        #     w = pd.Series(index=w.index, data=w_vals)
-        if style=='LZ':
-            temp.append( lz_entropy( data ) )
-        if style=='CTW':
-            temp.append( ctw_entropy( data ) )
-        print(temp, 'TEMP!!!!!!!')
+        alphabet = set(data)
+        ab_size = len(alphabet)
+        ab_dict = {cc: i for cc,i in zip(sorted(alphabet), range(ab_size))}
+
+        window_array = []
+        for n in range(n_windows):
+            w = data.iloc[ n*window : (n+1)*window ]
+            #
+            if hil:
+                w_vals = np.abs( hilbert(w) )
+            else:
+                w_vals = w.values
+                #print('yes')
+            #
+            w = pd.Series(index=w.index, data=w_vals)
+            if style=='LZ':
+                temp.append( lz_entropy( w ) )
+                
+            if style=='CTW':
+                temp.append( ctw_entropy( w, binarise=binarise, ab_size = ab_size, ab_dict = ab_dict ) )
+
         lz[c] = np.array(temp).mean()
-    return lz
+    return lz, temp
 
 
-def calc_lz_df_2(df, style='LZ', hil=False, window=2000, max_windows=np.inf):
+def calc_lz_df_3(df, style='LZ', hil=False, window=2000, max_windows=np.inf):
+    
     # find time indices
     n_windows = int( len(df) / window ) 
     n_windows = int( np.min( [max_windows, n_windows] ) )
@@ -168,6 +184,35 @@ def calc_lz_df_2(df, style='LZ', hil=False, window=2000, max_windows=np.inf):
     return lz, temp
 
 
+def calc_lz_df(df, style='LZ', hil=False, window=2000, max_windows=np.inf):
+    # find time indices
+    #n_windows = int( len(df) / window ) 
+    #n_windows = int( np.min( [max_windows, n_windows] ) )
+    lz = pd.Series(index=df.columns, dtype=float)
+    for c in df.columns:
+        data = df[c]
+        data = data.dropna()
+        if len(data) <= 30:
+            continue
+        temp = []
+
+        # for n in range(n_windows):
+        #     w = data.iloc[ n*window : (n+1)*window ]
+        #     #
+        #     if hil:
+        #         w_vals = np.abs( hilbert(w) )
+        #     else:
+        #         w_vals = w.values
+        #     #
+        #     w = pd.Series(index=w.index, data=w_vals)
+        if style=='LZ':
+            temp.append( lz_entropy( data ) )
+        if style=='CTW':
+            temp.append( ctw_entropy( data ) )
+        print(temp, 'TEMP!!!!!!!')
+        lz[c] = np.array(temp).mean()
+    return lz
+
 
 def plotAudio_2(data, samplerate, length_df, ax, start_time = 0):
     """Plot left and right channel of Audio Data"""
@@ -175,7 +220,7 @@ def plotAudio_2(data, samplerate, length_df, ax, start_time = 0):
         data = data[start_time:(start_time + length_df)]
     length = data.shape[0] / samplerate
     time = np.linspace(0., length, data.shape[0])
-    ax.plot(time, data[:,0], label="Left channel")
+    ax.plot(time, data[:], label="Left channel")
 
 
 def plotAudio(data, samplerate):
@@ -195,3 +240,4 @@ def plotAudio(data, samplerate):
 
 
 
+#you need to redo quite a lot of the script, need 2 binaries, now there is a window of zeros because of absolute value. 
