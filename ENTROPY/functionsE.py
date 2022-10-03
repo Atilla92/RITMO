@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from glob import glob
+import scipy
 #from scipy.io import loadmat
 #from scipy.signal import hilbert
 #import scipy.signal as sg
@@ -234,7 +235,18 @@ def plotAudio(data, samplerate):
     plt.ylabel("Amplitude")
     plt.show()
 
+def preProcessing(data, downsample_on = False, absolute_on = False, downsample_factor = 1, preBinarise_on = False )
+    # Downsample
+    if downsample_on:
+        data = scipy.signal.decimate(data, downsample_factor)
+    
+    if absolute_on:
+        data = np.abs(data)
 
+    if preBinarise_on:
+        data = quantize_vector(data)
+    
+    return data
 
 
 
