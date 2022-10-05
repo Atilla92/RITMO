@@ -2,11 +2,11 @@ import numpy as np
 import pandas as pd
 from scipy.stats.stats import pearsonr
 from scipy import stats
-import pingouin as pg
-import seaborn as sns
+#import pingouin as pg
+#import seaborn as sns
 import matplotlib.pyplot as plt
 
-df = pd.read_csv ('Responses/DuringExperiments_Oslo.csv')
+df = pd.read_csv ('Responses/DuringExperiments_Sevilla_October_2022.csv')
 
 
 
@@ -38,19 +38,19 @@ def filterOut(df, listFilter):
     return df_filter
 
 
-print(df)
-CronchbachAlpha(df)
-AverageFlowtoDF(df)
-correlMatrix(df, False)
-print(df)
+# print(df)
+# CronchbachAlpha(df)
+# AverageFlowtoDF(df)
+# correlMatrix(df, False)
+# print(df)
 
-df_P = df.loc[df['Participant'].isin(['P3', 'P4'])]
-CronchbachAlpha(df_P)
-correlMatrix(df_P, False)
+# df_P = df.loc[df['Participant'].isin(['P3', 'P4'])]
+# CronchbachAlpha(df_P)
+# correlMatrix(df_P, False)
 
-df_G = df.loc[df['Participant'].isin(['G1', 'G2'])]
-CronchbachAlpha(df_G)
-correlMatrix(df_G, True)
+# df_G = df.loc[df['Participant'].isin(['G1', 'G2'])]
+# CronchbachAlpha(df_G)
+# correlMatrix(df_G, True)
 
 
 
@@ -70,9 +70,10 @@ def InfotoColumns(df):
     df['Music_mode'] = music_array
     df['Palo'] = palo_array
 
+#df = df.dropna()
 InfotoColumns(df)
 print(df)
-df.to_csv('output/DuringExperiments_Oslo.csv', index=False)
+df.to_csv('output/ratingsAnalysis/DuringExperiments_Sevilla_October_2022.csv', index=False)
 
 #https://blog.4dcu.be/programming/2021/03/16/Code-Nugget-Correlation-Heatmaps.html
 
