@@ -81,9 +81,13 @@ def quantize_vector(data):
     return (data>0).astype(int)
 #
 #
-def lz_entropy(S):
-    X = quantize_vector(S.values)
-    N = len(X)
+def lz_entropy(S, binarise):
+    if binarise:
+        X = S.values
+        N = len(X)
+    else: 
+        X = quantize_vector(S.values)
+        N = len(X)
     return LZ76(X) * np.log2(N)/N
 #
 #
@@ -94,9 +98,9 @@ def ctw_entropy(X, vmm_order=2, binarise = False, ab_dict ={}, ab_size = 0):
         Xq = X.values
     else:
         Xq = quantize_vector(X.values)
-        # alphabet = set(Xq)
-        # ab_size = len(alphabet)
-        # ab_dict = {cc: i for cc,i in zip(sorted(alphabet), range(ab_size))}
+        alphabet = set(Xq)
+        ab_size = len(alphabet)
+        ab_dict = {cc: i for cc,i in zip(sorted(alphabet), range(ab_size))}
     #
     ## Initialise and train model
     vmm = jp.JPackage('vmm.algs').DCTWPredictor()
@@ -141,7 +145,7 @@ def calc_lz_df_2(df, style='LZ', hil=False, window=2000, max_windows=np.inf, bin
             #
             w = pd.Series(index=w.index, data=w_vals)
             if style=='LZ':
-                temp.append( lz_entropy( w ) )
+                temp.append( lz_entropy( w,  binarise = binarise ) )
                 
             if style=='CTW':
                 temp.append( ctw_entropy( w, binarise=binarise, ab_size = ab_size, ab_dict = ab_dict ) )
@@ -235,7 +239,7 @@ def plotAudio(data, samplerate):
     plt.ylabel("Amplitude")
     plt.show()
 
-def preProcessing(data, downsample_on = False, absolute_on = False, downsample_factor = 1, preBinarise_on = False )
+def preProcessing(data, downsample_on = False, absolute_on = False, downsample_factor = 1, preBinarise_on = False ):
     # Downsample
     if downsample_on:
         data = scipy.signal.decimate(data, downsample_factor)

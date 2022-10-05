@@ -1,4 +1,5 @@
 from curses import window
+#from turtle import down
 import numpy as np
 import scipy
 import pandas as pd
@@ -18,18 +19,24 @@ loop_on = False # Set to True if you want to loop through a certain folder. Else
 loop_off = 'P3_D1_G1_M1_R1_T1.wav'
 downsample_on = True #if you want to downsample. 
 downsample_factor = 4 # Set to 1 if False. 
-channel_num= 1 # 0 for Left channel, 1 for Right Channel. 
-# Initiate variables
-length_df = [] # Takes subset samples. Set to [] if you want to whole length. 
-step_size = 4000  # Window of LZ/CTW estimation. 
 preBinarise_on= True #If you want to binarise data prior to passing dataframe to LZ
 absolute_on = True #Takes the absolute value of input data. 
+channel_num= 1 # 0 for Left channel, 1 for Right Channel. 
+t_start = 50 #[s] if you want analysis to start from different time frame. 
+# Initiate variables
+length_df = 80000 # Takes subset samples. Set to [] if you want to whole length. 
+step_size = 4000  # Window of LZ/CTW estimation. 
 
-##Empty lists
+
+##Empty lists, default values
 output_lz_array = []
 output_ctw_array = [] 
 audio_files = []
+binString = 'off'
+absString = 'off'
 
+if not downsample_factor:
+    downsample_factor = 1
 
 #Load Data
 if loop_on:
@@ -42,7 +49,7 @@ else:
  audio_files = [loop_off]
 
 
-print(audio_files, 'audio_files')
+#print(audio_files, 'audio_files')
 
 
 # Read Audio WAV file
@@ -57,14 +64,17 @@ for i, item in enumerate(audio_files):
     # Downsample
     if downsample_on:
         data = scipy.signal.decimate(data, downsample_factor)
+     
     
     if absolute_on:
         data = np.abs(data)
+        absString = 'on'
     
     print(data, 'AFTER ABSOLUTE')
 
     if preBinarise_on:
         data = quantize_vector(data)
+        binString = 'on'
     
     print(data, 'AFTER BINARISE')
 
@@ -86,7 +96,7 @@ for i, item in enumerate(audio_files):
     print(len(df), 'Length df')
 
     # Calculate Entropy
-    output_lz, temp_lz  =calc_lz_df_2(df, style='LZ', window=step_size)
+    output_lz, temp_lz  =calc_lz_df_2(df, style='LZ', window=step_size, binarise=preBinarise_on)
     output_ctw, temp_ctw =calc_lz_df_2(df, style='CTW', window=step_size, binarise=preBinarise_on)
 
     
@@ -106,7 +116,7 @@ for i, item in enumerate(audio_files):
     df_out['CTW'] = temp_ctw
     df_out = pd.DataFrame([[len(df),output_lz.values[0], output_ctw.values[0]]], index = ['mean'], columns=df_out.columns).append(df_out)
     file_output = "/Users/atillajv/CODE/RITMO/ENTROPY/output/main/"
-    df_out.to_csv(file_output + 'Entropy_LZ_CTW_(w='+ str(step_size)+'_s='+str(length_df) +')_'+ file_name.strip('.wav') + '.csv')
+    df_out.to_csv(file_output + 'Entropy_LZ_CTW_(w='+ str(step_size)+'_s='+str(length_df) +'_ds='+str(downsample_factor)+'_b=' + binString + '_abs='+ absString + ')_'+ file_name.strip('.wav') + '.csv')
 
 
     # Plot data
@@ -124,8 +134,9 @@ for i, item in enumerate(audio_files):
     ax3.set_ylabel('Amplitude Binarised')
     ax4.set_ylabel('Audio Amplitude')
 
-    plt.show()
-    plt.savefig(file_output + 'Entropy_LZ_CTW_(w='+ str(step_size)+'_s='+str(length_df) +')_'+ file_name.strip('.wav') +'.png')
+    #plt.show()
+    #plt.savefig(file_output + 'test.png')
+    plt.savefig(file_output + 'Entropy_LZ_CTW_(w='+ str(step_size)+'_s='+str(length_df) +'_ds='+str(downsample_factor)+'_b=' + binString + '_abs='+ absString + ')_'+ file_name.strip('.wav') +'.png')
 
     # end time
     end = time.time()
@@ -149,10 +160,18 @@ for i, item in enumerate(audio_files):
 # 1. Downsample by 4. scipy.signal.decimate(x, q) x = array, q = factor of downsampling
 # 2. Positive amplitude, absolute value or squared. np.abs()
 # 3. Binarise the whole thing prior to windowing. 
+# 4. Entropy value in middle of window instead first point. use temp, in the middle. 
 
 
 # To Do:
 # 1. Go through code and clean dataframes. 
-# 2. Compare non binarised with binarised version.
+# 2. Compare non binarised with binarised version. DONE
 # 3. Plot only binarised if binarised necessary. 
 # 4. Store mean in a new dataframe, own csv so we can throw in mixed models analysis. 
+# 5. Also set a starting frame so you can take small random snippets.
+
+
+## Next step:
+# 1. Windowing in CWS
+# 2. Compare with ratings from dancers/musicians. 
+
