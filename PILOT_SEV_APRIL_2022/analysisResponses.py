@@ -6,7 +6,7 @@ from scipy import stats
 #import seaborn as sns
 import matplotlib.pyplot as plt
 
-df = pd.read_csv ('Responses/DuringExperiments_Sevilla_October_2022.csv')
+df = pd.read_csv ('Responses/DuringExperiments_Sevilla_06102022_DropW.csv')
 
 
 
@@ -73,7 +73,7 @@ def InfotoColumns(df):
 #df = df.dropna()
 InfotoColumns(df)
 print(df)
-df.to_csv('output/ratingsAnalysis/DuringExperiments_Sevilla_October_2022.csv', index=False)
+df.to_csv('output/ratingsAnalysis/DuringExperiments_Sevilla_06102022_DropW.csv', index=False)
 
 #https://blog.4dcu.be/programming/2021/03/16/Code-Nugget-Correlation-Heatmaps.html
 

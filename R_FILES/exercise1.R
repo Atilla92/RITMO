@@ -6,6 +6,15 @@ data2 <- read.csv("~/CODE/RITMO/PILOT_SEV_APRIL_2022/output/Ratings_Entropy.csv"
 data3 <- read.csv("~/CODE/RITMO/PILOT_SEV_APRIL_2022/output/ratingsAnalysis/DuringExperiments_Oslo.csv")
 data4 <- read.csv('~/CODE/RITMO/MIR/output/Average_rms_ent.csv')
 data5 <- read.csv("~/CODE/RITMO/PILOT_SEV_APRIL_2022/output/ratingsAnalysis/DuringExperiments_Edited.csv")
+
+#data 03102022
+#data6 <- read.csv("~/CODE/RITMO/PILOT_SEV_APRIL_2022/output/ratingsAnalysis/DuringExperiments_Sevilla_October_2022.csv")
+#data7 <- read.csv("~/CODE/RITMO/PILOT_SEV_APRIL_2022/output/ratingsAnalysis/DuringExperiments_Sevilla_October_2022_DropW.csv")
+
+#data 06102022
+data6 <- read.csv("~/CODE/RITMO/PILOT_SEV_APRIL_2022/output/ratingsAnalysis/DuringExperiments_Sevilla_October_2022.csv")
+data7 <- read.csv("~/CODE/RITMO/PILOT_SEV_APRIL_2022/output/ratingsAnalysis/DuringExperiments_Sevilla_October_2022_DropW.csv")
+
 dataSub <- subset(data3, Dance_mode!="D0")
 
 
@@ -49,6 +58,37 @@ AIC(data_mixed_3,data_mixed_3b)
 summary(data_mixed_3)
 summary(data_mixed_3b)
 summary(data_mixed_3c)
+
+
+### Latest version of Data ALL
+data6$Dance_mode<- as.factor(data6$Dance_mode)
+data6$Palo <- as.factor(data6$Palo)
+data6$Dance_mode <- relevel(data6$Dance_mode, "D6")
+data6$Palo <- relevel(data6$Palo, "R2")
+data6$Participant <- as.factor(data6$Participant)
+data_mixed_6 = lmer(Q1b~ Dance_mode    +   (1 | Participant),  data = data6)
+summary(data_mixed_6)
+data_mixed_6b = lmer(Q1b  ~ Dance_mode + Palo   + (1 | Participant),  data = data6)
+data_mixed_6c = lmer(Q1b  ~ Dance_mode * Palo   + (1 | Participant),  data = data6)
+AIC(data_mixed_6,data_mixed_6b)
+summary(data_mixed_6b)
+summary(data_mixed_6c)
+
+
+### Latest version of Data without W
+data7$Dance_mode<- as.factor(data7$Dance_mode)
+data7$Palo <- as.factor(data7$Palo)
+data7$Dance_mode <- relevel(data7$Dance_mode, "D6")
+data7$Palo <- relevel(data7$Palo, "R2")
+data7$Participant <- as.factor(data7$Participant)
+data_mixed_7 = lmer(Q1a~ Dance_mode + Q3b    +   (1 | Participant),  data = data7)
+summary(data_mixed_7)
+data_mixed_7b = lmer(Q1b  ~ Dance_mode + Palo   + (1 | Participant),  data = data7)
+data_mixed_7c = lmer(Q1b  ~ Dance_mode * Palo   + (1 | Participant),  data = data7)
+AIC(data_mixed_7,data_mixed_7b)
+summary(data_mixed_7b)
+summary(data_mixed_7c)
+
 
 # Model comparison with AIC
 # The smallest one is the best. 
