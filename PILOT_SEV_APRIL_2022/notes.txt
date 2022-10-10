@@ -5,7 +5,7 @@ During the experiments of P3 and G1, wrong paper was used for 2 experiments. Sho
 P3_D5_G1_M5_R1_T1--> P3_D1_G1_M1_R1_T1
 P3_D1_G1_M1_R1_T1--> P3_D5_G1_M5_R1_T1
 
-## Observations during experiments
+## Observations during experiments April 2022
 Day 1 participants seemed to be much more enthousiastic and enjoying the improvisation tasks. 
 What could be the cause of this?
 - Connectedness between participants could be a crucial factor --> Ask in future cuestionnaire
@@ -17,11 +17,14 @@ This made the improvisation task quite hard for her.
 
 --> Make it even clearer that the guitarist should follow the dancer. 
 
-
 ## For next experiment
 - Amount of pleasure
 - Connectedness
-- FSR?
 - Have guitarist take off shoes
+- Make sure all background noise is removed from room (ventilation, doors closed).
+- Make sure all background visuals are removed (cabels)
 
-
+## Obeservations during experiments October 2022
+- Having tangos and solea prepared will allow for more freedom in improvisation. 
+- Solea might leave less room for improvisation despite a 3/4 because of having more traditional frames. 
+- Connection with guitarist important. 
