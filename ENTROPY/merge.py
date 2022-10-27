@@ -14,7 +14,7 @@ for i, item in enumerate(df_mean['Name']):
     for j, itemj in enumerate(indexMean):
         df_long['CTW'].iloc[itemj] = df_mean['CTW'].iloc[i]
         df_long['LZ'].iloc[itemj] = df_mean['LZ'].iloc[i]
-
+print(df_long)
 
 df_long.to_csv('/Users/atillajv/CODE/RITMO/PILOT_SEV_APRIL_2022/output/ratingsAnalysis/DuringExperiments_Sevilla_06102022_DropW_Entropy.csv', index = False)
 

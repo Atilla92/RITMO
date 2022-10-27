@@ -17,7 +17,6 @@ data7 <- read.csv("~/CODE/RITMO/PILOT_SEV_APRIL_2022/output/ratingsAnalysis/Duri
 
 dataSub <- subset(data3, Dance_mode!="D0")
 #dataEntropy <- read.csv("~/CODE/RITMO/ENTROPY/output/mean/means.csv")
-dataEntropy <- read.csv("~/CODE/RITMO/PILOT_SEV_APRIL_2022/output/ratingsAnalysis/DuringExperiments_Sevilla_06102022_DropW_Entropy.csv")
 
 # Linear model
 #gpa_lm = lm(gpa ~ occasion, data = gpa)
@@ -92,14 +91,20 @@ summary(data_mixed_7c)
 
 
 ### Entropy data simple analysis mean
+dataEntropy <- read.csv("~/CODE/RITMO/PILOT_SEV_APRIL_2022/output/ratingsAnalysis/DuringExperiments_Sevilla_06102022_DropW_Entropy.csv")
 dataEntropy$Dance_mode <- as.factor(dataEntropy$Dance_mode)
 dataEntropy$Palo <- as.factor(dataEntropy$Palo)
+dataEntropy$Q3bF <- as.factor(dataEntropy$Q3b)
+dataEntropy$Music_mode <- as.factor(dataEntropy$Music_mode)
 dataEntropy$Dance_mode <- relevel(dataEntropy$Dance_mode, "D6")
+dataEntropy$Music_mode <- relevel(dataEntropy$Music_mode, "M6")
 dataEntropy$Participant <- as.factor(dataEntropy$Participant)
-model_entropy = lmer(Q1a ~ Dance_mode + CTW + (1 | Participant), data = dataEntropy )
-model_entropy_mixed = lmer(Q1a ~ CTW + Palo   + (1 | Participant), data = dataEntropy )
-summary(model_entropy_mixed)
+model_entropy = lmer(Perf_Av ~ Music_mode + (1 | Participant), data = dataEntropy )
 summary(model_entropy)
+model_entropy_mixed = lmer(Q1a ~ Dance_mode  + Abs_Av + (1 | Participant), data = dataEntropy )
+AIC(model_entropy,model_entropy_mixed)
+summary(model_entropy_mixed)
+
 
 # Model comparison with AIC
 # The smallest one is the best. 

@@ -71,6 +71,7 @@ def InfotoColumns(df):
     df['Palo'] = palo_array
 
 #df = df.dropna()
+AverageFlowtoDF(df)
 InfotoColumns(df)
 print(df)
 df.to_csv('output/ratingsAnalysis/DuringExperiments_Sevilla_06102022_DropW.csv', index=False)
