@@ -15,18 +15,18 @@ from functionsE import plotAudio_2, calc_lz_df_2, quantize_vector
 
 # Code settings:
 
-loop_on = True # Set to True if you want to loop through a certain folder. Else not. 
-loop_off = 'P3_D6_G1_M6_R1_T1.wav'
+loop_on = False # Set to True if you want to loop through a certain folder. Else not. 
+loop_off = 'P7_D1_G1_M6_R2_T1.wav'
 downsample_on = True #if you want to downsample. 
 downsample_factor = 4 # Set to 1 if False. 
 preBinarise_on= True #If you want to binarise data prior to passing dataframe to LZ
 absolute_on = True #Takes the absolute value of input data. 
 channel_num= 1 # 0 for Left channel, 1 for Right Channel. 
-t_start = 0 #[s] if you want analysis to start from different time frame. 
+t_start = 40 #[s] if you want analysis to start from different time frame. 
 tempMiddle = True # If you want to displace entropy values a bit further than beginning of window. 
 tempNum = 2 # start + windowsize/tempNum  (where windowsize = step_size)
 # Initiate variables
-length_df = [] # Takes subset samples. Set to [] if you want to whole length. 
+length_df = 40000 # Takes subset samples. Set to [] if you want to whole length. 
 step_size = 4000  # Window of LZ/CTW estimation. 
 
 
@@ -127,7 +127,7 @@ for i, item in enumerate(audio_files):
     df_out['LZ'] = temp_lz
     df_out['CTW'] = temp_ctw
     df_out = pd.DataFrame([[len(df),output_lz.values[0], output_ctw.values[0]]], index = ['mean'], columns=df_out.columns).append(df_out)
-    file_output = "/Users/atillajv/CODE/RITMO/ENTROPY/output/main/"
+    file_output = "/Users/atillajv/CODE/RITMO/ENTROPY/output/main/old"
     df_out.to_csv(file_output + 'Entropy_LZ_CTW_(w='+ str(step_size)+'_s='+str(length_df) +'_ds='+str(downsample_factor)+'_b=' + binString + '_abs='+ absString +'_t0=' +str(t_str) + ')_'+ file_name.strip('.wav') + '.csv')
 
 
@@ -146,7 +146,7 @@ for i, item in enumerate(audio_files):
     ax3.set_ylabel('Amplitude Binarised')
     ax4.set_ylabel('Audio Amplitude')
 
-    #plt.show()
+    plt.show()
     #plt.savefig(file_output + 'test.png')
     plt.savefig(file_output + 'Entropy_LZ_CTW_(w='+ str(step_size)+'_s='+str(length_df) +'_ds='+str(downsample_factor)+'_b=' + binString + '_abs='+ absString +'_t0=' +str(t_str) + ')_'+ file_name.strip('.wav') +'.png')
 
