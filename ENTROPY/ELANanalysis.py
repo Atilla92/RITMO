@@ -1,13 +1,13 @@
 from asyncore import file_dispatcher
 import pandas as pd
 import numpy as np
+import glob
 
-file_name = 'P3_D6_G1_M6_R2_T1'
-dfI = pd.read_csv ('/Users/atillajv/CODE/RITMO/FILES/ELAN/' + file_name + '.csv')
-dfR = pd.read_csv( '/Users/atillajv/CODE/RITMO/FILES/Ratings/P3_'+ file_name +'_IMPRO.csv' )
-dfE = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/Entropy_LZ_CTW_(w=4000_s=[]_ds=4_b=on_abs=on_t0=0)_'+file_name +'.csv')
-#dfF =  pd.read_csv( '/Users/atillajv/CODE/RITMO/FILES/Ratings/P3_'+ file_name +'_FLOW.csv' )
-#print(dfE)
+# One file or all in a specific folder
+file_name = 'P3_D6_G1_M6_R2_T1' # Name file if loop_on = False
+loop_on = True # True if you want to loop through folder
+path_files = '/Users/atillajv/CODE/RITMO/FILES/ELAN/'
+file_output = '/Users/atillajv/CODE/RITMO/ENTROPY/output/ELAN/'
 
 # Default settings 
 percentage = 0.1
@@ -15,82 +15,163 @@ frac_round = 1 #Round/frac_round for moving rating to the left
 dt_L = 4.5 #Number of seconds delay in rating of user. 
 
 
-# Add first row with time 0
-dfR.loc[-1] =[0, dfR[' Value'].iloc[0]]
-dfR.index = dfR.index + 1  # shifting index
-dfR = dfR.sort_index()  # sorting by index
+list_files = []
+if loop_on:
+    for filepath in glob.iglob( str(path_files + '*.csv')):
+        if filepath.endswith('.csv'):
+            filepath_split = filepath.partition('ELAN/')
+            print (filepath_split[2].strip('.csv'))
+            list_files.append(filepath_split[2].strip('.csv'))
+else:
+    audio_files = [file_name]
+
+print(list_files)
+
+# Initiate dataframe before loop 
+store_i = 0
+df_store = pd.DataFrame(columns=['Name', 'Music_Label', 'Dance_Label', 'Step', 'Imp_Av', 'CTW_Av', 'LZ_Av','Assigned_Cat', 'Rounds'])
+
+for file_i, file_item in enumerate(list_files):
+    print('FILE BEING ANALYSED: ', file_item)
+    dfI = pd.read_csv ('/Users/atillajv/CODE/RITMO/FILES/ELAN/' + file_item + '.csv')
+    dfR = pd.read_csv( '/Users/atillajv/CODE/RITMO/FILES/Ratings/P3_'+ file_item +'_IMPRO.csv' )
+    dfE = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/Entropy_LZ_CTW_(w=4000_s=[]_ds=4_b=on_abs=on_t0=0)_'+file_item+'.csv')[1:]
+    #dfF =  pd.read_csv( '/Users/atillajv/CODE/RITMO/FILES/Ratings/P3_'+ file_name +'_FLOW.csv' )
+    #print(dfE)
 
 
-# Estimate interval 
-# Add percentage 10%
-dtI = dfI['Duration - ss.msec']
-rounds = dfI['Bloques']
-tI_0 = dfI['Begin Time - ss.msec'] - (dtI * percentage )
-tI_1 = dfI['End Time - ss.msec'] + (dtI * percentage )
-dtI_2 = tI_1 - tI_0
-
-#Append end time to last row 
-dfR.loc[len(dfR.index)] = [tI_1.iloc[-1] ,dfR[' Value'].iloc[-1]]
-
-#Estimate which values fall within interval. 
-
-# Move ratings to the left 1/2 round
-dt_left = dtI/(rounds * frac_round)
-tR_end = dfR['Time'] - dt_L
-tR_end.loc[len(tR_end.index)] = tI_1.iloc[-1]
+    # Add first row with time 0
+    dfR.loc[-1] =[0, dfR[' Value'].iloc[0]]
+    dfR.index = dfR.index + 1  # shifting index
+    dfR = dfR.sort_index()  # sorting by index
 
 
-# Start a loop
-mean_array = []
-proportion_array = []
-Imp_average = []
-n=0
+    # Estimate interval 
+    # Add percentage 10%
+    
+    dtI = dfI['Duration - ss.msec']
+    rounds = dfI['Bloques']
+    tI_0 = dfI['Begin Time - ss.msec'] - (dtI * percentage )
+    tI_1 = dfI['End Time - ss.msec'] + (dtI * percentage )
+    dtI_2 = tI_1 - tI_0
 
-for i in np.arange(len(dfI)):
+    #Append end time to last row 
+    dfR.loc[len(dfR.index)] = [tI_1.iloc[-1] ,dfR[' Value'].iloc[-1]]
 
-    for j in np.arange(n,len(dfR)):
-        print(tR_end.iloc[j], tI_1.iloc[i], 'which value')
-        if tR_end.iloc[j] == 0 and tR_end.iloc[j+1] < tI_0.iloc[i]:
-            continue
+    #Estimate which values fall within interval. 
 
-        elif tR_end.iloc[j]< tI_0.iloc[i] and tR_end.iloc[j+1] >tI_0.iloc[i]:
-            mean_array.append(dfR[' Value'].iloc[j])
-            proportion_array.append(np.divide(tR_end.iloc[j+1]-tI_0.iloc[i] ,dtI_2.iloc[i]))
-        
-        elif tR_end.iloc[j] > tI_0.iloc[i] and tR_end.iloc[j+1] < tI_1.iloc[i]:
-            mean_array.append(dfR[' Value'].iloc[j])
-            proportion_array.append(np.divide(tR_end.iloc[j+1]-tR_end.iloc[j] ,dtI_2.iloc[i]))
+    # Move ratings to the left 1/2 round
+ 
+    #dt_left = dtI/(rounds * frac_round)
+    tR_end = dfR['Time'] - dt_L
+    tR_end.loc[len(tR_end.index)] = tI_1.iloc[-1]
 
-        elif tR_end.iloc[j] < tI_1.iloc[i] and tR_end.iloc[j+1] >= tI_1.iloc[i]:
-            mean_array.append(dfR[' Value'].iloc[j])
-            proportion_array.append(np.divide(tI_1.iloc[i]-tR_end.iloc[j] ,dtI_2.iloc[i]))
 
-        elif tR_end.iloc[j] < tI_0.iloc[i] and tR_end.iloc[j+1] > tI_1.iloc[i]:
-            mean_array.append(dfR[' Value'].iloc[j])
-            proportion_array.append(1)
-        
-
-        elif tR_end.iloc[j]>= tI_1.iloc[i]:
-            n=j-2
-            break
-    Imp_average.append(np.sum(np.multiply(mean_array,proportion_array)))
+    # Start a loop
     mean_array = []
     proportion_array = []
+    Imp_average = []
+    LZ_average = []
+    CTW_average = []
+    n=0
+ 
 
-print(len(Imp_average))
+    for i in np.arange(len(dfI)):
 
-dfI['Imp_Av'] = Imp_average
-print(dfI)
+        for j in np.arange(n,len(dfR)):
+            #print(tR_end.iloc[j], tI_1.iloc[i], 'which value')
+            if tR_end.iloc[j] == 0 and tR_end.iloc[j+1] < tI_0.iloc[i]:
+                continue
 
-# Assign Category per IMPRO
-# IMP0 [0,3) Not improvised
-# IMP1 [3,5)
-# IMP2 [5,7]
-dfI['Assigned_Cat'] = 'IMP0'
-dfI.loc[dfI['Imp_Av']>= 3 , 'Assigned_Cat'] = 'IMP1'
-dfI.loc[dfI['Imp_Av']>= 5 , 'Assigned_Cat'] = 'IMP2'
-print(dfI)
+            elif tR_end.iloc[j]< tI_0.iloc[i] and tR_end.iloc[j+1] >tI_0.iloc[i]:
+                mean_array.append(dfR[' Value'].iloc[j])
+                proportion_array.append(np.divide(tR_end.iloc[j+1]-tI_0.iloc[i] ,dtI_2.iloc[i]))
+            
+            elif tR_end.iloc[j] > tI_0.iloc[i] and tR_end.iloc[j+1] < tI_1.iloc[i]:
+                mean_array.append(dfR[' Value'].iloc[j])
+                proportion_array.append(np.divide(tR_end.iloc[j+1]-tR_end.iloc[j] ,dtI_2.iloc[i]))
 
-# Left to do:
-# Loop through files
-# Store in DF, 
+            elif tR_end.iloc[j] < tI_1.iloc[i] and tR_end.iloc[j+1] >= tI_1.iloc[i]:
+                mean_array.append(dfR[' Value'].iloc[j])
+                proportion_array.append(np.divide(tI_1.iloc[i]-tR_end.iloc[j] ,dtI_2.iloc[i]))
+
+            elif tR_end.iloc[j] < tI_0.iloc[i] and tR_end.iloc[j+1] > tI_1.iloc[i]:
+                mean_array.append(dfR[' Value'].iloc[j])
+                proportion_array.append(1)
+            
+
+            elif tR_end.iloc[j]>= tI_1.iloc[i]:
+                n=j-2
+                break
+        Imp_average.append(np.sum(np.multiply(mean_array,proportion_array)))
+        print('CHECK ==1 : ', np.sum(proportion_array))
+
+      
+        list_Entropy = dfE.loc[(dfE["t0"] >= tI_0.iloc[i] ) & (dfE['t0'] <= tI_1.iloc[i]  ) ]
+        LZ_average.append(list_Entropy['LZ'].mean()) 
+        CTW_average.append(list_Entropy['CTW'].mean())
+        df_store.loc[store_i] = {
+            'Name': file_item,
+            'Music_Label': dfI['Music_Mode'].iloc[i],
+            'Dance_Label': dfI['Category'].iloc[i],
+            'Step': dfI['Step'].iloc[i],
+            'Imp_Av': np.sum(np.multiply(mean_array,proportion_array)),
+            'CTW_Av': list_Entropy['CTW'].mean() ,
+            'LZ_Av': list_Entropy['LZ'].mean(),
+            'Assigned_Cat': 'IMP0',
+            'Rounds':dfI['Bloques'].iloc[i]}
+        store_i = store_i+1
+        
+
+
+        mean_array = []
+        proportion_array = []
+        
+
+
+    print(len(Imp_average), 'LZ:', LZ_average )
+
+    dfI['Imp_Av'] = Imp_average
+    print(dfI)
+
+    # Assign Category per IMPRO
+    # IMP0 [0,3) Not improvised
+    # IMP1 [3,5)
+    # IMP2 [5,7]
+
+    print(dfI)
+
+
+
+#df_store['Assigned_Cat'] = 'IMP0'
+df_store.loc[df_store['Imp_Av']>= 3 , 'Assigned_Cat'] = 'IMP1'
+df_store.loc[df_store['Imp_Av']>= 5 , 'Assigned_Cat'] = 'IMP2'
+
+
+def InfotoColumns(df):
+    dance_array = []
+    music_array = []
+    palo_array = []
+    participant_array = []
+    for i, item in enumerate(df['Name']):
+
+        split_array = item.split('_')
+        participant_array.append(split_array[0])
+        dance_array.append(split_array[1])
+        music_array.append(split_array[3])
+        palo_array.append(split_array[4])
+        #print(split_array)
+
+    df['Dance_mode'] = dance_array
+    df['Music_mode'] = music_array
+    df['Palo'] = palo_array
+    df['Participant'] = participant_array
+
+InfotoColumns(df_store)
+print(df_store)
+df_store.to_csv(file_output + 'LZ_CTW_Intervals' + '.csv')
+
+    # Left to do:
+    # Loop through files
+    # Store in DF,
+    # Fecth Entropy for that file 

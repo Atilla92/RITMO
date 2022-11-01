@@ -108,6 +108,28 @@ AIC(model_entropy,model_entropy_2)
 summary(model_entropy_mixed)
 
 
+
+
+
+dataInterval <- read.csv("~/CODE/RITMO/ENTROPY/output/ELAN/LZ_CTW_Intervals.csv")
+dataInterval$Dance_mode <- as.factor(dataInterval$Dance_mode)
+dataInterval$Palo <- as.factor(dataInterval$Palo)
+# dataEntropy$Q3bF <- as.factor(dataEntropy$Q3b)
+dataInterval$Music_mode <- as.factor(dataInterval$Music_mode)
+dataInterval$Assigned_Cat <- as.factor(dataInterval$Assigned_Cat)
+dataInterval$Dance_mode <- relevel(dataInterval$Dance_mode, "D6")
+dataInterval$Music_mode <- relevel(dataInterval$Music_mode, "M6")
+#dataInterval$Participant <- as.factor(dataInterval$Participant)
+model_entropy = lmer(Q1b ~ Q3b + (1 | Participant), data = dataEntropy )
+model_entropy_2 = lmer(LZ_Av ~ Imp_Av + (1 | Dance_mode), data = dataInterval)
+summary(model_entropy)
+summary(model_entropy_2)
+model_entropy_mixed = lmer(Q1a ~ Dance_mode  + Abs_Av + (1 | Participant), data = dataEntropy )
+AIC(model_entropy,model_entropy_2)
+summary(model_entropy_mixed)
+
+
+
 # Model comparison with AIC
 # The smallest one is the best. 
 # When you have more variables you will be able to explain more. So you need to check that the complexity is justified.
