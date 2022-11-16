@@ -1,0 +1,34 @@
+Begin Time - ss.msec;End Time - ss.msec;Duration - ss.msec;Sequence;Bloques;Step;Music_Mode;Category;Baile;Guitarra
+9.1;25.5;16.4;Introduction;8;4.1;MI;DI;Z1;A3
+25.6;40.9;15.3;Introduction;8;4.2;MI;DI;Z1;A3
+41.0;55.7;14.7;Introduction;8;4.3;MI;DI;Z1;A3
+55.7;70.8;15.1;Letra 1;8;4.4;MI;DI;Z1;A3
+70.9;83.7;12.8;Letra 1;8;4.5;MI;DI;Z1;A3
+83.8;97.0;13.2;Letra 1;8;4.6;MI;DI;Z2;A3
+97.1;104.5;7.4;Letra;4;4.7;MI;DI;Z2;A3
+104.5;111.5;7.0;Letra;4;4.8;MI;DI;Z1;A2
+111.6;115.3;3.7;Cierre;2;4.9;MI;DI;Z2;A2
+115.4;121.7;6.3;Escobilla;4;4.10;MI;DI;Z3;A1
+121.8;128.4;6.6;Marcaje;4;4.11.1;MI;DI;Z2;A2
+128.5;135.3;6.8;Marcaje, Pies;4;4.11.2;MI;DI;Z3;A2
+135.4;142.0;6.6;Marcaje, Pitos;4;4.12;MI;DI;Z2;A2
+142.1;148.6;6.5;Marcaje, escoblla;4;4.13.1;MI;DI;Z2;A2
+148.7;161.5;12.8;Escobilla;8;4.13.2;MI;DI;Z3;A1
+161.6;167.8;6.2;Escobilla;4;4.14;MI;DI;Z3;A1
+167.9;174.3;6.4;Escobilla;4;4.15;MI;DI;Z3;A1
+174.4;177.5;3.1;Respiro;1;4.16;MI;DI;Z1;A1
+177.5;184.1;6.6;Letra 2, Lo he escuchado antes, David?;4;4.17;MI;DI;Z1;A3
+184.1;190.8;6.7;Letra 2;4;4.18;MI;DI;Z1;A3
+190.9;203.8;12.9;Letra;8;4.19;MI;DI;Z3;A3
+203.9;217.0;13.1;Letra,Escobill;8;4.20;MI;DI;Z3;A3
+217.1;229.8;12.7;Letra, Movimiento;8;4.21;MI;DI;Z1;A3
+229.9;242.8;12.9;Marcaje, Letra;8;4.22;MI;DI;Z2;A1
+242.9;249.2;6.3;Escobilla;4;4.23;MI;DI;Z3;A1
+249.3;255.5;6.2;Llamada;4;4.24;MI;DI;Z2;A1
+255.5;268.2;12.7;Falseta;8;4.25;MI;DI;Z1;A1
+268.2;276.5;8.3;Cierre;5;4.26;MI;DI;Z2;A2
+276.6;283.8;7.2;Acompana;4;4.27;MI;DI;Z2;A1
+283.9;293.0;9.1;Marcaje, algo de pies;6;4.28;MI;DI;Z2;A1
+293.1;307.9;14.8;Escobilla;10;4.29;MI;DI;Z3;A1
+308.0;314.2;6.2;Llamada;4;4.30;MC;DI;Z2;A2
+314.3;320.4;6.1;Cierre;4;4.31;MC;DI;Z2;A2
