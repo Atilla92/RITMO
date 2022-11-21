@@ -1,19 +1,18 @@
-"Begin Time - ss.msec","End Time - ss.msec","Duration - ss.msec","Sequence","Bloques","Step","Music_Mode","Category"
-4.9,45.5,40.6,"Introduction  - Slow","4","2.17","MI","DI"
-45.6,72.5,26.9,"Inteoduction","4","2.18","MI","DI"
-72.65,91.45,18.8,"Marcaje","6","2.19","MI","DI"
-91.5,103.6,12.1,"Zapateado","4","2.20","MI","DI"
-103.7,115.5,11.8,"Zapateado","4","2.21","MI","DI"
-115.6,126.9,11.3,"Lamada - Remate","4","2.22","MI","DI"
-127.0,139.2,12.2,"Respiro","4","2.23","MI","DI"
-139.3,150.1,10.8,"Falseta 1","4","2.24","MI","DI"
-150.2,161.8,11.6,"Falseta 1","4","2.25","MI","DI"
-161.9,173.3,11.4,"Falseta 1","4","2.26","MI","DI"
-173.4,184.0,10.6,"Zapateado","4","2.27","MI","DI"
-184.1,194.9,10.8,"Zapateado","4","2.28","MI","DI"
-195.0,206.4,11.4,"Zapateado","4","2.29","MI","DI"
-206.5,217.0,10.5,"Marcaje","4","2.30","MI","DI"
-217.1,225.9,8.8,"Llamada","3","2.31","MI","DI"
-226.0,241.9,15.9,"Subida","6","2.32","MI","DI"
-241.9,247.3,5.4,"Remate + Cierre","2","2.33","MI","DI"
-
+Begin Time - ss.msec;End Time - ss.msec;Duration - ss.msec;Sequence;Bloques;Step;Music_Mode;Category;Baile;Guitarra
+4.9;45.5;40.6;Salida;4;2.17;MI;DI;Z1;A3
+45.6;72.5;26.9;Salida;4;2.18;MI;DI;Z1;A3
+72.65;91.45;18.8;Marcaje;6;2.19;MI;DI;Z2;A2
+91.5;103.6;12.1;Zapateado;4;2.20;MI;DI;Z3;A2
+103.7;115.5;11.8;Zapateado;4;2.21;MI;DI;Z3;A2
+115.6;126.9;11.3;Lamada - Remate;4;2.22;MI;DI;Z3;A1
+127.0;139.2;12.2;Respiro;4;2.23;MI;DI;Z2;A2
+139.3;150.1;10.8;Falseta 1;4;2.24;MI;DI;Z1;A3
+150.2;161.8;11.6;Falseta 1;4;2.25;MI;DI;Z1;A3
+161.9;173.3;11.4;Falseta 1;4;2.26;MI;DI;Z3;A3
+173.4;184.0;10.6;Zapateado;4;2.27;MI;DI;Z3;A2
+184.1;194.9;10.8;Zapateado;4;2.28;MI;DI;Z3;A2
+195.0;206.4;11.4;Zapateado;4;2.29;MI;DI;Z3;A2
+206.5;217.0;10.5;Marcaje;4;2.30;MI;DI;Z2;A2
+217.1;225.9;8.8;Llamada;3;2.31;MI;DI;Z2;A1
+226.0;241.9;15.9;Subida;6;2.32;MI;DI;Z3;A1
+241.9;247.3;5.4;Remate + Cierre;2;2.33;MI;DI;Z3;A1

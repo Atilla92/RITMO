@@ -1,44 +1,42 @@
-"Begin Time - ss.msec","End Time - ss.msec","Duration - ss.msec","Sequence","Bloques","Step","Music_Mode","Category","Baile","Guitarra"
-7.2,19.6,12.4,"Salida","4","4.1","MC","DI","Z1","A3"
-19.7,31.7,12.0,"Salida","4","4.2","MC","DI","Z2","A3"
-31.8,37.1,5.3,"Marcaje","2","4.3.1","MC","DI","Z2","A3"
-37.2,42.5,5.3,"Zapateado","2","4.3.2","MC","DI","Z3","A3"
-42.5,47.7,5.2,"Movimiento","2","4.4.1","MC","DI","Z1","A3"
-47.7,53.0,5.3,"Marcaje","2","4.4.2","MC","DI","Z2","A3"
-53.1,64.4,11.3,"Pies","4","4.5","MC","DI","Z3","A3"
-64.6,74.8,10.2,"Marcajes","4","4.6","MC","DI","Z2","A3"
-74.9,85.7,10.8,"Escobilla","4","4.7","MC","DI","Z3","A3"
-85.8,96.0,10.2,"Escobilla","4","4.8","MI","DI","Z3","A3"
-96.0,107.3,11.3,"Escobilla","4","4.9","MI","DI","Z3","A1"
-107.5,113.6,6.1,"Respiro","2","4.10","MI","DI","Z1","A1"
-113.7,122.2,8.5,"Escobilla","4","4.11","MI","DI","Z3","A1"
-122.3,136.7,14.4,"Escobilla","8","4.12","MI","DI","Z3","A1"
-136.7,150.9,14.2,"Marcajes","8","4.13","MC","DI","Z3","A1"
-151.0,158.3,7.3,"Movimiento","4","4.14","MI","DI","Z1","A1"
-158.4,164.8,6.4,"Giros, Lo he visto antes","4","4.15","MC","DI","Z1","A1"
-164.9,171.2,6.3,"Llamada","4","4.16","MC","DC","Z2","A2"
-171.3,177.6,6.3,"Llamada, Cierre","4","4.17","MC","DI","Z2","A2"
-177.7,184.2,6.5,"Escobilla","4","4.18","MI","DI","Z3","A1"
-184.3,190.5,6.2,"Escobilla","4","4.19","MI","DI","Z3","A1"
-190.6,196.3,5.7,"Escobilla","4","4.20","MI","DC","Z3","A1"
-196.4,208.8,12.4,"Escobilla","8","4.21","MC","DI","Z3","A3"
-209.0,212.1,3.1,"Cierre","2","4.22","MC","DI","Z2","A2"
-212.2,225.0,12.8,"Marcaje","8","4.23","MC","DI","Z2","A1"
-225.1,238.1,13.0,"Zapateado","8","4.24","MC","DI","Z3","A1"
-238.2,241.407,3.207,"Marcaje, Llamada","2","4.25","MI","DI","Z2","A2"
-241.407,241.5,0.093,,,"4.25",,,,
-241.5,254.4,12.9,"Movimiento","8","4.26","MI","DI","Z1","A1"
-254.5,268.6,14.1,"Movimiento","8","4.27","MI","DI","Z1","A1"
-268.7,281.1,12.4,"Subida","8","4.28","MI","DI","Z1","A2"
-281.1,286.1,5.0,"Cierre","2","4.29","MI","DI","Z1","A2"
-286.2,297.2,11.0,"Letra","8","4.30","MC","DI","Z3","A3"
-297.3,303.5,6.2,"Letra","4","4.31","MI","DI","Z1","A3"
-303.6,309.9,6.3,"Letra","4","4.32","MI","DI","Z3","A3"
-309.9,316.0,6.1,"Falseta","4","4.33","MC","DI","Z3","A1"
-316.1,322.3,6.2,"Baile","4","4.34","MC","DI","Z1","A1"
-322.3,328.6,6.3,"Marcaje","4","4.34","MI","DI","Z2","A2"
-328.7,341.4,12.7,"Zapateado","8","4.35","MI","DI","Z3","A1"
-341.4,347.1,5.7,"Zapateado","4","4.36","MI","DC","Z3","A1"
-347.2,352.3,5.1,"Llamada","4","3.37","MC","DI","Z2","A2"
-352.4,357.4,5.0,"Llamada","4","3.38","MC","DI","Z2","A2"
-
+Begin Time - ss.msec;End Time - ss.msec;Duration - ss.msec;Sequence;Bloques;Step;Music_Mode;Category;Baile;Guitarra
+7.2;19.6;12.4;Salida;4;4.1;MC;DI;Z1;A3
+19.7;31.7;12.0;Salida;4;4.2;MC;DI;Z2;A3
+31.8;37.1;5.3;Marcaje;2;4.3.1;MC;DI;Z2;A3
+37.2;42.5;5.3;Zapateado;2;4.3.2;MC;DI;Z3;A3
+42.5;47.7;5.2;Movimiento;2;4.4.1;MC;DI;Z1;A3
+47.7;53.0;5.3;Marcaje;2;4.4.2;MC;DI;Z2;A3
+53.1;64.4;11.3;Pies;4;4.5;MC;DI;Z3;A3
+64.6;74.8;10.2;Marcajes;4;4.6;MC;DI;Z2;A3
+74.9;85.7;10.8;Escobilla;4;4.7;MC;DI;Z3;A3
+85.8;96.0;10.2;Escobilla;4;4.8;MI;DI;Z3;A3
+96.0;107.3;11.3;Escobilla;4;4.9;MI;DI;Z3;A1
+107.5;113.6;6.1;Respiro;2;4.10;MI;DI;Z1;A1
+113.7;122.2;8.5;Escobilla;4;4.11;MI;DI;Z3;A1
+122.3;136.7;14.4;Escobilla;8;4.12;MI;DI;Z3;A2
+136.7;150.9;14.2;Marcajes;8;4.13;MC;DI;Z3;A1
+151.0;158.3;7.3;Movimiento;4;4.14;MI;DI;Z1;A2
+158.4;164.8;6.4;Giros, Lo he visto antes;4;4.15;MC;DI;Z1;A2
+164.9;171.2;6.3;Llamada;4;4.16;MC;DC;Z2;A1
+171.3;177.6;6.3;Llamada, Cierre;4;4.17;MC;DI;Z2;A1
+177.7;184.2;6.5;Escobilla;4;4.18;MI;DI;Z3;A1
+184.3;190.5;6.2;Escobilla;4;4.19;MI;DI;Z3;A1
+190.6;196.3;5.7;Escobilla;4;4.20;MI;DC;Z3;A1
+196.4;208.8;12.4;Escobilla;8;4.21;MC;DI;Z3;A2
+209.0;212.1;3.1;Cierre;2;4.22;MC;DI;Z2;A2
+212.2;225.0;12.8;Marcaje;8;4.23;MC;DI;Z2;A1
+225.1;238.1;13.0;Zapateado;8;4.24;MC;DI;Z3;A1
+238.2;241.407;3.207;Marcaje, Llamada;2;4.25;MI;DI;Z2;A1
+241.5;254.4;12.9;Movimiento;8;4.26;MI;DI;Z1;A2
+254.5;268.6;14.1;Movimiento;8;4.27;MI;DI;Z1;A1
+268.7;281.1;12.4;Subida;8;4.28;MI;DI;Z1;A1
+281.1;286.1;5.0;Cierre;2;4.29;MI;DI;Z1;A2
+286.2;297.2;11.0;Letra;8;4.30;MC;DI;Z3;A3
+297.3;303.5;6.2;Letra;4;4.31;MI;DI;Z1;A3
+303.6;309.9;6.3;Letra;4;4.32;MI;DI;Z3;A3
+309.9;316.0;6.1;Falseta;4;4.33;MC;DI;Z3;A2
+316.1;322.3;6.2;Baile;4;4.34;MC;DI;Z1;A2
+322.3;328.6;6.3;Marcaje;4;4.34;MI;DI;Z2;A1
+328.7;341.4;12.7;Zapateado;8;4.35;MI;DI;Z3;A1
+341.4;347.1;5.7;Zapateado;4;4.36;MI;DC;Z3;A1
+347.2;352.3;5.1;Llamada;4;3.37;MC;DI;Z2;A1
+352.4;357.4;5.0;Llamada;4;3.38;MC;DI;Z2;A1

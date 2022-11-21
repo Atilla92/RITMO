@@ -1,0 +1,13 @@
+"Begin Time - ss.msec","End Time - ss.msec","Duration - ss.msec","Sequence","Step","Category","Bloques","Music_Mode","Baile","Guitarra"
+2.4,19.6,17.2,"Salida","10.1","DI","10","MC","Z2","A2"
+19.8,29.2,9.4,"Marcaje","10.2","DI","6","MC","Z2","Z2"
+29.3,41.3,12.0,"Zapateado","10.3","DI","9","MC","Z3","A2"
+41.3,44.0,2.7,"Cierre","10.3","DC","1","MC","Z3","A1"
+44.1,50.1,6.0,"Pies","10.4","DI","4","MC","Z3","A2"
+50.2,61.7,11.5,"Zapateado","10.5","DI","8","MC","Z3","A1"
+61.8,64.9,3.1,"Cierre","10.5","DI","2","MC","Z3","A1"
+65.0,78.4,13.4,"Letra","10.6","DI","8","MC","Z1","A3"
+78.5,90.6,12.1,"Letra","10.7","DI","8","MC","Z1","A3"
+90.7,102.2,11.5,"Zapateado","10.8","DI","8","MC","Z3","A2"
+102.3,111.0,8.7,"Zapateado, Cierre","10.9","DI","6","MC","Z3","A1"
+

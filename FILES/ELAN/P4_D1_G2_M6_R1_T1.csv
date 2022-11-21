@@ -14,13 +14,13 @@ Begin Time - ss.msec;End Time - ss.msec;Duration - ss.msec;Sequence;Bloques;Step
 106.3;109.6;3.3;Marcaje;2;4.11.1;MC;DI;Z2;A1
 109.7;113.2;3.5;Marcaje, Pies;2;4.11.2;MC;DI;Z2;A1
 113.2;120.9;7.7;Pies, Marcaje;4;4.12;MC;DI;Z3;A1
-120.9;128.4;7.5;Pies, Pitos;4;4.13;MC;DI;Z3;A2
+120.9;128.4;7.5;Pies, Pitos;4;4.13;MC;DI;Z3;A1
 128.5;135.7;7.2;Marcaje, Movimiento;4;4.14;MC;DI;Z2;A1
-135.7;142.9;7.2;Movimiento;4;4.15;MC;DI;Z2;A3
-143.0;149.1;6.1;Llamada;4;4.16;MC;DI;Z2;A2
-149.2;155.1;5.9;Llamada, Cierre, Movimientos;4;4.17;MC;DI;Z1;A2
+135.7;142.9;7.2;Movimiento;4;4.15;MC;DI;Z2;A2
+143.0;149.1;6.1;Llamada;4;4.16;MC;DI;Z2;A1
+149.2;155.1;5.9;Llamada, Cierre, Movimientos;4;4.17;MC;DI;Z1;A1
 155.2;161.8;6.6;Escobilla;2;4.18.1;MC;DI;Z3;A1
-161.9;166.3;4.4;Escobilla;2;4.18.2;MC;DI;Z3;A2
+161.9;166.3;4.4;Escobilla;2;4.18.2;MC;DI;Z3;A1
 166.4;174.5;8.1;Marcaje, Poco Movimiento;4;4.19;MC;DI;Z2;A1
 174.5;182.2;7.7;Letra 2;4;4.20;MC;DI;Z2;A1
 182.3;188.5;6.2;Subida;4;4.21;MC;DI;Z3;A1
@@ -36,7 +36,7 @@ Begin Time - ss.msec;End Time - ss.msec;Duration - ss.msec;Sequence;Bloques;Step
 261.5;266.8;5.3;Subida;4;4.31;MC;DI;Z3;A1
 266.8;273.3;6.5;Bajada;4;4.32;MC;DI;Z3;A1
 273.5;277.1;3.6;Subida;4;4.33;MC;DI;Z3;A1
-277.1;282.9;5.8;Subida, Cierre;4;4.34;MC;DI;Z2;A2
+277.1;282.9;5.8;Subida, Cierre;4;4.34;MC;DI;Z2;A1
 282.9;288.7;5.8;Letra;4;4.35;MC;DI;Z1;A3
 288.8;294.3;5.5;Letra;4;4.36;MC;DI;Z1;A3
 294.4;305.8;11.4;Letra;8;4.37;MC;DI;Z1;A3
@@ -45,5 +45,5 @@ Begin Time - ss.msec;End Time - ss.msec;Duration - ss.msec;Sequence;Bloques;Step
 323.8;329.9;6.1;Marcaje, Pies;4;4.40;MC;DI;Z3;A1
 330.0;336.0;6.0;Zapateado;4;4.41;MC;DI;Z3;A1
 336.1;341.9;5.8;Marcaje;4;4.42;MC;DI;Z3;A1
-341.9;347.7;5.8;Llamada;4;4.43;MC;DI;Z2;A2
-347.8;353.6;5.8;Llama + Cierre;4;4.44;MC;DI;Z2;A2
+341.9;347.7;5.8;Llamada;4;4.43;MC;DI;Z2;A1
+347.8;353.6;5.8;Llama + Cierre;4;4.44;MC;DI;Z2;A1

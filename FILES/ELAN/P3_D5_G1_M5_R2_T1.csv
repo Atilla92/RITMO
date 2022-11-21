@@ -1,12 +1,11 @@
-"Begin Time - ss.msec","End Time - ss.msec","Duration - ss.msec","Sequence","Step","Category","Music_Mode","Bloques"
-5.0,34.2,29.2,"Introduction - Poco movimiento","1.11","DI","MI","4"
-34.3,52.1,17.8,"Letra 1 - Pies Diferente Final ","1.2","DI","MI","4"
-52.2,65.8,13.6,"Respiro + Cierre","1.6","DI","MC","3"
-65.8,78.2,12.4,"Acompañar 1 - Pasear","1.9","DI","MI","3"
-78.3,94.9,16.6,"Falseta 2","1.12","DI","MI","4"
-94.9,112.8,17.9,"Respiro - Cierre Lento ","1.13","DI","MI","4"
-112.9,135.8,22.9,"Escobilla - Comienzo sin musica","1.14","DI","MI","4"
-135.9,156.4,20.5,"Escobilla repetida","1.5","DC","MC","4"
-156.5,173.9,17.4,"Escobilla - Subida","1.15","DI","MI","4"
-174.0,186.5,12.5,"Subida - Cierre","1.16","DI","MI","3"
-
+Begin Time - ss.msec;End Time - ss.msec;Duration - ss.msec;Sequence;Step;Category;Music_Mode;Baile;Guitarra;Bloques
+5.0;34.2;29.2;Introduction - Poco movimiento;1.11;DI;MI;Z1;A2;4
+34.3;52.1;17.8;Letra 1 - Pies Diferente Final ;1.2;DI;MC;Z3;A3;4
+52.2;65.8;13.6;Respiro + Cierre;1.6;DI;MC;Z2;A2;3
+65.8;78.2;12.4;Acompañar 1 - Pasear;1.9;DI;MI;Z3;A2;3
+78.3;94.9;16.6;Falseta 2;1.12;DI;MI;Z2;A3;4
+94.9;112.8;17.9;Respiro - Cierre Lento ;1.13;DI;MI;Z2;A3;4
+112.9;135.8;22.9;Escobilla - Comienzo sin musica;1.14;DI;MI;Z3;A1;4
+135.9;156.4;20.5;Escobilla repetida;1.5;DC;MI;Z3;A2;4
+156.5;173.9;17.4;Escobilla - Subida;1.15;DI;MI;Z3;A1;4
+174.0;186.5;12.5;Subida - Cierre;1.16;DI;MI;Z3;A1;3
