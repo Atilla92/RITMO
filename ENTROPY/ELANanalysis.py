@@ -169,7 +169,7 @@ def InfotoColumns(df):
 
 InfotoColumns(df_store)
 print(df_store)
-df_store.to_csv(file_output + 'LZ_CTW_Intervals' + '.csv')
+df_store.to_csv(file_output + 'Testing_All_ELAN' + '.csv')
 
     # Left to do:
     # Loop through files
