@@ -108,6 +108,34 @@ AIC(model_entropy,model_entropy_2)
 summary(model_entropy_mixed)
 
 
+### Entropy data simple analysis mean
+dataELAN <- read.csv("~/CODE/RITMO/ENTROPY/output/ELAN/Testing_All_ELAN_2.csv")
+dataELAN$Dance_mode <- as.factor(dataELAN$Dance_mode)
+dataELAN$Palo <- as.factor(dataELAN$Palo)
+dataELAN$Music_mode <- as.factor(dataELAN$Music_mode)
+dataELAN$Dance_mode <- relevel(dataELAN$Dance_mode, "D6")
+dataELAN$Music_mode <- relevel(dataELAN$Music_mode, "M6")
+dataELAN$Participant <- as.factor(dataELAN$Participant)
+dataELAN$Baile <- as.factor(dataELAN$Baile_Level)
+dataELAN$Guitarra <- as.factor(dataELAN$Guitarra_Level)
+dataELAN$Guitarra <- relevel(dataELAN$Guitarra, "A1")
+dataELAN$Baile <- relevel(dataELAN$Baile, "Z1")
+dataELAN$Dance_Imp <- as.factor(dataELAN$Dance_Imp)
+dataELAN$Dance_Imp <- relevel(dataELAN$Dance_Imp, "DC")
+dataELAN$Music_Imp <- as.factor(dataELAN$Music_Imp)
+dataELAN$Music_Imp <- relevel(dataELAN$Music_Imp, "MC")
+dataELAN$ImpLevel <- as.factor(dataELAN$Assigned_Cat)
+model_entropy = lmer(Imp_Av ~ Guitarra + (1 | Participant) , data = dataELAN )
+summary(model_entropy)
+model_entropy_2 = lmer(Q1b ~ Q3b + I(Q3b^2) + (1 | Participant), data = dataEntropy)
+
+summary(model_entropy_2)
+model_entropy_mixed = lmer(Q1a ~ Dance_mode  + Abs_Av + (1 | Participant), data = dataEntropy )
+AIC(model_entropy,model_entropy_2)
+summary(model_entropy_mixed)
+
+
+
 
 
 

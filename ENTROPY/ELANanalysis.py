@@ -3,8 +3,11 @@ import pandas as pd
 import numpy as np
 import glob
 
+
+#And have to add the response, from csv for subjective ratings. Does that make sense?
+
 # One file or all in a specific folder
-file_name = 'P3_D6_G1_M6_R2_T1' # Name file if loop_on = False
+file_name = 'P4_D5_G2_M5_R2_T1' # Name file if loop_on = False
 loop_on = True # True if you want to loop through folder
 path_files = '/Users/atillajv/CODE/RITMO/FILES/ELAN/'
 file_output = '/Users/atillajv/CODE/RITMO/ENTROPY/output/ELAN/'
@@ -23,18 +26,19 @@ if loop_on:
             print (filepath_split[2].strip('.csv'))
             list_files.append(filepath_split[2].strip('.csv'))
 else:
-    audio_files = [file_name]
+    list_files = [file_name]
 
 print(list_files)
 
 # Initiate dataframe before loop 
 store_i = 0
-df_store = pd.DataFrame(columns=['Name', 'Music_Label', 'Dance_Label', 'Step', 'Imp_Av', 'CTW_Av', 'LZ_Av','Assigned_Cat', 'Rounds'])
+df_store = pd.DataFrame(columns=['Name', 'Music_Imp', 'Dance_Imp', 'Baile_Level','Guitarra_Level' ,'Step', 'Imp_Av', 'CTW_Av', 'LZ_Av','Assigned_Cat', 'Rounds'])
 
 for file_i, file_item in enumerate(list_files):
     print('FILE BEING ANALYSED: ', file_item)
-    dfI = pd.read_csv ('/Users/atillajv/CODE/RITMO/FILES/ELAN/' + file_item + '.csv')
-    dfR = pd.read_csv( '/Users/atillajv/CODE/RITMO/FILES/Ratings/P3_'+ file_item +'_IMPRO.csv' )
+    prefix = file_item.partition('_')[0]
+    dfI = pd.read_csv ('/Users/atillajv/CODE/RITMO/FILES/ELAN/' + file_item + '.csv',  delimiter=';')
+    dfR = pd.read_csv( '/Users/atillajv/CODE/RITMO/FILES/Ratings/'+ prefix +'_'+ file_item +'_IMPRO.csv' )
     dfE = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/Entropy_LZ_CTW_(w=4000_s=[]_ds=4_b=on_abs=on_t0=0)_'+file_item+'.csv')[1:]
     #dfF =  pd.read_csv( '/Users/atillajv/CODE/RITMO/FILES/Ratings/P3_'+ file_name +'_FLOW.csv' )
     #print(dfE)
@@ -79,13 +83,15 @@ for file_i, file_item in enumerate(list_files):
     for i in np.arange(len(dfI)):
 
         for j in np.arange(n,len(dfR)):
-            #print(tR_end.iloc[j], tI_1.iloc[i], 'which value')
             if tR_end.iloc[j] == 0 and tR_end.iloc[j+1] < tI_0.iloc[i]:
                 continue
 
             elif tR_end.iloc[j]< tI_0.iloc[i] and tR_end.iloc[j+1] >tI_0.iloc[i]:
                 mean_array.append(dfR[' Value'].iloc[j])
-                proportion_array.append(np.divide(tR_end.iloc[j+1]-tI_0.iloc[i] ,dtI_2.iloc[i]))
+                if tR_end.iloc[j+1] < tI_1.iloc[i]:
+                    proportion_array.append(np.divide(tR_end.iloc[j+1]-tI_0.iloc[i] ,dtI_2.iloc[i]))
+                elif tR_end.iloc[j+1] > tI_1.iloc[i]:
+                    proportion_array.append(1)
             
             elif tR_end.iloc[j] > tI_0.iloc[i] and tR_end.iloc[j+1] < tI_1.iloc[i]:
                 mean_array.append(dfR[' Value'].iloc[j])
@@ -102,9 +108,10 @@ for file_i, file_item in enumerate(list_files):
 
             elif tR_end.iloc[j]>= tI_1.iloc[i]:
                 n=j-2
+                
                 break
         Imp_average.append(np.sum(np.multiply(mean_array,proportion_array)))
-        print('CHECK ==1 : ', np.sum(proportion_array))
+        print('CHECK ==1 : ', np.sum(proportion_array), 'array:', proportion_array)
 
       
         list_Entropy = dfE.loc[(dfE["t0"] >= tI_0.iloc[i] ) & (dfE['t0'] <= tI_1.iloc[i]  ) ]
@@ -112,13 +119,15 @@ for file_i, file_item in enumerate(list_files):
         CTW_average.append(list_Entropy['CTW'].mean())
         df_store.loc[store_i] = {
             'Name': file_item,
-            'Music_Label': dfI['Music_Mode'].iloc[i],
-            'Dance_Label': dfI['Category'].iloc[i],
+            'Music_Imp': dfI['Music_Mode'].iloc[i],
+            'Dance_Imp': dfI['Category'].iloc[i],
             'Step': dfI['Step'].iloc[i],
             'Imp_Av': np.sum(np.multiply(mean_array,proportion_array)),
             'CTW_Av': list_Entropy['CTW'].mean() ,
             'LZ_Av': list_Entropy['LZ'].mean(),
             'Assigned_Cat': 'IMP0',
+            'Baile_Level': dfI['Baile'].iloc[i],
+            'Guitarra_Level': dfI['Guitarra'].iloc[i],
             'Rounds':dfI['Bloques'].iloc[i]}
         store_i = store_i+1
         
@@ -139,9 +148,7 @@ for file_i, file_item in enumerate(list_files):
     # IMP1 [3,5)
     # IMP2 [5,7]
 
-    print(dfI)
-
-
+   # print(dfI)
 
 #df_store['Assigned_Cat'] = 'IMP0'
 df_store.loc[df_store['Imp_Av']>= 3 , 'Assigned_Cat'] = 'IMP1'
@@ -169,9 +176,5 @@ def InfotoColumns(df):
 
 InfotoColumns(df_store)
 print(df_store)
-df_store.to_csv(file_output + 'Testing_All_ELAN' + '.csv')
+df_store.to_csv(file_output + 'Testing_All_ELAN_2' + '.csv')
 
-    # Left to do:
-    # Loop through files
-    # Store in DF,
-    # Fecth Entropy for that file 

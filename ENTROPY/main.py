@@ -11,22 +11,23 @@ from scipy.io.wavfile import read
 import matplotlib.pyplot as plt
 import numpy as np
 import time
-from functionsE import plotAudio_2, calc_lz_df_2, quantize_vector
+from functionsE import plotAudio_2, calc_lz_df_2, quantize_vector, quartile_vector
 
 # Code settings:
 
 loop_on = False # Set to True if you want to loop through a certain folder. Else not. 
-loop_off = 'P7_D1_G1_M6_R2_T1.wav'
+#loop_off = 'P7_D1_G1_M6_R2_T1.wav'
+loop_off = 'P7_D1_G1_M1_R2_T1.wav'
 downsample_on = True #if you want to downsample. 
-downsample_factor = 4 # Set to 1 if False. 
+downsample_factor = 8 # Set to 1 if False. 
 preBinarise_on= True #If you want to binarise data prior to passing dataframe to LZ
 absolute_on = True #Takes the absolute value of input data. 
 channel_num= 1 # 0 for Left channel, 1 for Right Channel. 
-t_start = 40 #[s] if you want analysis to start from different time frame. 
+t_start = 0 #[s] if you want analysis to start from different time frame.Need to set to 0 if whole length.  
 tempMiddle = True # If you want to displace entropy values a bit further than beginning of window. 
 tempNum = 2 # start + windowsize/tempNum  (where windowsize = step_size)
 # Initiate variables
-length_df = 40000 # Takes subset samples. Set to [] if you want to whole length. 
+length_df = [] # Takes subset samples. Set to [] if you want to whole length. 
 step_size = 4000  # Window of LZ/CTW estimation. 
 
 
@@ -65,17 +66,21 @@ for i, item in enumerate(audio_files):
 
     # Downsample
     if downsample_on:
-        data = scipy.signal.decimate(data, downsample_factor)
-     
+        dataDown = scipy.signal.decimate(data, downsample_factor)
+        data = dataDown
     
     if absolute_on:
-        data = np.abs(data)
+        #data = np.abs(data)
+        data = data**2
+        dataAbs = data
         absString = 'on'
+
     
     print(data, 'AFTER ABSOLUTE')
 
     if preBinarise_on:
-        data = quantize_vector(data)
+        #data = quantize_vector(data)
+        data = quartile_vector(data,  0.9)
         binString = 'on'
     
     print(data, 'AFTER BINARISE')
@@ -127,24 +132,27 @@ for i, item in enumerate(audio_files):
     df_out['LZ'] = temp_lz
     df_out['CTW'] = temp_ctw
     df_out = pd.DataFrame([[len(df),output_lz.values[0], output_ctw.values[0]]], index = ['mean'], columns=df_out.columns).append(df_out)
-    file_output = "/Users/atillajv/CODE/RITMO/ENTROPY/output/main/old"
+    file_output = "/Users/atillajv/CODE/RITMO/ENTROPY/output/main/old/"
     df_out.to_csv(file_output + 'Entropy_LZ_CTW_(w='+ str(step_size)+'_s='+str(length_df) +'_ds='+str(downsample_factor)+'_b=' + binString + '_abs='+ absString +'_t0=' +str(t_str) + ')_'+ file_name.strip('.wav') + '.csv')
 
 
     # Plot data
-    f, (ax1, ax2, ax3, ax4) = plt.subplots(4, 1, sharex=True)
+    f, (ax1, ax2, ax3) = plt.subplots(3, 1, sharex=True)
     ax1.plot(time_array_ent ,temp_lz, label = 'LZ' )
-    ax2.plot(time_array_ent, temp_ctw, label = 'CTW' )
-    ax3.plot(time_binary,df['Audio'] )
+    #ax2.plot(time_array_ent, temp_ctw, label = 'CTW' )
+    ax2.plot(time_binary,df['Audio'] )
     #plotAudio_2(data, samplerate, length_df*downsample_factor, ax3)
-    plotAudio_2(data_raw, samplerate, length_df*downsample_factor, ax4)
+   # plotAudio_2(data_raw, samplerate, length_df*downsample_factor, ax5)
+    ax3.plot(time_binary, dataAbs)
+    #ax4.plot(time_binary, dataDown)
     plt.legend()
     f.suptitle('Entropy (w: ' + str(step_size) + ' s:'+ str(length_df) +') ' + file_name.strip('.wav') )
-    ax4.set_xlabel('Time (s)')
+    #ax4.set_xlabel('Time (s)')
     ax1.set_ylabel('LZ')
     ax2.set_ylabel('CTW')
     ax3.set_ylabel('Amplitude Binarised')
-    ax4.set_ylabel('Audio Amplitude')
+    #ax4.set_ylabel('Audio Amplitude')
+
 
     plt.show()
     #plt.savefig(file_output + 'test.png')

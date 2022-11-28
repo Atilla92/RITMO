@@ -81,6 +81,14 @@ def quantize_vector(data):
     return (data>0).astype(int)
 #
 #
+def quartile_vector(data, percentile):
+    data = np.array(data)
+    threshold = np.quantile(data, percentile)
+    print('threshold:', threshold, 'mean:', np.mean(data))
+    data = data - threshold
+    print(np.sum((data> 0).astype(int))/len(data), 'LENGTH')
+    return (data> 0).astype(int)
+
 def lz_entropy(S, binarise):
     if binarise:
         X = S.values
