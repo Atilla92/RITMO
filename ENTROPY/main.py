@@ -12,10 +12,24 @@ import matplotlib.pyplot as plt
 import numpy as np
 import time
 from functionsE import plotAudio_2, calc_lz_df_2, quantize_vector, quartile_vector
+import json
+
+# Output settings:
+file_output = "/Users/atillajv/CODE/RITMO/ENTROPY/output/main/29_Nov_2022_075/" # Name of folder to store plots. 
+
+
+
+if not os.path.exists(file_output):
+    os.mkdir(file_output)
+    print("Directory " , file_output ,  " Created ")
+else:    
+    print("Directory " , file_output ,  " already exists")
+
+
 
 # Code settings:
-
-loop_on = False # Set to True if you want to loop through a certain folder. Else not. 
+audio_path = '/Users/atillajv/CODE/FILES/PILOT_SEV_APRIL_2022/Audio/'
+loop_on = True # Set to True if you want to loop through a certain folder. Else not. 
 #loop_off = 'P7_D1_G1_M6_R2_T1.wav'
 loop_off = 'P7_D1_G1_M1_R2_T1.wav'
 downsample_on = True #if you want to downsample. 
@@ -29,7 +43,7 @@ tempNum = 2 # start + windowsize/tempNum  (where windowsize = step_size)
 # Initiate variables
 length_df = [] # Takes subset samples. Set to [] if you want to whole length. 
 step_size = 4000  # Window of LZ/CTW estimation. 
-
+quartile = 0.75 #Set threshold for binarisation. 
 
 ##Empty lists, default values
 output_lz_array = []
@@ -46,7 +60,7 @@ if not downsample_factor:
 
 #Load Data
 if loop_on:
-    for filepath in glob.iglob('/Users/atillajv/CODE/FILES/PILOT_SEV_APRIL_2022/Audio/*.wav'):
+    for filepath in glob.iglob(str(audio_path + '*.wav')):
         if filepath.endswith('.wav'):
             filepath_split = filepath.partition('Audio/')
             print (filepath_split)
@@ -61,7 +75,7 @@ start = time.time()
 for i, item in enumerate(audio_files):
     print('Loop: ', item ,i)
     file_name = item
-    samplerate, data_raw = read(str('/Users/atillajv/CODE/FILES/PILOT_SEV_APRIL_2022/Audio/'+ file_name))
+    samplerate, data_raw = read(str( audio_path+ file_name))
     data = data_raw[:,channel_num]
 
     # Downsample
@@ -80,7 +94,7 @@ for i, item in enumerate(audio_files):
 
     if preBinarise_on:
         #data = quantize_vector(data)
-        data = quartile_vector(data,  0.9)
+        data = quartile_vector(data,  quartile)
         binString = 'on'
     
     print(data, 'AFTER BINARISE')
@@ -132,32 +146,35 @@ for i, item in enumerate(audio_files):
     df_out['LZ'] = temp_lz
     df_out['CTW'] = temp_ctw
     df_out = pd.DataFrame([[len(df),output_lz.values[0], output_ctw.values[0]]], index = ['mean'], columns=df_out.columns).append(df_out)
-    file_output = "/Users/atillajv/CODE/RITMO/ENTROPY/output/main/old/"
-    df_out.to_csv(file_output + 'Entropy_LZ_CTW_(w='+ str(step_size)+'_s='+str(length_df) +'_ds='+str(downsample_factor)+'_b=' + binString + '_abs='+ absString +'_t0=' +str(t_str) + ')_'+ file_name.strip('.wav') + '.csv')
+
+    #df_out.to_csv(file_output + 'Entropy_LZ_CTW_(w='+ str(step_size)+'_s='+str(length_df) +'_ds='+str(downsample_factor)+'_b=' + binString + '_abs='+ absString +'_t0=' +str(t_str) + ')_'+ file_name.strip('.wav') + '.csv')
+    df_out.to_csv(file_output + file_name.strip('.wav') + '.csv')
 
 
     # Plot data
-    f, (ax1, ax2, ax3) = plt.subplots(3, 1, sharex=True)
+    f, (ax1, ax2, ax3, ax4) = plt.subplots(4, 1, sharex=True)
     ax1.plot(time_array_ent ,temp_lz, label = 'LZ' )
     #ax2.plot(time_array_ent, temp_ctw, label = 'CTW' )
     ax2.plot(time_binary,df['Audio'] )
     #plotAudio_2(data, samplerate, length_df*downsample_factor, ax3)
-   # plotAudio_2(data_raw, samplerate, length_df*downsample_factor, ax5)
+    plotAudio_2(data_raw, samplerate, length_df*downsample_factor, ax4)
     ax3.plot(time_binary, dataAbs)
     #ax4.plot(time_binary, dataDown)
     plt.legend()
-    f.suptitle('Entropy (w: ' + str(step_size) + ' s:'+ str(length_df) +') ' + file_name.strip('.wav') )
-    #ax4.set_xlabel('Time (s)')
+    f.suptitle('Entropy (w: ' + str(step_size) + ' qnt:'+ str(quartile) +') ' + file_name.strip('.wav') )
+    ax4.set_xlabel('Time (s)')
     ax1.set_ylabel('LZ')
-    ax2.set_ylabel('CTW')
-    ax3.set_ylabel('Amplitude Binarised')
+
+    ax3.set_ylabel('Squared')
+    ax2.set_ylabel('Binarised')
+    ax4.set_ylabel('Audio')
     #ax4.set_ylabel('Audio Amplitude')
 
 
-    plt.show()
+    #plt.show()
     #plt.savefig(file_output + 'test.png')
-    plt.savefig(file_output + 'Entropy_LZ_CTW_(w='+ str(step_size)+'_s='+str(length_df) +'_ds='+str(downsample_factor)+'_b=' + binString + '_abs='+ absString +'_t0=' +str(t_str) + ')_'+ file_name.strip('.wav') +'.png')
-
+    #plt.savefig(file_output + 'Entropy_LZ_CTW_(w='+ str(step_size)+'_s='+str(length_df) +'_ds='+str(downsample_factor)+'_b=' + binString + '_abs='+ absString +'_t0=' +str(t_str) + ')_'+ file_name.strip('.wav') +'.png')
+    plt.savefig(file_output + file_name.strip('.wav')+ '.png')
     # end time
     end = time.time()
     # total time taken
@@ -165,7 +182,17 @@ for i, item in enumerate(audio_files):
     print(f"Runtime of the program is {end - start}")
 
 
+variables_dict = {
+    "downsample" : downsample_factor,
+    "preBinarise" : preBinarise_on,
+    "quantile" : quartile,
+    "absoluteOn": absolute_on,
+    "windowSize": step_size
 
+}
+json_object = json.dumps(variables_dict, indent = 4)
+with open(str(file_output + "variables.json"), "w") as outfile:
+    outfile.write(json_object)
 
 
 

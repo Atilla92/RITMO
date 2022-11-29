@@ -1,0 +1,7 @@
+{
+    "downsample": 8,
+    "preBinarise": true,
+    "quantile": 0.9,
+    "absoluteOn": true,
+    "windowSize": 4000
+}

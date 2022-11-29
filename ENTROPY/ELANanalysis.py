@@ -10,7 +10,7 @@ import glob
 file_name = 'P4_D5_G2_M5_R2_T1' # Name file if loop_on = False
 loop_on = True # True if you want to loop through folder
 path_files = '/Users/atillajv/CODE/RITMO/FILES/ELAN/'
-file_output = '/Users/atillajv/CODE/RITMO/ENTROPY/output/ELAN/'
+file_output = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/28_Nov_2022/'
 
 # Default settings 
 percentage = 0.1
@@ -39,7 +39,9 @@ for file_i, file_item in enumerate(list_files):
     prefix = file_item.partition('_')[0]
     dfI = pd.read_csv ('/Users/atillajv/CODE/RITMO/FILES/ELAN/' + file_item + '.csv',  delimiter=';')
     dfR = pd.read_csv( '/Users/atillajv/CODE/RITMO/FILES/Ratings/'+ prefix +'_'+ file_item +'_IMPRO.csv' )
-    dfE = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/Entropy_LZ_CTW_(w=4000_s=[]_ds=4_b=on_abs=on_t0=0)_'+file_item+'.csv')[1:]
+    #dfE = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/Entropy_LZ_CTW_(w=4000_s=[]_ds=4_b=on_abs=on_t0=0)_'+file_item+'.csv')[1:]
+    dfE = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/28_Nov_2022/'+file_item+'.csv')[1:]
+    
     #dfF =  pd.read_csv( '/Users/atillajv/CODE/RITMO/FILES/Ratings/P3_'+ file_name +'_FLOW.csv' )
     #print(dfE)
 
@@ -176,5 +178,5 @@ def InfotoColumns(df):
 
 InfotoColumns(df_store)
 print(df_store)
-df_store.to_csv(file_output + 'Testing_All_ELAN_2' + '.csv')
+df_store.to_csv(file_output + 'Entropy_095' + '.csv')
 
