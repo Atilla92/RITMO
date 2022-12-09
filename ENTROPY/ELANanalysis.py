@@ -8,9 +8,9 @@ import glob
 
 # One file or all in a specific folder
 file_name = 'P6_D1_G1_M6_R1_T1' # Name file if loop_on = False
-loop_on = True # True if you want to loop through folder
+loop_on = False # True if you want to loop through folder
 path_files = '/Users/atillajv/CODE/RITMO/FILES/ELAN/'
-file_output = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/28_Nov_2022/'
+file_output = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/Test/'
 
 # Default settings 
 percentage = 0.1
@@ -67,6 +67,7 @@ for file_i, file_item in enumerate(list_files):
     #dfE = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/Entropy_LZ_CTW_(w=4000_s=[]_ds=4_b=on_abs=on_t0=0)_'+file_item+'.csv')[1:]
     dfE = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/28_Nov_2022/'+file_item+'.csv')[1:]
     dfS = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/Subjective/DuringExperiments_Sevilla_06102022_DropW_Entropy.csv')
+    dfMIR = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/MIR/' + file_item + '.csv')
     #dfF =  pd.read_csv( '/Users/atillajv/CODE/RITMO/FILES/Ratings/P3_'+ file_name +'_FLOW.csv' )
     #print(dfE)
 
@@ -145,97 +146,106 @@ for file_i, file_item in enumerate(list_files):
         Imp_average.append(np.sum(np.multiply(mean_array,proportion_array)))
         print('CHECK ==1 : ', np.sum(proportion_array), 'array:', proportion_array)
 
-      
+        #Fetching LZ entropy in intervals
         list_Entropy = dfE.loc[(dfE["t0"] >= tI_0.iloc[i] ) & (dfE['t0'] <= tI_1.iloc[i]  ) ]
         LZ_average.append(list_Entropy['LZ'].mean()) 
         CTW_average.append(list_Entropy['CTW'].mean())
-        dfTest = dfS[ (dfS['Name'].str.contains(file_item)) & (dfS['Participant'].str.contains(prefix)) ]
-        print(dfTest)
-        df_store.loc[store_i] = {
-            'Name': file_item,
-            'Music_Imp': dfI['Music_Mode'].iloc[i],
-            'Dance_Imp': dfI['Category'].iloc[i],
-            'Step': dfI['Step'].iloc[i],
-            'Imp_Av': np.sum(np.multiply(mean_array,proportion_array)),
-            'CTW': list_Entropy['CTW'].mean() ,
-            'LZ': list_Entropy['LZ'].mean(),
-            'Assigned_Cat': 'IMP0',
-            'Baile_Level': dfI['Baile'].iloc[i],
-            'Guitarra_Level': dfI['Guitarra'].iloc[i],
-            'Rounds':dfI['Bloques'].iloc[i],
-            "Q1a": dfTest["Q1a"].iloc[0],
-            "Q1b": dfTest["Q1b"].iloc[0],
-            "Q2a": dfTest["Q2a"].iloc[0],
-            "Q2b": dfTest["Q2b"].iloc[0],
-            "Q2c": dfTest["Q2c"].iloc[0],
-            "Q2d": dfTest["Q2d"].iloc[0],
-            "Q2e": dfTest["Q2e"].iloc[0],
-            "Q2f": dfTest["Q2f"].iloc[0],
-            "Q2g": dfTest["Q2g"].iloc[0],
-            "Q2h": dfTest["Q2h"].iloc[0],
-            "Q2i": dfTest["Q2i"].iloc[0],
-            "Q2j": dfTest["Q2j"].iloc[0],
-            "Q3a": dfTest["Q3a"].iloc[0],
-            "Q3b": dfTest["Q3b"].iloc[0],
-            "Q4a": dfTest["Q4a"].iloc[0],
-            "Q4b": dfTest["Q4b"].iloc[0],
-            "Abs_Av": dfTest["Abs_Av"].iloc[0],
-            "Perf_Av": dfTest["Perf_Av"].iloc[0],
-            "SFS": dfTest["SFS"].iloc[0],
-            "Dance_mode": dfTest["Dance_mode"].iloc[0],
-            "Music_mode": dfTest["Music_mode"].iloc[0],
-            "Palo": dfTest["Palo"].iloc[0],
-            "LZ_Av": dfTest["LZ"].iloc[0],
-            "CTW_Av": dfTest["CTW"].values
-            }
-        store_i = store_i+1
+        # Fetching Spectral Entropy in intervals
+        print(dfMIR, '!!!!! dfMIR !!!!')
+
+        dfMIR_t0 = np.array(dfMIR['entropy_t0'])
+        
+
+
+        # Store values in new dataframe
+    #     dfTest = dfS[ (dfS['Name'].str.contains(file_item)) & (dfS['Participant'].str.contains(prefix)) ]
+    #     print(dfTest)
+    #     df_store.loc[store_i] = {
+    #         'Name': file_item,
+    #         'Music_Imp': dfI['Music_Mode'].iloc[i],
+    #         'Dance_Imp': dfI['Category'].iloc[i],
+    #         'Step': dfI['Step'].iloc[i],
+    #         'Imp_Av': np.sum(np.multiply(mean_array,proportion_array)),
+    #         'CTW': list_Entropy['CTW'].mean() ,
+    #         'LZ': list_Entropy['LZ'].mean(),
+    #         'Assigned_Cat': 'IMP0',
+    #         'Baile_Level': dfI['Baile'].iloc[i],
+    #         'Guitarra_Level': dfI['Guitarra'].iloc[i],
+    #         'Rounds':dfI['Bloques'].iloc[i],
+    #         "Q1a": dfTest["Q1a"].iloc[0],
+    #         "Q1b": dfTest["Q1b"].iloc[0],
+    #         "Q2a": dfTest["Q2a"].iloc[0],
+    #         "Q2b": dfTest["Q2b"].iloc[0],
+    #         "Q2c": dfTest["Q2c"].iloc[0],
+    #         "Q2d": dfTest["Q2d"].iloc[0],
+    #         "Q2e": dfTest["Q2e"].iloc[0],
+    #         "Q2f": dfTest["Q2f"].iloc[0],
+    #         "Q2g": dfTest["Q2g"].iloc[0],
+    #         "Q2h": dfTest["Q2h"].iloc[0],
+    #         "Q2i": dfTest["Q2i"].iloc[0],
+    #         "Q2j": dfTest["Q2j"].iloc[0],
+    #         "Q3a": dfTest["Q3a"].iloc[0],
+    #         "Q3b": dfTest["Q3b"].iloc[0],
+    #         "Q4a": dfTest["Q4a"].iloc[0],
+    #         "Q4b": dfTest["Q4b"].iloc[0],
+    #         "Abs_Av": dfTest["Abs_Av"].iloc[0],
+    #         "Perf_Av": dfTest["Perf_Av"].iloc[0],
+    #         "SFS": dfTest["SFS"].iloc[0],
+    #         "Dance_mode": dfTest["Dance_mode"].iloc[0],
+    #         "Music_mode": dfTest["Music_mode"].iloc[0],
+    #         "Palo": dfTest["Palo"].iloc[0],
+    #         "LZ_Av": dfTest["LZ"].iloc[0],
+    #         "CTW_Av": dfTest["CTW"].values
+    #         }
+    #     store_i = store_i+1
         
 
 
 
-        mean_array = []
-        proportion_array = []
+    #     mean_array = []
+    #     proportion_array = []
         
-    dfI['Imp_Av'] = Imp_average
-    dfTest = dfS[ (dfS['Name'].str.contains(file_name)) & (dfS['Participant'].str.contains(prefix)) ]
-    print(dfTest, 'TESTING!!!!!!!!')
+    # dfI['Imp_Av'] = Imp_average
+    # dfTest = dfS[ (dfS['Name'].str.contains(file_name)) & (dfS['Participant'].str.contains(prefix)) ]
+    # print(dfTest, 'TESTING!!!!!!!!')
 
-    # Assign Category per IMPRO
-    # IMP0 [0,3) Not improvised
-    # IMP1 [3,5)
-    # IMP2 [5,7]
 
-   # print(dfI)
 
+# Assign Category per IMPRO
+# IMP0 [0,3) Not improvised
+# IMP1 [3,5)
+# IMP2 [5,7]
 #df_store['Assigned_Cat'] = 'IMP0'
-df_store.loc[df_store['Imp_Av']>= 3 , 'Assigned_Cat'] = 'IMP1'
-df_store.loc[df_store['Imp_Av']>= 5 , 'Assigned_Cat'] = 'IMP2'
 
 
-def InfotoColumns(df):
-    dance_array = []
-    music_array = []
-    palo_array = []
-    participant_array = []
-    for i, item in enumerate(df['Name']):
-
-        split_array = item.split('_')
-        participant_array.append(split_array[0])
-        dance_array.append(split_array[1])
-        music_array.append(split_array[3])
-        palo_array.append(split_array[4])
-        #print(split_array)
-
-    df['Dance_mode'] = dance_array
-    df['Music_mode'] = music_array
-    df['Palo'] = palo_array
-    df['Participant'] = participant_array
-
-InfotoColumns(df_store)
-print(df_store)
-
-print(dfS)
+# df_store.loc[df_store['Imp_Av']>= 3 , 'Assigned_Cat'] = 'IMP1'
+# df_store.loc[df_store['Imp_Av']>= 5 , 'Assigned_Cat'] = 'IMP2'
 
 
-df_store.to_csv(file_output + 'Entropy_095_Subjective' + '.csv')
+# def InfotoColumns(df):
+#     dance_array = []
+#     music_array = []
+#     palo_array = []
+#     participant_array = []
+#     for i, item in enumerate(df['Name']):
+
+#         split_array = item.split('_')
+#         participant_array.append(split_array[0])
+#         dance_array.append(split_array[1])
+#         music_array.append(split_array[3])
+#         palo_array.append(split_array[4])
+#         #print(split_array)
+
+#     df['Dance_mode'] = dance_array
+#     df['Music_mode'] = music_array
+#     df['Palo'] = palo_array
+#     df['Participant'] = participant_array
+
+# InfotoColumns(df_store)
+# print(df_store)
+
+# print(dfS)
+
+
+# df_store.to_csv(file_output + 'Testing_MIR' + '.csv')
 

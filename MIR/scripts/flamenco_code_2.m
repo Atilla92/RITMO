@@ -51,14 +51,14 @@ d = dir;
                         rmsc = mirrms(d(i).name, 'Frame');
                         m1 = mirgetdata(rmsc);
                         f1 = get(rmsc,'FramePos');
-                        f1{1}{1}
+                        f1{1}{1};
                         
                         entropyavgc = mirentropy(d(i).name);
                         mgt2 = mirgetdata(entropyavgc);
                         entropyc = mirentropy(d(i).name, 'Frame');
                         m2 = mirgetdata(entropyc);
                         f2 = get(entropyc,'FramePos');
-                        f2{1}{1}
+                        f2{1}{1};
 
                         o1 = mironsets(d(i).name,'SpectroFrame',.05,.2,...
                             'PreSilence',0,'Detect',0,'Frame',5,.05);
@@ -72,13 +72,13 @@ d = dir;
                         metrec = mirmetre(ac);
                         m3 = mirgetdata(metrec);
                         f3 = get(metrec,'FramePos');
-                        f3{1}{1}
+                        f3{1}{1};
 
                         s = mirmfcc(d(i).name,'Frame',7,.2,'Rank',2:13);
                         smc = mirsimatrix(s);
                         m4 = mirgetdata(smc);
                         f4 = get(smc, 'FramePos');
-                        f4{1}{1}
+                        f4{1}{1};
 
                         b = mirnovelty(smc,'Width',20,'Normal',0,...
                             'FilterBorder',0,'Back');
@@ -87,7 +87,7 @@ d = dir;
                         noveltyc = b + f;
                         m5 = mirgetdata(noveltyc);
                         f5 = get(noveltyc, 'FramePos');
-                        f5{1}{1}
+                        f5{1}{1};
                         
                         
                         filenames{end+1} = d(i).name;
@@ -106,11 +106,11 @@ d = dir;
                         
                         b=[b; rmsc; entropyc; metrec; smc; noveltyc];
     
-                        title(d(i).name)
+                        %title(d(i).name);
     
                         %save([num2str(d(i).name) '.mat'],'ml1')
                     
-                        snapnow
+                        snapnow;
                         close all
                 end            
                 

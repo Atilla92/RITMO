@@ -126,7 +126,7 @@ dataELAN$Dance_Imp <- relevel(dataELAN$Dance_Imp, "DC")
 dataELAN$Music_Imp <- as.factor(dataELAN$Music_Imp)
 dataELAN$Music_Imp <- relevel(dataELAN$Music_Imp, "MC")
 dataELAN$ImpLevel <- as.factor(dataELAN$Assigned_Cat)
-model_entropy = lmer(Q1a ~ ImpLevel  + (1 | Participant) , data = dataELAN )
+model_entropy = lmer(LZ ~  Imp_Av  + (1 | Participant) , data = dataELAN )
 summary(model_entropy)
 model_entropy_2 = lmer(Q1b ~ Q3b + I(Q3b^2) + (1 | Participant), data = dataEntropy)
 
