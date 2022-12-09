@@ -8,9 +8,9 @@ import glob
 
 # One file or all in a specific folder
 file_name = 'P6_D1_G1_M6_R1_T1' # Name file if loop_on = False
-loop_on = False # True if you want to loop through folder
+loop_on = True # True if you want to loop through folder
 path_files = '/Users/atillajv/CODE/RITMO/FILES/ELAN/'
-file_output = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/Test/'
+file_output = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/28_Nov_2022/'
 
 # Default settings 
 percentage = 0.1
@@ -56,7 +56,13 @@ df_store = pd.DataFrame(columns=['Name', 'Music_Imp', 'Dance_Imp', 'Baile_Level'
 'Music_mode',
 'Palo',
 'LZ_Av',
-'CTW_Av'
+'CTW_Av',
+'MIR_entropy',
+'MIR_entropy_avg',
+'MIR_rms',
+'MIR_rms_avg',
+'MIR_novelty',
+'MIR_novelty_avg',
 ])
 
 for file_i, file_item in enumerate(list_files):
@@ -67,7 +73,8 @@ for file_i, file_item in enumerate(list_files):
     #dfE = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/Entropy_LZ_CTW_(w=4000_s=[]_ds=4_b=on_abs=on_t0=0)_'+file_item+'.csv')[1:]
     dfE = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/28_Nov_2022/'+file_item+'.csv')[1:]
     dfS = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/Subjective/DuringExperiments_Sevilla_06102022_DropW_Entropy.csv')
-    dfMIR = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/MIR/' + file_item + '.csv')
+    dfMIR_entropy = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/MIR/ENTROPY/' + file_item + '.csv')
+    dfMIR_novelty = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/MIR/NOVELTY/' + file_item + '.csv')
     #dfF =  pd.read_csv( '/Users/atillajv/CODE/RITMO/FILES/Ratings/P3_'+ file_name +'_FLOW.csv' )
     #print(dfE)
 
@@ -96,8 +103,10 @@ for file_i, file_item in enumerate(list_files):
     tR_end.index = tR_end.index + 1  # shifting index
     tR_end = tR_end.sort_index()  # sorting by index
     tR_end.loc[len(tR_end.index)] = tI_1.iloc[-1]
-    print(tR_end)
+    #print(tR_end)
 
+
+   # Arrays for MIR values
 
     # Start a loop
     mean_array = []
@@ -105,6 +114,8 @@ for file_i, file_item in enumerate(list_files):
     Imp_average = []
     LZ_average = []
     CTW_average = []
+    MIR_entropy_avg = []
+    MIR_rms_avg = []
     n=0
  
 
@@ -148,66 +159,78 @@ for file_i, file_item in enumerate(list_files):
 
         #Fetching LZ entropy in intervals
         list_Entropy = dfE.loc[(dfE["t0"] >= tI_0.iloc[i] ) & (dfE['t0'] <= tI_1.iloc[i]  ) ]
-        LZ_average.append(list_Entropy['LZ'].mean()) 
-        CTW_average.append(list_Entropy['CTW'].mean())
-        # Fetching Spectral Entropy in intervals
-        print(dfMIR, '!!!!! dfMIR !!!!')
 
-        dfMIR_t0 = np.array(dfMIR['entropy_t0'])
-        
+        # Fetching Spectral Entropy MIR in intervals
+        list_MIR_entropy = dfMIR_entropy.loc[(dfMIR_entropy["entropy_t0"] >= tI_0.iloc[i] ) & (dfMIR_entropy['entropy_t0'] <= tI_1.iloc[i]  ) ]
+       
+        # Fetching Novelty MIR in intervals
+        list_MIR_novelty = dfMIR_novelty.loc[(dfMIR_novelty["novelty_t0"] >= tI_0.iloc[i] ) & (dfMIR_novelty['novelty_t0'] <= tI_1.iloc[i]  ) ]
+       
+
+        #print(MIR_rms_avg, 'MIR!!!!')
+       
+
+
+
 
 
         # Store values in new dataframe
-    #     dfTest = dfS[ (dfS['Name'].str.contains(file_item)) & (dfS['Participant'].str.contains(prefix)) ]
-    #     print(dfTest)
-    #     df_store.loc[store_i] = {
-    #         'Name': file_item,
-    #         'Music_Imp': dfI['Music_Mode'].iloc[i],
-    #         'Dance_Imp': dfI['Category'].iloc[i],
-    #         'Step': dfI['Step'].iloc[i],
-    #         'Imp_Av': np.sum(np.multiply(mean_array,proportion_array)),
-    #         'CTW': list_Entropy['CTW'].mean() ,
-    #         'LZ': list_Entropy['LZ'].mean(),
-    #         'Assigned_Cat': 'IMP0',
-    #         'Baile_Level': dfI['Baile'].iloc[i],
-    #         'Guitarra_Level': dfI['Guitarra'].iloc[i],
-    #         'Rounds':dfI['Bloques'].iloc[i],
-    #         "Q1a": dfTest["Q1a"].iloc[0],
-    #         "Q1b": dfTest["Q1b"].iloc[0],
-    #         "Q2a": dfTest["Q2a"].iloc[0],
-    #         "Q2b": dfTest["Q2b"].iloc[0],
-    #         "Q2c": dfTest["Q2c"].iloc[0],
-    #         "Q2d": dfTest["Q2d"].iloc[0],
-    #         "Q2e": dfTest["Q2e"].iloc[0],
-    #         "Q2f": dfTest["Q2f"].iloc[0],
-    #         "Q2g": dfTest["Q2g"].iloc[0],
-    #         "Q2h": dfTest["Q2h"].iloc[0],
-    #         "Q2i": dfTest["Q2i"].iloc[0],
-    #         "Q2j": dfTest["Q2j"].iloc[0],
-    #         "Q3a": dfTest["Q3a"].iloc[0],
-    #         "Q3b": dfTest["Q3b"].iloc[0],
-    #         "Q4a": dfTest["Q4a"].iloc[0],
-    #         "Q4b": dfTest["Q4b"].iloc[0],
-    #         "Abs_Av": dfTest["Abs_Av"].iloc[0],
-    #         "Perf_Av": dfTest["Perf_Av"].iloc[0],
-    #         "SFS": dfTest["SFS"].iloc[0],
-    #         "Dance_mode": dfTest["Dance_mode"].iloc[0],
-    #         "Music_mode": dfTest["Music_mode"].iloc[0],
-    #         "Palo": dfTest["Palo"].iloc[0],
-    #         "LZ_Av": dfTest["LZ"].iloc[0],
-    #         "CTW_Av": dfTest["CTW"].values
-    #         }
-    #     store_i = store_i+1
+        dfTest = dfS[ (dfS['Name'].str.contains(file_item)) & (dfS['Participant'].str.contains(prefix)) ]
+        #print(dfTest)
+        df_store.loc[store_i] = {
+            'Name': file_item,
+            'Music_Imp': dfI['Music_Mode'].iloc[i],
+            'Dance_Imp': dfI['Category'].iloc[i],
+            'Step': dfI['Step'].iloc[i],
+            'Imp_Av': np.sum(np.multiply(mean_array,proportion_array)),
+            'CTW': list_Entropy['CTW'].mean() ,
+            'LZ': list_Entropy['LZ'].mean(),
+            'Assigned_Cat': 'IMP0',
+            'Baile_Level': dfI['Baile'].iloc[i],
+            'Guitarra_Level': dfI['Guitarra'].iloc[i],
+            'Rounds':dfI['Bloques'].iloc[i],
+            "Q1a": dfTest["Q1a"].iloc[0],
+            "Q1b": dfTest["Q1b"].iloc[0],
+            "Q2a": dfTest["Q2a"].iloc[0],
+            "Q2b": dfTest["Q2b"].iloc[0],
+            "Q2c": dfTest["Q2c"].iloc[0],
+            "Q2d": dfTest["Q2d"].iloc[0],
+            "Q2e": dfTest["Q2e"].iloc[0],
+            "Q2f": dfTest["Q2f"].iloc[0],
+            "Q2g": dfTest["Q2g"].iloc[0],
+            "Q2h": dfTest["Q2h"].iloc[0],
+            "Q2i": dfTest["Q2i"].iloc[0],
+            "Q2j": dfTest["Q2j"].iloc[0],
+            "Q3a": dfTest["Q3a"].iloc[0],
+            "Q3b": dfTest["Q3b"].iloc[0],
+            "Q4a": dfTest["Q4a"].iloc[0],
+            "Q4b": dfTest["Q4b"].iloc[0],
+            "Abs_Av": dfTest["Abs_Av"].iloc[0],
+            "Perf_Av": dfTest["Perf_Av"].iloc[0],
+            "SFS": dfTest["SFS"].iloc[0],
+            "Dance_mode": dfTest["Dance_mode"].iloc[0],
+            "Music_mode": dfTest["Music_mode"].iloc[0],
+            "Palo": dfTest["Palo"].iloc[0],
+            "LZ_Av": dfTest["LZ"].iloc[0],
+            "CTW_Av": dfTest["CTW"].iloc[0],
+            'MIR_entropy' : list_MIR_entropy['entropy'].mean() ,
+            'MIR_entropy_avg' : dfMIR_entropy['entropy'].mean(),
+            'MIR_rms' : list_MIR_entropy['rms'].mean(),
+            'MIR_rms_avg' : dfMIR_entropy['rms'].mean(),
+            'MIR_novelty' : list_MIR_novelty['novelty'].mean() ,
+            'MIR_novelty_avg' : dfMIR_novelty['novelty'].mean(),
+            }
+        store_i = store_i+1
         
 
 
 
-    #     mean_array = []
-    #     proportion_array = []
+        mean_array = []
+        proportion_array = []
         
-    # dfI['Imp_Av'] = Imp_average
-    # dfTest = dfS[ (dfS['Name'].str.contains(file_name)) & (dfS['Participant'].str.contains(prefix)) ]
-    # print(dfTest, 'TESTING!!!!!!!!')
+    dfI['Imp_Av'] = Imp_average
+    dfTest = dfS[ (dfS['Name'].str.contains(file_name)) & (dfS['Participant'].str.contains(prefix)) ]
+    print(dfTest, 'TESTING!!!!!!!!')
 
 
 
@@ -215,37 +238,37 @@ for file_i, file_item in enumerate(list_files):
 # IMP0 [0,3) Not improvised
 # IMP1 [3,5)
 # IMP2 [5,7]
-#df_store['Assigned_Cat'] = 'IMP0'
+df_store['Assigned_Cat'] = 'IMP0'
 
 
-# df_store.loc[df_store['Imp_Av']>= 3 , 'Assigned_Cat'] = 'IMP1'
-# df_store.loc[df_store['Imp_Av']>= 5 , 'Assigned_Cat'] = 'IMP2'
+df_store.loc[df_store['Imp_Av']>= 3 , 'Assigned_Cat'] = 'IMP1'
+df_store.loc[df_store['Imp_Av']>= 5 , 'Assigned_Cat'] = 'IMP2'
 
 
-# def InfotoColumns(df):
-#     dance_array = []
-#     music_array = []
-#     palo_array = []
-#     participant_array = []
-#     for i, item in enumerate(df['Name']):
+def InfotoColumns(df):
+    dance_array = []
+    music_array = []
+    palo_array = []
+    participant_array = []
+    for i, item in enumerate(df['Name']):
 
-#         split_array = item.split('_')
-#         participant_array.append(split_array[0])
-#         dance_array.append(split_array[1])
-#         music_array.append(split_array[3])
-#         palo_array.append(split_array[4])
-#         #print(split_array)
+        split_array = item.split('_')
+        participant_array.append(split_array[0])
+        dance_array.append(split_array[1])
+        music_array.append(split_array[3])
+        palo_array.append(split_array[4])
+        #print(split_array)
 
-#     df['Dance_mode'] = dance_array
-#     df['Music_mode'] = music_array
-#     df['Palo'] = palo_array
-#     df['Participant'] = participant_array
+    df['Dance_mode'] = dance_array
+    df['Music_mode'] = music_array
+    df['Palo'] = palo_array
+    df['Participant'] = participant_array
 
-# InfotoColumns(df_store)
-# print(df_store)
+InfotoColumns(df_store)
+#print(df_store)
 
-# print(dfS)
+#print(dfS)
 
 
-# df_store.to_csv(file_output + 'Testing_MIR' + '.csv')
+df_store.to_csv(file_output + 'Entropy_095_MIR' + '.csv')
 

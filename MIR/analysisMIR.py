@@ -40,19 +40,45 @@ for i, item in enumerate(name_files):
     #print (item, av_entropy, 'average ent', av_rms, 'average rms')
 
     # Create new dataframe to store entropy
-    df_intermediate = pd.DataFrame({
-        'Name': str(item).strip('.wav'),
-        'rms_t0' :[ data['fp1'][i][0]],
-        'rms_t1' : [data['fp1'][i][1]],
-        'rms': [data['rms'][i]],
+    df_1 = pd.DataFrame({
+        'rms_t0' : data['fp1'][i][0],
+        'rms_t1' : data['fp1'][i][1],
+        'rms': data['rms'][i],
         'rms_avg': data['rmsavg'][i],
-        'novelty': [data['novelty'][i]],
-        'novelty_t0' :[ data['fp5'][i][0]],
-        'novelty_t1' :[ data['fp5'][i][1]],
-        'entropy': [data['entropy'][i]],
-        'entropy_t0': [data['fp2'][i][0]],
-        'entropy_t1': [data['fp2'][i][1]],
-        'entropy_avg': data['entropyavg'][i],
+        'entropy': data['entropy'][i],
+        'entropy_t0': data['fp2'][i][0],
+        'entropy_t1': data['fp2'][i][1],
+        #'entropy_avg': data['entropyavg'][i],
+        #'sm': [data['sm'][i]],
+        #'sm_t0': [data['fp4'][i][0]],
+        #'sm_t1': [data['fp4'][i][1]],
+        }             
+        )
+    df_2 = pd.DataFrame({
+        #'Name': str(item).strip('.wav'),
+        #'rms_t0' :[ data['fp1'][i][0]],
+        #'rms_t1' : [data['fp1'][i][1]],
+        #'rms': [data['rms'][i]],
+        #'rms_avg': data['rmsavg'][i],
+        'novelty': data['novelty'][i],
+        'novelty_t0' : data['fp5'][i][0],
+        'novelty_t1' : data['fp5'][i][1],
+        },             
+        )
+
+    df_3 = pd.DataFrame({
+        #'Name': str(item).strip('.wav'),
+        # 'rms_t0' :[ data['fp1'][i][0]],
+        # 'rms_t1' : [data['fp1'][i][1]],
+        # 'rms': [data['rms'][i]],
+        # 'rms_avg': data['rmsavg'][i],
+        # 'novelty': [data['novelty'][i]],
+        # 'novelty_t0' :[ data['fp5'][i][0]],
+        # 'novelty_t1' :[ data['fp5'][i][1]],
+        # 'entropy': [data['entropy'][i]],
+        # 'entropy_t0': [data['fp2'][i][0]],
+        # 'entropy_t1': [data['fp2'][i][1]],
+        # 'entropy_avg': data['entropyavg'][i],
         'sm': [data['sm'][i]],
         'sm_t0': [data['fp4'][i][0]],
         'sm_t1': [data['fp4'][i][1]],
@@ -60,9 +86,10 @@ for i, item in enumerate(name_files):
         )
 
 
-    df_store = pd.concat([df_intermediate, df_store])
-    df_store.to_csv('./output/MIR_Files/'+ str(item).strip('.wav') + ' .csv', index=False, delimiter = ',')
-
+    #df_store = pd.concat([df_intermediate, df_store])
+    df_1.to_csv('/Users/atillajv/CODE/RITMO/FILES/MIR/ENTROPY/'+ str(item).strip('.wav') + '.csv', index=False)
+    df_2.to_csv('/Users/atillajv/CODE/RITMO/FILES/MIR/NOVELTY/'+ str(item).strip('.wav') + '.csv', index=False)
+    df_3.to_csv('/Users/atillajv/CODE/RITMO/FILES/MIR/SM/'+ str(item).strip('.wav') + '.csv', index=False)
 #print(df_store)
 
 #InfotoColumns(df_store)
