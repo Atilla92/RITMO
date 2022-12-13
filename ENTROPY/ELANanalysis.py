@@ -7,15 +7,15 @@ import glob
 #And have to add the response, from csv for subjective ratings. Does that make sense?
 
 # One file or all in a specific folder
-file_name = 'P6_D1_G1_M6_R1_T1' # Name file if loop_on = False
-loop_on = True # True if you want to loop through folder
+file_name = 'P4_D1_G2_M1_R2_T1' # Name file if loop_on = False
+loop_on = False # True if you want to loop through folder
 path_files = '/Users/atillajv/CODE/RITMO/FILES/ELAN/'
-file_output = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/28_Nov_2022/'
+file_output = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/Test/' #check that this is the same as input file for entropy
 
 # Default settings 
 percentage = 0.1
 frac_round = 1 #Round/frac_round for moving rating to the left 
-dt_L = 4.5 #Number of seconds delay in rating of user. 
+dt_L = 4 #Number of seconds delay in rating of user. 
 
 
 list_files = []
@@ -32,7 +32,9 @@ print(list_files)
 
 # Initiate dataframe before loop 
 store_i = 0
-df_store = pd.DataFrame(columns=['Name', 'Music_Imp', 'Dance_Imp', 'Baile_Level','Guitarra_Level' ,'Step', 'Imp_Av', 'CTW', 'LZ','Assigned_Cat', 'Rounds', 
+df_store = pd.DataFrame(columns=['Name', 'Music_Imp', 'Dance_Imp', 'Baile_Level','Guitarra_Level' ,'Step', 
+'Imp_subj','Imp_avg', 'Flow_subj', 'Flow_avg',
+'CTW', 'LZ','Assigned_Cat', 'Rounds', 
 'Q1a',
 'Q1b',
 'Q2a',
@@ -70,6 +72,7 @@ for file_i, file_item in enumerate(list_files):
     prefix = file_item.partition('_')[0]
     dfI = pd.read_csv ('/Users/atillajv/CODE/RITMO/FILES/ELAN/' + file_item + '.csv',  delimiter=';')
     dfR = pd.read_csv( '/Users/atillajv/CODE/RITMO/FILES/Ratings/'+ prefix +'_'+ file_item +'_IMPRO.csv' )
+    dfR_flow = pd.read_csv( '/Users/atillajv/CODE/RITMO/FILES/Ratings/'+ prefix +'_'+ file_item +'_FLOW.csv' )
     #dfE = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/Entropy_LZ_CTW_(w=4000_s=[]_ds=4_b=on_abs=on_t0=0)_'+file_item+'.csv')[1:]
     dfE = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/28_Nov_2022/'+file_item+'.csv')[1:]
     dfS = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/Subjective/DuringExperiments_Sevilla_06102022_DropW_Entropy.csv')
@@ -90,20 +93,31 @@ for file_i, file_item in enumerate(list_files):
 
     #Append end time to last row 
     dfR.loc[len(dfR.index)] = [tI_1.iloc[-1] ,dfR[' Value'].iloc[-1]]
+    dfR_flow.loc[len(dfR_flow.index)] = [tI_1.iloc[-1] ,dfR[' Value'].iloc[-1]]
+    #dfR.loc[len(dfR.index)] = [tI_1.iloc[-1] ,dfR[' Value'].iloc[-1]]
 
 
     #Estimate which values fall within interval. 
-
     # Move ratings to the left 1/2 round
  
     #dt_left = dtI/(rounds * frac_round)
-    tR_end = dfR['Time'] - dt_L    
+    dfR['Time_2'] = dfR['Time'] - dt_L    
     # Add first row with time 0
-    tR_end.loc[-1] = 0
-    tR_end.index = tR_end.index + 1  # shifting index
-    tR_end = tR_end.sort_index()  # sorting by index
-    tR_end.loc[len(tR_end.index)] = tI_1.iloc[-1]
+    dfR.loc[-1] = [0, dfR[' Value'].iloc[0], 0]
+    dfR.index = dfR.index + 1  # shifting index
+    dfR = dfR.sort_index()  # sorting by index
+    dfR.loc[len(dfR.index)] = [tI_1.iloc[-1], dfR[' Value'].iloc[-1], tI_1.iloc[-1]]
+    tR_end = dfR['Time_2']
     #print(tR_end)
+
+
+    dfR_flow['Time_2'] = dfR_flow['Time'] - dt_L    
+    # Add first row with time 0
+    dfR_flow.loc[-1] = [0, dfR_flow[' Value'].iloc[0], 0]
+    dfR_flow.index = dfR_flow.index + 1  # shifting index
+    dfR_flow = dfR_flow.sort_index()  # sorting by index
+    dfR_flow.loc[len(dfR.index)] = [tI_1.iloc[-1], dfR_flow[' Value'].iloc[-1], tI_1.iloc[-1]]
+    tR_end_flow = dfR_flow['Time_2']
 
 
    # Arrays for MIR values
@@ -111,49 +125,61 @@ for file_i, file_item in enumerate(list_files):
     # Start a loop
     mean_array = []
     proportion_array = []
+    mean_array_flow = []
+    proportion_array_flow = []
     Imp_average = []
     LZ_average = []
     CTW_average = []
     MIR_entropy_avg = []
     MIR_rms_avg = []
     n=0
+    m=0
  
+    print(dfR, tR_end, tI_0, tI_1)
 
-    for i in np.arange(len(dfI)):
+    for i, item in enumerate(tI_0):
 
-        for j in np.arange(n,len(dfR)):
-
+        for j in np.arange(n,len(dfR)-1):
+            #print(tR_end[j],tR_end[j+1],'TR' ,tI_0[i], 'TI', tI_1[i], )
             if tR_end.iloc[j] == 0 and tR_end.iloc[j+1] < tI_0.iloc[i]:
+                #print('Test0')
                 continue
 
             elif tR_end.iloc[j]< tI_0.iloc[i] and tR_end.iloc[j+1] >tI_0.iloc[i]:
-                
-                mean_array.append(dfR[' Value'].iloc[j])
+                #print('Test1')     
                 if tR_end.iloc[j+1] < tI_1.iloc[i]:
+                    mean_array.append(dfR[' Value'].iloc[j])
                     proportion_array.append(np.divide(tR_end.iloc[j+1]-tI_0.iloc[i] ,dtI_2.iloc[i]))
                 elif tR_end.iloc[j+1] > tI_1.iloc[i]:
+                    mean_array.append(dfR[' Value'].iloc[j])
                     proportion_array.append(1)
             
             elif tR_end.iloc[j] > tI_0.iloc[i] and tR_end.iloc[j+1] < tI_1.iloc[i]:
-                
+                #print('Test2')
                 mean_array.append(dfR[' Value'].iloc[j])
                 proportion_array.append(np.divide(tR_end.iloc[j+1]-tR_end.iloc[j] ,dtI_2.iloc[i]))
-
+        
             elif tR_end.iloc[j] < tI_1.iloc[i] and tR_end.iloc[j+1] >= tI_1.iloc[i]:
-                
+                #print('Test3', j)            
                 mean_array.append(dfR[' Value'].iloc[j])
                 proportion_array.append(np.divide(tI_1.iloc[i]-tR_end.iloc[j] ,dtI_2.iloc[i]))
 
             elif tR_end.iloc[j] < tI_0.iloc[i] and tR_end.iloc[j+1] > tI_1.iloc[i]:
-                
+                #print('Test4')
                 mean_array.append(dfR[' Value'].iloc[j])
                 proportion_array.append(1)
             
+            elif proportion_array == [] and tR_end.iloc[j] > tI_0.iloc[i]:
+                #print('test new2')
+                mean_array.append(dfR[' Value'].iloc[j])
+                proportion_array.append(np.divide(tR_end.iloc[j]-tI_0.iloc[i] ,dtI_2.iloc[i]))
 
             elif tR_end.iloc[j]>= tI_1.iloc[i]:
-                n=j-1
-                
+                #print('Test5')
+                n=j-2  
                 break
+
+    
         Imp_average.append(np.sum(np.multiply(mean_array,proportion_array)))
         print('CHECK ==1 : ', np.sum(proportion_array), 'array:', proportion_array)
 
@@ -169,6 +195,50 @@ for file_i, file_item in enumerate(list_files):
 
         #print(MIR_rms_avg, 'MIR!!!!')
        
+    # for i, item in enumerate(tI_0):
+
+        for k in np.arange(m,len(dfR_flow)-1):
+            #print(tR_end[j],tR_end[j+1],'TR' ,tI_0[i], 'TI', tI_1[i], )
+            if tR_end_flow.iloc[k] == 0 and tR_end_flow.iloc[k+1] < tI_0.iloc[i]:
+                print('Test0')
+                continue
+
+            elif tR_end_flow.iloc[k]< tI_0.iloc[i] and tR_end_flow.iloc[k+1] >tI_0.iloc[i]:
+                print('Test1')     
+                if tR_end_flow.iloc[k+1] < tI_1.iloc[i]:
+                    mean_array_flow.append(dfR_flow[' Value'].iloc[k])
+                    proportion_array_flow.append(np.divide(tR_end_flow.iloc[k+1]-tI_0.iloc[i] ,dtI_2.iloc[i]))
+                elif tR_end_flow.iloc[k+1] > tI_1.iloc[i]:
+                    mean_array_flow.append(dfR_flow[' Value'].iloc[k])
+                    proportion_array_flow.append(1)
+            
+            elif tR_end_flow.iloc[k] > tI_0.iloc[i] and tR_end_flow.iloc[k+1] < tI_1.iloc[i]:
+                print('Test2')
+                mean_array_flow.append(dfR_flow[' Value'].iloc[k])
+                proportion_array_flow.append(np.divide(tR_end_flow.iloc[k+1]-tR_end_flow.iloc[k] ,dtI_2.iloc[i]))
+        
+            elif tR_end_flow.iloc[k] < tI_1.iloc[i] and tR_end_flow.iloc[k+1] >= tI_1.iloc[i]:
+                print('Test3', k)            
+                mean_array_flow.append(dfR_flow[' Value'].iloc[k])
+                proportion_array_flow.append(np.divide(tI_1.iloc[i]-tR_end_flow.iloc[k] ,dtI_2.iloc[i]))
+
+            elif tR_end_flow.iloc[k] < tI_0.iloc[i] and tR_end_flow.iloc[k+1] > tI_1.iloc[i]:
+                print('Test4')
+                mean_array_flow.append(dfR_flow[' Value'].iloc[k])
+                proportion_array_flow.append(1)
+            
+            elif proportion_array_flow == [] and tR_end_flow.iloc[k] > tI_0.iloc[i]:
+                print('test new2')
+                mean_array_flow.append(dfR_flow[' Value'].iloc[k])
+                proportion_array_flow.append(np.divide(tR_end_flow.iloc[k]-tI_0.iloc[i] ,dtI_2.iloc[i]))
+
+            elif tR_end_flow.iloc[k]>= tI_1.iloc[i]:
+                print('Test5')
+                m=k-2  
+                break
+        
+        print('CHECK ==1(2) : ', np.sum(proportion_array_flow), 'array:', proportion_array_flow)
+
 
 
 
@@ -182,7 +252,10 @@ for file_i, file_item in enumerate(list_files):
             'Music_Imp': dfI['Music_Mode'].iloc[i],
             'Dance_Imp': dfI['Category'].iloc[i],
             'Step': dfI['Step'].iloc[i],
-            'Imp_Av': np.sum(np.multiply(mean_array,proportion_array)),
+            'Imp_subj': np.sum(np.multiply(mean_array,proportion_array)),
+            'Imp_avg' : dfR[' Value'].mean(),
+            'Flow_subj': np.sum(np.multiply(mean_array_flow,proportion_array_flow)),
+            'Flow_avg': dfR_flow[' Value'].mean(),
             'CTW': list_Entropy['CTW'].mean() ,
             'LZ': list_Entropy['LZ'].mean(),
             'Assigned_Cat': 'IMP0',
@@ -221,16 +294,15 @@ for file_i, file_item in enumerate(list_files):
             'MIR_novelty_avg' : dfMIR_novelty['novelty'].mean(),
             }
         store_i = store_i+1
-        
-
-
 
         mean_array = []
         proportion_array = []
+        mean_array_flow = []
+        proportion_array_flow = []
         
-    dfI['Imp_Av'] = Imp_average
-    dfTest = dfS[ (dfS['Name'].str.contains(file_name)) & (dfS['Participant'].str.contains(prefix)) ]
-    print(dfTest, 'TESTING!!!!!!!!')
+    dfI['Imp_subj'] = Imp_average
+    # dfTest = dfS[ (dfS['Name'].str.contains(file_name)) & (dfS['Participant'].str.contains(prefix)) ]
+    # print(dfTest, 'TESTING!!!!!!!!')
 
 
 
@@ -241,8 +313,8 @@ for file_i, file_item in enumerate(list_files):
 df_store['Assigned_Cat'] = 'IMP0'
 
 
-df_store.loc[df_store['Imp_Av']>= 3 , 'Assigned_Cat'] = 'IMP1'
-df_store.loc[df_store['Imp_Av']>= 5 , 'Assigned_Cat'] = 'IMP2'
+df_store.loc[df_store['Imp_subj']>= 3 , 'Assigned_Cat'] = 'IMP1'
+df_store.loc[df_store['Imp_subj']>= 5 , 'Assigned_Cat'] = 'IMP2'
 
 
 def InfotoColumns(df):
@@ -270,5 +342,5 @@ InfotoColumns(df_store)
 #print(dfS)
 
 
-df_store.to_csv(file_output + 'Entropy_095_MIR' + '.csv')
+df_store.to_csv(file_output + 'Test_Flow' + '.csv')
 
