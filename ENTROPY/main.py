@@ -29,9 +29,9 @@ else:
 
 # Code settings:
 audio_path = '/Users/atillajv/CODE/FILES/PILOT_SEV_APRIL_2022/Audio/'
-loop_on = True # Set to True if you want to loop through a certain folder. Else not. 
+loop_on = False # Set to True if you want to loop through a certain folder. Else not. 
 #loop_off = 'P7_D1_G1_M6_R2_T1.wav'
-loop_off = 'P7_D1_G1_M1_R2_T1.wav'
+loop_off = 'P7_D5_G1_M6_R1_T1.wav'
 downsample_on = True #if you want to downsample. 
 downsample_factor = 8 # Set to 1 if False. 
 preBinarise_on= True #If you want to binarise data prior to passing dataframe to LZ
