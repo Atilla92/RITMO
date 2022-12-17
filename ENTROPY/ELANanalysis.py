@@ -10,7 +10,7 @@ import glob
 file_name = 'P5_D1_G3_M6_R1_T1' # Name file if loop_on = False
 loop_on = True # True if you want to loop through folder
 path_files = '/Users/atillajv/CODE/RITMO/FILES/ELAN/'
-file_output = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/28_Nov_2022/' #check that this is the same as input file for entropy
+file_output = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/17_Dec_2022/' #check that this is the same as input file for entropy
 
 # Default settings 
 percentage = 0.1
@@ -65,6 +65,8 @@ df_store = pd.DataFrame(columns=['Name', 'Music_Imp', 'Dance_Imp', 'Baile_Level'
 'MIR_rms_avg',
 'MIR_novelty',
 'MIR_novelty_avg',
+'var_entropy',
+'var_entropy_avg'
 ])
 
 for file_i, file_item in enumerate(list_files):
@@ -78,6 +80,7 @@ for file_i, file_item in enumerate(list_files):
     dfS = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/Subjective/DuringExperiments_Sevilla_06102022_DropW_Entropy.csv')
     dfMIR_entropy = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/MIR/ENTROPY/' + file_item + '.csv')
     dfMIR_novelty = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/MIR/NOVELTY/' + file_item + '.csv')
+    df_var = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/17_Dec_2022/var/'+file_item+'.csv')[1:]
     #dfF =  pd.read_csv( '/Users/atillajv/CODE/RITMO/FILES/Ratings/P3_'+ file_name +'_FLOW.csv' )
     #print(dfE)
 
@@ -203,6 +206,8 @@ for file_i, file_item in enumerate(list_files):
         # Fetching Novelty MIR in intervals
         list_MIR_novelty = dfMIR_novelty.loc[(dfMIR_novelty["novelty_t0"] >= tI_0.iloc[i] ) & (dfMIR_novelty['novelty_t0'] <= tI_1.iloc[i]  ) ]
        
+        # Fetching Variance Entropy within interval
+        list_var =  df_var.loc[(df_var["t0"] >= tI_0.iloc[i] ) & (df_var['t0'] <= tI_1.iloc[i]  ) ]
 
         #print(MIR_rms_avg, 'MIR!!!!')
        
@@ -309,6 +314,8 @@ for file_i, file_item in enumerate(list_files):
             'MIR_rms_avg' : dfMIR_entropy['rms'].mean(),
             'MIR_novelty' : list_MIR_novelty['novelty'].mean() ,
             'MIR_novelty_avg' : dfMIR_novelty['novelty'].mean(),
+            'var_entropy': list_var['var'].mean(),
+            'var_entropy_avg': df_var['var'].mean(),
             }
         store_i = store_i+1
 
@@ -359,5 +366,5 @@ InfotoColumns(df_store)
 #print(dfS)
 
 
-df_store.to_csv(file_output + '13122022_095_2s' + '.csv')
+df_store.to_csv(file_output + '17122022_095_2s' + '.csv')
 

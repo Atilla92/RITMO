@@ -27,14 +27,15 @@ else:
 
 
 # Save settings: 
-save_fig  = False # To save figure
-save_variables = False # To save variables in json. 
-save_csv = False # Store ouput in CSV.
+save_fig  = True # To save figure
+save_variables = True # To save variables in json. 
+save_csv = True # Store ouput in CSV.
 plot_data = True # To plot data
+show_plot = False # To show data instead of plotting, if saving data set to False. 
 
 # Code settings:
 audio_path = '/Users/atillajv/CODE/FILES/PILOT_SEV_APRIL_2022/Audio/'
-loop_on = False # Set to True if you want to loop through a certain folder. Else not. 
+loop_on = True # Set to True if you want to loop through a certain folder. Else not. 
 #loop_off = 'P7_D1_G1_M6_R2_T1.wav'
 loop_off = 'P7_D5_G1_M6_R1_T1.wav'
 
@@ -170,10 +171,12 @@ for i, item in enumerate(audio_files):
         plt.legend()
         f.suptitle('Entropy (w: ' + str(step_size) + ' qnt:'+ str(quartile) +') ' + file_name.strip('.wav') )
         ax4.set_xlabel('Time (s)')
-        ax1.set_ylabel('LZ')
+        ax1.set_ylabel('Entropy f(var)')
         ax2.set_ylabel('Squared')
         ax4.set_ylabel('Audio')
-        plt.show()
+        
+        if show_plot: 
+            plt.show()
 
         if save_fig :
             plt.savefig(file_output + file_name.strip('.wav')+ '.png')
