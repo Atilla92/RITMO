@@ -121,6 +121,17 @@ def ctw_entropy(X, vmm_order=2, binarise = False, ab_dict ={}, ab_size = 0):
 #
 #
 
+def var_entropy(S):
+    #print(S)
+    X = S.values.var()
+    #print(X)
+    #X = np.sqrt(X)
+    #print(X)
+    ent_X = 0.5 * np.log2(2* np.pi * X) + 0.5
+    
+    return ent_X
+
+
 def calc_lz_df_2(df, style='LZ', hil=False, window=2000, max_windows=np.inf, binarise = False):
   
     
@@ -157,6 +168,8 @@ def calc_lz_df_2(df, style='LZ', hil=False, window=2000, max_windows=np.inf, bin
                 
             if style=='CTW':
                 temp.append( ctw_entropy( w, binarise=binarise, ab_size = ab_size, ab_dict = ab_dict ) )
+            if style == 'var':
+                temp.append(var_entropy(w))
 
         lz[c] = np.array(temp).mean()
     return lz, temp
