@@ -111,7 +111,8 @@ summary(model_entropy_mixed)
 ### Entropy data simple analysis mean
 #dataELAN <- read.csv("~/CODE/RITMO/ENTROPY/output/main/28_Nov_2022/Entropy_095_Subjective.csv")
 
-dataELAN <- read.csv("~/CODE/RITMO/ENTROPY/output/main/28_Nov_2022/13122022_095_2s.csv")
+#dataELAN <- read.csv("~/CODE/RITMO/ENTROPY/output/main/28_Nov_2022/13122022_095_2s.csv")
+dataELAN <- read.csv("~/CODE/RITMO/ENTROPY/output/main/17_Dec_2022/17122022_095_2s.csv")
 #dataELAN <- read.csv("~/CODE/RITMO/ENTROPY/output/main/29_Nov_2022_075/Entropy_075.csv")
 dataELAN$Dance_mode <- as.factor(dataELAN$Dance_mode)
 dataELAN$Palo <- as.factor(dataELAN$Palo)
@@ -128,7 +129,7 @@ dataELAN$Dance_Imp <- relevel(dataELAN$Dance_Imp, "DC")
 dataELAN$Music_Imp <- as.factor(dataELAN$Music_Imp)
 dataELAN$Music_Imp <- relevel(dataELAN$Music_Imp, "MC")
 dataELAN$ImpLevel <- as.factor(dataELAN$Assigned_Cat)
-model_entropy = lmer(MIR_entropy ~    Baile + (1 | Participant) , data = dataELAN )
+model_entropy = lmer(LZ ~   Imp_subj + (1 | Participant) , data = dataELAN )
 summary(model_entropy)
 model_entropy_2 = lmer(Q1b ~ Q3b + I(Q3b^2) + (1 | Participant), data = dataEntropy)
 
