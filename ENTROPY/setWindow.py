@@ -4,12 +4,20 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from glob import glob
-from functions import *
+from functionsE import *
 from scipy.io.wavfile import read
 import matplotlib.pyplot as plt
 import numpy as np
 import time
-from functions import calc_lz_df_2, plotAudio_2
+from functionsE import calc_lz_df_2, plotAudio_2
+
+
+'''
+This script can be used to estimate how long the time window for the LZ estimation shoud be. 
+Usually when you can see in the plot that the fluctuations start to dampen, thats a good estimate for window size. 
+'''
+file_output = "/Users/atillajv/CODE/RITMO/ENTROPY/output/set_window/"
+
 # starting time
 start = time.time()
 
@@ -79,7 +87,6 @@ df_out['LZ'] = output_lz_array
 df_out['CTW'] = output_ctw_array
 
 # Store file
-file_output = "/Users/atillajv/CODE/RITMO/ENTROPY/output/set_window/"
 df_out.to_csv(file_output + 'window_set_(a=' + str(a) + ', f=' +functionType + '_t0 =' + str(t_start) +'_s='+ str(length_df) + ' )_'+ file_name + '.csv')
 
 # #Plot simple figure 

@@ -2,11 +2,16 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from glob import glob
-from functions import *
+from functionsE import *
 from scipy.io.wavfile import read
 import matplotlib.pyplot as plt
 import numpy as np
 from numpy.random import seed
+
+
+'''
+This script is a sanity check to test whether the LZ and CTW computed provide the correct values. 
+'''
 
 # Create empty array to store outputs
 output_lz_array = []

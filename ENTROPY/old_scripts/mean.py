@@ -2,6 +2,7 @@ import pandas as pd
 import glob
 
 folder = "/Users/atillajv/CODE/RITMO/ENTROPY/output/main/"
+file_output = '/Users/atillajv/CODE/RITMO/ENTROPY/output/mean/means.csv'
 # fileName = "Entropy_LZ_CTW_(w=4000_s=[]_ds=4_b=on_abs=on_t0=0)_P3_D0_G1_M6_R1_T1.csv"
 # df = pd.read_csv(str(folder + fileName))
 # dfSmall = df[1:]
@@ -58,7 +59,7 @@ def InfotoColumns(df):
 InfotoColumns(df_new)
 print(df_new)
 
-df_new.to_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/mean/means.csv', index = False)
+df_new.to_csv(file_output, index = False)
 
 
 # I would say just add two columns to PD, if finds a match, insert. 

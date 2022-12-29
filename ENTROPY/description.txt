@@ -1,0 +1,38 @@
+This folder contains several scripts to analyse the Pilot Sevilla Data
+
+
+ELANanalysis
+    Estimates average flow and improvisation rating for each ELAN annotation.
+    Includes both Guitarist and Dancer
+
+
+fMRI_analysis
+    work in progress
+
+main.py 
+    Estimates the LZ entropy of audio files. 
+    Need to set paramterers for window. 
+    Some of the functions are stores in functionsE.py
+
+mean.py can probably be discarded
+merge.py can probably be discarded as well. 
+
+plots.py
+    Mainly statistical plots from .csv file coming from ELANanalysis.py
+
+
+setWindow.py
+    Used to estimate window length for data. 
+    Look in the plot where fluctuations start to calm down. 
+
+testing.py
+    Sanity check with another computer whether the LZ computed renders the same values. 
+
+
+variance.py
+    Estimates the entropy as f(variance)
+    Stores plots and outputs in seperate folder. 
+
+
+
+
