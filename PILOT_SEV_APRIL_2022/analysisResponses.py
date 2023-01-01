@@ -3,12 +3,12 @@ import pandas as pd
 from scipy.stats.stats import pearsonr
 from scipy import stats
 #import pingouin as pg
-#import seaborn as sns
+import seaborn as sns
 import matplotlib.pyplot as plt
 
-df = pd.read_csv ('Responses/DuringExperiments_Sevilla_06102022_DropW.csv')
+#df = pd.read_csv ('Responses/DuringExperiments_Sevilla_06102022_DropW.csv')
 
-
+df = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/17_Dec_2022/17122022_095_2s.csv')
 
 
 def CronchbachAlpha(df):
@@ -25,7 +25,9 @@ def AverageFlowtoDF(df):
     df['SFS'] = df[['Abs_Av', 'Perf_Av']].mean(axis= 1)
 
 def correlMatrix(df, p):
-    df_filter = filterOut(df,['Name', 'Participant'])
+    df_filter = filterOut(df,['Name', 'Participant', 'Q2a', 'Q2c', 'Q2f', 'Q2j','Q2b','Q2d','Q2e','Q2g','Q2h','Q2i',
+    'MIR_entropy_avg', 'MIR_rms_avg', 'MIR_novelty_avg', 'var_entropy_avg', 'Imp_avg', 'Flow_avg', 'LZ_Av', 'CTW_Av'
+     ])
     if p: 
         correlation_mat = df_filter.corr()
         sns.heatmap(correlation_mat, annot = True) 
@@ -73,10 +75,14 @@ def InfotoColumns(df):
     df['Palo'] = palo_array
 
 #df = df.dropna()
-AverageFlowtoDF(df)
-InfotoColumns(df)
-print(df)
-df.to_csv('output/ratingsAnalysis/DuringExperiments_Sevilla_06102022_DropW.csv', index=False)
+#AverageFlowtoDF(df)
+#InfotoColumns(df)
+
+correlMatrix(df, True)
+
+
+#df.to_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/17_Dec_2022/17122022_095_2s_Corr.csv')
+#df.to_csv('output/ratingsAnalysis/DuringExperiments_Sevilla_06102022_DropW.csv', index=False)
 
 #https://blog.4dcu.be/programming/2021/03/16/Code-Nugget-Correlation-Heatmaps.html
 

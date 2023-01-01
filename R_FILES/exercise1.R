@@ -91,7 +91,7 @@ summary(data_mixed_7c)
 
 
 ### Entropy data simple analysis mean
-dataEntropy <- read.csv("~/CODE/RITMO/PILOT_SEV_APRIL_2022/output/ratingsAnalysis/DuringExperiments_Sevilla_06102022_DropW_Entropy.csv")
+dataEntropy <- read.csv("/Users/atillajv/CODE/RITMO/FILES/Subjective/DuringExperiments_Sevilla_06102022_DropW_Entropy.csv")
 dataEntropy$Dance_mode <- as.factor(dataEntropy$Dance_mode)
 dataEntropy$Palo <- as.factor(dataEntropy$Palo)
 dataEntropy$Q3bF <- as.factor(dataEntropy$Q3b)
@@ -99,9 +99,10 @@ dataEntropy$Music_mode <- as.factor(dataEntropy$Music_mode)
 dataEntropy$Dance_mode <- relevel(dataEntropy$Dance_mode, "D6")
 dataEntropy$Music_mode <- relevel(dataEntropy$Music_mode, "M6")
 dataEntropy$Participant <- as.factor(dataEntropy$Participant)
-model_entropy = lmer(Q1a ~ Q3a + (1 | Participant) , data = dataEntropy )
-model_entropy_2 = lmer(Q1b ~ Q3b + I(Q3b^2) + (1 | Participant), data = dataEntropy)
+model_entropy = lmer(Q1a ~ Q3b + (1 | Participant) , data = dataEntropy )
 summary(model_entropy)
+model_entropy_2 = lmer(Q1a ~ Q3a + I(Q3b^2) + (1 | Participant), data = dataEntropy)
+
 summary(model_entropy_2)
 model_entropy_mixed = lmer(Q1a ~ Dance_mode  + Abs_Av + (1 | Participant), data = dataEntropy )
 AIC(model_entropy,model_entropy_2)
@@ -112,7 +113,8 @@ summary(model_entropy_mixed)
 #dataELAN <- read.csv("~/CODE/RITMO/ENTROPY/output/main/28_Nov_2022/Entropy_095_Subjective.csv")
 
 #dataELAN <- read.csv("~/CODE/RITMO/ENTROPY/output/main/28_Nov_2022/13122022_095_2s.csv")
-dataELAN <- read.csv("~/CODE/RITMO/ENTROPY/output/main/17_Dec_2022/17122022_095_2s.csv")
+#dataELAN <- read.csv("~/CODE/RITMO/ENTROPY/output/main/17_Dec_2022/17122022_095_2s.csv")
+dataELAN <- read.csv("~/CODE/RITMO/ENTROPY/output/main/29_Dec_2022/29122022_095_2s.csv")
 #dataELAN <- read.csv("~/CODE/RITMO/ENTROPY/output/main/29_Nov_2022_075/Entropy_075.csv")
 dataELAN$Dance_mode <- as.factor(dataELAN$Dance_mode)
 dataELAN$Palo <- as.factor(dataELAN$Palo)
@@ -129,18 +131,95 @@ dataELAN$Dance_Imp <- relevel(dataELAN$Dance_Imp, "DC")
 dataELAN$Music_Imp <- as.factor(dataELAN$Music_Imp)
 dataELAN$Music_Imp <- relevel(dataELAN$Music_Imp, "MC")
 dataELAN$ImpLevel <- as.factor(dataELAN$Assigned_Cat)
-model_entropy = lmer(LZ ~   Imp_subj + (1 | Participant) , data = dataELAN )
+model_entropy = lmer(Imp_subj ~ Palo + Dance_Imp +  (1 | Participant) , data = dataELAN )
 summary(model_entropy)
+
+# Plot the model
+library(effects)
+e <- allEffects(model_entropy)
+#Plots the effect
+plot(e ,multiline=TRUE,confint=TRUE,ci.style="bars"
+     ,main="Effect of Palo and Dance on Imp_subj"
+     ,xlab="Palo"
+     ,ylab="Dance_imp")
+
+#Plots all the data points
+plot(model_entropy,multiline=TRUE,confint=TRUE,ci.style="bars"
+     ,main="Effect of Palo and Dance on Imp_subj"
+     ,xlab="Palo"
+     ,ylab="Dance_imp",
+     )
+
+
+
 model_entropy_2 = lmer(Q1b ~ Q3b + I(Q3b^2) + (1 | Participant), data = dataEntropy)
+
+
+#Subset data of ELAN only dancers
+dataELAN_P <- dataELAN[!grepl("G", dataELAN$Participant),]
+dataELAN_G <- dataELAN[!grepl("P", dataELAN$Participant),]
+model_entropy = lmer(Flow_subj ~   Q3b + (1 | Participant) , data = dataSubELAN )
+summary(model_entropy)
 
 summary(model_entropy_2)
 model_entropy_mixed = lmer(Q1a ~ Dance_mode  + Abs_Av + (1 | Participant), data = dataEntropy )
 AIC(model_entropy,model_entropy_2)
 summary(model_entropy_mixed)
 
+# Correlation plot
+library(corrplot)
+library("psych")   
+
+#BLUE PLOTS
+name_plot <- "micro_all"
+corr_mat = dataELAN[, c('LZ', 'Imp_subj', 'CTW', 'Flow_subj', 'MIR_entropy', 'MIR_rms', 'MIR_novelty', 'var_entropy')]
+name_plot <- "micro_P"
+corr_mat = dataELAN_P[, c('LZ', 'Imp_subj', 'CTW', 'Flow_subj', 'MIR_entropy', 'MIR_rms', 'MIR_novelty', 'var_entropy')]
+name_plot <- "micro_G"
+corr_mat = dataELAN_G[, c('LZ', 'Imp_subj', 'CTW', 'Flow_subj', 'MIR_entropy', 'MIR_rms', 'MIR_novelty', 'var_entropy')]
+
+#RED PLOTS
+name_plot <- "red_all"
+corr_mat = dataELAN[, c('LZ_Av', 'Imp_avg', 'CTW_Av', 'Flow_avg', 'MIR_entropy_avg', 'MIR_rms_avg', 'MIR_novelty_avg', 'var_entropy_avg')]
+name_plot <- "red_G"
+corr_mat = dataELAN_G[, c('LZ_Av', 'Imp_avg', 'CTW_Av', 'Flow_avg', 'MIR_entropy_avg', 'MIR_rms_avg', 'MIR_novelty_avg', 'var_entropy_avg')]
+name_plot <- "red_P"
+corr_mat = dataELAN_P[, c('LZ_Av', 'Imp_avg', 'CTW_Av', 'Flow_avg', 'MIR_entropy_avg', 'MIR_rms_avg', 'MIR_novelty_avg', 'var_entropy_avg')]
+
+
+#RED MORE PLOTS
+name_plot <- "macro_all"
+corr_mat = dataELAN[, c('Abs_Av','Perf_Av','SFS','Q1a','Q1b','Q3a','Q3b','Q4a','Q4b','LZ_Av', 'Imp_avg', 'Flow_avg', 'MIR_entropy_avg', 'MIR_rms_avg', 'MIR_novelty_avg', 'var_entropy_avg')]
+name_plot <- "macro_P"
+corr_mat = dataELAN_P[, c('Abs_Av','Perf_Av','SFS','Q1a','Q1b','Q3a','Q3b','Q4a','Q4b','LZ_Av', 'Imp_avg', 'Flow_avg', 'MIR_entropy_avg', 'MIR_rms_avg', 'MIR_novelty_avg', 'var_entropy_avg')]
+name_plot <- "macro_G"
+corr_mat = dataELAN_G[, c('Abs_Av','Perf_Av','SFS','Q1a','Q1b','Q3a','Q3b','Q4a','Q4b','LZ_Av', 'Imp_avg', 'Flow_avg', 'MIR_entropy_avg', 'MIR_rms_avg', 'MIR_novelty_avg', 'var_entropy_avg')]
 
 
 
+M <- cor(corr_mat, use = 'complete.obs', method='spearman')
+plot.new()
+corrplot(M, order = "AOE", tl.col = "black", tl.srt = 45, p.mat = corr.test(corr_mat)$p, insig = 'label_sig', sig.level = c(.001, .01, .05),
+         pch.cex = 0.8, pch.col = 'red',
+        title =  paste('Correlation Plot (', name_plot , ')'), cex.main = 1.8,
+         mar=c(0,0,2,0),
+         )
+
+dev.print( device = png,              # what are we printing to?
+                         filename = paste("/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/Stats/R/corr_2_", name_plot, '_AOE.png'),  # name of the image file
+                         width = 865,                # how many pixels wide should it be
+                         height = 636,                # how many pixels high should it be
+             )
+
+
+p_corr_test <-corr.test(corr_mat)$p
+cor_test_star <- symnum(p_corr_test, cutpoints = c(0, 0.001, 0.01, 0.05, 1), 
+             symbols = c("***","**","*",""))
+
+r = round(cor(corr_mat, use = 'complete.obs', method='spearman'), digits = 2)
+txt <- paste(r, cor_test_star, sep = " ")
+cex.cor <- 0.8/strwidth(txt)
+text(0.5, 0.5, txt, cex = cex.cor*r)
 
 
 dataInterval <- read.csv("~/CODE/RITMO/ENTROPY/output/ELAN/LZ_CTW_Intervals.csv")
