@@ -32,7 +32,7 @@ def correlMatrix(df, p):
         correlation_mat = df_filter.corr()
         sns.heatmap(correlation_mat, annot = True) 
         plt.show()      
-    r_corr = df_filter.rcorr()
+    r_corr = df_filter.corr()
     print(r_corr) 
 
 def filterOut(df, listFilter):

@@ -172,19 +172,19 @@ library("psych")
 
 #BLUE PLOTS
 name_plot <- "micro_all"
-corr_mat = dataELAN[, c('LZ', 'Imp_subj', 'CTW', 'Flow_subj', 'MIR_entropy', 'MIR_rms', 'MIR_novelty', 'var_entropy')]
+corr_mat = dataELAN[, c('LZ', 'Imp_subj', 'Flow_subj', 'MIR_entropy', 'MIR_rms', 'MIR_novelty', 'var_entropy')]
 name_plot <- "micro_P"
-corr_mat = dataELAN_P[, c('LZ', 'Imp_subj', 'CTW', 'Flow_subj', 'MIR_entropy', 'MIR_rms', 'MIR_novelty', 'var_entropy')]
+corr_mat = dataELAN_P[, c('LZ', 'Imp_subj', 'Flow_subj', 'MIR_entropy', 'MIR_rms', 'MIR_novelty', 'var_entropy')]
 name_plot <- "micro_G"
-corr_mat = dataELAN_G[, c('LZ', 'Imp_subj', 'CTW', 'Flow_subj', 'MIR_entropy', 'MIR_rms', 'MIR_novelty', 'var_entropy')]
+corr_mat = dataELAN_G[, c('LZ', 'Imp_subj', 'Flow_subj', 'MIR_entropy', 'MIR_rms', 'MIR_novelty', 'var_entropy')]
 
 #RED PLOTS
 name_plot <- "red_all"
-corr_mat = dataELAN[, c('LZ_Av', 'Imp_avg', 'CTW_Av', 'Flow_avg', 'MIR_entropy_avg', 'MIR_rms_avg', 'MIR_novelty_avg', 'var_entropy_avg')]
+corr_mat = dataELAN[, c('LZ_Av', 'Imp_avg', 'Flow_avg', 'MIR_entropy_avg', 'MIR_rms_avg', 'MIR_novelty_avg', 'var_entropy_avg')]
 name_plot <- "red_G"
-corr_mat = dataELAN_G[, c('LZ_Av', 'Imp_avg', 'CTW_Av', 'Flow_avg', 'MIR_entropy_avg', 'MIR_rms_avg', 'MIR_novelty_avg', 'var_entropy_avg')]
+corr_mat = dataELAN_G[, c('LZ_Av', 'Imp_avg', 'Flow_avg', 'MIR_entropy_avg', 'MIR_rms_avg', 'MIR_novelty_avg', 'var_entropy_avg')]
 name_plot <- "red_P"
-corr_mat = dataELAN_P[, c('LZ_Av', 'Imp_avg', 'CTW_Av', 'Flow_avg', 'MIR_entropy_avg', 'MIR_rms_avg', 'MIR_novelty_avg', 'var_entropy_avg')]
+corr_mat = dataELAN_P[, c('LZ_Av', 'Imp_avg', 'Flow_avg', 'MIR_entropy_avg', 'MIR_rms_avg', 'MIR_novelty_avg', 'var_entropy_avg')]
 
 
 #RED MORE PLOTS
