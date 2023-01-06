@@ -11,8 +11,8 @@ file_name = 'P5_D1_G3_M6_R1_T1' # Name file if loop_on = False
 loop_on = True # True if you want to loop through folder
 path_files = '/Users/atillajv/CODE/RITMO/FILES/ELAN/'
 path_ratings = '/Users/atillajv/CODE/RITMO/FILES/Ratings/'
-file_output = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/29_Dec_2022/' #check that this is the same as input file for entropy
-name_output = '29122022_095_2s'
+file_output = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/05_Jan_2023_095/' #check that this is the same as input file for entropy
+name_output = '03012023_095_2s_16'
 # Default settings 
 percentage = 0.1
 frac_round = 1 #Round/frac_round for moving rating to the left 
@@ -87,11 +87,11 @@ for file_i, file_item_long in enumerate(list_files):
         dfR = pd.read_csv( '/Users/atillajv/CODE/RITMO/FILES/Ratings/'+ file_item_long +'_IMPRO.csv' )
         dfR_flow = pd.read_csv( '/Users/atillajv/CODE/RITMO/FILES/Ratings/'+ file_item_long +'_FLOW.csv' )
         #dfE = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/Entropy_LZ_CTW_(w=4000_s=[]_ds=4_b=on_abs=on_t0=0)_'+file_item+'.csv')[1:]
-        dfE = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/28_Nov_2022/'+file_item+'.csv')[1:]
+        dfE = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/05_Jan_2023_095/'+file_item+'.csv')[1:]
         dfS = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/Subjective/DuringExperiments_Sevilla_06102022_DropW_Entropy.csv')
         dfMIR_entropy = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/MIR/ENTROPY/' + file_item + '.csv')
         dfMIR_novelty = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/MIR/NOVELTY/' + file_item + '.csv')
-        df_var = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/17_Dec_2022/var/'+file_item+'.csv')[1:]
+        df_var = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/05_Jan_2023_095/var/'+file_item+'.csv')[1:]
         #dfF =  pd.read_csv( '/Users/atillajv/CODE/RITMO/FILES/Ratings/P3_'+ file_name +'_FLOW.csv' )
         #print(dfE)
 

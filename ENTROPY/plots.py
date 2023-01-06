@@ -156,11 +156,8 @@ def heatMapCategories(categories, save_fig, save_plot):
     ds = df[categories].value_counts().reset_index(name='count')
     ds['percentage'] = (ds['count']/ds['count'].sum())*100
     ds = ds.sort_values(by = categories)  
-
-    if len(categories)<2:
-        pivoted = ds.pivot(index= categories[0], columns= categories[0], values="percentage")
-    else:
-        pivoted = ds.pivot(index= categories[0], columns= categories[1], values="percentage")
+    
+    pivoted = ds.pivot(index= categories[0], columns= categories[1], values="percentage")
 
 
     fig,(ax1, ax2) = plt.subplots(1,2)
@@ -179,7 +176,7 @@ if plot_heatmap:
     heatMapCategories(['Palo', 'Baile_Level'], False, save_plot)
     heatMapCategories(['Q1a', 'Dance_Imp'], False, save_plot)
     heatMapCategories(['Dance_Imp', 'Music_Imp'], False, save_plot)
-    heatMapCategories(['Palo'], True, save_plot)
+    #heatMapCategories(['Palo'], True, save_plot)
 
 
 

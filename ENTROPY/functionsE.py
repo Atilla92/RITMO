@@ -155,6 +155,7 @@ def calc_lz_df_2(df, style='LZ', hil=False, window=2000, max_windows=np.inf, bin
         window_array = []
         for n in range(n_windows):
             w = data.iloc[ n*window : (n+1)*window ]
+
             #
             if hil:
                 w_vals = np.abs( hilbert(w) )

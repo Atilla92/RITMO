@@ -15,7 +15,7 @@ from functionsE import plotAudio_2, calc_lz_df_2, quantize_vector, quartile_vect
 import json
 
 # Output settings:
-file_output = "/Users/atillajv/CODE/RITMO/ENTROPY/output/main/17_Dec_2022/var/" # Name of folder to store plots. 
+file_output = "/Users/atillajv/CODE/RITMO/ENTROPY/output/main/05_Jan_2023_095/var/" # Name of folder to store plots. 
 
 
 
@@ -40,7 +40,7 @@ loop_on = True # Set to True if you want to loop through a certain folder. Else 
 loop_off = 'P7_D5_G1_M6_R1_T1.wav'
 
 downsample_on = True #if you want to downsample. 
-downsample_factor = 8 # Set to 1 if False. 
+downsample_factor = 32 # Set to 1 if False. 
 preBinarise_on= False #If you want to binarise data prior to passing dataframe to LZ
 absolute_on = True #Takes the absolute value of input data. 
 channel_num= 1 # 0 for Left channel, 1 for Right Channel. 
@@ -49,8 +49,8 @@ tempMiddle = True # If you want to displace entropy values a bit further than be
 tempNum = 2 # start + windowsize/tempNum  (where windowsize = step_size)
 # Initiate variables
 length_df = [] # Takes subset samples. Set to [] if you want to whole length. 
-step_size = 4000  # Window of LZ/CTW estimation. 
-quartile = 0.75 #Set threshold for binarisation. 
+step_size = 6000  # Window of LZ/CTW estimation. 
+quartile = 0.95 #Set threshold for binarisation. 
 
 ##Empty lists, default values
 output_lz_array = []

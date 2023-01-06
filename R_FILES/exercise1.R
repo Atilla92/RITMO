@@ -115,6 +115,7 @@ summary(model_entropy_mixed)
 #dataELAN <- read.csv("~/CODE/RITMO/ENTROPY/output/main/28_Nov_2022/13122022_095_2s.csv")
 #dataELAN <- read.csv("~/CODE/RITMO/ENTROPY/output/main/17_Dec_2022/17122022_095_2s.csv")
 dataELAN <- read.csv("~/CODE/RITMO/ENTROPY/output/main/29_Dec_2022/29122022_095_2s.csv")
+dataELAN <- read.csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/02_Jan_2023_095/03012023_095_2s_16.csv')
 #dataELAN <- read.csv("~/CODE/RITMO/ENTROPY/output/main/29_Nov_2022_075/Entropy_075.csv")
 dataELAN$Dance_mode <- as.factor(dataELAN$Dance_mode)
 dataELAN$Palo <- as.factor(dataELAN$Palo)
@@ -131,16 +132,19 @@ dataELAN$Dance_Imp <- relevel(dataELAN$Dance_Imp, "DC")
 dataELAN$Music_Imp <- as.factor(dataELAN$Music_Imp)
 dataELAN$Music_Imp <- relevel(dataELAN$Music_Imp, "MC")
 dataELAN$ImpLevel <- as.factor(dataELAN$Assigned_Cat)
-model_entropy = lmer(Imp_subj ~ Palo + Dance_Imp +  (1 | Participant) , data = dataELAN )
+
+
+model_entropy = lmer(LZ ~ Flow_subj + (1 + Flow_subj  | Participant) , data = dataELAN )
 summary(model_entropy)
 
 # Plot the model
+library(carData)
 library(effects)
 e <- allEffects(model_entropy)
 #Plots the effect
 plot(e ,multiline=TRUE,confint=TRUE,ci.style="bars"
      ,main="Effect of Palo and Dance on Imp_subj"
-     ,xlab="Palo"
+     ,xlab="LZ_Av"
      ,ylab="Dance_imp")
 
 #Plots all the data points
@@ -171,28 +175,28 @@ library(corrplot)
 library("psych")   
 
 #BLUE PLOTS
-name_plot <- "micro_all"
+name_plot <- "micro_all_16"
 corr_mat = dataELAN[, c('LZ', 'Imp_subj', 'Flow_subj', 'MIR_entropy', 'MIR_rms', 'MIR_novelty', 'var_entropy')]
-name_plot <- "micro_P"
+name_plot <- "micro_P_16"
 corr_mat = dataELAN_P[, c('LZ', 'Imp_subj', 'Flow_subj', 'MIR_entropy', 'MIR_rms', 'MIR_novelty', 'var_entropy')]
-name_plot <- "micro_G"
+name_plot <- "micro_G_16"
 corr_mat = dataELAN_G[, c('LZ', 'Imp_subj', 'Flow_subj', 'MIR_entropy', 'MIR_rms', 'MIR_novelty', 'var_entropy')]
 
 #RED PLOTS
-name_plot <- "red_all"
+name_plot <- "macro_all"
 corr_mat = dataELAN[, c('LZ_Av', 'Imp_avg', 'Flow_avg', 'MIR_entropy_avg', 'MIR_rms_avg', 'MIR_novelty_avg', 'var_entropy_avg')]
-name_plot <- "red_G"
+name_plot <- "macro_G"
 corr_mat = dataELAN_G[, c('LZ_Av', 'Imp_avg', 'Flow_avg', 'MIR_entropy_avg', 'MIR_rms_avg', 'MIR_novelty_avg', 'var_entropy_avg')]
-name_plot <- "red_P"
+name_plot <- "macro_P"
 corr_mat = dataELAN_P[, c('LZ_Av', 'Imp_avg', 'Flow_avg', 'MIR_entropy_avg', 'MIR_rms_avg', 'MIR_novelty_avg', 'var_entropy_avg')]
 
 
 #RED MORE PLOTS
-name_plot <- "macro_all"
+name_plot <- "macro_all_16"
 corr_mat = dataELAN[, c('Abs_Av','Perf_Av','SFS','Q1a','Q1b','Q3a','Q3b','Q4a','Q4b','LZ_Av', 'Imp_avg', 'Flow_avg', 'MIR_entropy_avg', 'MIR_rms_avg', 'MIR_novelty_avg', 'var_entropy_avg')]
-name_plot <- "macro_P"
+name_plot <- "macro_P_16"
 corr_mat = dataELAN_P[, c('Abs_Av','Perf_Av','SFS','Q1a','Q1b','Q3a','Q3b','Q4a','Q4b','LZ_Av', 'Imp_avg', 'Flow_avg', 'MIR_entropy_avg', 'MIR_rms_avg', 'MIR_novelty_avg', 'var_entropy_avg')]
-name_plot <- "macro_G"
+name_plot <- "macro_G_16"
 corr_mat = dataELAN_G[, c('Abs_Av','Perf_Av','SFS','Q1a','Q1b','Q3a','Q3b','Q4a','Q4b','LZ_Av', 'Imp_avg', 'Flow_avg', 'MIR_entropy_avg', 'MIR_rms_avg', 'MIR_novelty_avg', 'var_entropy_avg')]
 
 
@@ -206,7 +210,7 @@ corrplot(M, order = "AOE", tl.col = "black", tl.srt = 45, p.mat = corr.test(corr
          )
 
 dev.print( device = png,              # what are we printing to?
-                         filename = paste("/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/Stats/R/corr_2_", name_plot, '_AOE.png'),  # name of the image file
+                         filename = paste("/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/Stats/R/corr_", name_plot, '_AOE.png'),  # name of the image file
                          width = 865,                # how many pixels wide should it be
                          height = 636,                # how many pixels high should it be
              )
