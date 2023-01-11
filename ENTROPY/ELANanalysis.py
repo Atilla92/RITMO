@@ -12,7 +12,7 @@ loop_on = True # True if you want to loop through folder
 path_files = '/Users/atillajv/CODE/RITMO/FILES/ELAN/'
 path_ratings = '/Users/atillajv/CODE/RITMO/FILES/Ratings/'
 file_output = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/05_Jan_2023_095/' #check that this is the same as input file for entropy
-name_output = '03012023_095_2s_16'
+name_output = '03012023_095_2s_16_condition'
 # Default settings 
 percentage = 0.1
 frac_round = 1 #Round/frac_round for moving rating to the left 
@@ -363,6 +363,7 @@ def InfotoColumns(df):
     music_array = []
     palo_array = []
     participant_array = []
+    condition_array = []
     for i, item in enumerate(df['Name']):
 
         split_array = item.split('_')
@@ -370,17 +371,25 @@ def InfotoColumns(df):
         dance_array.append(split_array[1])
         music_array.append(split_array[3])
         palo_array.append(split_array[4])
+        condition_array.append(str(split_array[1] +'_' + split_array[3]))
         #print(split_array)
 
     df['Dance_mode'] = dance_array
     df['Music_mode'] = music_array
     df['Palo'] = palo_array
+    df['Condition']= condition_array
     #df['Participant'] = participant_array
 
 InfotoColumns(df_store)
 #print(df_store)
 
 #print(dfS)
+
+df_store.loc[df_store['Condition']== 'D6_M6' , 'Condition_order'] = 0
+df_store.loc[df_store['Condition']== 'D5_M6' , 'Condition_order'] = 1
+df_store.loc[df_store['Condition']== 'D1_M6' , 'Condition_order'] = 2
+df_store.loc[df_store['Condition']== 'D5_M5' , 'Condition_order'] = 3
+df_store.loc[df_store['Condition']== 'D1_M1' , 'Condition_order'] = 4
 
 
 

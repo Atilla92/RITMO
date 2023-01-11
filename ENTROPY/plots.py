@@ -4,10 +4,10 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from statsmodels.graphics.mosaicplot import mosaic
 
-file_input = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/28_Nov_2022/'
+file_input = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/05_Jan_2023_095/'
 save_plot = '/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/' 
 
-df = pd.read_csv(file_input + '13122022_095_2s' + '.csv')
+df = pd.read_csv(file_input + '03012023_095_2s_16_condition' + '.csv')
 
 plot_violin = False #Plot Violinplot of variables. Variables is list 
 save_violin_plot = False
@@ -152,7 +152,7 @@ def BarPlot(lsts_col, lsts_counts, df, save_plot):
 
 # Other statistics
 
-def heatMapCategories(categories, save_fig, save_plot):
+def heatMapCategories(df, categories, save_fig, save_plot, name = ''):
     ds = df[categories].value_counts().reset_index(name='count')
     ds['percentage'] = (ds['count']/ds['count'].sum())*100
     ds = ds.sort_values(by = categories)  
@@ -161,21 +161,22 @@ def heatMapCategories(categories, save_fig, save_plot):
 
 
     fig,(ax1, ax2) = plt.subplots(1,2)
-    sns.heatmap( ax = ax1, data = pivoted, annot = True, cmap="crest", cbar=False)
+    sns.heatmap( ax = ax1, data = pivoted, annot = True, cmap="crest", cbar=False )
+    ax1.set_title(name)
     mosaic(df, categories , ax= ax2)
    #if not save_fig:
     #    plt.show()
     if save_fig :
-        plt.savefig(save_plot + str(categories) + '.png')
+        plt.savefig(save_plot + str(categories) + '_'+ name + '.png')
 
 
 # Plot heatmaps
 
 if plot_heatmap:
-    heatMapCategories(['Baile_Level', 'Guitarra_Level'], False, save_plot )
-    heatMapCategories(['Palo', 'Baile_Level'], False, save_plot)
-    heatMapCategories(['Q1a', 'Dance_Imp'], False, save_plot)
-    heatMapCategories(['Dance_Imp', 'Music_Imp'], False, save_plot)
+    heatMapCategories(df, ['Guitarra_Level', 'Condition'], False, save_plot )
+    # heatMapCategories(['Palo', 'Baile_Level'], False, save_plot)
+    # heatMapCategories(['Q1a', 'Dance_Imp'], False, save_plot)
+    # heatMapCategories(['Dance_Imp', 'Music_Imp'], False, save_plot)
     #heatMapCategories(['Palo'], True, save_plot)
 
 
@@ -186,3 +187,13 @@ if plot_scatterplot:
     sns.catplot(x = 'Imp_subj', y = 'Guitarra_Level', data=df, hue='Palo')
 
     plt.show()
+
+
+
+column = 'Condition'
+list_column = df[column].unique().tolist()
+list_column = np.sort(list_column).tolist()
+for i, item in enumerate(list_column):
+    MI = df[df[str(column)].str.contains(str(item))]
+    heatMapCategories(MI, ['Dance_Imp', 'Baile_Level'], True, save_plot, name = str(item) )
+    #heatMapCategories(['Guitarra_Level', 'Condition'], True, save_plot )

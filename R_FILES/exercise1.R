@@ -115,7 +115,7 @@ summary(model_entropy_mixed)
 #dataELAN <- read.csv("~/CODE/RITMO/ENTROPY/output/main/28_Nov_2022/13122022_095_2s.csv")
 #dataELAN <- read.csv("~/CODE/RITMO/ENTROPY/output/main/17_Dec_2022/17122022_095_2s.csv")
 dataELAN <- read.csv("~/CODE/RITMO/ENTROPY/output/main/29_Dec_2022/29122022_095_2s.csv")
-dataELAN <- read.csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/02_Jan_2023_095/03012023_095_2s_16.csv')
+dataELAN <- read.csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/05_Jan_2023_095/03012023_095_2s_16.csv')
 #dataELAN <- read.csv("~/CODE/RITMO/ENTROPY/output/main/29_Nov_2022_075/Entropy_075.csv")
 dataELAN$Dance_mode <- as.factor(dataELAN$Dance_mode)
 dataELAN$Palo <- as.factor(dataELAN$Palo)
@@ -133,8 +133,7 @@ dataELAN$Music_Imp <- as.factor(dataELAN$Music_Imp)
 dataELAN$Music_Imp <- relevel(dataELAN$Music_Imp, "MC")
 dataELAN$ImpLevel <- as.factor(dataELAN$Assigned_Cat)
 
-
-model_entropy = lmer(LZ ~ Flow_subj + (1 + Flow_subj  | Participant) , data = dataELAN )
+model_entropy = lmer(Imp_subj ~ Flow_subj + (1 + Flow_subj | Participant) , data = dataELAN )
 summary(model_entropy)
 
 # Plot the model
