@@ -7,12 +7,12 @@ import json
 #And have to add the response, from csv for subjective ratings. Does that make sense?
 
 # One file or all in a specific folder
-file_name = 'P5_D1_G3_M6_R1_T1' # Name file if loop_on = False
-loop_on = True # True if you want to loop through folder
+file_name = 'P5_P5_D1_G3_M6_R1_T1' # Name file if loop_on = False
+loop_on = False # True if you want to loop through folder
 path_files = '/Users/atillajv/CODE/RITMO/FILES/ELAN/'
 path_ratings = '/Users/atillajv/CODE/RITMO/FILES/Ratings/'
-file_output = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/05_Jan_2023_095/' #check that this is the same as input file for entropy
-name_output = '03012023_095_2s_16_condition'
+file_output = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/Test/' #check that this is the same as input file for entropy
+name_output = 'Test'
 # Default settings 
 percentage = 0.1
 frac_round = 1 #Round/frac_round for moving rating to the left 
@@ -73,7 +73,8 @@ df_store = pd.DataFrame(columns=['Name', 'Participant', 'Music_Imp', 'Dance_Imp'
 'MIR_novelty',
 'MIR_novelty_avg',
 'var_entropy',
-'var_entropy_avg'
+'var_entropy_avg',
+'annot_frac'
 ])
 
 for file_i, file_item_long in enumerate(list_files):
@@ -328,6 +329,7 @@ for file_i, file_item_long in enumerate(list_files):
                 'MIR_novelty_avg' : dfMIR_novelty['novelty'].mean(),
                 'var_entropy': list_var['var'].mean(),
                 'var_entropy_avg': df_var['var'].mean(),
+                'annot_frac': '',
                 }
             store_i = store_i+1
 
@@ -420,6 +422,3 @@ with open(str(file_output + "FilesNotFound_" + name_output + ".json"), "w") as o
 #             list_files.append(filepath_split[2].strip('.csv'))
 # else:
 #     list_files = [file_name]
-
-
-

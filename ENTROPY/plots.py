@@ -8,6 +8,9 @@ file_input = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/05_Jan_2023_095/'
 save_plot = '/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/' 
 
 df = pd.read_csv(file_input + '03012023_095_2s_16_condition' + '.csv')
+print(df)
+df.drop_duplicates(keep = False)
+print(df)
 
 plot_violin = False #Plot Violinplot of variables. Variables is list 
 save_violin_plot = False
@@ -160,10 +163,10 @@ def heatMapCategories(df, categories, save_fig, save_plot, name = ''):
     pivoted = ds.pivot(index= categories[0], columns= categories[1], values="percentage")
 
 
-    fig,(ax1, ax2) = plt.subplots(1,2)
+    fig,(ax1) = plt.subplots(1,1)
     sns.heatmap( ax = ax1, data = pivoted, annot = True, cmap="crest", cbar=False )
     ax1.set_title(name)
-    mosaic(df, categories , ax= ax2)
+    #mosaic(df, categories , ax= ax2)
    #if not save_fig:
     #    plt.show()
     if save_fig :
@@ -190,10 +193,72 @@ if plot_scatterplot:
 
 
 
-column = 'Condition'
-list_column = df[column].unique().tolist()
-list_column = np.sort(list_column).tolist()
-for i, item in enumerate(list_column):
-    MI = df[df[str(column)].str.contains(str(item))]
-    heatMapCategories(MI, ['Dance_Imp', 'Baile_Level'], True, save_plot, name = str(item) )
-    #heatMapCategories(['Guitarra_Level', 'Condition'], True, save_plot )
+# Plot for specific condition
+# column = 'Condition'
+# list_column = df[column].unique().tolist()
+# list_column = np.sort(list_column).tolist()
+# for i, item in enumerate(list_column):
+#     MI = df[df[str(column)].str.contains(str(item))]
+#     heatMapCategories(MI, ['Dance_Imp', 'Palo'], True, save_plot, name = str(item) )
+#     heatMapCategories(MI, ['Baile_Level', 'Palo'], True, save_plot, name = str(item) )
+#     #heatMapCategories(['Guitarra_Level', 'Condition'], True, save_plot )
+
+
+
+# Plot for speficic Palo
+
+def plotPalo(df):
+    column = 'Palo'
+    list_column = df[column].unique().tolist()
+    list_column = np.sort(list_column).tolist()
+    for i, item in enumerate(list_column):
+        MI = df[df[str(column)].str.contains(str(item))]
+        heatMapCategories(MI, ['Dance_Imp', 'Condition'], True, save_plot, name = str(item) )
+        heatMapCategories(MI, ['Baile_Level', 'Condition'], True, save_plot, name = str(item) )
+        #heatMapCategories(MI, ['Baile_Level', 'Palo'], True, save_plot, name = str(item) )
+
+
+
+
+# Estimate annotation percentage based on rounds
+column = 'Name'
+list_files = df[column].unique().tolist()
+df['frac_annot'] = np.nan
+print(list_files)
+ds = df.groupby(['Name', 'Participant'])[['Rounds']].sum()
+print(ds.keys())
+
+i = 0
+for name, group in ds.index:
+    #print (name, group)
+    sum_rounds = ds['Rounds'].iloc[i]
+    
+    i = i + 1
+
+    
+    list_index = df[ (df['Name'].str.contains(name)) & (df['Participant'].str.contains(group)) ].index.tolist()
+    #print(list_index)
+    df.loc[list_index, 'frac_annot'] = df[ (df['Name'].str.contains(name)) & (df['Participant'].str.contains(group)) ]['Rounds']/sum_rounds
+    
+
+df.to_csv(file_input + 'Test.csv')   
+    
+    #print(df[ (df['Name'].str.contains(name)) & (df['Participant'].str.contains(group)) ]['frac_annot'])
+    #df[df[str(column)].str.contains(str(item))]
+    
+
+# for i, item in ds:
+#     #print(item)
+#     print 
+    
+    #ds['Name', 'Rounds'] = (df.groupby('Name')[['Rounds']].sum())
+    #print (ds)
+    #print(item, ds[ds[str(column)].str.contains(str(item))])
+    #sum_rounds = ds['Rounds'].sum()
+    #df['frac_annot'] = (df['Rounds']/ds['Rounds'].sum())*100
+
+
+
+
+#https://pandas.pydata.org/pandas-docs/stable/user_guide/groupby.html
+
