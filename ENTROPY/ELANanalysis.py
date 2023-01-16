@@ -394,7 +394,7 @@ df_store.loc[df_store['Condition']== 'D5_M5' , 'Condition_order'] = 3
 df_store.loc[df_store['Condition']== 'D1_M1' , 'Condition_order'] = 4
 
 
-
+df.drop_duplicates(subset=None, keep="first", inplace=True)
 df_store.to_csv(file_output + name_output + '.csv')
 
 

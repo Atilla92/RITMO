@@ -7,10 +7,10 @@ from statsmodels.graphics.mosaicplot import mosaic
 file_input = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/05_Jan_2023_095/'
 save_plot = '/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/' 
 
-df = pd.read_csv(file_input + '03012023_095_2s_16_condition' + '.csv')
-print(df)
-df.drop_duplicates(keep = False)
-print(df)
+df_file = '03012023_095_2s_16_condition'
+df = pd.read_csv(file_input + df_file + '.csv', index_col=0)
+df.drop_duplicates(subset=None, keep="first", inplace=True)
+#print(df)
 
 plot_violin = False #Plot Violinplot of variables. Variables is list 
 save_violin_plot = False
@@ -158,6 +158,7 @@ def BarPlot(lsts_col, lsts_counts, df, save_plot):
 def heatMapCategories(df, categories, save_fig, save_plot, name = ''):
     ds = df[categories].value_counts().reset_index(name='count')
     ds['percentage'] = (ds['count']/ds['count'].sum())*100
+    
     ds = ds.sort_values(by = categories)  
     
     pivoted = ds.pivot(index= categories[0], columns= categories[1], values="percentage")
@@ -175,8 +176,8 @@ def heatMapCategories(df, categories, save_fig, save_plot, name = ''):
 
 # Plot heatmaps
 
-if plot_heatmap:
-    heatMapCategories(df, ['Guitarra_Level', 'Condition'], False, save_plot )
+#if plot_heatmap:
+    #heatMapCategories(df, ['Guitarra_Level', 'Condition'], False, save_plot )
     # heatMapCategories(['Palo', 'Baile_Level'], False, save_plot)
     # heatMapCategories(['Q1a', 'Dance_Imp'], False, save_plot)
     # heatMapCategories(['Dance_Imp', 'Music_Imp'], False, save_plot)
@@ -193,15 +194,6 @@ if plot_scatterplot:
 
 
 
-# Plot for specific condition
-# column = 'Condition'
-# list_column = df[column].unique().tolist()
-# list_column = np.sort(list_column).tolist()
-# for i, item in enumerate(list_column):
-#     MI = df[df[str(column)].str.contains(str(item))]
-#     heatMapCategories(MI, ['Dance_Imp', 'Palo'], True, save_plot, name = str(item) )
-#     heatMapCategories(MI, ['Baile_Level', 'Palo'], True, save_plot, name = str(item) )
-#     #heatMapCategories(['Guitarra_Level', 'Condition'], True, save_plot )
 
 
 
@@ -221,27 +213,91 @@ def plotPalo(df):
 
 
 # Estimate annotation percentage based on rounds
-column = 'Name'
-list_files = df[column].unique().tolist()
-df['frac_annot'] = np.nan
-print(list_files)
-ds = df.groupby(['Name', 'Participant'])[['Rounds']].sum()
-print(ds.keys())
 
-i = 0
-for name, group in ds.index:
-    #print (name, group)
-    sum_rounds = ds['Rounds'].iloc[i]
-    
-    i = i + 1
 
-    
-    list_index = df[ (df['Name'].str.contains(name)) & (df['Participant'].str.contains(group)) ].index.tolist()
-    #print(list_index)
-    df.loc[list_index, 'frac_annot'] = df[ (df['Name'].str.contains(name)) & (df['Participant'].str.contains(group)) ]['Rounds']/sum_rounds
-    
 
-df.to_csv(file_input + 'Test.csv')   
+
+def addFracAnnot(df):
+    column = 'Name'
+    list_files = df[column].unique().tolist()
+    df['frac_annot'] = np.nan
+    ds = df.groupby(['Name', 'Participant'])[['Rounds']].sum()
+
+    i = 0
+    for name, group in ds.index:
+        sum_rounds = ds['Rounds'].iloc[i]
+        i = i + 1    
+        list_index = df[ (df['Name'].str.contains(name)) & (df['Participant'].str.contains(group)) ].index.tolist()
+        df.loc[list_index, 'frac_annot'] =np.divide(np.array( df[ (df['Name'].str.contains(name)) & (df['Participant'].str.contains(group)) ]['Rounds']),sum_rounds)
+        #print('SUM:',(np.divide(np.array( df[ (df['Name'].str.contains(name)) & (df['Participant'].str.contains(group)) ]['Rounds']),sum_rounds)).sum())
+ 
+
+
+def HeatMapCategoriesFrac(df, categories, loopName = '', name = ''):
+    '''
+    df: DataFrame
+    categories: two columns you want to create the heatmap from. 
+    addFracAnnot adds column with fraction of each annotation within song based on number of rounds annotation. 
+    '''
+    addFracAnnot(df)
+    result =  df.groupby(by= categories)["frac_annot"].sum().reset_index(name = 'count')
+    #result['percentage'] = result['count']/result.groupby(categories[1]).sum()['count']*100
+    cond = result.groupby(categories[1]).sum()
+
+    result = result.sort_values(by = categories)  
+        
+    pivoted = result.pivot(index= categories[0], columns= categories[1], values="count")
+    percentage = pivoted.div(np.array(cond['count'].T))*100
+    
+    print(str(categories),' :',percentage, 'SUM: ',percentage.sum())
+
+    fig,(ax1) = plt.subplots(1,1)
+    sns.heatmap( ax = ax1, data = percentage, annot = True, cmap="crest", cbar=False )
+    #ax1.set_title('Distribution(%) ' + str(name) +': '+ str(categories[0]) + ' vs. ' + str(categories[1]))
+    ax1.set_title('Distribution(%) ' + str(name))
+    plt.savefig(save_plot + str(categories) + '_HeatMap_FracAnnot_' +str(loopName) +'.png')
+
+# HeatMapCategoriesFrac(df,["Baile_Level", 'Dance_Imp'] )
+# HeatMapCategoriesFrac(df,["Baile_Level", 'Condition'] )
+# HeatMapCategoriesFrac(df,["Dance_Imp", 'Condition'] )
+# HeatMapCategoriesFrac(df,["Dance_Imp", 'Palo'] )
+# HeatMapCategoriesFrac(df,["Guitarra_Level", 'Condition'] )
+# HeatMapCategoriesFrac(df,["Music_Imp", 'Condition'] )
+# HeatMapCategoriesFrac(df,["Baile_Level", 'Palo'] )
+# HeatMapCategoriesFrac(df,["Baile_Level", 'Guitarra_Level'] )
+# HeatMapCategoriesFrac(df,["Baile_Level", 'Music_Imp'] )
+
+
+#Plot for specific condition
+
+def loopOverColumn(df, column, categories, funcName):
+    
+    list_column = df[column].unique().tolist()
+    list_column = np.sort(list_column).tolist()
+   # print(list_column)
+    for i, item in enumerate(list_column):
+        MI = df[df[str(column)].str.contains(str(item))]
+
+
+        if funcName == 1:
+            heatMapCategories(MI, categories, True, save_plot, name = str(item) )
+        
+        elif funcName == 2:
+            HeatMapCategoriesFrac(MI, categories, str(item), str(item))
+        #heatMapCategories(MI, ['Baile_Level', 'Palo'], True, save_plot, name = str(item) )
+    #heatMapCategories(['Guitarra_Level', 'Condition'], True, save_plot )
+
+loopOverColumn(df, 'Palo', ['Q1b', 'Q3b'], 2 )
+
+#result2 =  df.groupby(by=["Guitarra_Level", 'Condition'])["frac_annot"].count()
+#print(df['frac_annot'])
+#print( result) 
+
+
+df.to_csv(file_input + df_file + '_Filtered.csv')   
+
+#Need to now somehow fetch percetnages, sum them, classify them. Which is similar to what you hae done with the groupby. 
+
     
     #print(df[ (df['Name'].str.contains(name)) & (df['Participant'].str.contains(group)) ]['frac_annot'])
     #df[df[str(column)].str.contains(str(item))]
