@@ -10,6 +10,10 @@ save_plot = '/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/'
 df_file = '03012023_095_2s_16_condition'
 df = pd.read_csv(file_input + df_file + '.csv', index_col=0)
 df.drop_duplicates(subset=None, keep="first", inplace=True)
+
+#drop MI, DC
+#df = df[~((df['Music_Imp'].str.contains('MI')) & (df['Dance_Imp'].str.contains('DC')))]
+print(df)
 #print(df)
 
 plot_violin = False #Plot Violinplot of variables. Variables is list 
@@ -287,14 +291,14 @@ def loopOverColumn(df, column, categories, funcName):
         #heatMapCategories(MI, ['Baile_Level', 'Palo'], True, save_plot, name = str(item) )
     #heatMapCategories(['Guitarra_Level', 'Condition'], True, save_plot )
 
-loopOverColumn(df, 'Palo', ['Q1b', 'Q3b'], 2 )
+loopOverColumn(df, 'Palo', ['Baile_Level', 'Dance_Imp'], 2 )
 
 #result2 =  df.groupby(by=["Guitarra_Level", 'Condition'])["frac_annot"].count()
 #print(df['frac_annot'])
 #print( result) 
 
 
-df.to_csv(file_input + df_file + '_Filtered.csv')   
+#df.to_csv(file_input + df_file + '_Filtered.csv')   
 
 #Need to now somehow fetch percetnages, sum them, classify them. Which is similar to what you hae done with the groupby. 
 

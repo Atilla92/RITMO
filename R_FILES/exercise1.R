@@ -138,7 +138,7 @@ dataELAN$Music_Imp <- relevel(dataELAN$Music_Imp, "MC")
 dataELAN$ImpLevel <- as.factor(dataELAN$Assigned_Cat)
 
  
-model_entropy = lmer(Imp_avg ~ Condition + (1    | Participant) , data = dataELAN )
+model_entropy = lmer(LZ_Av ~ Condition + (1   | Participant) , data = dataELAN_P )
 summary(model_entropy)
 
 # Plot the model
