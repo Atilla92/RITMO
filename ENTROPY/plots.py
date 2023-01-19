@@ -12,7 +12,7 @@ df = pd.read_csv(file_input + df_file + '.csv', index_col=0)
 df.drop_duplicates(subset=None, keep="first", inplace=True)
 
 #drop MI, DC
-#df = df[~((df['Music_Imp'].str.contains('MI')) & (df['Dance_Imp'].str.contains('DC')))]
+df = df[~((df['Music_Imp'].str.contains('MI')) & (df['Dance_Imp'].str.contains('DC')))]
 print(df)
 #print(df)
 
@@ -291,14 +291,25 @@ def loopOverColumn(df, column, categories, funcName):
         #heatMapCategories(MI, ['Baile_Level', 'Palo'], True, save_plot, name = str(item) )
     #heatMapCategories(['Guitarra_Level', 'Condition'], True, save_plot )
 
-loopOverColumn(df, 'Palo', ['Baile_Level', 'Dance_Imp'], 2 )
+loopOverColumn(df, 'Dance_Imp', ['Baile_Level', 'Condition'], 2 )
+
+
+
+# fig, ax = plt.subplots()
+
+# for label, grp in df.groupby('Condition'):
+#     grp = np.sort()
+#     grp.plot(x = 'Condition_order', y = 'Q1b', ax = ax, label = label)
+#     #print( label)
+#     plt.show()
+
 
 #result2 =  df.groupby(by=["Guitarra_Level", 'Condition'])["frac_annot"].count()
 #print(df['frac_annot'])
 #print( result) 
 
-
-#df.to_csv(file_input + df_file + '_Filtered.csv')   
+#print(df)
+#df.to_csv(file_input + df_file + '_Filtered_2.csv')   
 
 #Need to now somehow fetch percetnages, sum them, classify them. Which is similar to what you hae done with the groupby. 
 

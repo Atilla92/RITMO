@@ -117,7 +117,7 @@ summary(model_entropy_mixed)
 dataELAN <- read.csv("~/CODE/RITMO/ENTROPY/output/main/29_Dec_2022/29122022_095_2s.csv")
 dataELAN <- read.csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/05_Jan_2023_095/03012023_095_2s_16.csv')
 dataELAN <- read.csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/05_Jan_2023_095/03012023_095_2s_16_condition.csv')
-dataELAN <- read.csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/05_Jan_2023_095/03012023_095_2s_16_condition_Filtered.csv')
+dataELAN <- read.csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/05_Jan_2023_095/03012023_095_2s_16_condition_Filtered_2.csv')
 #dataELAN <- read.csv("~/CODE/RITMO/ENTROPY/output/main/29_Nov_2022_075/Entropy_075.csv")
 dataELAN$Dance_mode <- as.factor(dataELAN$Dance_mode)
 dataELAN$Condition <- as.factor(dataELAN$Condition)
@@ -137,8 +137,10 @@ dataELAN$Music_Imp <- as.factor(dataELAN$Music_Imp)
 dataELAN$Music_Imp <- relevel(dataELAN$Music_Imp, "MC")
 dataELAN$ImpLevel <- as.factor(dataELAN$Assigned_Cat)
 
+
+dataELAN_I <- dataELAN[!grepl("DC", dataELAN$Dance_Imp),]
  
-model_entropy = lmer(LZ_Av ~ Condition + (1   | Participant) , data = dataELAN_P )
+model_entropy = lmer(LZ_Av ~ Abs_Av  + (1  | Participant) , data = dataELAN_P )
 summary(model_entropy)
 
 # Plot the model
@@ -146,14 +148,25 @@ library(carData)
 library(effects)
 e <- allEffects(model_entropy)
 #Plots the effect
+plot.new()
 plot(e ,multiline=TRUE,confint=TRUE,ci.style="bars"
-     ,main="Effect of Palo and Dance on Imp_subj"
-     ,xlab="LZ_Av"
-     ,ylab="Dance_imp")
+     ,main="LZ_Av and Quality of Flow"
+     ,xlab="Q3b"
+     ,ylab="Abs_Av")
+
+name_plot = 'LZ_Av_vs_Q3b'
+
+dev.print( device = png,              # what are we printing to?
+           filename = paste("/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/Stats/R/plot_", name_plot, '.png'),  # name of the image file
+           width = 865,                # how many pixels wide should it be
+           height = 636,                # how many pixels high should it be
+)
+
+
 
 #Plots all the data points
 plot(model_entropy,multiline=TRUE,confint=TRUE,ci.style="bars"
-     ,main="Effect of Palo and Dance on Imp_subj"
+     ,main="Complexity across conditions"
      ,xlab="Palo"
      ,ylab="Dance_imp",
      )
@@ -170,7 +183,7 @@ model_entropy = lmer(Flow_subj ~   Q3b + (1 | Participant) , data = dataSubELAN 
 summary(model_entropy)
 
 summary(model_entropy_2)
-model_entropy_mixed = lmer(Q1a ~ Dance_mode  + Abs_Av + (1 | Participant), data = dataEntropy )
+model_entropy_mixed = lmer(Q1a ~ Dance_mode  + Abs_Av + (1 + Condition | Participant), data = dataEntropy )
 AIC(model_entropy,model_entropy_2)
 summary(model_entropy_mixed)
 
