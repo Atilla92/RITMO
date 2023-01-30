@@ -122,10 +122,13 @@ dataELAN <- read.csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/05_Jan_2023
 dataELAN$Dance_mode <- as.factor(dataELAN$Dance_mode)
 dataELAN$Condition <- as.factor(dataELAN$Condition)
 dataELAN$Condition <- relevel(dataELAN$Condition, "D6_M6")
+dataELAN$Dance_mode <- factor(dataELAN$Dance_mode, levels = c("D6", 'D5', 'D1'))
+dataELAN$Condition <- factor(dataELAN$Condition, levels = c('D6_M6', 'D5_M6', 'D1_M6', 'D5_M5', 'D1_M1'))
+dataELAN$Condition_order <- as.factor(dataELAN$Condition_order)
+
 dataELAN$Palo <- as.factor(dataELAN$Palo)
 dataELAN$Music_mode <- as.factor(dataELAN$Music_mode)
-dataELAN$Dance_mode <- relevel(dataELAN$Dance_mode, "D6")
-dataELAN$Music_mode <- relevel(dataELAN$Music_mode, "M6")
+dataELAN$Music_mode <- factor(dataELAN$Music_mode, levels = c("M6",'M5','M1'))
 dataELAN$Participant <- as.factor(dataELAN$Participant)
 dataELAN$Baile <- as.factor(dataELAN$Baile_Level)
 dataELAN$Guitarra <- as.factor(dataELAN$Guitarra_Level)
@@ -140,8 +143,23 @@ dataELAN$ImpLevel <- as.factor(dataELAN$Assigned_Cat)
 
 dataELAN_I <- dataELAN[!grepl("DC", dataELAN$Dance_Imp),]
  
-model_entropy = lmer(LZ_Av ~ Abs_Av  + (1  | Participant) , data = dataELAN_P )
+
+
+ 
+#model_entropy = lmer(LZ ~ Dance_Imp:Name  + (1 + Name | Participant) , data = dataELAN )
+ 
+model_entropy = lmer(LZ_Av ~ Q4a + (1| Participant) , data = dataELAN_P )
 summary(model_entropy)
+
+# Plot p values and model
+name_plot = 'lmer_Q4a_Q3b_Q1a_Dance_mode_ELAN'
+sjPlot::plot_model(title = 'LMER - Connection [Q4b] - Improv.[Q1a] & Flow [Q3b] ', model_entropy, show.p = TRUE, show.values = TRUE, digits = 3,show.intercept = TRUE)
+dev.print( device = png,              # what are we printing to?
+           filename = paste("/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/Stats/R/plot_", name_plot, '.png'),  # name of the image file
+           width = 865,                # how many pixels wide should it be
+           height = 400,                # how many pixels high should it be
+)
+
 
 # Plot the model
 library(carData)
@@ -149,10 +167,16 @@ library(effects)
 e <- allEffects(model_entropy)
 #Plots the effect
 plot.new()
+library(ggplot2)
+library(sjPlot)
+library(sjlabelled)
+library(sjmisc)
+
+plot_model(model_entropy)
 plot(e ,multiline=TRUE,confint=TRUE,ci.style="bars"
      ,main="LZ_Av and Quality of Flow"
-     ,xlab="Q3b"
-     ,ylab="Abs_Av")
+     ,xlab="Abs_Avg"
+     ,ylab="LZ_Avg", show.values = TRUE)
 
 name_plot = 'LZ_Av_vs_Q3b'
 
@@ -253,7 +277,7 @@ dataInterval$Dance_mode <- relevel(dataInterval$Dance_mode, "D6")
 dataInterval$Music_mode <- relevel(dataInterval$Music_mode, "M6")
 #dataInterval$Participant <- as.factor(dataInterval$Participant)
 model_entropy = lmer(Q1b ~ Q3b + (1 | Participant), data = dataEntropy )
-model_entropy_2 = lmer(LZ_Av ~ Imp_Av + (1 | Dance_mode), data = dataInterval)
+model_entropy_2 = lmer(LZ_Av ~ Abs_Av + (1 | Dance_mode), data = dataInterval)
 summary(model_entropy)
 summary(model_entropy_2)
 model_entropy_mixed = lmer(Q1a ~ Dance_mode  + Abs_Av + (1 | Participant), data = dataEntropy )
