@@ -15,7 +15,7 @@ from functionsE import plotAudio_2, calc_lz_df_2, quantize_vector, quartile_vect
 import json
 
 # Output settings:
-file_output = "/Users/atillajv/CODE/RITMO/ENTROPY/output/main/05_Jan_2023_095/" # Name of folder to store plots. 
+file_output = "/Users/atillajv/CODE/RITMO/ENTROPY/output/main/Test/" # Name of folder to store plots. 
 
 
 
@@ -29,7 +29,7 @@ else:
 
 # Code settings:
 audio_path = '/Users/atillajv/CODE/FILES/PILOT_SEV_APRIL_2022/Audio/'
-loop_on = True # Set to True if you want to loop through a certain folder. Else not. 
+loop_on = False # Set to True if you want to loop through a certain folder. Else not. 
 #loop_off = 'P7_D1_G1_M6_R2_T1.wav'
 loop_off = 'P7_D5_G1_M6_R1_T1.wav'
 downsample_on = True #if you want to downsample. 
@@ -76,6 +76,7 @@ for i, item in enumerate(audio_files):
     print('Loop: ', item ,i)
     file_name = item
     samplerate, data_raw = read(str( audio_path+ file_name))
+    print(samplerate,'samplerate', ' seconds:',np.divide(downsample_factor * step_size,samplerate))
     data = data_raw[:,channel_num]
 
     # Downsample

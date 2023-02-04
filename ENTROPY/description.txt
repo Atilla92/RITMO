@@ -6,12 +6,9 @@ ELANanalysis
     Includes both Guitarist and Dancer
 
 
-fMRI_analysis
-    work in progress
-
 main.py 
     Estimates the LZ entropy of audio files. 
-    Need to set paramterers for window. 
+    Need to set parameeters for window and downsampling. 
     Some of the functions are stores in functionsE.py
 
 mean.py can probably be discarded

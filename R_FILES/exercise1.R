@@ -99,7 +99,7 @@ dataEntropy$Music_mode <- as.factor(dataEntropy$Music_mode)
 dataEntropy$Dance_mode <- relevel(dataEntropy$Dance_mode, "D6")
 dataEntropy$Music_mode <- relevel(dataEntropy$Music_mode, "M6")
 dataEntropy$Participant <- as.factor(dataEntropy$Participant)
-model_entropy = lmer(Q1a ~ Q3b + (1 | Participant) , data = dataEntropy )
+model_entropy = lmer(Q1a ~ Q3b + (1 + Q3b | Participant) , data = dataEntropy )
 summary(model_entropy)
 model_entropy_2 = lmer(Q1a ~ Q3a + I(Q3b^2) + (1 | Participant), data = dataEntropy)
 
@@ -148,7 +148,7 @@ dataELAN_I <- dataELAN[!grepl("DC", dataELAN$Dance_Imp),]
  
 #model_entropy = lmer(LZ ~ Dance_Imp:Name  + (1 + Name | Participant) , data = dataELAN )
  
-model_entropy = lmer(LZ_Av ~ Q4a + (1| Participant) , data = dataELAN_P )
+model_entropy = lmer(Q1a ~ Condition + (1+ Condition | Participant) , data = dataELAN )
 summary(model_entropy)
 
 # Plot p values and model

@@ -8,11 +8,11 @@ import json
 
 # One file or all in a specific folder
 file_name = 'P5_P5_D1_G3_M6_R1_T1' # Name file if loop_on = False
-loop_on = False # True if you want to loop through folder
+loop_on = True # True if you want to loop through folder
 path_files = '/Users/atillajv/CODE/RITMO/FILES/ELAN/'
 path_ratings = '/Users/atillajv/CODE/RITMO/FILES/Ratings/'
 file_output = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/Test/' #check that this is the same as input file for entropy
-name_output = 'Test'
+name_output = 'Test_01022023'
 # Default settings 
 percentage = 0.1
 frac_round = 1 #Round/frac_round for moving rating to the left 
@@ -39,7 +39,7 @@ print(list_files)
 
 # Initiate dataframe before loop 
 store_i = 0
-df_store = pd.DataFrame(columns=['Name', 'Participant', 'Music_Imp', 'Dance_Imp', 'Baile_Level','Guitarra_Level' ,'Step', 
+df_store = pd.DataFrame(columns=['Name', 'Duration', 'Participant', 'Music_Imp', 'Dance_Imp', 'Baile_Level','Guitarra_Level' ,'Step', 
 'Imp_subj','Imp_avg', 'Flow_subj', 'Flow_avg',
 'CTW', 'LZ','Assigned_Cat', 'Rounds', 
 'Q1a',
@@ -283,6 +283,7 @@ for file_i, file_item_long in enumerate(list_files):
             #print(dfTest)
             df_store.loc[store_i] = {
                 'Name': file_item,
+                'Duration': dfI['Duration - ss.msec'].iloc[i],
                 'Participant' : prefixParticipant,
                 'Music_Imp': dfI['Music_Mode'].iloc[i],
                 'Dance_Imp': dfI['Category'].iloc[i],
@@ -394,7 +395,7 @@ df_store.loc[df_store['Condition']== 'D5_M5' , 'Condition_order'] = 3
 df_store.loc[df_store['Condition']== 'D1_M1' , 'Condition_order'] = 4
 
 
-df.drop_duplicates(subset=None, keep="first", inplace=True)
+df_store.drop_duplicates(subset=None, keep="first", inplace=True)
 df_store.to_csv(file_output + name_output + '.csv')
 
 
