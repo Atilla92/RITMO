@@ -8,19 +8,19 @@ Begin Time - ss.msec;End Time - ss.msec;Duration - ss.msec;Sequence;Bloques;Step
 73.4;79.1;5.7;Escobilla;2;4.7.1;MC;DC;Z3;A3
 79.1;84.8;5.7;Escobilla, Marcaje;2;4.7;MC;DC;Z2;A3
 84.9;98.1;13.2;Marcaje, Cierre;4;4.8;MC;DC;Z1;A3
-98.2;103.7;5.5;Escobilla comienzo;2;4.9.1;MC;DC;Z3;A3
-103.7;107.3;3.6;Marcaje;2;4.9.2;MC;DC;Z2;A3
+98.2;103.7;5.5;Escobilla comienzo;2;4.9;MC;DC;Z3;A3
+103.7;107.3;3.6;Marcaje;2;4.9;MC;DC;Z2;A3
 107.4;114.8;7.4;Letra ;4;4.10;MC;DC;Z2;A2
-114.9;118.6;3.7;Pies, Letra;2;4.11.1;MC;DC;Z2;A2
-118.6;122.4;3.8;Escobilla;2;4.11.2;MC;DC;Z3;A2
+114.9;118.6;3.7;Pies, Letra;2;4.11;MC;DC;Z2;A2
+118.6;122.4;3.8;Escobilla;2;4.11;MC;DC;Z3;A2
 122.5;130.0;7.5;Marcaje;4;4.12;MC;DC;Z2;A2
 130.2;137.2;7.0;Escobilla, Giros;4;4.13;MC;DC;Z3;A1
 137.3;144.6;7.3;Baile, Marcaje;4;4.14;MC;DC;Z1;A1
 144.7;151.6;6.9;Moviemiento;4;4.15;MC;DC;Z1;A2
 151.7;157.6;5.9;Llamada;4;4.16;MC;DC;Z3;A1
 157.7;164.1;6.4;Cierre;4;4.17;MC;DC;Z3;A1
-164.2;172.0;7.8;Respiro, Giro;2;4.18.1;MC;DC;Z1;A1
-172.0;176.8;4.8;Marcaje;2;4.18.2;MC;DC;Z1;A1
+164.2;172.0;7.8;Respiro, Giro;2;4.18;MC;DC;Z1;A1
+172.0;176.8;4.8;Marcaje;2;4.18;MC;DC;Z1;A1
 176.8;185.4;8.6;Letra 2;4;4.19;MC;DC;Z1;A1
 185.4;192.9;7.5;Letra 2;4;4.20;MC;DC;Z2;A1
 193.0;199.8;6.8;Marcake;4;4.21;MC;DC;Z2;A1

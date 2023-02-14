@@ -1,14 +1,13 @@
-"Begin Time - ss.msec";"End Time - ss.msec";"Duration - ss.msec";"Sequence";"Bloques";"Step";"Music_Mode";"Category";"Baile";"Guitarra"
-5.9;20.0;14.1;"Salida";"2";"7.1";"MI";"DI";"Z2";"A3"
-20.1;33.4;13.3;"Marcajes";"2";"7.2";"MI";"DI";"Z2";"A2"
-33.5;38.9;5.4;"Respiro";"1";"7.3";"MI";"DI";"Z2";"A1"
-39.0;54.7;15.7;"Interludio";"2.5";"7.4";"MI";"DI";"Z1";"A3"
-54.8;68.3;13.5;"Respiro";"2";"7.5";"MI";"DI";"Z1";"A3"
-68.4;72.1;3.7;"Respiro";"0.5";"7.6";"MI";"DI";"Z1";"A1"
-72.2;84.9;12.7;"Marcaje";"2";"7.7";"MI";"DI";"Z2";"A3"
-85.0;91.5;6.5;"Paseo";"1";"7.8";"MI";"DI";"Z1";"A1"
-91.6;97.5;5.9;"Marcaje";"1";"7.8";"MI";"DI";"Z2";"A2"
-97.6;108.9;11.3;"Pies";"2";"7.9";"MI";"DC";"Z3";"A1"
-109.0;115.3;6.3;"Remate";"1";"7.10";"MC";"DC";"Z3";"A1"
-115.4;121.2;5.8;"Final";"1";"7.11";"MI";"DC";"Z1";"A1"
-
+﻿Begin Time - ss.msec;End Time - ss.msec;Duration - ss.msec;Sequence;Bloques;Step;Music_Mode;Category;Baile;Guitarra
+5.9;20.0;14.1;Salida;2;7.13;MI;DI;Z2;A3
+20.1;33.4;13.3;Marcajes;2;7.14;MI;DI;Z2;A2
+33.5;38.9;5.4;Respiro;1;7.15;MI;DI;Z2;A1
+39.0;54.7;15.7;Interludio;2.5;7.16;MI;DI;Z1;A3
+54.8;68.3;13.5;Respiro;2;7.17;MI;DI;Z1;A3
+68.4;72.1;3.7;Respiro;0.5;7.18;MI;DI;Z1;A1
+72.2;84.9;12.7;Marcaje;2;7.19;MI;DI;Z2;A3
+85.0;91.5;6.5;Paseo;1;7.20;MI;DI;Z1;A1
+91.6;97.5;5.9;Marcaje;1;7.21;MI;DI;Z2;A2
+97.6;108.9;11.3;Pies;2;7.22;MI;DC;Z3;A1
+109.0;115.3;6.3;Remate;1;7.23;MC;DC;Z3;A1
+115.4;121.2;5.8;Final;1;7.24;MI;DC;Z1;A1

@@ -5,22 +5,22 @@ Begin Time - ss.msec;End Time - ss.msec;Duration - ss.msec;Sequence;Bloques;Step
 38.3;49.0;10.7;Letra;4;4.4;MC;DI;Z2;A3
 49.1;59.8;10.7;Letra;4;4.5;MC;DI;Z2;A3
 59.8;70.3;10.5;Letra;4;4.6;MC;DI;Z2;A2
-70.4;75.6;5.2;Pies;2;4.7.1;MC;DI;Z3;A3
-75.7;80.7;5.0;Pies;2;4.7.2;MC;DI;Z3;A3
+70.4;75.6;5.2;Pies;2;4.7;MC;DI;Z3;A3
+75.7;80.7;5.0;Pies;2;4.7;MC;DI;Z3;A3
 80.8;91.9;11.1;Marcaje;4;4.8;MC;DI;Z2;A3
-92.0;95.8;3.8;Marcaje, Pitos;2;4.9.1;MC;DI;Z1;A3
-95.9;99.0;3.1;Marcaje, Pitos;2;4.9.2;MC;DI;Z3;A3
+92.0;95.8;3.8;Marcaje, Pitos;2;4.9;MC;DI;Z1;A3
+95.9;99.0;3.1;Marcaje, Pitos;2;4.9;MC;DI;Z3;A3
 99.1;106.3;7.2;Escobilla;4;4.10;MC;DI;Z3;A2
-106.3;109.6;3.3;Marcaje;2;4.11.1;MC;DI;Z2;A1
-109.7;113.2;3.5;Marcaje, Pies;2;4.11.2;MC;DI;Z2;A1
+106.3;109.6;3.3;Marcaje;2;4.11;MC;DI;Z2;A1
+109.7;113.2;3.5;Marcaje, Pies;2;4.11;MC;DI;Z2;A1
 113.2;120.9;7.7;Pies, Marcaje;4;4.12;MC;DI;Z3;A1
 120.9;128.4;7.5;Pies, Pitos;4;4.13;MC;DI;Z3;A1
 128.5;135.7;7.2;Marcaje, Movimiento;4;4.14;MC;DI;Z2;A1
 135.7;142.9;7.2;Movimiento;4;4.15;MC;DI;Z2;A2
 143.0;149.1;6.1;Llamada;4;4.16;MC;DI;Z2;A1
 149.2;155.1;5.9;Llamada, Cierre, Movimientos;4;4.17;MC;DI;Z1;A1
-155.2;161.8;6.6;Escobilla;2;4.18.1;MC;DI;Z3;A1
-161.9;166.3;4.4;Escobilla;2;4.18.2;MC;DI;Z3;A1
+155.2;161.8;6.6;Escobilla;2;4.18;MC;DI;Z3;A1
+161.9;166.3;4.4;Escobilla;2;4.18;MC;DI;Z3;A1
 166.4;174.5;8.1;Marcaje, Poco Movimiento;4;4.19;MC;DI;Z2;A1
 174.5;182.2;7.7;Letra 2;4;4.20;MC;DI;Z2;A1
 182.3;188.5;6.2;Subida;4;4.21;MC;DI;Z3;A1

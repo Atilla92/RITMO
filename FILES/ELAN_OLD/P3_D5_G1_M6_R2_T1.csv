@@ -1,0 +1,12 @@
+Begin Time - ss.msec;End Time - ss.msec;Duration - ss.msec;Sequence;Bloques;Category;Step;Music_Mode;Baile;Guitarra;ImpLevel
+10.1;29.1;19.0;Same as D6 - M6 - Introduction;4;DC;1.1;MC;Z1;A2;1.5
+29.2;48.4;19.2;Letra 1 - Movements;4;DC;1.2;MC;Z1;A3;2
+48.5;67.5;19.0;Letra 2 ;4;DI;1.3;MC;Z2;A3;3.5
+67.6;87.5;19.9;Zapateado - Comienzo;4;DC;1.4;MC;Z3;A3;3
+87.6;106.5;18.9;Escobilla;4;DC;1.5;MC;Z3;A2;3
+106.6;124.3;17.7;Escobilla ;4;DI;1.6;MC;Z3;A2;4.5
+124.4;142.7;18.3;Letra 2;4;DI;1.7;MC;Z2;A3;5.5
+142.8;155.4;12.6;Falseta?;3;DI;1.8;MI;Z2;A1;3
+155.4;160.1;4.7;Falseta?;1;DI;1.8;MI;Z3;A1;
+160.1;173.1;13.0;Paseando;3;DI;1.9;MC;Z2;A1;3
+173.2;186.7;13.5;Remate - Cierre;3;DC;1.10;MC;Z3;A1;4

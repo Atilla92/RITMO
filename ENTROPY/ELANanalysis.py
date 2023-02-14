@@ -11,8 +11,8 @@ file_name = 'P5_P5_D1_G3_M6_R1_T1' # Name file if loop_on = False
 loop_on = True # True if you want to loop through folder
 path_files = '/Users/atillajv/CODE/RITMO/FILES/ELAN/'
 path_ratings = '/Users/atillajv/CODE/RITMO/FILES/Ratings/'
-file_output = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/Test/' #check that this is the same as input file for entropy
-name_output = 'Test_01022023'
+file_output = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/05_Jan_2023_095/' #check that this is the same as input file for entropy
+name_output = '13022023_095_pairs_2s_32'
 # Default settings 
 percentage = 0.1
 frac_round = 1 #Round/frac_round for moving rating to the left 
@@ -367,6 +367,7 @@ def InfotoColumns(df):
     palo_array = []
     participant_array = []
     condition_array = []
+    pair_array = []
     for i, item in enumerate(df['Name']):
 
         split_array = item.split('_')
@@ -375,12 +376,14 @@ def InfotoColumns(df):
         music_array.append(split_array[3])
         palo_array.append(split_array[4])
         condition_array.append(str(split_array[1] +'_' + split_array[3]))
+        pair_array.append(str(split_array[0]+ '_' + split_array[1]))
         #print(split_array)
 
     df['Dance_mode'] = dance_array
     df['Music_mode'] = music_array
     df['Palo'] = palo_array
     df['Condition']= condition_array
+    df['Pair'] = pair_array
     #df['Participant'] = participant_array
 
 InfotoColumns(df_store)

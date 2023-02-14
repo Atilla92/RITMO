@@ -4,6 +4,10 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from statsmodels.graphics.mosaicplot import mosaic
 
+'''
+Plots different statistics of the dataset
+'''
+
 file_input = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/05_Jan_2023_095/'
 save_plot = '/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/' 
 

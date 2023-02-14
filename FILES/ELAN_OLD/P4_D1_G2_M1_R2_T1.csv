@@ -1,0 +1,22 @@
+﻿Begin Time - ss.msec;End Time - ss.msec;Duration - ss.msec;Sequence;Bloques;Step;Music_Mode;Category;Baile;Guitarra
+6.7;10.8;4.1;Salida;1;3;MI;DI;Z2;A2
+10.8;30.8;20;Salida;4;3.1;MI;DI;Z1;A3
+30.8;50.5;19.7;Letra 1;4;3.2;MI;DI;Z2;A3
+50.6;70.6;20;Letra;4;3.3;MI;DI;Z2;A2
+70.7;89.7;19;Escobilla clasica;4;3.4;MC;DC;Z3;A3
+89.7;109.3;19.6;Escobilla ;4;3.5;MI;DI;Z3;A1
+109.4;118.6;9.2;Maracaje;2;3.6;MI;DI;Z3;A2
+118.6;128.6;10;;2;3.6;MI;DI;Z2;A2
+128.6;145.8;17.2;Marcaje. Respiro;4;3.7;MI;DI;Z1;A2
+145.9;161.2;15.3;Subida. Escobilla;4;3.8;MI;DI;Z3;A1
+161.3;176.1;14.8;Escobilla;4;3.9;MI;DI;Z3;A1
+176.2;191.4;15.2;Marcaje. Musica Clasica;4;3.10;MI;DI;Z2;A1
+191.5;204.6;13.1;Escobilla. lento y mas rapido;2;3.11;MI;DI;Z2;A2
+204.6;211.3;6.7;Escobilla;2;3.11;MI;DI;Z3;A2
+211.3;222.9;11.6;Escobilla;4;3.12;MI;DI;Z3;A3
+223;233.9;10.9;Escobilla;4;3.13;MI;DI;Z3;A1
+234;245.4;11.4;Intento llamada;4;3.14;MI;DI;Z2;A1
+245.5;256.1;10.6;Marcaje Palmas;4;3.15;MI;DI;Z2;A1
+256.2;261.9;5.7;Llamada;2;3.16;MI;DI;Z2;A1
+262;273;11;Escobilla;4;3.17;MI;DI;Z3;A1
+273.1;276.4;3.3;Cierre;2;3.18;MC;DI;Z2;A1

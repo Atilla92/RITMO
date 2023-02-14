@@ -1,12 +1,11 @@
-"Begin Time - ss.msec";"End Time - ss.msec";"Duration - ss.msec";"Sequence";"Bloques";"Step";"Music_Mode";"Category";"Baile";"Guitarra"
-4.4;18.6;14.2;"Salida Palmas";"2";"7.1";"MI";"DI";"Z1";"A3"
-18.7;32.1;13.4;"Marcaje Pitos";"2";"7.2";"MI";"DI";"Z1";"A3"
-32.3;44.8;12.5;"Marcaje";"2";"7.3";"MC";"DI";"Z2";"A3"
-44.9;57.1;12.2;"Marcaje";"2";"7.4";"MI";"DI";"Z2";"A2"
-57.2;66.3;9.1;"Cierre";"1.5";"7.5";"MI";"DI";"Z3";"A1"
-66.4;72.5;6.1;"Respiro";"1";"7.6";"MI";"DI";"Z1";"A1"
-72.6;84.5;11.9;"Escobilla";"2";"7.7";"MI";"DI";"Z3";"A3"
-84.6;96.4;11.8;"Escobilla";"2";"7.8";"MI";"DI";"Z3";"A2"
-96.4;107.2;10.8;"Escobilla";"2";"7.9";"MI";"DI";"Z3";"A1"
-107.3;116.5;9.2;"Cierre";"1.5";"7.10";"MI";"DI";"Z3";"A1"
-
+﻿Begin Time - ss.msec;End Time - ss.msec;Duration - ss.msec;Sequence;Bloques;Step;Music_Mode;Category;Baile;Guitarra
+4.4;18.6;14.2;Salida Palmas;2;7.25;MI;DI;Z1;A3
+18.7;32.1;13.4;Marcaje Pitos;2;7.26;MI;DI;Z1;A3
+32.3;44.8;12.5;Marcaje;2;7.27;MC;DI;Z2;A3
+44.9;57.1;12.2;Marcaje;2;7.28;MI;DI;Z2;A2
+57.2;66.3;9.1;Cierre;1.5;7.29;MI;DI;Z3;A1
+66.4;72.5;6.1;Respiro;1;7.30;MI;DI;Z1;A1
+72.6;84.5;11.9;Escobilla;2;7.31;MI;DI;Z3;A3
+84.6;96.4;11.8;Escobilla;2;7.32;MI;DI;Z3;A2
+96.4;107.2;10.8;Escobilla;2;7.33;MI;DI;Z3;A1
+107.3;116.5;9.2;Cierre;1.5;7.34;MI;DI;Z3;A1

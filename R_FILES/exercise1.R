@@ -109,6 +109,7 @@ AIC(model_entropy,model_entropy_2)
 summary(model_entropy_mixed)
 
 
+
 ### Entropy data simple analysis mean
 #dataELAN <- read.csv("~/CODE/RITMO/ENTROPY/output/main/28_Nov_2022/Entropy_095_Subjective.csv")
 
@@ -119,17 +120,29 @@ dataELAN <- read.csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/05_Jan_2023
 dataELAN <- read.csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/05_Jan_2023_095/03012023_095_2s_16_condition.csv')
 dataELAN <- read.csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/05_Jan_2023_095/03012023_095_2s_16_condition_Filtered_2.csv')
 #dataELAN <- read.csv("~/CODE/RITMO/ENTROPY/output/main/29_Nov_2022_075/Entropy_075.csv")
+
+
+#Latest dataset
+#MACRO
+dataELAN <- read.csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/mean/macroDataset_05_Jan_2023_095.csv')
+#MICRO
+dataELAN <- read.csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/05_Jan_2023_095/13022023_095_pairs_2s_32.csv')
+
+
+# ALl analysis
 dataELAN$Dance_mode <- as.factor(dataELAN$Dance_mode)
 dataELAN$Condition <- as.factor(dataELAN$Condition)
 dataELAN$Condition <- relevel(dataELAN$Condition, "D6_M6")
 dataELAN$Dance_mode <- factor(dataELAN$Dance_mode, levels = c("D6", 'D5', 'D1'))
 dataELAN$Condition <- factor(dataELAN$Condition, levels = c('D6_M6', 'D5_M6', 'D1_M6', 'D5_M5', 'D1_M1'))
 dataELAN$Condition_order <- as.factor(dataELAN$Condition_order)
-
 dataELAN$Palo <- as.factor(dataELAN$Palo)
 dataELAN$Music_mode <- as.factor(dataELAN$Music_mode)
 dataELAN$Music_mode <- factor(dataELAN$Music_mode, levels = c("M6",'M5','M1'))
 dataELAN$Participant <- as.factor(dataELAN$Participant)
+dataELAN$Pair <- as.factor(dataELAN$Pair)
+
+#Micro Analysis
 dataELAN$Baile <- as.factor(dataELAN$Baile_Level)
 dataELAN$Guitarra <- as.factor(dataELAN$Guitarra_Level)
 dataELAN$Guitarra <- relevel(dataELAN$Guitarra, "A1")
@@ -139,21 +152,73 @@ dataELAN$Dance_Imp <- relevel(dataELAN$Dance_Imp, "DC")
 dataELAN$Music_Imp <- as.factor(dataELAN$Music_Imp)
 dataELAN$Music_Imp <- relevel(dataELAN$Music_Imp, "MC")
 dataELAN$ImpLevel <- as.factor(dataELAN$Assigned_Cat)
+dataELAN$Step <- as.factor(dataELAN$Step)
 
 
+#Grep subset of data
 dataELAN_I <- dataELAN[!grepl("DC", dataELAN$Dance_Imp),]
- 
+dataELAN_P <- dataELAN[!grepl("G", dataELAN$Participant),] #only dancers
+dataELAN_G <- dataELAN[!grepl("P", dataELAN$Participant),] #only dancers
+# Model Micro
+model_entropy_micro = lmer(Flow_subj ~ LZ + (1 | Participant) + (1 | Pair/Step ) , data = dataELAN_G)
+summary(model_entropy_micro)
+
+
+#Model Macro
+model_entropy  = lmer(LZ ~ Abs_Av  + (1 | Participant)  , data = dataELAN ) #this performs better
+model_entropy_1  = lmer(LZ ~ Abs_Av + (1 | Participant) + (1 | Pair)  , data = dataELAN ) #this performs better
+model_entropy_2  = lmer(LZ ~ Abs_Av  + (1 | Pair/Participant)  , data = dataELAN )
+summary(model_entropy)
+anova(model_entropy, model_entropy_1, model_entropy_2)
+
+model_entropy_2  = lmer(Q1b ~ Q3b + (1 | Pair/Participant)  , data = dataELAN )
+anova(model_entropy, model_entropy_1, model_entropy_2)
+
+
+
+# Plot data, Look at data
+plot.new()
+library(ggplot2)
+library(sjPlot)
+library(sjlabelled)
+library(sjmisc)
+ggplot(dataELAN, aes(x = Q3b, y = Condition_order))+ geom_point() + scale_x_continuous(1:8) + facet_wrap(~Participant)
+
+name_plot = 'lmer_LZ_Abs_Macro_Pair'
+sjPlot::plot_model(title = 'LZ ~ Absorption + (1|Participant) + (1|Pair)  ', model_entropy_1, show.p = TRUE, show.values = TRUE, digits = 3,show.intercept = TRUE)
+dev.print( device = png,              # what are we printing to?
+           filename = paste("/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/Stats/R/plot_", name_plot, '.png'),  # name of the image file
+           width = 865,                # how many pixels wide should it be
+           height = 400,                # how many pixels high should it be
+)
+
+
+
+
+model_entropy = lm(Q1a ~ Condition +  Participant + Condition:Participant , data = dataELAN )
+model_entropy = lm(Q1a ~ Condition +  Participant + Condition:Participant , data = dataELAN )
+coef(model_entropy)
+dataELAN %>% summary
+model_entropy %>% summary
+
+dataELAN %>%
+  count(Participant)
+
+dataEntropy %>%
+  count(Participant)
 
 
  
 #model_entropy = lmer(LZ ~ Dance_Imp:Name  + (1 + Name | Participant) , data = dataELAN )
- 
-model_entropy = lmer(Q1a ~ Condition + (1+ Condition | Participant) , data = dataELAN )
-summary(model_entropy)
+model_entropy_1  = lmer(LZ_avg ~Dance_mode + (1 | Participant) , data = dataELAN )
+model_entropy_2 = lmer(LZ_avg ~ Q3a + Dance_mode + (1 | Participant) , data = dataELAN )
 
+summary(model_entropy)
+anova(model_entropy_1, model_entropy_2 )
+AIC(model_entropy_1, model_entropy_2)
 # Plot p values and model
 name_plot = 'lmer_Q4a_Q3b_Q1a_Dance_mode_ELAN'
-sjPlot::plot_model(title = 'LMER - Connection [Q4b] - Improv.[Q1a] & Flow [Q3b] ', model_entropy, show.p = TRUE, show.values = TRUE, digits = 3,show.intercept = TRUE)
+sjPlot::plot_model(title = 'LMER - Quality of Improvisation [Q1b] - Conditions', model_entropy, show.p = TRUE, show.values = TRUE, digits = 3,show.intercept = TRUE)
 dev.print( device = png,              # what are we printing to?
            filename = paste("/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/Stats/R/plot_", name_plot, '.png'),  # name of the image file
            width = 865,                # how many pixels wide should it be
@@ -207,7 +272,7 @@ model_entropy = lmer(Flow_subj ~   Q3b + (1 | Participant) , data = dataSubELAN 
 summary(model_entropy)
 
 summary(model_entropy_2)
-model_entropy_mixed = lmer(Q1a ~ Dance_mode  + Abs_Av + (1 + Condition | Participant), data = dataEntropy )
+model_entropy_mixed = lmer(Q1a ~ Q3a + Dance_mode  + Abs_Av + (1 + Condition | Participant), data = dataEntropy )
 AIC(model_entropy,model_entropy_2)
 summary(model_entropy_mixed)
 
@@ -216,7 +281,7 @@ library(corrplot)
 library("psych")   
 
 #BLUE PLOTS
-name_plot <- "micro_all_16"
+name_plot <- "micro_all_new"
 corr_mat = dataELAN[, c('LZ', 'Imp_subj', 'Flow_subj', 'MIR_entropy', 'MIR_rms', 'MIR_novelty', 'var_entropy')]
 name_plot <- "micro_P_16"
 corr_mat = dataELAN_P[, c('LZ', 'Imp_subj', 'Flow_subj', 'MIR_entropy', 'MIR_rms', 'MIR_novelty', 'var_entropy')]
@@ -225,11 +290,14 @@ corr_mat = dataELAN_G[, c('LZ', 'Imp_subj', 'Flow_subj', 'MIR_entropy', 'MIR_rms
 
 #RED PLOTS
 name_plot <- "macro_all"
-corr_mat = dataELAN[, c('LZ_Av', 'Imp_avg', 'Flow_avg', 'MIR_entropy_avg', 'MIR_rms_avg', 'MIR_novelty_avg', 'var_entropy_avg')]
+corr_mat = dataELAN[, c('LZ_avg', 'Imp_avg', 'Flow_avg', 'MIR_entropy_avg', 'MIR_rms_avg', 'MIR_novelty_avg', 'var_entropy_avg')]
 name_plot <- "macro_G"
 corr_mat = dataELAN_G[, c('LZ_Av', 'Imp_avg', 'Flow_avg', 'MIR_entropy_avg', 'MIR_rms_avg', 'MIR_novelty_avg', 'var_entropy_avg')]
 name_plot <- "macro_P"
 corr_mat = dataELAN_P[, c('LZ_Av', 'Imp_avg', 'Flow_avg', 'MIR_entropy_avg', 'MIR_rms_avg', 'MIR_novelty_avg', 'var_entropy_avg')]
+
+
+
 
 
 #RED MORE PLOTS
@@ -239,6 +307,9 @@ name_plot <- "macro_P_16"
 corr_mat = dataELAN_P[, c('Abs_Av','Perf_Av','SFS','Q1a','Q1b','Q3a','Q3b','Q4a','Q4b','LZ_Av', 'Imp_avg', 'Flow_avg', 'MIR_entropy_avg', 'MIR_rms_avg', 'MIR_novelty_avg', 'var_entropy_avg')]
 name_plot <- "macro_G_16"
 corr_mat = dataELAN_G[, c('Abs_Av','Perf_Av','SFS','Q1a','Q1b','Q3a','Q3b','Q4a','Q4b','LZ_Av', 'Imp_avg', 'Flow_avg', 'MIR_entropy_avg', 'MIR_rms_avg', 'MIR_novelty_avg', 'var_entropy_avg')]
+
+name_plot <- "macro_new"
+corr_mat = dataELAN[, c('Abs_Av','Perf_Av','SFS','Q1a','Q1b','Q3a','Q3b','Q4a','Q4b','LZ_avg', 'MIR_entropy_avg', 'MIR_novelty_avg', 'var_entropy_avg')]
 
 
 

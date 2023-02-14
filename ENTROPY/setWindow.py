@@ -31,7 +31,7 @@ t_start = 50 #seconds, set to zero if from beginning
 length_df = 15000 # Samples If you want to only take a chunck of the data
 a = 5 # a*e^x or a*x^2, where a = a
 b = 50 # a
-functionType = 'squared' # Set to 'e' for e function, 'squared' for x^2 function
+functionType = 'squared' # Set to 'e' for e function, 'squared' for x^2 function, to define steps on X-axis. 
 
 
 if not length_df:

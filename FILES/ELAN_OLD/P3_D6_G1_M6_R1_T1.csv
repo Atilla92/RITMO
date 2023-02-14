@@ -1,0 +1,21 @@
+﻿Begin Time - ss.msec;End Time - ss.msec;Duration - ss.msec;Sequence;Bloques;Step;Music_Mode;Category;Baile;Guitarra
+13.2;22.4;9.2;Salida;3;2.1;MC;DC;Z1;A3
+22.4;26.1;3.7;Salida;1;2.1;MC;DC;Z2;A3
+26.1;38.3;12.2;Intro;4;2.2;MC;DC;Z2;A3
+38.4;47.5;9.1;Letra 1;3;2.3;MC;DC;Z1;A3
+47.5;50.6;3.1;Letra;1;2.3;MC;DC;Z2;A3
+50.6;60.1;9.5;Letra;3;2.4;MC;DC;Z1;A3
+60.1;63.5;3.4;Letra 1;1;2.4;MC;DC;Z2;A3
+63.6;75.9;12.3;Zapateado 1;4;2.5;MC;DC;Z3;A3
+76;87.5;11.5;Zapateado 1;4;2.6;MC;DC;Z3;A2
+87.5;99.1;11.6;Zapateado1;4;2.7;MC;DC;Z3;A2
+99.2;113.1;13.9;Zapateado + Cierre;6;2.8;MC;DC;Z3;A2
+113.2;125.8;12.6;Zapateado 2;4.5;2.9;MC;DC;Z3;A2
+125.9;139;13.1;Zapateado 2;4.5;2.10;MC;DC;Z2;A2
+139.1;151.7;12.6;Falseta;4.5;2.11;MC;DC;Z2;A3
+151.7;163.9;12.2;Letra 2;4.5;2.12;MC;DC;Z2;A3
+164;174.8;10.8;SUbida;4;2.13;MC;DC;Z3;A1
+174.9;185.9;11;Pasear;4;2.14;MC;DC;Z2;A1
+186;191.9;5.9;Remate;2;2.15;MC;DC;Z3;A1
+191.9;197.1;5.2;Llamada;2;2.15;MC;DC;Z2;A1
+197.1;202.8;5.7;Llamada - Cierre;2;2.16;MC;DC;Z2;A1

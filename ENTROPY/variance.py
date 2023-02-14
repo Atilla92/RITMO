@@ -51,7 +51,6 @@ tempNum = 2 # start + windowsize/tempNum  (where windowsize = step_size)
 length_df = [] # Takes subset samples. Set to [] if you want to whole length. 
 step_size = 6000  # Window of LZ/CTW estimation. 
 quartile = 0.95 #Set threshold for binarisation. 
-
 ##Empty lists, default values
 output_lz_array = []
 output_ctw_array = [] 
