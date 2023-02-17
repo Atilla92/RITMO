@@ -4,7 +4,7 @@ Create a small set of the data, with only LZ and varEnropy averaged as extra oup
 
 import pandas as pd
 
-file_output = '/Users/atillajv/CODE/RITMO/ENTROPY/output/mean/macroDataset_05_Jan_2023_095.csv'
+file_output = '/Users/atillajv/CODE/RITMO/ENTROPY/output/mean/Test17022023.csv'
 
 df = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/Subjective/DuringExperiments_Sevilla_06102022_DropW_Entropy.csv')
 print(df)

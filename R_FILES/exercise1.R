@@ -165,9 +165,10 @@ summary(model_entropy_micro)
 
 
 #Model Macro
-model_entropy  = lmer(LZ ~ Abs_Av  + (1 | Participant)  , data = dataELAN ) #this performs better
-model_entropy_1  = lmer(LZ ~ Abs_Av + (1 | Participant) + (1 | Pair)  , data = dataELAN ) #this performs better
-model_entropy_2  = lmer(LZ ~ Abs_Av  + (1 | Pair/Participant)  , data = dataELAN )
+model_entropy  = lmer(Q1b ~ LZ  + (1 | Participant)  , data = dataELAN ) #this performs better
+model_entropy_1  = lmer(Q1b ~ LZ + (1 | Participant) + (1 | Pair)  , data = dataELAN ) #this performs better
+model_entropy_2  = lmer(Q1b ~ MIR_novelty_avg   + (1 | Pair/Participant)  , data = dataELAN )
+#model_entropy_3 = lmer(Q1b ~ Q3b + (1 | Pair)  , data = dataELAN )
 summary(model_entropy)
 anova(model_entropy, model_entropy_1, model_entropy_2)
 
@@ -184,8 +185,8 @@ library(sjlabelled)
 library(sjmisc)
 ggplot(dataELAN, aes(x = Q3b, y = Condition_order))+ geom_point() + scale_x_continuous(1:8) + facet_wrap(~Participant)
 
-name_plot = 'lmer_LZ_Abs_Macro_Pair'
-sjPlot::plot_model(title = 'LZ ~ Absorption + (1|Participant) + (1|Pair)  ', model_entropy_1, show.p = TRUE, show.values = TRUE, digits = 3,show.intercept = TRUE)
+name_plot = 'lmer_Q1b_Q3b_Macro_Participant'
+sjPlot::plot_model(title = 'Q1b ~ Q3b + (1| Participant)  ', model_entropy, show.p = TRUE, show.values = TRUE, digits = 3,show.intercept = TRUE)
 dev.print( device = png,              # what are we printing to?
            filename = paste("/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/Stats/R/plot_", name_plot, '.png'),  # name of the image file
            width = 865,                # how many pixels wide should it be
