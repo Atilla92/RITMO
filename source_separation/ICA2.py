@@ -5,91 +5,215 @@ import numpy as np
 from sklearn.decomposition import FastICA, PCA
 from scipy.io.wavfile import read
 import matplotlib.pyplot as plt
-
-
+from scipy.io import wavfile as wf
+from coroica import CoroICA
+import pandas as pd
+import scipy
+import matplotlib.pyplot as plt
 import numpy as np
 from scipy import signal
 
-np.random.seed(0)
-n_samples = 2000
-time = np.linspace(0, 8, n_samples)
-
-s1 = np.sin(2 * time)  # Signal 1 : sinusoidal signal
-s2 = np.sign(np.sin(3 * time))  # Signal 2 : square signal
-s3 = signal.sawtooth(2 * np.pi * time)  # Signal 3: saw tooth signal
-
-S = np.c_[s1, s2, s3]
-S += 0.2 * np.random.normal(size=S.shape)  # Add noise
-
-S /= S.std(axis=0)  # Standardize data
-# Mix data
-A = np.array([[1, 1, 1], [0.5, 2, 1.0], [1.5, 1.0, 2.0]])  # Mixing matrix
-X = np.dot(S, A.T)  # Generate observations
-print(X.shape)
-
+# For no xtrain and xtest are the same, try with another test .wav file. 
+# Perhaps try with different mics from goPro. Perhaps front view and feet on last recordings. or zoom360 and feet. See whether it makes a difference. 
 
 
 audio_path = '/Users/atillajv/CODE/FILES/PILOT_SEV_APRIL_2022/Source_Separation/'
-file_name = 'P7_D5_G1_M6_R1_T1.wav'
-file_1 = 'P3_D0_G1_M6_R2_T1.wav'
-file_2 = 'P3_D1_G1_M1_R2_T1.wav'
+
+#file_name = 'P7_D6_G1_M6_R2_T1'
+file_name = 'P3_D1_G1_M1_R1_T1'
+
+#file_1 = 'GoProFeet_P7_D6_G1_M6_R2_T1.wav'
+file_1 = 'GoProFeet_P3_D1_G1_M1_R1_T1.wav'
+#file_2 = 'Mic360_P7_D6_G1_M6_R2_T1.wav'
+file_2 = 'Mic360_P3_D1_G1_M1_R1_T1.wav'
+
+
 name_file = file_2
 
+df = pd.read_csv ('/Users/atillajv/CODE/RITMO/FILES/ELAN/' + file_name + '.csv',  delimiter=';')
 
-samplerate, s1 = read(str( audio_path+ file_1))
-s1 = s1[:,1]
-samplerate2, s2 = read(str( audio_path+ file_2))
-s2 = s2[:,1]
+# Code settings
+downsample = 1 #How much to downsample
+set_threshold  = False #Set threshold manually in plot
+get_labels = True #Get group labels from ELAN
 
-print(s1.shape, s2.shape)
+def plotFig_SetCoord(x):
+    """
+    Fetch coordinates when clicking on plot
+    Fetches the last clicked event
+    x: list 
+    y: list
+    returns coordinates [x,y]
+    """
+    fig = plt.figure()
+    plt.plot(x)
 
-def mix_sources(sources, apply_noise=False):
-    for i in range(len(sources)):
-        max_val = np.max(sources[i])
-        if(max_val > 1 or np.min(sources[i]) < 1):
-            sources[i] = sources[i] / (max_val / 2) - 0.5
-            
-    mixture = np.c_[[source for source in sources]]
+    def onclick(event):
+        global ix, iy
+        ix, iy = event.xdata, event.ydata
+        #print ('x = %d, y = %d'%(ix, iy))
+
+        global coords
+        coords = [ix, iy]
+        return coords
+
+    cid = fig.canvas.mpl_connect('button_press_event', onclick)
+    plt.show()
+    return coords
+
+
+
+def setThreshold(s1):
+    """"Set threshold for analysis"""
+
+    coords = plotFig_SetCoord(s1)
+    print(coords, 'coords')
     
-    if(apply_noise):
-        mixture += 0.02 * np.random.normal(size=X.shape)
-        
-    return mixture
+    plt.close()
+    return coords
 
 
-x = mix_sources([s1, s2[:s1.shape[0]]], False)
+
+
+
+#Import audio
+samplerate, s1 = read(str( audio_path+ file_1))
+samplerate2, s2 = read(str( audio_path+ file_2))
+
+
+
+# Downsample
+s1 = scipy.signal.decimate(s1[:,1], downsample)
+s2 = scipy.signal.decimate(s2[:,1], downsample)
+
+#Setting threshold
+
+if set_threshold:
+    th_s1 = int(setThreshold(s1)[0])
+    th_s2 = int(setThreshold(s2)[0])
+
+else:
+    # th_s1 = 2867
+    # th_s2 = 1925    
+    th_s1 = 9626
+    th_s2 = 5097
+
+
+s1 = s1[th_s1:]
+s1 = s2[th_s2:]
+
+#Minimum length
+length = min(len(s1), len(s2))
+s1 = s1[:length]
+s2 = s2[:length]
+
+
+
+if set_threshold:
+    plt.figure()
+    plt.plot(s1)
+    plt.plot(s2)
+    plt.show()
+
+
+def getLabels(samplerate, s1, s2, df):
+    sub_s1 = []
+    sub_s2 = []
+    s1_full =[]
+    s2_full = []
+    labels_full = []
+    parts_full = []
+    dt = np.divide(np.arange(len(s1)), samplerate)
+
+    for index, row in df.iterrows():
+        begin= np.argmax(dt >= row['Begin Time - ss.msec'])
+        end = np.argmax(dt > row['End Time - ss.msec'])
+        sub_s1 = s1[begin:(end-1)].tolist()
+        sub_s2 = s2[begin:(end-1)].tolist()
+        labels = [row['Baile'] for x in range(len(sub_s1))]
+        parts =  [index for x in range(len(sub_s1))]
+        s1_full = s1_full + sub_s1 
+        s2_full = s2_full + sub_s2
+        labels_full = labels_full + labels
+        parts_full = parts_full + parts
+    return s1_full, s2_full, np.array(labels_full), np.array(parts_full)
+
+
+if get_labels:
+    s1, s2, groups, partition  =getLabels(samplerate, s1, s2, df)
+
+
+x = np.c_[[s1,s2]]
 print (x.shape)
 x = x.T
 print(x.shape)
 
-ica = FastICA(n_components=2, whiten="arbitrary-variance")
-S_ = ica.fit_transform(x)  # Reconstruct signals
-A_ = ica.mixing_  # Get estimated mixing matrix
-
-# We can `prove` that the ICA model applies by reverting the unmixing.
-#assert np.allclose(x, np.dot(S_, A_.T) + ica.mean_)
-
-pca = PCA(n_components=2)
-H = pca.fit_transform(x) 
 
 
+#x = np.asarray_chkfinite(x)
+#print('PASSED CHECK')
+
+c = CoroICA()
+
+#c.fit(x)
+
+c.fit(x, group_index = groups)
+# c.V_ holds the unmixing matrix
+
+recovered_sources = c.transform(x)
+print(recovered_sources.shape)
+
+#s3 = recovered_sources[:,1] - recovered_sources[:,0]
 
 plt.figure()
-
-models = [x, S_, H]
-names = [
-    "Observations (mixed signal)",
-    "True Sources",
-    "ICA recovered signals",
-    "PCA recovered signals",
-]
-colors = ["red", "steelblue", "orange"]
-
-for ii, (model, name) in enumerate(zip(models, names), 1):
-    plt.subplot(3, 1, ii)
-    plt.title(name)
-    for sig, color in zip(model.T, colors):
-        plt.plot(sig, color=color)
-
-plt.tight_layout()
+plt.plot(recovered_sources[:,0])
+plt.plot(recovered_sources[:,1])
+#.plot(s3)
 plt.show()
+
+
+
+wf.write(str(audio_path +name_file +'_s1_predicted_ICA2.wav'), int(samplerate/downsample),recovered_sources[:,0].astype(np.float32))
+wf.write(str(audio_path +name_file +'_s2_predicted_ICA2.wav'), int(samplerate/downsample),recovered_sources[:,1].astype(np.float32))
+#wf.write(str(audio_path +name_file +'_s3_predicted_ICA2.wav'), int(samplerate/downsample),s3.astype(np.float32))
+
+
+
+#https://scikit-learn.org/stable/auto_examples/decomposition/plot_ica_blind_source_separation.html
+# plt.figure()
+# plt.plot(recovered_sources)
+# plt.show()
+# ica = FastICA(n_components=2, whiten="arbitrary-variance")
+# S_ = ica.fit_transform(x)  # Reconstruct signals
+# A_ = ica.mixing_  # Get estimated mixing matrix
+
+# # We can `prove` that the ICA model applies by reverting the unmixing.
+# #assert np.allclose(x, np.dot(S_, A_.T) + ica.mean_)
+
+# pca = PCA(n_components=2)
+# H = pca.fit_transform(x) 
+
+# #print(S_[:,1].shape)
+# plt.figure()
+# # plt.plot(S_[:,1])
+# # plt.show()
+# models = [x, S_]
+# names = [
+#     "Observations (mixed signal)",
+#     "ICA recovered signals",
+#     "PCA recovered signals",
+#     'A'
+# ]
+# colors = ["red", "steelblue", "orange"]
+
+# for ii, (model, name) in enumerate(zip(models, names), 1):
+#     plt.subplot(2, 1, ii)
+#     plt.title(name)
+#     for sig, color in zip(model.T, colors):
+#         plt.plot(sig, color=color)
+
+# plt.tight_layout()
+# plt.show()
+
+# wf.write(str(audio_path +file_name +'_s1_predicted.wav'), samplerate, S_[:,0].astype(np.float32))
+# wf.write(str(audio_path +file_name +'_s2_predicted.wav'), samplerate, S_[:,1].astype(np.float32))

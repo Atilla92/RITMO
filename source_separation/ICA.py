@@ -5,12 +5,10 @@ from scipy.io.wavfile import read
 from scipy.io import wavfile as wf
 
 audio_path = '/Users/atillajv/CODE/FILES/PILOT_SEV_APRIL_2022/Source_Separation/'
-file_name = 'P7_D5_G1_M6_R1_T1.wav'
-
-file_1 = 'P3_D0_G1_M6_R2_T1.wav'
-file_2 = 'P3_D1_G1_M1_R2_T1.wav'
+file_name = 'P3_D1_G1_M1_R1_T1'
+file_1 = 'Mic360_P3_D1_G1_M1_R1_T1.wav'
+file_2 = 'Zoom_P3_D1_G1_M1_R1_T1.wav'
 name_file = file_2
-
 
 samplerate, s1 = read(str( audio_path+ file_1))
 s1 = s1[:,1]
@@ -106,5 +104,5 @@ def ica(X, iterations, tolerance=1e-5):
 S, distances = ica(X_whiten, iterations=100)
 
 
-wf.write(str(audio_path +name_file +'_s1_predicted.wav'), samplerate, S[0].astype(np.float32))
-wf.write(str(audio_path +name_file +'_s2_predicted.wav'), samplerate, S[1].astype(np.float32))
+wf.write(str(audio_path +name_file +'_s1_predicted_ICA1.wav'), samplerate, S[0].astype(np.float32))
+wf.write(str(audio_path +name_file +'_s2_predicted_ICA1.wav'), samplerate, S[1].astype(np.float32))
