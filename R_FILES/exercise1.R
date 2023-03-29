@@ -160,19 +160,20 @@ dataELAN_I <- dataELAN[!grepl("DC", dataELAN$Dance_Imp),]
 dataELAN_P <- dataELAN[!grepl("G", dataELAN$Participant),] #only dancers
 dataELAN_G <- dataELAN[!grepl("P", dataELAN$Participant),] #only dancers
 # Model Micro
-model_entropy_micro = lmer(Flow_subj ~ LZ + (1 | Participant) + (1 | Pair/Step ) , data = dataELAN_G)
+model_entropy_micro = lmer(LZ ~ Flow_subj + (1 | Participant) + (1 |Pair/Step) , data = dataELAN)
 summary(model_entropy_micro)
 
 
 #Model Macro
-model_entropy  = lmer(Q1b ~ LZ  + (1 | Participant)  , data = dataELAN ) #this performs better
-model_entropy_1  = lmer(Q1b ~ LZ + (1 | Participant) + (1 | Pair)  , data = dataELAN ) #this performs better
+model_entropy  = lmer(LZ ~  Condition + (1 | Participant)  , data = dataELAN ) #this performs better
+model_entropy_1  = lmer(LZ~  Condition + (1 | Participant) + (1 | Pair)  , data = dataELAN ) #this performs better
 model_entropy_2  = lmer(Q1b ~ MIR_novelty_avg   + (1 | Pair/Participant)  , data = dataELAN )
 #model_entropy_3 = lmer(Q1b ~ Q3b + (1 | Pair)  , data = dataELAN )
 summary(model_entropy)
-anova(model_entropy, model_entropy_1, model_entropy_2)
+summary(model_entropy_1)
+anova(model_entropy, model_entropy_1)
 
-model_entropy_2  = lmer(Q1b ~ Q3b + (1 | Pair/Participant)  , data = dataELAN )
+model_entropy_2  = lmer(LZ ~ Flow_subj + (1 | Pair/Participant)  , data = dataELAN )
 anova(model_entropy, model_entropy_1, model_entropy_2)
 
 

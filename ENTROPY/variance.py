@@ -15,7 +15,8 @@ from functionsE import plotAudio_2, calc_lz_df_2, quantize_vector, quartile_vect
 import json
 
 # Output settings:
-file_output = "/Users/atillajv/CODE/RITMO/ENTROPY/output/main/05_Jan_2023_095/var/" # Name of folder to store plots. 
+#file_output = "/Users/atillajv/CODE/RITMO/ENTROPY/output/main/05_Jan_2023_095/var/" # Name of folder to store plots. 
+file_output = "/Users/atillajv/CODE/RITMO/ENTROPY/output/main/27_03_2023_095_drums/var/"
 
 
 
@@ -34,7 +35,7 @@ plot_data = True # To plot data
 show_plot = False # To show data instead of plotting, if saving data set to False. 
 
 # Code settings:
-audio_path = '/Users/atillajv/CODE/FILES/PILOT_SEV_APRIL_2022/Audio/'
+audio_path = '/Users/atillajv/CODE/FILES/PILOT_SEV_APRIL_2022/Audio/separated/htdemucs_6s/separated/all_drums/'
 loop_on = True # Set to True if you want to loop through a certain folder. Else not. 
 #loop_off = 'P7_D1_G1_M6_R2_T1.wav'
 loop_off = 'P7_D5_G1_M6_R1_T1.wav'
@@ -68,7 +69,7 @@ if not downsample_factor:
 if loop_on:
     for filepath in glob.iglob(str(audio_path + '*.wav')):
         if filepath.endswith('.wav'):
-            filepath_split = filepath.partition('Audio/')
+            filepath_split = filepath.partition('all_drums/')
             print (filepath_split)
             audio_files.append(filepath_split[2])
 else:

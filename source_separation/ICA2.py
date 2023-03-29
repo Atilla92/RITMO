@@ -17,18 +17,23 @@ from scipy import signal
 # Perhaps try with different mics from goPro. Perhaps front view and feet on last recordings. or zoom360 and feet. See whether it makes a difference. 
 
 
-audio_path = '/Users/atillajv/CODE/FILES/PILOT_SEV_APRIL_2022/Source_Separation/'
+#audio_path = '/Users/atillajv/CODE/FILES/PILOT_SEV_APRIL_2022/Source_Separation/'
+audio_path = '/Users/atillajv/CODE/FILES/PILOT_SEV_APRIL_2022/Audio/'
+drums_path = '/Users/atillajv/CODE/FILES/PILOT_SEV_APRIL_2022/Audio/separated/htdemucs_6s/separated/all_drums/'
 
+# Output folder
+output_folder = '/Users/atillajv/CODE/FILES/PILOT_SEV_APRIL_2022/Audio/separated/htdemucs_6s/separated/ICA2/'
 #file_name = 'P7_D6_G1_M6_R2_T1'
 file_name = 'P3_D1_G1_M1_R1_T1'
 
 #file_1 = 'GoProFeet_P7_D6_G1_M6_R2_T1.wav'
-file_1 = 'GoProFeet_P3_D1_G1_M1_R1_T1.wav'
+#file_2 = 'GoProFeet_P3_D1_G1_M1_R1_T1.wav'
 #file_2 = 'Mic360_P7_D6_G1_M6_R2_T1.wav'
-file_2 = 'Mic360_P3_D1_G1_M1_R1_T1.wav'
+#file_1 = 'Mic360_P3_D1_G1_M1_R1_T1.wav'
 
 
-name_file = file_2
+
+#name_file = file_2
 
 df = pd.read_csv ('/Users/atillajv/CODE/RITMO/FILES/ELAN/' + file_name + '.csv',  delimiter=';')
 
@@ -73,12 +78,9 @@ def setThreshold(s1):
     return coords
 
 
-
-
-
-#Import audio
-samplerate, s1 = read(str( audio_path+ file_1))
-samplerate2, s2 = read(str( audio_path+ file_2))
+# Import audio
+samplerate, s1 = read(str( audio_path+ file_name + '.wav'))
+samplerate2, s2 = read(str( drums_path+ file_name + '.wav'))
 
 
 
@@ -173,8 +175,8 @@ plt.show()
 
 
 
-wf.write(str(audio_path +name_file +'_s1_predicted_ICA2.wav'), int(samplerate/downsample),recovered_sources[:,0].astype(np.float32))
-wf.write(str(audio_path +name_file +'_s2_predicted_ICA2.wav'), int(samplerate/downsample),recovered_sources[:,1].astype(np.float32))
+wf.write(str(output_folder  +file_name +'_s1_predicted_ICA2.wav'), int(samplerate/downsample),recovered_sources[:,0].astype(np.float32))
+wf.write(str(output_folder +file_name +'_s2_predicted_ICA2.wav'), int(samplerate/downsample),recovered_sources[:,1].astype(np.float32))
 #wf.write(str(audio_path +name_file +'_s3_predicted_ICA2.wav'), int(samplerate/downsample),s3.astype(np.float32))
 
 

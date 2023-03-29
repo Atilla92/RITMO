@@ -3,20 +3,37 @@ import numpy as np
 from functions import loadmat, InfotoColumns
 import pandas as pd
 import json
+import os
 
 # data = io.loadmat('./output/features.mat')
 
 # print(data['fp1'][0][0][0][0][0][0][1][-1])
 
+folder_name = 'features_28032023_drums'
+#data = loadmat('./output/features_dec_2022.mat') #Files used until 29.03.2023
 
-data = loadmat('./output/features_dec_2022.mat')
+
+# Create new folders to store if necessary
+list_folders = ['ENTROPY', 'NOVELTY', 'SM']
+for i, item in enumerate(list_folders):
+    file_output = str('/Users/atillajv/CODE/RITMO/FILES/MIR/'+ folder_name + '/'+ item +'/') 
+    if not os.path.exists(file_output):
+        os.mkdir(file_output)
+        print("Directory " , file_output ,  " Created ")
+    else:    
+        print("Directory " , file_output ,  " already exists")
+    
+
+
+data = loadmat(str('./output/' + folder_name + '.mat'))
 print(data.keys())
 df_store = pd.DataFrame()
-print(df_store)
+#print(df_store)
 print(data['fp1'][0][1])
 
 
 name_files = data['filenames']
+print(name_files)
 frame_0 = data['fp1'][0][0]
 frame_1 = data['fp2'][0][1]
 
@@ -87,9 +104,12 @@ for i, item in enumerate(name_files):
 
 
     #df_store = pd.concat([df_intermediate, df_store])
-    df_1.to_csv('/Users/atillajv/CODE/RITMO/FILES/MIR/ENTROPY/'+ str(item).strip('.wav') + '.csv', index=False)
-    df_2.to_csv('/Users/atillajv/CODE/RITMO/FILES/MIR/NOVELTY/'+ str(item).strip('.wav') + '.csv', index=False)
-    df_3.to_csv('/Users/atillajv/CODE/RITMO/FILES/MIR/SM/'+ str(item).strip('.wav') + '.csv', index=False)
+
+
+
+    df_1.to_csv('/Users/atillajv/CODE/RITMO/FILES/MIR/'+ folder_name + '/ENTROPY/'+ str(item).strip('.wav') + '.csv', index=False)
+    df_2.to_csv('/Users/atillajv/CODE/RITMO/FILES/MIR/'+ folder_name + '/NOVELTY/'+ str(item).strip('.wav') + '.csv', index=False)
+    df_3.to_csv('/Users/atillajv/CODE/RITMO/FILES/MIR/'+ folder_name + '/SM/'+ str(item).strip('.wav') + '.csv', index=False)
 #print(df_store)
 
 #InfotoColumns(df_store)

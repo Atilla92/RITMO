@@ -15,6 +15,10 @@ s1 = s1[:,1]
 samplerate2, s2 = read(str( audio_path+ file_2))
 s2 = s2[:,1]
 
+
+
+
+
 print(s1.shape, s2.shape)
 
 def mix_sources(sources, apply_noise=False):
