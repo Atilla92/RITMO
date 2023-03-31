@@ -16,8 +16,7 @@ import json
 
 # Output settings:
 #file_output = "/Users/atillajv/CODE/RITMO/ENTROPY/output/main/05_Jan_2023_095/var/" # Name of folder to store plots. 
-file_output = "/Users/atillajv/CODE/RITMO/ENTROPY/output/main/27_03_2023_095_drums/var/"
-
+file_output = "/Users/atillajv/CODE/RITMO/ENTROPY/output/main/30032023_095_guitar/var/"
 
 
 if not os.path.exists(file_output):
@@ -35,7 +34,7 @@ plot_data = True # To plot data
 show_plot = False # To show data instead of plotting, if saving data set to False. 
 
 # Code settings:
-audio_path = '/Users/atillajv/CODE/FILES/PILOT_SEV_APRIL_2022/Audio/separated/htdemucs_6s/separated/all_drums/'
+audio_path = '/Users/atillajv/CODE/FILES/PILOT_SEV_APRIL_2022/Audio/separated/htdemucs_6s/separated/all_guitar/'
 loop_on = True # Set to True if you want to loop through a certain folder. Else not. 
 #loop_off = 'P7_D1_G1_M6_R2_T1.wav'
 loop_off = 'P7_D5_G1_M6_R1_T1.wav'
@@ -69,7 +68,7 @@ if not downsample_factor:
 if loop_on:
     for filepath in glob.iglob(str(audio_path + '*.wav')):
         if filepath.endswith('.wav'):
-            filepath_split = filepath.partition('all_drums/')
+            filepath_split = filepath.partition(audio_path[len(audio_path)-10:])
             print (filepath_split)
             audio_files.append(filepath_split[2])
 else:

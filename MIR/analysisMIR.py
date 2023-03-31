@@ -9,7 +9,7 @@ import os
 
 # print(data['fp1'][0][0][0][0][0][0][1][-1])
 
-folder_name = 'features_28032023_drums'
+folder_name = 'features_29032023_guitar'
 #data = loadmat('./output/features_dec_2022.mat') #Files used until 29.03.2023
 
 

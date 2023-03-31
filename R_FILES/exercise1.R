@@ -127,6 +127,8 @@ dataELAN <- read.csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/05_Jan_2023
 dataELAN <- read.csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/mean/macroDataset_05_Jan_2023_095.csv')
 #MICRO
 dataELAN <- read.csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/05_Jan_2023_095/13022023_095_pairs_2s_32.csv')
+#SEPARATED
+dataELAN <- read.csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/30032023_095_guitar/30032023_095_32_guitar.csv')
 
 
 # ALl analysis
@@ -160,14 +162,14 @@ dataELAN_I <- dataELAN[!grepl("DC", dataELAN$Dance_Imp),]
 dataELAN_P <- dataELAN[!grepl("G", dataELAN$Participant),] #only dancers
 dataELAN_G <- dataELAN[!grepl("P", dataELAN$Participant),] #only dancers
 # Model Micro
-model_entropy_micro = lmer(LZ ~ Flow_subj + (1 | Participant) + (1 |Pair/Step) , data = dataELAN)
+model_entropy_micro = lmer(p_LZ ~ Flow_subj + (1 | Participant) + (1 |Pair/Step) , data = dataELAN)
 summary(model_entropy_micro)
 
 
 #Model Macro
-model_entropy  = lmer(LZ ~  Condition + (1 | Participant)  , data = dataELAN ) #this performs better
-model_entropy_1  = lmer(LZ~  Condition + (1 | Participant) + (1 | Pair)  , data = dataELAN ) #this performs better
-model_entropy_2  = lmer(Q1b ~ MIR_novelty_avg   + (1 | Pair/Participant)  , data = dataELAN )
+model_entropy  = lmer(g_LZ ~  Imp_subj + (1 | Participant)  , data = dataELAN ) #this performs better
+model_entropy_1  = lmer(g_LZ~  Imp_subj + (1 | Participant) + (1 | Pair)  , data = dataELAN ) #this performs better
+#model_entropy_2  = lmer(Q1b ~ MIR_novelty_avg   + (1 | Pair/Participant)  , data = dataELAN )
 #model_entropy_3 = lmer(Q1b ~ Q3b + (1 | Pair)  , data = dataELAN )
 summary(model_entropy)
 summary(model_entropy_1)

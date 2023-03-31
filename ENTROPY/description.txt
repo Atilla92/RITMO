@@ -1,9 +1,56 @@
 This folder contains several scripts to analyse the Pilot Sevilla Data
 
+####
+Protocol for getting all the data
+####
+
+    - Create a .csv for all subjective ratings fetched during the experiment. 
+    - Create a folder with all audio data you would like to analyse.
+
+Script for source seperatation:
+    0. Go to folder where all tracks are
+    1. Run demucs command: demucs -n htdemucs_6s  *.wav
+    2. Run renameDemucs.py to rename files with respective track name. 
+
+Scripts for getting MIR features:
+    1. Run flamenco_code_2.m in MATLAB ,
+        a. The script can be found in: '/Users/atillajv/CODE/RITMO/MIR/scripts/'
+        b. Run the code from the folder where your audio files are. Add this folder to your path. 
+        c. A features.mat will be stored in the same folder/
+        d. Copy features.mat file to '/Users/atillajv/CODE/RITMO/MIR'
+    2. Run analysisMIR.py
+        a. Change the name of the "features.mat" to the correspondent one.
+        b. Add a folder with "features_date_XXX" to Users/atillajv/CODE/RITMO/FILES/MIR.
+        c. A folder for Entropy, Novelty and SM will be created there, with all the features for each track. 
+
+Scripts for getting entropy:
+    1. For LZ-complexity run main.py  
+        () Create XXXX folder in '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/'
+        a. Set location of folder with all audio tracks.
+        b. Stores plots and csv file for each audio track in '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/XXXX'
+    2. Run variance.py
+        a. Set location of folder with all audio tracks.
+        b. Set location for output '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/XXXX/var/'
+        b. Stores plots and csv file for each audio track in '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/var/XXXX/'
+    
+ Merging all data. 
+    1. Run ELANanalysis.py or ELANanalysis_demucs.py if also source separated data is to be added. 
+        a. Set proper location for all files starting from line 109 after try:
+        b. Set name for output folder and name of file. 
+    
+
+
+######
+A description of all the scripts can be found below.
+######
 
 ELANanalysis
     Estimates average flow and improvisation rating for each ELAN annotation.
     Includes both Guitarist and Dancer
+
+
+ELANanalysis_demucs (latest version)
+    Same analysis as ELANanalysis yet here it adds also the estimates from separated sources for guitar and drums. 
 
 
 main.py 
@@ -18,6 +65,9 @@ plots.py
     Mainly statistical plots from .csv file coming from ELANanalysis.py
 
 
+renameDemucs.py 
+    script can be used to copy all files with file name into new location
+
 setWindow.py
     Used to estimate window length for data. 
     Look in the plot where fluctuations start to calm down. 
@@ -29,6 +79,9 @@ testing.py
 variance.py
     Estimates the entropy as f(variance)
     Stores plots and outputs in seperate folder. 
+
+
+
 
 
 
