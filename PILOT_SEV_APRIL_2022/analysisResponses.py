@@ -3,12 +3,12 @@ import pandas as pd
 from scipy.stats.stats import pearsonr
 from scipy import stats
 #import pingouin as pg
-import seaborn as sns
+#import seaborn as sns
 import matplotlib.pyplot as plt
 
-#df = pd.read_csv ('Responses/DuringExperiments_Sevilla_06102022_DropW.csv')
+df = pd.read_csv ('Responses/DuringExperiments_Lausanne_April_2023_DropW.csv')
 
-df = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/17_Dec_2022/17122022_095_2s.csv')
+#df = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/17_Dec_2022/17122022_095_2s.csv')
 
 
 def CronchbachAlpha(df):
@@ -74,15 +74,15 @@ def InfotoColumns(df):
     df['Music_mode'] = music_array
     df['Palo'] = palo_array
 
-#df = df.dropna()
+df = df.dropna()
 #AverageFlowtoDF(df)
-#InfotoColumns(df)
+InfotoColumns(df)
 
-correlMatrix(df, True)
+#correlMatrix(df, True)
 
 
 #df.to_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/17_Dec_2022/17122022_095_2s_Corr.csv')
-#df.to_csv('output/ratingsAnalysis/DuringExperiments_Sevilla_06102022_DropW.csv', index=False)
+df.to_csv('output/ratingsAnalysis/DuringExperiments_Lausanne_03042023_DropW.csv', index=False)
 
 #https://blog.4dcu.be/programming/2021/03/16/Code-Nugget-Correlation-Heatmaps.html
 
