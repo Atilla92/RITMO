@@ -6,8 +6,8 @@ from scipy import stats
 #import seaborn as sns
 import matplotlib.pyplot as plt
 
-df = pd.read_csv ('Responses/DuringExperiments_Lausanne_April_2023_DropW.csv')
-
+df = pd.read_csv ('Responses/DuringExperiments_April2023_all.csv')
+print(df)
 #df = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/17_Dec_2022/17122022_095_2s.csv')
 
 
@@ -42,7 +42,7 @@ def filterOut(df, listFilter):
 
 # print(df)
 # CronchbachAlpha(df)
-# AverageFlowtoDF(df)
+AverageFlowtoDF(df)
 # correlMatrix(df, False)
 # print(df)
 
@@ -74,15 +74,15 @@ def InfotoColumns(df):
     df['Music_mode'] = music_array
     df['Palo'] = palo_array
 
-df = df.dropna()
+#df = df.dropna()
 #AverageFlowtoDF(df)
 InfotoColumns(df)
-
+print(df)
 #correlMatrix(df, True)
 
 
 #df.to_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/17_Dec_2022/17122022_095_2s_Corr.csv')
-df.to_csv('output/ratingsAnalysis/DuringExperiments_Lausanne_03042023_DropW.csv', index=False)
+df.to_csv('output/ratingsAnalysis/DuringExperiments_Sevilla_Lausanne_DropW.csv', index=False)
 
 #https://blog.4dcu.be/programming/2021/03/16/Code-Nugget-Correlation-Heatmaps.html
 

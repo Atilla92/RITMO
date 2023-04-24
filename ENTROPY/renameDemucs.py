@@ -4,8 +4,8 @@ This script will rename the files created and stored by demucs in one folder.
 import glob
 import os
 
-old_folder = '/Users/atillajv/CODE/FILES/PILOT_SEV_APRIL_2022/Audio/separated/htdemucs_6s/separated/htdemucs_6s/'
-new_folder = '/Users/atillajv/CODE/FILES/PILOT_SEV_APRIL_2022/Audio/separated/htdemucs_6s/separated/all_guitar/'
+old_folder = '/Users/atillajv/Ritmo/L-Lausanne/DEMUCS/separated/htdemucs_6s/'
+new_folder = '/Users/atillajv/CODE/FILES/PILOT_SEV_APRIL_2022/Audio_Lausanne/htdemucs_6s/all_guitar/'
 
 # 1. Name all files in the path 
 # Get last string (name file) and add /drums.wav
@@ -24,5 +24,6 @@ for file in os.listdir(old_folder):
         print('file not found:', file)
         pass
 
+    
 
 

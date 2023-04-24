@@ -129,7 +129,8 @@ dataELAN <- read.csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/mean/macroDatase
 dataELAN <- read.csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/05_Jan_2023_095/13022023_095_pairs_2s_32.csv')
 #SEPARATED
 dataELAN <- read.csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/30032023_095_guitar/30032023_095_32_guitar.csv')
-
+# LAUSANNE
+dataELAN <- read.csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_095/18042023_all_experiments_drums_guitar_zd.csv')
 
 # ALl analysis
 dataELAN$Dance_mode <- as.factor(dataELAN$Dance_mode)
@@ -137,7 +138,7 @@ dataELAN$Condition <- as.factor(dataELAN$Condition)
 dataELAN$Condition <- relevel(dataELAN$Condition, "D6_M6")
 dataELAN$Dance_mode <- factor(dataELAN$Dance_mode, levels = c("D6", 'D5', 'D1'))
 dataELAN$Condition <- factor(dataELAN$Condition, levels = c('D6_M6', 'D5_M6', 'D1_M6', 'D5_M5', 'D1_M1'))
-dataELAN$Condition_order <- as.factor(dataELAN$Condition_order)
+#dataELAN$Condition_order <- as.factor(dataELAN$Condition_order)
 dataELAN$Palo <- as.factor(dataELAN$Palo)
 dataELAN$Music_mode <- as.factor(dataELAN$Music_mode)
 dataELAN$Music_mode <- factor(dataELAN$Music_mode, levels = c("M6",'M5','M1'))
@@ -167,8 +168,8 @@ summary(model_entropy_micro)
 
 
 #Model Macro
-model_entropy  = lmer(g_LZ ~  Imp_subj + (1 | Participant)  , data = dataELAN ) #this performs better
-model_entropy_1  = lmer(g_LZ~  Imp_subj + (1 | Participant) + (1 | Pair)  , data = dataELAN ) #this performs better
+model_entropy  = lmer(LZ_avg ~  Q3b + (1 | Participant)  , data = dataELAN ) #this performs better
+model_entropy_1  = lmer(LZ_avg ~  Q3b + (1 | Participant) + (1 | Pair)  , data = dataELAN ) #this performs better
 #model_entropy_2  = lmer(Q1b ~ MIR_novelty_avg   + (1 | Pair/Participant)  , data = dataELAN )
 #model_entropy_3 = lmer(Q1b ~ Q3b + (1 | Pair)  , data = dataELAN )
 summary(model_entropy)
@@ -186,7 +187,7 @@ library(ggplot2)
 library(sjPlot)
 library(sjlabelled)
 library(sjmisc)
-ggplot(dataELAN, aes(x = Q3b, y = Condition_order))+ geom_point() + scale_x_continuous(1:8) + facet_wrap(~Participant)
+ggplot(dataELAN, aes(x = Q3a, y = Condition))+ geom_point() + scale_x_continuous(1:8) + facet_wrap(~Participant)
 
 name_plot = 'lmer_Q1b_Q3b_Macro_Participant'
 sjPlot::plot_model(title = 'Q1b ~ Q3b + (1| Participant)  ', model_entropy, show.p = TRUE, show.values = TRUE, digits = 3,show.intercept = TRUE)
@@ -301,9 +302,6 @@ name_plot <- "macro_P"
 corr_mat = dataELAN_P[, c('LZ_Av', 'Imp_avg', 'Flow_avg', 'MIR_entropy_avg', 'MIR_rms_avg', 'MIR_novelty_avg', 'var_entropy_avg')]
 
 
-
-
-
 #RED MORE PLOTS
 name_plot <- "macro_all_16"
 corr_mat = dataELAN[, c('Abs_Av','Perf_Av','SFS','Q1a','Q1b','Q3a','Q3b','Q4a','Q4b','LZ_Av', 'Imp_avg', 'Flow_avg', 'MIR_entropy_avg', 'MIR_rms_avg', 'MIR_novelty_avg', 'var_entropy_avg')]
@@ -315,7 +313,10 @@ corr_mat = dataELAN_G[, c('Abs_Av','Perf_Av','SFS','Q1a','Q1b','Q3a','Q3b','Q4a'
 name_plot <- "macro_new"
 corr_mat = dataELAN[, c('Abs_Av','Perf_Av','SFS','Q1a','Q1b','Q3a','Q3b','Q4a','Q4b','LZ_avg', 'MIR_entropy_avg', 'MIR_novelty_avg', 'var_entropy_avg')]
 
-
+#Lausanne Data
+name_plot <- "Lausanne"
+corr_mat = dataELAN[, c('Abs_Av','Perf_Av','SFS','Q1a','Q1b','Q3a','Q3b','Q4a','Q4b','LZ_Av', 'Imp_avg', 'Flow_avg', 'MIR_entropy_avg', 'MIR_rms_avg', 'MIR_novelty_avg', 'var_entropy_avg')]
+corr_mat = dataELAN [,x ('LZ', 'p_LZ', 'g_LZ', 'LZ_avg', 'p_LZ_avg', 'g_LZ_avg')]
 
 M <- cor(corr_mat, use = 'complete.obs', method='spearman')
 plot.new()

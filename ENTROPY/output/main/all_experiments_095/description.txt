@@ -1,0 +1,13 @@
+This dataset contains
+
+Experimental data Sevilla, Oslo, Sevilla2
+27_03_2023_095_drums (demucs from zoom)
+27_03_2023_095_guitar (demucs from zoom)
+05_Jan_2023_095
+
+Experimental data Lausanne
+16_04_2023_095
+16_04_2023_095_drums (demucs from zoom)
+16_04_2023_095_guitar_zoom (contact mic)
+
+

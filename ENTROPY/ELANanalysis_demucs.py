@@ -7,12 +7,14 @@ import json
 #And have to add the response, from csv for subjective ratings. Does that make sense?
 
 # One file or all in a specific folder
-file_name = 'P5_P5_D1_G3_M6_R1_T1' # Name file if loop_on = False
+file_name = 'G4_P9_D6_G4_M6_R2_T2' # Name file if loop_on = False
 loop_on = True # True if you want to loop through folder
 path_files = '/Users/atillajv/CODE/RITMO/FILES/ELAN/'
 path_ratings = '/Users/atillajv/CODE/RITMO/FILES/Ratings/'
-file_output = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/30032023_095_guitar/' #check that this is the same as input file for entropy
-name_output = '30032023_095_32_guitar'
+#file_output = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_097/' #check that this is the same as input file for entropy
+file_output = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_095/' #check that this is the same as input file for entropy
+#name_output = 'all_experimen'
+name_output = '18042023_all_experiments_drums_guitar_zd'
 # Default settings 
 percentage = 0.1
 frac_round = 1 #Round/frac_round for moving rating to the left 
@@ -58,6 +60,11 @@ df_store = pd.DataFrame(columns=['Name', 'Duration', 'Participant', 'Music_Imp',
 'Q3b',
 'Q4a',
 'Q4b',
+'Q4c',
+'Q5a',
+'Q5b',
+'Q6a',
+'Q6b',
 'Abs_Av',
 'Perf_Av',
 'SFS',
@@ -121,27 +128,28 @@ for file_i, file_item_long in enumerate(list_files):
         # ELAN folder with files with annotations
         dfI = pd.read_csv ('/Users/atillajv/CODE/RITMO/FILES/ELAN/' + file_item + '.csv',  delimiter=';')
         # Csv file with during experiments results 
-        dfS = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/Subjective/DuringExperiments_Sevilla_06102022_DropW_Entropy.csv')
+        dfS = pd.read_csv('/Users/atillajv/CODE/RITMO/PILOT_SEV_APRIL_2022/output/ratingsAnalysis/DuringExperiments_Sevilla_Lausanne_DropW.csv')
         # Rating files from CDRS
         dfR = pd.read_csv( '/Users/atillajv/CODE/RITMO/FILES/Ratings/'+ file_item_long +'_IMPRO.csv' )
         dfR_flow = pd.read_csv( '/Users/atillajv/CODE/RITMO/FILES/Ratings/'+ file_item_long +'_FLOW.csv' )
+        print('ok Ratings')
         # Features files based on original sound files
-        dfE = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/05_Jan_2023_095/'+file_item+'.csv')[1:]
-        dfMIR_entropy = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/MIR/features_dec_2022/ENTROPY/' + file_item + '.csv')
-        dfMIR_novelty = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/MIR/features_dec_2022/NOVELTY/' + file_item + '.csv')
-        df_var = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/05_Jan_2023_095/var/'+file_item+'.csv')[1:]
-        
+        dfE = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_095/'+file_item+'.csv')[1:]
+        dfMIR_entropy = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/MIR/features_all_experiments/zoom/ENTROPY/' + file_item + '.csv')
+        dfMIR_novelty = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/MIR/features_all_experiments/zoom/NOVELTY/' + file_item + '.csv')
+        df_var = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_095/var/'+file_item+'.csv')[1:]
+        print('ok')
         # Features files based on drums sound files
-        p_dfE = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/27_03_2023_095_drums/'+file_item+'.csv')[1:]
-        p_dfMIR_entropy = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/MIR/features_28032023_drums/ENTROPY/' + file_item + '.csv')
-        p_dfMIR_novelty = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/MIR/features_28032023_drums/NOVELTY/' + file_item + '.csv')
-        p_df_var = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/27_03_2023_095_drums/var/'+file_item+'.csv')[1:]
-
+        p_dfE = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_095_drums/'+file_item+'.csv')[1:]
+        p_dfMIR_entropy = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/MIR/features_all_experiments/drums/ENTROPY/' + file_item + '.csv')
+        p_dfMIR_novelty = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/MIR/features_all_experiments/drums/NOVELTY/' + file_item + '.csv')
+        p_df_var = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_095_drums/var/'+file_item+'.csv')[1:]
+        print('ok2')
         # Features files based on drums sound files
-        g_dfE = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/30032023_095_guitar/'+file_item+'.csv')[1:]
-        g_dfMIR_entropy = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/MIR/features_29032023_guitar/ENTROPY/' + file_item + '.csv')
-        g_dfMIR_novelty = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/MIR/features_29032023_guitar/NOVELTY/' + file_item + '.csv')
-        g_df_var = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/30032023_095_guitar/var/'+file_item+'.csv')[1:]
+        g_dfE = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_095_guitar_zd/'+file_item+'.csv')[1:]
+        g_dfMIR_entropy = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/MIR/features_all_experiments/guitar_zoom/ENTROPY/' + file_item + '.csv')
+        g_dfMIR_novelty = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/MIR/features_all_experiments/guitar_zoom/NOVELTY/' + file_item + '.csv')
+        g_df_var = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_095_guitar_zd/var/'+file_item+'.csv')[1:]
         print('ok1', file_item)
 
 
@@ -154,11 +162,14 @@ for file_i, file_item_long in enumerate(list_files):
         tI_1 = dfI['End Time - ss.msec'] + (dtI * percentage )
         dtI_2 = tI_1 - tI_0
 
+        print('hello')
+
         #Append end time to last row 
         dfR.loc[len(dfR.index)] = [tI_1.iloc[-1] ,dfR[' Value'].iloc[-1]]
         dfR_flow.loc[len(dfR_flow.index)] = [tI_1.iloc[-1] ,dfR[' Value'].iloc[-1]]
         #dfR.loc[len(dfR.index)] = [tI_1.iloc[-1] ,dfR[' Value'].iloc[-1]]
 
+    
 
         #Estimate which values fall within interval. 
         # Move ratings to the left 1/2 round
@@ -287,7 +298,7 @@ for file_i, file_item_long in enumerate(list_files):
             g_list_Entropy = g_dfE.loc[(g_dfE["t0"] >= tI_0.iloc[i] ) & (g_dfE['t0'] <= tI_1.iloc[i]  ) ]
 
             # Fetching Spectral Entropy MIR in intervals
-            g_list_MIR_entropy = p_dfMIR_entropy.loc[(g_dfMIR_entropy["entropy_t0"] >= tI_0.iloc[i] ) & (g_dfMIR_entropy['entropy_t0'] <= tI_1.iloc[i]  ) ]
+            g_list_MIR_entropy = g_dfMIR_entropy.loc[(g_dfMIR_entropy["entropy_t0"] >= tI_0.iloc[i] ) & (g_dfMIR_entropy['entropy_t0'] <= tI_1.iloc[i]  ) ]
         
             # Fetching Novelty MIR in intervals
             g_list_MIR_novelty = g_dfMIR_novelty.loc[(g_dfMIR_novelty["novelty_t0"] >= tI_0.iloc[i] ) & (g_dfMIR_novelty['novelty_t0'] <= tI_1.iloc[i]  ) ]
@@ -387,6 +398,12 @@ for file_i, file_item_long in enumerate(list_files):
                 "Q3b": dfTest["Q3b"].iloc[0],
                 "Q4a": dfTest["Q4a"].iloc[0],
                 "Q4b": dfTest["Q4b"].iloc[0],
+                "Q4b": dfTest["Q4b"].iloc[0],
+                "Q4c": dfTest["Q4c"].iloc[0],
+                "Q5a": dfTest["Q5a"].iloc[0],
+                "Q5b": dfTest["Q5b"].iloc[0],
+                "Q6a": dfTest["Q6a"].iloc[0],
+                "Q6b": dfTest["Q6b"].iloc[0],
                 "Abs_Av": dfTest["Abs_Av"].iloc[0],
                 "Perf_Av": dfTest["Perf_Av"].iloc[0],
                 "SFS": dfTest["SFS"].iloc[0],
@@ -493,26 +510,26 @@ def InfotoColumns(df):
 InfotoColumns(df_store)
 
 
-df_store.loc[df_store['Condition']== 'D6_M6' , 'Condition_order'] = 0
-df_store.loc[df_store['Condition']== 'D5_M6' , 'Condition_order'] = 1
-df_store.loc[df_store['Condition']== 'D1_M6' , 'Condition_order'] = 2
-df_store.loc[df_store['Condition']== 'D5_M5' , 'Condition_order'] = 3
-df_store.loc[df_store['Condition']== 'D1_M1' , 'Condition_order'] = 4
+# df_store.loc[df_store['Condition']== 'D6_M6' , 'Condition_order'] = 0
+# df_store.loc[df_store['Condition']== 'D5_M6' , 'Condition_order'] = 1
+# df_store.loc[df_store['Condition']== 'D1_M6' , 'Condition_order'] = 2
+# df_store.loc[df_store['Condition']== 'D5_M5' , 'Condition_order'] = 3
+# df_store.loc[df_store['Condition']== 'D1_M1' , 'Condition_order'] = 4
 
 
-# Filter out variance for dancers
-df_store.loc[df_store['Name'].str.contains("DO"), 'p_LZ'] = 0
-df_store.loc[df_store['Name'].str.contains("DO"), 'p_CTW'] = 0
-df_store.loc[df_store['Name'].str.contains("DO"), 'p_LZ_Av'] = 0
-df_store.loc[df_store['Name'].str.contains("DO"), 'p_CTW_Av'] = 0
-df_store.loc[df_store['Name'].str.contains("DO"), 'p_MIR_entropy'] = 0
-df_store.loc[df_store['Name'].str.contains("DO"), 'p_MIR_entropy_avg'] = 0
-df_store.loc[df_store['Name'].str.contains("DO"), 'p_MIR_rms'] = 0
-df_store.loc[df_store['Name'].str.contains("DO"), 'p_MIR_rms_avg'] = 0
-df_store.loc[df_store['Name'].str.contains("DO"), 'p_MIR_novelty'] = 0
-df_store.loc[df_store['Name'].str.contains("DO"), 'p_MIR_novelty_avg'] = 0
-df_store.loc[df_store['Name'].str.contains("DO"), 'p_var_entropy'] = 0
-df_store.loc[df_store['Name'].str.contains("DO"), 'p_var_entropy_avg'] = 0
+# # Filter out variance for dancers
+# df_store.loc[df_store['Name'].str.contains("DO"), 'p_LZ'] = 0
+# df_store.loc[df_store['Name'].str.contains("DO"), 'p_CTW'] = 0
+# df_store.loc[df_store['Name'].str.contains("DO"), 'p_LZ_Av'] = 0
+# df_store.loc[df_store['Name'].str.contains("DO"), 'p_CTW_Av'] = 0
+# df_store.loc[df_store['Name'].str.contains("DO"), 'p_MIR_entropy'] = 0
+# df_store.loc[df_store['Name'].str.contains("DO"), 'p_MIR_entropy_avg'] = 0
+# df_store.loc[df_store['Name'].str.contains("DO"), 'p_MIR_rms'] = 0
+# df_store.loc[df_store['Name'].str.contains("DO"), 'p_MIR_rms_avg'] = 0
+# df_store.loc[df_store['Name'].str.contains("DO"), 'p_MIR_novelty'] = 0
+# df_store.loc[df_store['Name'].str.contains("DO"), 'p_MIR_novelty_avg'] = 0
+# df_store.loc[df_store['Name'].str.contains("DO"), 'p_var_entropy'] = 0
+# df_store.loc[df_store['Name'].str.contains("DO"), 'p_var_entropy_avg'] = 0
 
 
 # Drop duplicates due to running code twice for flow and impro ratings. 

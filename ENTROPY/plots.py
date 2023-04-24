@@ -8,22 +8,22 @@ from statsmodels.graphics.mosaicplot import mosaic
 Plots different statistics of the dataset
 '''
 
-file_input = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/05_Jan_2023_095/'
+file_input = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_095/'
 save_plot = '/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/' 
 
-df_file = '03012023_095_2s_16_condition'
+df_file = '18042023_all_experiments_drums_guitar_zd'
 df = pd.read_csv(file_input + df_file + '.csv', index_col=0)
 df.drop_duplicates(subset=None, keep="first", inplace=True)
 
 #drop MI, DC
-df = df[~((df['Music_Imp'].str.contains('MI')) & (df['Dance_Imp'].str.contains('DC')))]
+#df = df[~((df['Music_Imp'].str.contains('MI')) & (df['Dance_Imp'].str.contains('DC')))]
 print(df)
 #print(df)
 
-plot_violin = False #Plot Violinplot of variables. Variables is list 
-save_violin_plot = False
+plot_violin = True #Plot Violinplot of variables. Variables is list 
+save_violin_plot = True
 plotBoxPlot = False #Plot Boxplot on top of violin plot
-bar_plot = True #Plot bar plot of all variables
+bar_plot = False #Plot bar plot of all variables
 plot_heatmap = True #Plot sns heatmap and mosaic 
 plot_scatterplot = False #Plot a scatterplot of 3 variables
 
@@ -48,7 +48,10 @@ def stdMean(column, variable, colour ):
     counts = []
 
     for i, item in enumerate(list_column):
+        print(df[str(column)])
         MI = df[df[str(column)].str.contains(str(item))]
+        print(MI)
+        print('hello')
         counts.append(len(MI))
         MI_mean = MI[str(variable)].mean()
         MI_std = MI[str(variable)].std()
@@ -76,7 +79,7 @@ def stdMean(column, variable, colour ):
 
 # '''
 
-variables = ['Imp_subj']
+variables = ['Imp_subj', 'Flow_subj', 'LZ', 'p_LZ','g_LZ']
 for j, itemj in enumerate(variables):
     list_columns = ['Music_Imp','Dance_Imp', 'Music_mode', 'Dance_mode', 'Palo',  'Guitarra_Level','Baile_Level']
     list_colour = ['black', 'red', 'black', 'red','cyan', 'green', 'blue','green']
@@ -229,6 +232,7 @@ def addFracAnnot(df):
     column = 'Name'
     list_files = df[column].unique().tolist()
     df['frac_annot'] = np.nan
+    print(np)
     ds = df.groupby(['Name', 'Participant'])[['Rounds']].sum()
 
     i = 0
@@ -265,15 +269,15 @@ def HeatMapCategoriesFrac(df, categories, loopName = '', name = ''):
     ax1.set_title('Distribution(%) ' + str(name))
     plt.savefig(save_plot + str(categories) + '_HeatMap_FracAnnot_' +str(loopName) +'.png')
 
-# HeatMapCategoriesFrac(df,["Baile_Level", 'Dance_Imp'] )
-# HeatMapCategoriesFrac(df,["Baile_Level", 'Condition'] )
-# HeatMapCategoriesFrac(df,["Dance_Imp", 'Condition'] )
-# HeatMapCategoriesFrac(df,["Dance_Imp", 'Palo'] )
-# HeatMapCategoriesFrac(df,["Guitarra_Level", 'Condition'] )
-# HeatMapCategoriesFrac(df,["Music_Imp", 'Condition'] )
-# HeatMapCategoriesFrac(df,["Baile_Level", 'Palo'] )
-# HeatMapCategoriesFrac(df,["Baile_Level", 'Guitarra_Level'] )
-# HeatMapCategoriesFrac(df,["Baile_Level", 'Music_Imp'] )
+HeatMapCategoriesFrac(df,["Baile_Level", 'Dance_Imp'] )
+HeatMapCategoriesFrac(df,["Baile_Level", 'Condition'] )
+HeatMapCategoriesFrac(df,["Dance_Imp", 'Condition'] )
+HeatMapCategoriesFrac(df,["Dance_Imp", 'Palo'] )
+HeatMapCategoriesFrac(df,["Guitarra_Level", 'Condition'] )
+HeatMapCategoriesFrac(df,["Music_Imp", 'Condition'] )
+HeatMapCategoriesFrac(df,["Baile_Level", 'Palo'] )
+HeatMapCategoriesFrac(df,["Baile_Level", 'Guitarra_Level'] )
+HeatMapCategoriesFrac(df,["Baile_Level", 'Music_Imp'] )
 
 
 #Plot for specific condition
