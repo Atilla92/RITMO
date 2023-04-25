@@ -115,7 +115,7 @@ df_store = pd.DataFrame(columns=['Name', 'Duration', 'Participant', 'Music_Imp',
 'g_MIR_novelty_avg',
 'g_var_entropy',
 'g_var_entropy_avg',
-'annot_frac'
+'annot_frac',
 ])
 
 for file_i, file_item_long in enumerate(list_files):
