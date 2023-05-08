@@ -14,7 +14,7 @@ path_ratings = '/Users/atillajv/CODE/RITMO/FILES/Ratings/'
 #file_output = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_097/' #check that this is the same as input file for entropy
 file_output = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_095/' #check that this is the same as input file for entropy
 #name_output = 'all_experimen'
-name_output = '18042023_all_experiments_drums_guitar_zd'
+name_output = '08052023_all_experiments_drums_guitar_zd'
 # Default settings 
 percentage = 0.1
 frac_round = 1 #Round/frac_round for moving rating to the left 
@@ -116,6 +116,7 @@ df_store = pd.DataFrame(columns=['Name', 'Duration', 'Participant', 'Music_Imp',
 'g_var_entropy',
 'g_var_entropy_avg',
 'annot_frac',
+'number',
 ])
 
 for file_i, file_item_long in enumerate(list_files):
@@ -132,25 +133,25 @@ for file_i, file_item_long in enumerate(list_files):
         # Rating files from CDRS
         dfR = pd.read_csv( '/Users/atillajv/CODE/RITMO/FILES/Ratings/'+ file_item_long +'_IMPRO.csv' )
         dfR_flow = pd.read_csv( '/Users/atillajv/CODE/RITMO/FILES/Ratings/'+ file_item_long +'_FLOW.csv' )
-        print('ok Ratings')
+        #print('ok Ratings')
         # Features files based on original sound files
         dfE = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_095/'+file_item+'.csv')[1:]
         dfMIR_entropy = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/MIR/features_all_experiments/zoom/ENTROPY/' + file_item + '.csv')
         dfMIR_novelty = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/MIR/features_all_experiments/zoom/NOVELTY/' + file_item + '.csv')
         df_var = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_095/var/'+file_item+'.csv')[1:]
-        print('ok')
+        #print('ok')
         # Features files based on drums sound files
         p_dfE = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_095_drums/'+file_item+'.csv')[1:]
         p_dfMIR_entropy = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/MIR/features_all_experiments/drums/ENTROPY/' + file_item + '.csv')
         p_dfMIR_novelty = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/MIR/features_all_experiments/drums/NOVELTY/' + file_item + '.csv')
         p_df_var = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_095_drums/var/'+file_item+'.csv')[1:]
-        print('ok2')
+        #print('ok2')
         # Features files based on drums sound files
         g_dfE = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_095_guitar_zd/'+file_item+'.csv')[1:]
         g_dfMIR_entropy = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/MIR/features_all_experiments/guitar_zoom/ENTROPY/' + file_item + '.csv')
         g_dfMIR_novelty = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/MIR/features_all_experiments/guitar_zoom/NOVELTY/' + file_item + '.csv')
         g_df_var = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_095_guitar_zd/var/'+file_item+'.csv')[1:]
-        print('ok1', file_item)
+        #print('ok1', file_item)
 
 
         # Estimate interval 
@@ -162,7 +163,7 @@ for file_i, file_item_long in enumerate(list_files):
         tI_1 = dfI['End Time - ss.msec'] + (dtI * percentage )
         dtI_2 = tI_1 - tI_0
 
-        print('hello')
+        #print('hello')
 
         #Append end time to last row 
         dfR.loc[len(dfR.index)] = [tI_1.iloc[-1] ,dfR[' Value'].iloc[-1]]
@@ -447,6 +448,7 @@ for file_i, file_item_long in enumerate(list_files):
                 'g_var_entropy' : g_list_var['var'].mean(),
                 'g_var_entropy_avg' : g_df_var['var'].mean(),
                 'annot_frac' : '',
+                'number': i,
                 }
             store_i = store_i+1
 
@@ -497,7 +499,7 @@ def InfotoColumns(df):
         music_array.append(split_array[3])
         palo_array.append(split_array[4])
         condition_array.append(str(split_array[1] +'_' + split_array[3]))
-        pair_array.append(str(split_array[0]+ '_' + split_array[1]))
+        pair_array.append(str(split_array[0]+ '_' + split_array[2]))
         #print(split_array)
 
     df['Dance_mode'] = dance_array

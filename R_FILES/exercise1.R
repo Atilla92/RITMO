@@ -168,8 +168,14 @@ summary(model_entropy_micro)
 
 
 #Model Macro
-model_entropy  = lmer(LZ_avg ~  Q3b + (1 | Participant)  , data = dataELAN ) #this performs better
-model_entropy_1  = lmer(LZ_avg ~  Q3b + (1 | Participant) + (1 | Pair)  , data = dataELAN ) #this performs better
+data_model = dataELAN_P
+y1 = dataELAN$LZ
+x1 = dataELAN$Flow_subj
+model_entropy  = lmer(LZ_avg ~ Flow_avg + (1 | Participant)  , data = dataELAN ) #this performs better
+model_entropy_1  = lmer(LZ_avg ~   Flow_avg + (1 | Participant) + (1 | Pair)  , data = dataELAN ) #this performs better
+model_entropy_1  = lmer(LZ_avg ~   Flow_avg + (1 | Participant) + (1 | Pair)  , data = dataELAN ) #this performs better
+
+#model_entropy_2  = lmer(y1 ~  x1 + (1 + x1 | Participant)  , data = data_model ) #this performs better
 #model_entropy_2  = lmer(Q1b ~ MIR_novelty_avg   + (1 | Pair/Participant)  , data = dataELAN )
 #model_entropy_3 = lmer(Q1b ~ Q3b + (1 | Pair)  , data = dataELAN )
 summary(model_entropy)
@@ -187,10 +193,10 @@ library(ggplot2)
 library(sjPlot)
 library(sjlabelled)
 library(sjmisc)
-ggplot(dataELAN, aes(x = Q3a, y = Condition))+ geom_point() + scale_x_continuous(1:8) + facet_wrap(~Participant)
+ggplot(dataELAN, aes(x = Imp_avg, y = Dance_mode))+ geom_point() + scale_x_continuous(1:8) + facet_wrap(~Participant)
 
 name_plot = 'lmer_Q1b_Q3b_Macro_Participant'
-sjPlot::plot_model(title = 'Q1b ~ Q3b + (1| Participant)  ', model_entropy, show.p = TRUE, show.values = TRUE, digits = 3,show.intercept = TRUE)
+sjPlot::plot_model(title = 'Q1b ~ Q3b + (1| Participant)  ', model_entropy_1, show.p = TRUE, show.values = TRUE, digits = 3,show.intercept = TRUE)
 dev.print( device = png,              # what are we printing to?
            filename = paste("/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/Stats/R/plot_", name_plot, '.png'),  # name of the image file
            width = 865,                # how many pixels wide should it be
@@ -314,9 +320,18 @@ name_plot <- "macro_new"
 corr_mat = dataELAN[, c('Abs_Av','Perf_Av','SFS','Q1a','Q1b','Q3a','Q3b','Q4a','Q4b','LZ_avg', 'MIR_entropy_avg', 'MIR_novelty_avg', 'var_entropy_avg')]
 
 #Lausanne Data
-name_plot <- "Lausanne"
-corr_mat = dataELAN[, c('Abs_Av','Perf_Av','SFS','Q1a','Q1b','Q3a','Q3b','Q4a','Q4b','LZ_Av', 'Imp_avg', 'Flow_avg', 'MIR_entropy_avg', 'MIR_rms_avg', 'MIR_novelty_avg', 'var_entropy_avg')]
-corr_mat = dataELAN [,x ('LZ', 'p_LZ', 'g_LZ', 'LZ_avg', 'p_LZ_avg', 'g_LZ_avg')]
+name_plot <- "Data Lausanne"
+corr_mat = dataELAN[, c('Abs_Av','Perf_Av','SFS','Q1a','Q1b','Q3a','Q3b','Q4a','Q4b','LZ_avg', 'p_LZ_avg', 'g_LZ_avg', 'Imp_avg', 'Flow_avg', 'MIR_entropy_avg', 'MIR_rms_avg', 'MIR_novelty_avg', 'var_entropy_avg')]
+corr_mat = dataELAN [, c('LZ_avg', 'p_LZ_avg', 'g_LZ_avg', 'Q3a', 'Q3b', 'Q4a','Q4b','Q4c', 'Q5a','Q5b','Q6a','Q6b', 'Imp_avg', 'Flow_avg', 'Abs_Av', 'Perf_Av', 'var_entropy_avg')]
+corr_mat = dataELAN [, c('LZ_avg', 'p_LZ_avg', 'g_LZ_avg','Q6a','Q6b', 'Imp_avg', 'Flow_avg')]
+corr_mat = dataELAN [, c('LZ_avg', 'Q1a','Q1b', 'Q3a', 'Q3b', 'Q4a','Q4b','Q4c', 'Q5a','Q5b','Q6a','Q6b', 'Imp_avg', 'Flow_avg', 'Abs_Av', 'Perf_Av', 'var_entropy_avg')]
+#Lausanne Data Dancer
+name_plot <- "Dancer"
+corr_mat = dataELAN_P [, c('p_LZ_avg', 'Q1a','Q1b', 'Q3a', 'Q3b', 'Q4a','Q4b','Q4c', 'Q5a','Q5b','Q6a','Q6b', 'Imp_avg', 'Flow_avg', 'Abs_Av', 'Perf_Av', 'p_var_entropy_avg')]
+
+name_plot <- "Guitarist"
+corr_mat = dataELAN_G [, c('g_LZ_avg', 'Q1a','Q1b', 'Q3a', 'Q3b', 'Q4a','Q4b','Q4c', 'Q5a','Q5b','Q6a','Q6b', 'Imp_avg', 'Flow_avg', 'Abs_Av', 'Perf_Av', 'g_var_entropy_avg')]
+
 
 M <- cor(corr_mat, use = 'complete.obs', method='spearman')
 plot.new()

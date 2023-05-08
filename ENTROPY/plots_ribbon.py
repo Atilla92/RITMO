@@ -1,4 +1,5 @@
 # This file will plot entropy time-series
+from functionsE import binningPlots, InfotoColumnsPlots
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -7,6 +8,7 @@ from statsmodels.graphics.mosaicplot import mosaic
 import glob
 import os
 from itertools import repeat
+
 
 """
 Create a Ribbon plot of Entropy and LZ data.Loops over .csv files
@@ -24,8 +26,8 @@ Indicarw:
 y_var = 'LZ'
 hue_var = 'Dance_mode'
 title_plot = 'Zapateado'
-file_input = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_095_drums/'
-save_plot = '/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/all_experiments_095/'
+file_input = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_095_guitar_zd/'
+save_plot = '/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/all_experiments_095/var/'
 
 
 file_name = str(y_var + '_t_%' + '_drums_' + hue_var +'_filtered' )
@@ -33,7 +35,7 @@ file_name = str(y_var + '_t_%' + '_drums_' + hue_var +'_filtered' )
 # Loop or single file 
 loop_on = True #Set to false if only analysing one file. 
 loop_off = 'P7_D5_G1_M6_R1_T1.csv'
-filter_out = True
+filter_out = False
 
 # Initiate empty lists
 entropy_files = []
@@ -110,17 +112,8 @@ def InfotoColumns(df):
 InfotoColumns(df_plots)
 
 # Binning
-df_plots['Assigned_%'] = 0
-df_plots.loc[df_plots['t_%']<= 0.10 , 'Assigned_%'] = 0.05
-df_plots.loc[(df_plots['t_%']<= 0.20) & (df_plots['t_%']> 0.10 ) , 'Assigned_%'] = 0.10
-df_plots.loc[(df_plots['t_%']<= 0.30) & (df_plots['t_%']> 0.20 ) , 'Assigned_%'] = 0.20
-df_plots.loc[(df_plots['t_%']<= 0.40) & (df_plots['t_%']> 0.30 ) , 'Assigned_%'] = 0.30
-df_plots.loc[(df_plots['t_%']<= 0.50) & (df_plots['t_%']> 0.40 ) , 'Assigned_%'] = 0.40
-df_plots.loc[(df_plots['t_%']<= 0.60) & (df_plots['t_%']> 0.50 ) , 'Assigned_%'] = 0.50
-df_plots.loc[(df_plots['t_%']<= 0.70) & (df_plots['t_%']> 0.60 ) , 'Assigned_%'] = 0.60
-df_plots.loc[(df_plots['t_%']<= 0.80) & (df_plots['t_%']> 0.70 ) , 'Assigned_%'] = 0.70
-df_plots.loc[(df_plots['t_%']<= 0.90) & (df_plots['t_%']> 0.80 ) , 'Assigned_%'] = 0.80
-df_plots.loc[df_plots['t_%']> 0.90  , 'Assigned_%'] = 0.90
+binningPlots(df_plots)
+
 
 #df_plots.to_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/all_experiments_095/Test.csv')
 
@@ -136,8 +129,9 @@ fig = sns.lineplot(data = df_plots,  x="Assigned_%", y="y_var", hue = hue_var)
 fig.set(xlabel='t [%]', ylabel = y_var, title = title_plot)
 #plt.show()
 
-plt.savefig(save_plot+ file_name + '.png')
-
+#plt.savefig(save_plot+ file_name + '.png')
+save_csv = '/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/all_experiments_095/'
+df_plots.to_csv(save_csv + '/data/t%_LZ_guitar_zd.csv')
 
 
 

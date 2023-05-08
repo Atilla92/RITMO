@@ -9,19 +9,20 @@ Plots different statistics of the dataset
 '''
 
 file_input = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_095/'
-save_plot = '/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/' 
+save_plot = '/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/all_experiments_095/' 
 
 df_file = '18042023_all_experiments_drums_guitar_zd'
 df = pd.read_csv(file_input + df_file + '.csv', index_col=0)
 df.drop_duplicates(subset=None, keep="first", inplace=True)
+df = df[~df['Dance_mode'].str.contains("D0")]
 
 #drop MI, DC
 #df = df[~((df['Music_Imp'].str.contains('MI')) & (df['Dance_Imp'].str.contains('DC')))]
 print(df)
 #print(df)
 
-plot_violin = True #Plot Violinplot of variables. Variables is list 
-save_violin_plot = True
+plot_violin = False #Plot Violinplot of variables. Variables is list 
+save_violin_plot = False
 plotBoxPlot = False #Plot Boxplot on top of violin plot
 bar_plot = False #Plot bar plot of all variables
 plot_heatmap = True #Plot sns heatmap and mosaic 
@@ -140,7 +141,7 @@ for j, itemj in enumerate(variables):
     
     if save_violin_plot:
     
-        plt.savefig('/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/'+'ViolinPlots_'+ itemj +  '.png')
+        plt.savefig(save_plot +'ViolinPlots_'+ itemj +  '.png')
 
 
 
@@ -204,10 +205,6 @@ if plot_scatterplot:
     plt.show()
 
 
-
-
-
-
 # Plot for speficic Palo
 
 def plotPalo(df):
@@ -221,11 +218,7 @@ def plotPalo(df):
         #heatMapCategories(MI, ['Baile_Level', 'Palo'], True, save_plot, name = str(item) )
 
 
-
-
 # Estimate annotation percentage based on rounds
-
-
 
 
 def addFracAnnot(df):
@@ -269,15 +262,16 @@ def HeatMapCategoriesFrac(df, categories, loopName = '', name = ''):
     ax1.set_title('Distribution(%) ' + str(name))
     plt.savefig(save_plot + str(categories) + '_HeatMap_FracAnnot_' +str(loopName) +'.png')
 
-HeatMapCategoriesFrac(df,["Baile_Level", 'Dance_Imp'] )
-HeatMapCategoriesFrac(df,["Baile_Level", 'Condition'] )
-HeatMapCategoriesFrac(df,["Dance_Imp", 'Condition'] )
-HeatMapCategoriesFrac(df,["Dance_Imp", 'Palo'] )
-HeatMapCategoriesFrac(df,["Guitarra_Level", 'Condition'] )
-HeatMapCategoriesFrac(df,["Music_Imp", 'Condition'] )
-HeatMapCategoriesFrac(df,["Baile_Level", 'Palo'] )
-HeatMapCategoriesFrac(df,["Baile_Level", 'Guitarra_Level'] )
-HeatMapCategoriesFrac(df,["Baile_Level", 'Music_Imp'] )
+# HeatMapCategoriesFrac(df,["Baile_Level", 'Dance_Imp'] )
+# HeatMapCategoriesFrac(df,["Baile_Level", 'Condition'] )
+# HeatMapCategoriesFrac(df,["Dance_Imp", 'Condition'] )
+# HeatMapCategoriesFrac(df,["Dance_Imp", 'Palo'] )
+# HeatMapCategoriesFrac(df,["Guitarra_Level", 'Condition'] )
+# HeatMapCategoriesFrac(df,["Music_Imp", 'Condition'] )
+# HeatMapCategoriesFrac(df,["Baile_Level", 'Palo'] )
+# HeatMapCategoriesFrac(df,["Baile_Level", 'Guitarra_Level'] )
+# HeatMapCategoriesFrac(df,["Baile_Level", 'Music_Imp'] )
+HeatMapCategoriesFrac(df,["Dance_Imp", 'Music_Imp'] )
 
 
 #Plot for specific condition

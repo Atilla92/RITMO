@@ -276,6 +276,47 @@ def preProcessing(data, downsample_on = False, absolute_on = False, downsample_f
 
 
 
-
-
 #you need to redo quite a lot of the script, need 2 binaries, now there is a window of zeros because of absolute value. 
+
+####PLOTS FUNCTIONS ######
+#Put df in bins for t% plots
+def binningPlots(df_plots):
+    df_plots['Assigned_%'] = 0
+    df_plots.loc[df_plots['t_%']<= 0.10 , 'Assigned_%'] = 0.10
+    df_plots.loc[(df_plots['t_%']<= 0.20) & (df_plots['t_%']> 0.10 ) , 'Assigned_%'] = 0.20
+    df_plots.loc[(df_plots['t_%']<= 0.30) & (df_plots['t_%']> 0.20 ) , 'Assigned_%'] = 0.30
+    df_plots.loc[(df_plots['t_%']<= 0.40) & (df_plots['t_%']> 0.30 ) , 'Assigned_%'] = 0.40
+    df_plots.loc[(df_plots['t_%']<= 0.50) & (df_plots['t_%']> 0.40 ) , 'Assigned_%'] = 0.50
+    df_plots.loc[(df_plots['t_%']<= 0.60) & (df_plots['t_%']> 0.50 ) , 'Assigned_%'] = 0.60
+    df_plots.loc[(df_plots['t_%']<= 0.70) & (df_plots['t_%']> 0.60 ) , 'Assigned_%'] = 0.70
+    df_plots.loc[(df_plots['t_%']<= 0.80) & (df_plots['t_%']> 0.70 ) , 'Assigned_%'] = 0.80
+    df_plots.loc[(df_plots['t_%']<= 0.90) & (df_plots['t_%']> 0.80 ) , 'Assigned_%'] = 0.90
+    df_plots.loc[df_plots['t_%']> 0.90  , 'Assigned_%'] = 1.00
+
+
+def InfotoColumnsPlots(df):
+    dance_array = []
+    music_array = []
+    palo_array = []
+    condition_array = []
+    participant_array = []
+    rater_array = []
+    artist_array = []
+    for i, item in enumerate(df['Name']):
+
+        split_array = item.split('_')
+        rater_array.append(split_array[0])
+        artist_array.append(split_array[0][0])
+        participant_array.append(split_array[1])
+        dance_array.append(split_array[2])
+        music_array.append(split_array[4])
+        palo_array.append(split_array[5])
+        condition_array.append(str(split_array[2] +'_' + split_array[4]))
+        #print(split_array)
+    df['Artist'] = artist_array
+    df['Rater'] = rater_array
+    df['Participant'] = participant_array
+    df['Dance_mode'] = dance_array
+    df['Music_mode'] = music_array
+    df['Palo'] = palo_array
+    df['Condition'] = condition_array

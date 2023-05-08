@@ -7,7 +7,7 @@ Protocol for getting all the data
     - Create a .csv for all subjective ratings fetched during the experiment. 
     - Create a folder with all audio data you would like to analyse.
 
-Script for source seperatation:
+Script for source separation:
     0. Go to folder where all tracks are
     1. Run demucs command: demucs -n htdemucs_6s  *.wav
     2. Run renameDemucs.py to rename files with respective track name. 
@@ -37,6 +37,22 @@ Scripts for getting entropy:
     1. Run ELANanalysis.py or ELANanalysis_demucs.py if also source separated data is to be added. 
         a. Set proper location for all files starting from line 109 after try:
         b. Set name for output folder and name of file. 
+
+There are several scripts for plots
+    1. Violin Plots: plots.py
+        a. Uses .csv file from ELANanalysis.py or ELANanalysis_demucs.py 
+        b. Set bar_plot = False, plot_violin = True, save_violin_plot = True.
+        c. Provide list on line 82 which "variables" (columns from .csv) you want to have in plot. 
+        d. Change folder for saving file on line 143. 
+        e. Suggestion for future: convert lines 83-143 into defintion. 
+
+    2. HeatMap of data in plots.py:
+       Get overview on how data is dritributed, takes two categories (e.g. Music_Imp, Baile_Level) as input.
+
+
+    3. Ribbon plots for entropy and complexity as f(t%): plots_ribbon.py
+    4. Ribbon plots for Improvisation and Flow Subjective ratings as f(t%): plots_ratings.py
+    
     
 
 

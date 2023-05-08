@@ -7,7 +7,7 @@ from statsmodels.graphics.mosaicplot import mosaic
 import glob
 import os
 from itertools import repeat
-
+from functionsE import binningPlots, InfotoColumnsPlots
 """
 Create a Ribbon plot of Entropy and LZ data.Loops over .csv files
 
@@ -27,9 +27,9 @@ save_plot = '/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/all_experiments_095
 audio_input = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_095_drums/'
 
 
-hue_var = 'Dance_mode'
-rating = 'IMPRO'
-file_name = str(rating + "_t%_" + hue_var + '_test' )
+hue_var = 'Artist'
+rating = 'FLOW'
+file_name = str(rating + "_t%_" + hue_var + 'filter_D0' )
 
 # Loop or single file 
 loop_on = True #Set to false if only analysing one file. 
@@ -58,8 +58,6 @@ plt.figure()
 j= 0
 for k, item_k in enumerate(entropy_files):
     name_list = []
-    print(item_k)
-
     try:
         dfR = pd.read_csv(file_input + item_k)
         df_a = pd.read_csv(audio_input + item_k.split('_',1)[1].rpartition('_')[0] + '.csv')
@@ -111,56 +109,19 @@ for k, item_k in enumerate(entropy_files):
         print('file not found:', item_k)
         pass
 
-def InfotoColumns(df):
-    dance_array = []
-    music_array = []
-    palo_array = []
-    condition_array = []
-    participant_array = []
-    rater_array = []
-    artist_array = []
-    for i, item in enumerate(df['Name']):
-
-        split_array = item.split('_')
-        rater_array.append(split_array[0])
-        artist_array.append(split_array[0][0])
-        participant_array.append(split_array[1])
-        dance_array.append(split_array[2])
-        music_array.append(split_array[4])
-        palo_array.append(split_array[5])
-        condition_array.append(str(split_array[2] +'_' + split_array[4]))
-        #print(split_array)
-    df['Artist'] = artist_array
-    df['Rater'] = rater_array
-    df['Participant'] = participant_array
-    df['Dance_mode'] = dance_array
-    df['Music_mode'] = music_array
-    df['Palo'] = palo_array
-    df['Condition'] = condition_array
 
 
-InfotoColumns(df_plots)
-print(df_plots)
-
+InfotoColumnsPlots(df_plots)
 
 # Binning
-df_plots['Assigned_%'] = 0
-df_plots.loc[df_plots['t_%']<= 0.10 , 'Assigned_%'] = 0.10
-df_plots.loc[(df_plots['t_%']<= 0.20) & (df_plots['t_%']> 0.10 ) , 'Assigned_%'] = 0.20
-df_plots.loc[(df_plots['t_%']<= 0.30) & (df_plots['t_%']> 0.20 ) , 'Assigned_%'] = 0.30
-df_plots.loc[(df_plots['t_%']<= 0.40) & (df_plots['t_%']> 0.30 ) , 'Assigned_%'] = 0.40
-df_plots.loc[(df_plots['t_%']<= 0.50) & (df_plots['t_%']> 0.40 ) , 'Assigned_%'] = 0.50
-df_plots.loc[(df_plots['t_%']<= 0.60) & (df_plots['t_%']> 0.50 ) , 'Assigned_%'] = 0.60
-df_plots.loc[(df_plots['t_%']<= 0.70) & (df_plots['t_%']> 0.60 ) , 'Assigned_%'] = 0.70
-df_plots.loc[(df_plots['t_%']<= 0.80) & (df_plots['t_%']> 0.70 ) , 'Assigned_%'] = 0.80
-df_plots.loc[(df_plots['t_%']<= 0.90) & (df_plots['t_%']> 0.80 ) , 'Assigned_%'] = 0.90
-df_plots.loc[df_plots['t_%']> 0.90  , 'Assigned_%'] = 1.00
+binningPlots(df_plots)
 
 #df_plots.to_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/all_experiments_095/Test.csv')
 
 df_plots.drop_duplicates(subset=None, keep="first", inplace=True, ignore_index=True)
 if filter_out:
     df_plots = df_plots[~df_plots['Dance_mode'].str.contains("D0")]
+    df_plots = df_plots[~df_plots['Artist'].str.contains("G")]
     #df_plots = df_plots[~df_plots['Artist'].str.contains("G")]
 #df_plots = df_plots[~df_plots['Dance_mode'].str.contains("D5")]
 print(df_plots)
@@ -169,9 +130,13 @@ print(df_plots)
 #sns.violinplot(data=df_plots, x="Assigned_%", y="LZ", hue = 'Dance_mode')
 fig = sns.lineplot(data = df_plots,  x="Assigned_%", y="y_var", hue = hue_var)
 fig.set(xlabel='t [%]', ylabel = 'Subjective Rating', title = rating)
+fig.set_ylim([0, 7])
 #plt.show()
+#plt.legend( labels = ['D5 - Semi', 'D1 - Impro', 'D6 - Choreo'])
+plt.show()
+#plt.savefig(save_plot+ file_name + '.png')
 
-plt.savefig(save_plot+ file_name + '.png')
+#df_plots.to_csv(save_plot + '/data/t%_ratings_' + rating+'.csv')
 
 
 
