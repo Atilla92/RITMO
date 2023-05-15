@@ -261,12 +261,24 @@ m07 = lmer(LZ_avg ~ Abs_Av + Q3a + (1 |Pair:Participant) , data = dataELAN_C )
 m08 = lmer(LZ_avg ~ Q3a + Abs_Av + Q3b + Q1a  + (1 |Pair:Participant) , data = dataELAN_C )
 
 tab_model(m01, m02, m03, m04, m05,m06,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
-          dv.labels=c("m01", "m02","m03","m04", "m05", "m6"), digits = 5, digits.re=5 )
+          dv.labels=c("m01", "m02","m03","m04", "m05", "m6"), digits = 5, digits.re=5,
+          file ="/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/Stats/R/tab1_lmer_LZ_predictors.html" )
+webshot("/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/Stats/R/tab1_lmer_LZ_predictors.html", 
+        "/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/Stats/R/tab1_lmer_LZ_predictors.png")
 
-m01 = lmer(LZ_avg ~ Abs_Av + Q3a + (1 |Pair:Participant) , data = dataELAN_C )
-m02 = lmer(LZ_avg ~ Q3a + Abs_Av + Q3b + Q1a  + (1 |Pair:Participant) , data = dataELAN_C )
-tab_model(m01, m02, m03, m04, m05,m06,m07, m08,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
-          dv.labels=c("m01", "m02","m03","m04", "m05", "m6", "m7", "m8"), digits = 5, digits.re=5 )
+m01 = lmer(LZ_avg ~ Abs_Av + (1 |Pair:Participant) , data = dataELAN_C )
+m02 = lmer(LZ_avg ~ Q3a + Abs_Av + (1 |Pair:Participant) , data = dataELAN_C )
+m03 = lmer(LZ_avg ~ Q3a + Abs_Av + Q3b  + (1 |Pair:Participant) , data = dataELAN_C )
+m04 = lmer(LZ_avg ~ Abs_Av + Q3b  + (1 |Pair:Participant) , data = dataELAN_C )
+m05 = lmer(LZ_avg ~ Q3a + Abs_Av + Q3b  + Perf_Av + (1 |Pair:Participant) , data = dataELAN_C )
+m06 = lmer(LZ_avg ~ Q3a + Abs_Av + Q3b  + Q1a + (1 |Pair:Participant) , data = dataELAN_C )
+m07 = lmer(LZ_avg ~ Abs_Av + Q3b  + Q1a + (1 |Pair:Participant) , data = dataELAN_C )
+tab_model(m01, m02, m03, m04, m05,m06,m07,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m1", "m2","m3","m4", "m5", "m6", "m7"), digits = 5, digits.re=5 ,
+          file ="/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/Stats/R/tab2_lmer_LZ_predictors.html")
+library(webshot)
+webshot("/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/Stats/R/tab2_lmer_LZ_predictors.html", 
+        "/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/Stats/R/tab2_lmer_LZ_predictors.png")
 
 
 m01 = lmer(LZ_avg ~ Q3b+ (Condition |Pair:Participant) + (1 | Condition)  , data = dataELAN )

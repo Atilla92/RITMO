@@ -28,7 +28,7 @@ audio_input = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_09
 
 
 hue_var = 'Artist'
-rating = 'FLOW'
+rating = 'IMPRO'
 file_name = str(rating + "_t%_" + hue_var + 'filter_D0' )
 
 # Loop or single file 
@@ -41,7 +41,7 @@ entropy_files = []
 array_x = []
 array_y = []
 
-df_plots = pd.DataFrame(columns = ['Name', 't_%', 'y_var', 't0'])
+df_plots = pd.DataFrame(columns = ['Name', 't_%', 'y_var', 't_0'])
 #Load Data
 if loop_on:
     for filepath in glob.iglob(str(file_input + '*' + rating +'.csv')):
@@ -91,11 +91,10 @@ for k, item_k in enumerate(entropy_files):
                     n = j
                     break
             
-
-
-        name_list.extend(repeat(str(item_k),len(np.array(mean_array))))
-        #print(len(array_y))
-        #print(name_list)
+        print(time_r)
+        item_new = item_k.split("_")
+        item_new = "_".join(item_new[1:-1])
+        name_list.extend(repeat(str(item_new),len(np.array(mean_array))))
         df_plot = pd.DataFrame( {
             'Name': name_list,
             't_%': time_array,
@@ -133,10 +132,11 @@ fig.set(xlabel='t [%]', ylabel = 'Subjective Rating', title = rating)
 fig.set_ylim([0, 7])
 #plt.show()
 #plt.legend( labels = ['D5 - Semi', 'D1 - Impro', 'D6 - Choreo'])
-plt.show()
+#plt.show()
 #plt.savefig(save_plot+ file_name + '.png')
 
-#df_plots.to_csv(save_plot + '/data/t%_ratings_' + rating+'.csv')
+
+df_plots.to_csv(save_plot + '/data/t%_ratings_' + rating+'.csv')
 
 
 

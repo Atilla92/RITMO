@@ -23,10 +23,11 @@ Indicarw:
 """
 
 # Parameters of plotting function.
-y_var = 'LZ'
+y_var = 'var'
+source_var = '_guitar_zd'
 hue_var = 'Dance_mode'
 title_plot = 'Zapateado'
-file_input = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_095_guitar_zd/'
+file_input = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_095'+source_var+'/var/'
 save_plot = '/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/all_experiments_095/var/'
 
 
@@ -42,7 +43,7 @@ entropy_files = []
 array_x = []
 array_y = []
 
-df_plots = pd.DataFrame(columns = ['Name', 't_%', y_var])
+df_plots = pd.DataFrame(columns = ['Name', 't_%'])
 #Load Data
 if loop_on:
     for filepath in glob.iglob(str(file_input + '*.csv')):
@@ -72,9 +73,9 @@ for i, item in enumerate(entropy_files):
     #plt.plot(df_i['t_%'], df_i['LZ'] )
     array_x = np.array(df_i['t_%'])
     array_y = np.array(df_i[y_var])
-    name_list.extend(repeat(str(item),len(np.array(df_i['t0']))))
+    name_list.extend(repeat(str(item).strip('.csv'),len(np.array(df_i['t0']))))
+    
     #print(len(array_y))
-    #print(name_list)
     df_plot = pd.DataFrame( {
         'Name': name_list,
         't_%': array_x,
@@ -128,13 +129,13 @@ if filter_out:
 fig = sns.lineplot(data = df_plots,  x="Assigned_%", y="y_var", hue = hue_var)
 fig.set(xlabel='t [%]', ylabel = y_var, title = title_plot)
 #plt.show()
-
 #plt.savefig(save_plot+ file_name + '.png')
+
 save_csv = '/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/all_experiments_095/'
-df_plots.to_csv(save_csv + '/data/t%_LZ_guitar_zd.csv')
+df_plots.to_csv(save_csv + '/data/t%_' + y_var +source_var+'.csv')
 
 
-
+#print(df_plots)
 
 # fig, axs = plt.subplots(5,1)
 # i = 0

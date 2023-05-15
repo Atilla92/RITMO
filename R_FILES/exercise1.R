@@ -320,11 +320,11 @@ name_plot <- "macro_new"
 corr_mat = dataELAN[, c('Abs_Av','Perf_Av','SFS','Q1a','Q1b','Q3a','Q3b','Q4a','Q4b','LZ_avg', 'MIR_entropy_avg', 'MIR_novelty_avg', 'var_entropy_avg')]
 
 #Lausanne Data
-name_plot <- "Data Lausanne"
+name_plot <- "D1_M1"
 corr_mat = dataELAN[, c('Abs_Av','Perf_Av','SFS','Q1a','Q1b','Q3a','Q3b','Q4a','Q4b','LZ_avg', 'p_LZ_avg', 'g_LZ_avg', 'Imp_avg', 'Flow_avg', 'MIR_entropy_avg', 'MIR_rms_avg', 'MIR_novelty_avg', 'var_entropy_avg')]
 corr_mat = dataELAN [, c('LZ_avg', 'p_LZ_avg', 'g_LZ_avg', 'Q3a', 'Q3b', 'Q4a','Q4b','Q4c', 'Q5a','Q5b','Q6a','Q6b', 'Imp_avg', 'Flow_avg', 'Abs_Av', 'Perf_Av', 'var_entropy_avg')]
 corr_mat = dataELAN [, c('LZ_avg', 'p_LZ_avg', 'g_LZ_avg','Q6a','Q6b', 'Imp_avg', 'Flow_avg')]
-corr_mat = dataELAN [, c('LZ_avg', 'Q1a','Q1b', 'Q3a', 'Q3b', 'Q4a','Q4b','Q4c', 'Q5a','Q5b','Q6a','Q6b', 'Imp_avg', 'Flow_avg', 'Abs_Av', 'Perf_Av', 'var_entropy_avg')]
+corr_mat = dataELAN_C [, c('LZ_avg', 'Q1a','Q1b', 'Q3a', 'Q3b', 'Q4a','Q4b','Q4c', 'Q5a','Q5b','Q6a','Q6b', 'Imp_avg', 'Flow_avg', 'Abs_Av', 'Perf_Av', 'var_entropy_avg')]
 #Lausanne Data Dancer
 name_plot <- "Dancer"
 corr_mat = dataELAN_P [, c('p_LZ_avg', 'Q1a','Q1b', 'Q3a', 'Q3b', 'Q4a','Q4b','Q4c', 'Q5a','Q5b','Q6a','Q6b', 'Imp_avg', 'Flow_avg', 'Abs_Av', 'Perf_Av', 'p_var_entropy_avg')]
