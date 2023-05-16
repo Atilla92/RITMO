@@ -302,9 +302,10 @@ def InfotoColumnsPlots(df):
     participant_array = []
     rater_array = []
     artist_array = []
-    for i, item in enumerate(df['Name']):
+    for i, item in enumerate(df['file']):
 
         split_array = item.split('_')
+        print(split_array)
         rater_array.append(split_array[0])
         artist_array.append(split_array[0][0])
         participant_array.append(split_array[1])

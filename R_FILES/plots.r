@@ -292,3 +292,16 @@ tab_model(m01, m02, m03, m04, m05,m06,m07,  p.style = "stars", show.aic = TRUE, 
           dv.labels=c("m01", "m02","m03","m04", "m05", "m6", "m7"), digits = 5, digits.re=5 )
 summary(m01)
 
+
+# Data Time-Series Visualisation 
+
+dataSeries <- read.csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/all_experiments_095/data/t%_merged_average.csv')
+view(dataSeries)
+dataSeries$time <- as.factor(dataSeries$Assigned)
+ggplot(dataSeries, aes(time, FLOW , group = Rater))+ facet_wrap(~Pair)+
+  geom_smooth(aes(x= time, y= FLOW, group = Rater), method="lm",se=FALSE) + geom_point()
+
+geom_smooth(aes(x= Assigned, y= FLOW), method="lm",se=FALSE, colour='red')
+
+
+

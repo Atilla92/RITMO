@@ -34,7 +34,7 @@ file_name = str(rating + "_t%_" + hue_var + 'filter_D0' )
 # Loop or single file 
 loop_on = True #Set to false if only analysing one file. 
 loop_off = 'P3_P3_D5_G1_M6_R1_T1_FLOW.csv'
-filter_out = True
+filter_out = False
 
 # Initiate empty lists
 entropy_files = []
@@ -51,13 +51,14 @@ if loop_on:
 else:
  entropy_files = [loop_off]
 
-print(entropy_files)
+#print(entropy_files)
 
 
 plt.figure()
 j= 0
 for k, item_k in enumerate(entropy_files):
     name_list = []
+    file_list = []
     try:
         dfR = pd.read_csv(file_input + item_k)
         df_a = pd.read_csv(audio_input + item_k.split('_',1)[1].rpartition('_')[0] + '.csv')
@@ -91,12 +92,15 @@ for k, item_k in enumerate(entropy_files):
                     n = j
                     break
             
-        print(time_r)
         item_new = item_k.split("_")
         item_new = "_".join(item_new[1:-1])
         name_list.extend(repeat(str(item_new),len(np.array(mean_array))))
+        file_list.extend(repeat(str(item_k),len(np.array(mean_array))))
+        print(item_k.split('_')[0])
         df_plot = pd.DataFrame( {
             'Name': name_list,
+            'file': file_list,
+            'Rater': item_k.split("_")[0],
             't_%': time_array,
             'y_var': mean_array,
             't_0': time_r
@@ -117,13 +121,14 @@ binningPlots(df_plots)
 
 #df_plots.to_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/all_experiments_095/Test.csv')
 
-df_plots.drop_duplicates(subset=None, keep="first", inplace=True, ignore_index=True)
-if filter_out:
-    df_plots = df_plots[~df_plots['Dance_mode'].str.contains("D0")]
-    df_plots = df_plots[~df_plots['Artist'].str.contains("G")]
+#df_plots.drop_duplicates(subset=None, keep="first", inplace=True, ignore_index=True)
+# if filter_out:
+#     df_plots = df_plots[~df_plots['Dance_mode'].str.contains("D0")]
+#df_plots = df_plots[~df_plots['Rater'].str.contains("P")]
+print(df_plots)
     #df_plots = df_plots[~df_plots['Artist'].str.contains("G")]
 #df_plots = df_plots[~df_plots['Dance_mode'].str.contains("D5")]
-print(df_plots)
+#print(df_plots)
 # Figures
 
 #sns.violinplot(data=df_plots, x="Assigned_%", y="LZ", hue = 'Dance_mode')
@@ -135,8 +140,8 @@ fig.set_ylim([0, 7])
 #plt.show()
 #plt.savefig(save_plot+ file_name + '.png')
 
-
-df_plots.to_csv(save_plot + '/data/t%_ratings_' + rating+'.csv')
+#print(df_plots)
+df_plots.to_csv(save_plot + '/data/ratings/t%_ratings_' + rating+'.csv')
 
 
 
