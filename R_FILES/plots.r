@@ -298,10 +298,33 @@ summary(m01)
 dataSeries <- read.csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/all_experiments_095/data/t%_merged_average.csv')
 view(dataSeries)
 dataSeries$time <- as.factor(dataSeries$Assigned)
-ggplot(dataSeries, aes(time, FLOW , group = Rater))+ facet_wrap(~Pair)+
-  geom_smooth(aes(x= time, y= FLOW, group = Rater), method="lm",se=FALSE) + geom_point()
+ggplot(dataSeries, aes(x = time, y= t_LZ , group = Rater, color=factor(Artist)))+ facet_wrap(~Condition)+
+  geom_smooth(aes(x = time, y= t_LZ, group = Rater, color=factor(Artist)), method="lm",se=FALSE) + geom_point()
 
 geom_smooth(aes(x= Assigned, y= FLOW), method="lm",se=FALSE, colour='red')
 
 
+require("lme4")
+require("splines")
+
+m7_spline<-lmer(t_LZ ~ 1+ (bs(time) | Rater), data=dataSeries) #bs() base spline, estimate for best fitting spline for data. 
+dat$pred_spline<-predict(m7_spline, dat,re.form=NA)
+
+ggplot(dataSeries, aes(x=time, y=t_LZ, color=factor(Artist), fill=factor(Artist), group=Artist))+facet_wrap(~Condition)+
+  stat_summary(fun.data="mean_se", geom="ribbon", color=NA, alpha=0.1)+
+  stat_summary(fun="mean", geom="line", size=1.25)+
+  labs(title="LZ Complexity Across Conditions, Time-Series", y="Baseline-corrected pupil size (a.u.)")+
+  theme_bw(base_size=15)+theme(axis.title.x=element_blank(), legend.position="none")
+
+ggplot(dataSeries, aes(x=time, y=FLOW, color=factor(Artist), fill=factor(Artist), group=Artist))+facet_wrap(~Condition)+
+  stat_summary(fun.data="mean_se", geom="ribbon", color=NA, alpha=0.1)+
+  stat_summary(fun="mean", geom="line", size=1.25)+
+  labs(title="LZ Complexity Across Conditions, Time-Series", y="Baseline-corrected pupil size (a.u.)")+
+  theme_bw(base_size=15)+theme(axis.title.x=element_blank(), legend.position="none")
+
+ggplot(dataSeries, aes(x=time, y=IMPRO, color=factor(Artist), fill=factor(Artist), group=Artist))+facet_wrap(~Condition)+
+  stat_summary(fun.data="mean_se", geom="ribbon", color=NA, alpha=0.1)+
+  stat_summary(fun="mean", geom="line", size=1.25)+
+  labs(title="LZ Complexity Across Conditions, Time-Series", y="Baseline-corrected pupil size (a.u.)")+
+  theme_bw(base_size=15)+theme(axis.title.x=element_blank(), legend.position="none")
 
