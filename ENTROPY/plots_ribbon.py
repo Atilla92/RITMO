@@ -13,12 +13,18 @@ from itertools import repeat
 """
 Create a Ribbon plot of Entropy and LZ data.Loops over .csv files
 
+Uncomment on the bottom if you want .csv file to be stored and plots to be shown/saved. 
+
 Indicarw: 
     y_var = 'LZ' or 'var', which variable you want to have plot
     file_input = folder where the LZ or Entropy files for songs are
     save_plot = where to save figures
+    save_csv = where csv is to be saved. 
     file_name = name of file being saved 
     hue_var = grouping variable
+    loop_on = if you want to loop through all .csv files
+    filter_out = True if you want to filter out D0 of data. 
+
 
 """
 
@@ -29,6 +35,7 @@ hue_var = 'Dance_mode'
 title_plot = 'Zapateado'
 file_input = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_095'+source_var+'/var/'
 save_plot = '/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/all_experiments_095/var/'
+save_csv = '/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/all_experiments_095/'
 
 
 file_name = str(y_var + '_t_%' + '_drums_' + hue_var +'_filtered' )
@@ -131,7 +138,7 @@ fig.set(xlabel='t [%]', ylabel = y_var, title = title_plot)
 #plt.show()
 #plt.savefig(save_plot+ file_name + '.png')
 
-save_csv = '/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/all_experiments_095/'
+
 df_plots.to_csv(save_csv + '/data/t%_' + y_var +source_var+'.csv')
 
 

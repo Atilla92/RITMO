@@ -12,11 +12,13 @@ from functionsE import binningPlots, InfotoColumnsPlots
 Create a Ribbon plot of Entropy and LZ data.Loops over .csv files
 
 Indicarw: 
-    y_var = 'LZ' or 'var', which variable you want to have plot
-    file_input = folder where the LZ or Entropy files for songs are
+    rating = 'IMPRO' or 'FLOW', which variable you want to have plot
+    file_input = folder where ratings are
+    audio_input = uses the audio files to fetch total song length over which the %time is binned. 
     save_plot = where to save figures
     file_name = name of file being saved 
     hue_var = grouping variable
+    filter_ out = True if you want to filter out certain columns containing string (e.g. DO). 
 
 """
 

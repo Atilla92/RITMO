@@ -53,7 +53,16 @@ There are several scripts for plots
     3. Ribbon plots for entropy and complexity as f(t%): plots_ribbon.py
     4. Ribbon plots for Improvisation and Flow Subjective ratings as f(t%): plots_ratings.py
     
-    
+
+#### TIME SERIES ####
+After all of the previous steps you can also create a time-series .csv based on the online ratings of the artists. Need to run all three scripts. Script 3 uses output from script 1 and 2. 
+
+
+For time series analysis:
+    Time series have been binned in %time binned in 10 interval steps of 0.1. Three scripts have been made for plotting and for saving data as .csv 
+    1. plots_ribbon.py: works with entropy data (main/DATE/...) allows both to plot a ribbon plot of entropy and variance of entropy over time (y_var). Can both save plots and csv files. One measure at the time. 
+    2. plots_ratings.py: works with FLOW and IMPRO rating files. 
+    3. plots_entropy_flow.py: merges Ratings and Entropy measures in one .csv file for further analysis in R. Also binned at 0.1-1, 10 intervals. 
 
 
 ######
