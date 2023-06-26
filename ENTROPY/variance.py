@@ -16,7 +16,7 @@ import json
 
 # Output settings:
 #file_output = "/Users/atillajv/CODE/RITMO/ENTROPY/output/main/05_Jan_2023_095/var/" # Name of folder to store plots. 
-file_output = "/Users/atillajv/CODE/RITMO/ENTROPY/output/main/16_04_2023_095_guitar_demucs/var/"
+file_output = "/Users/atillajv/CODE/RITMO/ENTROPY/output/main/25_Jun_2023_095_drums/var/"
 
 
 if not os.path.exists(file_output):
@@ -35,7 +35,7 @@ show_plot = False # To show data instead of plotting, if saving data set to Fals
 
 # Code settings:
 #audio_path = '/Users/atillajv/CODE/FILES/PILOT_SEV_APRIL_2022/Audio/separated/htdemucs_6s/separated/all_guitar/'
-audio_path = '/Volumes/Seagate/FlamencoProject/L_Lausanne/Audio/all_guitar_demucs/'
+audio_path = '/Volumes/Seagate/FlamencoProject/F_Andalucia/DEMUCS/separated/drums/'
 loop_on = True # Set to True if you want to loop through a certain folder. Else not. 
 #loop_off = 'P7_D1_G1_M6_R2_T1.wav'
 loop_off = 'P7_D5_G1_M6_R1_T1.wav'

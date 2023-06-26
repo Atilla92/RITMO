@@ -15,7 +15,7 @@ from functionsE import plotAudio_2, calc_lz_df_2, quantize_vector, quartile_vect
 import json
 
 # Output settings:
-file_output = "/Users/atillajv/CODE/RITMO/ENTROPY/output/main/16_04_2023_095_guitar_demucs/" # Name of folder to store plots. 
+file_output = "/Users/atillajv/CODE/RITMO/ENTROPY/output/main/25_Jun_2023_095/" # Name of folder to store plots. 
 #file_output = "/Users/atillajv/CODE/RITMO/ENTROPY/output/main/Test/" # Name of folder to store plots. 
 
 
@@ -28,7 +28,7 @@ else:
 
 
 # Code settings:
-audio_path = '/Volumes/Seagate/FlamencoProject/L_Lausanne/Audio/all_guitar_demucs/'
+audio_path = '/Volumes/Seagate/FlamencoProject/F_Andalucia/ensemble_rode/'
 loop_on = True # Set to True if you want to loop through a certain folder. Else not. 
 #loop_off = 'P7_D1_G1_M6_R2_T1.wav'
 loop_off = 'P7_D5_G1_M6_R1_T1.wav'
@@ -188,7 +188,8 @@ variables_dict = {
     "preBinarise" : preBinarise_on,
     "quantile" : quartile,
     "absoluteOn": absolute_on,
-    "windowSize": step_size
+    "windowSize": step_size,
+    "sampleRate": samplerate,
 
 }
 json_object = json.dumps(variables_dict, indent = 4)

@@ -6,6 +6,7 @@ Protocol for getting all the data
 
     - Create a .csv for all subjective ratings fetched during the experiment. 
     - Create a folder with all audio data you would like to analyse.
+    - Run scripts on  ***python3.10****
 
 Script for source separation:
     0. Go to folder where all tracks are
