@@ -1,0 +1,12 @@
+"Begin Time - ss.msec","End Time - ss.msec","Duration - ss.msec","Sequence","Bloques","Step","Music_Mode","Category","Baile","Guitarra","Dance_Step"
+3.7,9.5,5.8,"Palmas Solo","1","20.19","MI","DI","Z2","A1","20.37"
+9.5,21.9,12.4,"Escobilla","2","20.20","MI","DC","Z3","A2","20.2"
+22.0,33.9,11.9,"Marcaje","2","20.3","MC","DC","Z2","A2","20.3"
+33.9,39.9,6.0,"Llamada","1","20.5","MC","DC","Z3","A1","20.4"
+39.9,45.9,6.0,"Cierre","1","20.6","MC","DC","Z3","A1","20.5"
+45.9,57.5,11.6,"Falseta","2","20.7","MC","DI","Z1","A3","20.38"
+57.6,68.9,11.3,"Marcaje","2","20.21","MI","DI","Z2","A2","20.39"
+68.9,75.4,6.5,"Marcaje","1","20.22","MI","DI","Z2","A3","20.40"
+75.4,86.9,11.5,"Respiro","2","20.23","MI","DI","Z2","A3","20.41"
+86.9,99.5,12.6,"Escobilla Cierre","2","20.13","MC","DI","Z3","A1","20.42"
+
