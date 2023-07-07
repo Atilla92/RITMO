@@ -7,14 +7,14 @@ import json
 #And have to add the response, from csv for subjective ratings. Does that make sense?
 
 # One file or all in a specific folder
-file_name = 'G4_P9_D6_G4_M6_R2_T2' # Name file if loop_on = False
+file_name = 'G6_P11_D6_G6_M6_R1_T2' # Name file if loop_on = False
 loop_on = True # True if you want to loop through folder
-path_files = '/Users/atillajv/CODE/RITMO/FILES/ELAN/'
+path_files = '/Users/atillajv/CODE/RITMO/FILES/ELAN/cleaned/'
 path_ratings = '/Users/atillajv/CODE/RITMO/FILES/Ratings/'
 #file_output = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_097/' #check that this is the same as input file for entropy
-file_output = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_095/' #check that this is the same as input file for entropy
+file_output = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_07072023_095/' #check that this is the same as input file for entropy
 #name_output = 'all_experimen'
-name_output = '08052023_all_experiments_drums_guitar_zd'
+name_output = '07072023_all_experiments_drums_guitar_zd'
 # Default settings 
 percentage = 0.1
 frac_round = 1 #Round/frac_round for moving rating to the left 
@@ -127,9 +127,10 @@ for file_i, file_item_long in enumerate(list_files):
 
     try:
         # ELAN folder with files with annotations
-        dfI = pd.read_csv ('/Users/atillajv/CODE/RITMO/FILES/ELAN/' + file_item + '.csv',  delimiter=';')
+        dfI = pd.read_csv ('/Users/atillajv/CODE/RITMO/FILES/ELAN/cleaned/' + file_item + '.csv',  delimiter=';')
         # Csv file with during experiments results 
-        dfS = pd.read_csv('/Users/atillajv/CODE/RITMO/PILOT_SEV_APRIL_2022/output/ratingsAnalysis/DuringExperiments_Sevilla_Lausanne_DropW.csv')
+        #dfS = pd.read_csv('/Users/atillajv/CODE/RITMO/PILOT_SEV_APRIL_2022/output/ratingsAnalysis/DuringExperiments_Andalu_DropW.csv')
+        dfS = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/Subjective/DuringExperiments_Andalucia_07072023_DropW.csv')
         # Rating files from CDRS
         dfR = pd.read_csv( '/Users/atillajv/CODE/RITMO/FILES/Ratings/'+ file_item_long +'_IMPRO.csv' )
         dfR_flow = pd.read_csv( '/Users/atillajv/CODE/RITMO/FILES/Ratings/'+ file_item_long +'_FLOW.csv' )
@@ -140,6 +141,7 @@ for file_i, file_item_long in enumerate(list_files):
         dfMIR_novelty = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/MIR/features_all_experiments/zoom/NOVELTY/' + file_item + '.csv')
         df_var = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_095/var/'+file_item+'.csv')[1:]
         #print('ok')
+
         # Features files based on drums sound files
         p_dfE = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_095_drums/'+file_item+'.csv')[1:]
         p_dfMIR_entropy = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/MIR/features_all_experiments/drums/ENTROPY/' + file_item + '.csv')
@@ -151,30 +153,29 @@ for file_i, file_item_long in enumerate(list_files):
         g_dfMIR_entropy = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/MIR/features_all_experiments/guitar_zoom/ENTROPY/' + file_item + '.csv')
         g_dfMIR_novelty = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/MIR/features_all_experiments/guitar_zoom/NOVELTY/' + file_item + '.csv')
         g_df_var = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_095_guitar_zd/var/'+file_item+'.csv')[1:]
-        #print('ok1', file_item)
+        print('ok1', file_item)
 
 
         # Estimate interval 
         # Add percentage 10%
-        
         dtI = dfI['Duration - ss.msec']
         rounds = dfI['Bloques']
         tI_0 = dfI['Begin Time - ss.msec'] - (dtI * percentage )
         tI_1 = dfI['End Time - ss.msec'] + (dtI * percentage )
         dtI_2 = tI_1 - tI_0
 
-        #print('hello')
+        print('hello')
 
         #Append end time to last row 
         dfR.loc[len(dfR.index)] = [tI_1.iloc[-1] ,dfR[' Value'].iloc[-1]]
         dfR_flow.loc[len(dfR_flow.index)] = [tI_1.iloc[-1] ,dfR[' Value'].iloc[-1]]
         #dfR.loc[len(dfR.index)] = [tI_1.iloc[-1] ,dfR[' Value'].iloc[-1]]
 
-    
+
 
         #Estimate which values fall within interval. 
         # Move ratings to the left 1/2 round
-    
+
         #dt_left = dtI/(rounds * frac_round)
         dfR['Time_2'] = dfR['Time'] - dt_L    
         # Add first row with time 0
@@ -214,7 +215,7 @@ for file_i, file_item_long in enumerate(list_files):
         MIR_rms_avg = []
         n=0
         m=0
-    
+
         #print(dfR_flow, tR_end_flow, tI_0, tI_1, tR_end)
 
         for i, item in enumerate(tI_0):
@@ -468,8 +469,8 @@ for file_i, file_item_long in enumerate(list_files):
         #     print('')            
 
         pass
-    # dfTest = dfS[ (dfS['Name'].str.contains(file_name)) & (dfS['Participant'].str.contains(prefix)) ]
-    # print(dfTest, 'TESTING!!!!!!!!')
+    dfTest = dfS[ (dfS['Name'].str.contains(file_name)) & (dfS['Participant'].str.contains(prefix)) ]
+    print(dfTest, 'TESTING!!!!!!!!')
 
 
 

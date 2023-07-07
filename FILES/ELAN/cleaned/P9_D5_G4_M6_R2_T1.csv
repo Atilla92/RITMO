@@ -1,0 +1,22 @@
+Begin Time - ss.msec;End Time - ss.msec;Duration - ss.msec;Sequence;Bloques;Step;Music_Mode;Category;Baile;Guitarra;Dance_Step
+6.3;17.9;11.6;Salida;1;13.1;MC;DC;Z1;A3;13.1
+18.0;30.0;12.0;Letra Respiro;1;13.2;MC;DC;Z1;A3;13.2
+30.1;41.3;11.2;Letra Respiro;1;13.3;MC;DC;Z1;A3;13.3
+41.3;53.8;12.5;Letra Paseo;1;13.4;MC;DI;Z1;A3;13.20
+53.8;65.9;12.1;Escobilla;1;13.5;MC;DI;Z3;A2;13.21
+66.0;76.8;10.8;Escobilla;1;13.6;MC;DC;Z3;A1;13.6
+76.8;88.6;11.8;Respiro;1;13.7;MC;DC;Z1;A2;13.7
+88.7;100.0;11.3;Marcaje;1;13.8;MC;DC;Z1;A2;13.8
+100.1;111.1;11.0;Marcaje Pitos;1;13.9;MC;DC;Z2;A2;13.9
+111.1;123.1;12.0;Marcaje Pitos;1;13.10;MC;DC;Z2;A2;13.10
+123.1;134.3;11.2;Marcaje;1;13.11;MC;DC;Z2;A2;13.11
+134.3;145.8;11.5;Marcaje;1;13.12;MC;DC;Z2;A2;13.12
+145.9;156.8;10.9;Pies;1;13.13;MC;DC;Z3;A1;13.13
+156.9;167.2;10.3;Cierre Respiro;1;13.14;MC;DI;Z2;A2;13.14
+167.2;177.7;10.5;Marcaje;1;13.15;MC;DI;Z2;A2;13.22
+177.8;185.6;7.8;Escobilla;1;13.15;MC;DI;Z3;A1;13.15
+185.7;192.2;6.5;Escobilla;1;13.16;MC;DC;Z3;A1;13.16
+192.3;199.1;6.8;Escobilla;1;13.17;MC;DC;Z3;A1;13.17
+199.2;205.2;6.0;Cierre Llamada;1;13.18;MC;DI;Z3;A1;13.23
+205.3;208.5;3.2;CIerre;0.5;13.20;MI;DI;Z2;A1;13.24
+

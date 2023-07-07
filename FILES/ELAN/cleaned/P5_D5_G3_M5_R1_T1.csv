@@ -1,0 +1,15 @@
+﻿Begin Time - ss.msec;End Time - ss.msec;Duration - ss.msec;Sequence;Bloques;Step;Music_Mode;Category;Baile;Guitarra
+3.5;10.1;6.6;Introduction Pitos;1;5.15;MC;DI;Z2;A1
+10.2;17.0;6.8;Pies;1;5.16;MI;DI;Z3;A2
+17.1;23.6;6.5;Marcaje Pies;1;5.17;MI;DI;Z2;A1
+23.7;30.0;6.3;Cierre;1;5.18;MC;DI;Z3;A1
+30.1;37.1;7.0;Respiro Pitos;1;5.19;MC;DI;Z2;A1
+37.1;45.4;8.3;Marcaje;1.25;5.20;MI;DI;Z2;A1
+45.4;50.4;5.0;Cierre;0.5;5.21;MI;DC;Z3;A1
+50.4;57.3;6.9;Marcaje;1;5.22;MI;DI;Z2;A1
+57.4;63.8;6.4;Marcaje;1;5.23;MI;DI;Z2;A1
+63.9;70.6;6.7;Marcaje Cierre;1;5.24;MI;DI;Z2;A1
+70.7;83.2;12.5;Zapateado;2;5.25;MI;DI;Z3;A1
+83.3;89.4;6.1;Respiro Pitos;0.75;5.26;MI;DI;Z2;A1
+89.4;96.1;6.7;Llamada;1;5.27;MC;DC;Z3;A1
+96.2;99.8;3.6;Cierre;0.5;5.28;MC;DC;Z3;A1

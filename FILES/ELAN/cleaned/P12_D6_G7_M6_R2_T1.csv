@@ -1,0 +1,32 @@
+Begin Time - ss.msec;End Time - ss.msec;Duration - ss.msec;Sequence;Bloques;Step;Music_Mode;Category;Baile;Guitarra;Dance_Step
+3.3;23.2;19.9;Entrada;1;17.1;MC;DC;Z1;A3;17.1
+23.2;43.7;20.5;Salida;1;17.2;MC;DC;Z1;A3;17.2
+43.7;60.3;16.6;Letra;1;17.3;MC;DC;Z1;A3;17.3
+60.3;75.9;15.6;Marcaje;1;17.4;MC;DC;Z1;A3;17.4
+76.0;91.9;15.9;Marcaje;1;17.5;MC;DC;Z1;A3;17.5
+91.9;103.2;11.3;Falseta;1;17.6;MC;DC;Z3;A3;17.6
+103.2;113.8;10.6;Falseta;1;17.7;MC;DC;Z3;A3;17.7
+113.8;123.3;9.5;Falseta;1;17.8;MC;DC;Z3;A3;17.8
+123.3;130.6;7.3;Escobilla;1;17.9;MC;DC;Z3;A1;17.9
+130.6;136.0;5.4;Subida;1;17.10;MC;DC;Z3;A1;17.10
+136.0;140.4;4.4;Subida;1;17.11;MC;DC;Z3;A1;17.11
+140.4;144.4;4.0;Escobilla;1;17.12;MC;DC;Z3;A1;17.12
+144.4;148.3;3.9;Cierre;1;17.13;MC;DC;Z3;A1;17.13
+148.3;153.0;4.7;Respiro;1;17.14;MC;DC;Z1;A1;17.14
+153.0;161.7;8.7;Escobilla;1;17.15;MC;DC;Z3;A1;17.15
+161.7;170.0;8.3;Escobilla;1;17.16;MC;DC;Z3;A1;17.16
+170.0;176.0;6.0;Escobilla;1;17.17;MC;DC;Z3;A1;17.17
+176.0;176.1;0.1;Escobilla;;;;;;;
+176.1;185.1;9.0;Escobilla;1;17.18;MC;DC;Z3;A1;17.18
+185.1;193.0;7.9;Escobilla;1;17.19;MC;DC;Z3;A1;17.19
+193.0;200.0;7.0;Escobilla;1;17.20;MC;DC;Z3;A1;17.20
+200.0;205.5;5.5;Escobilla;1;17.21;MC;DC;Z3;A1;17.21
+205.5;207.7;2.2;Respiro;1;17.21;MC;DC;Z1;A1;17.22
+207.7;214.6;6.9;Falseta;1;17.23;MC;DC;Z1;A3;17.23
+214.6;221.6;7.0;Falseta;1;17.24;MC;DC;Z2;A3;17.24
+221.6;229.9;8.3;Falseta;1;17.25;MC;DC;Z2;A3;17.25
+229.9;238.1;8.2;Falseta Falseta;1;17.26;MC;DC;Z1;A3;17.26
+238.1;238.2;0.1;Bajada;;17.26;MC;DC;Z1;A3;17.26
+238.2;246.6;8.4;Falseta;1;17.27;MC;DC;Z1;A3;17.27
+246.6;260.3;13.7;Bajada;1;17.28;MC;DC;Z1;A3;17.28
+

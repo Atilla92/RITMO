@@ -1,0 +1,13 @@
+"Begin Time - ss.msec";"End Time - ss.msec";"Duration - ss.msec";"Sequence";"Step";"Category";"Bloques";"Music_Mode";"Baile";"Guitarra"
+2.4;21.0;18.6;"Salida";"10.1";"DC";"10";"MC";"Z2";"A2"
+21.1;30.9;9.8;"Marcaje Pitos";"10.2";"DC";"6";"MC";"Z2";"A2"
+30.9;46.4;15.5;"Zapateado";"10.3";"DI";"10";"MC";"Z3";"A2"
+46.5;49.1;2.6;"Respiro";"10.4";"DC";"2";"MC";"Z2";"A2"
+49.2;57.4;8.2;"Escobilla";"10.5";"DI";"5";"MC";"Z3";"A1"
+57.4;67.5;10.1;"Escobilla";"10.5";"DC";"7";"MC";"Z3";"A1"
+67.6;81.4;13.8;"Letra";"10.6";"DC";"8";"MC";"Z2";"A3"
+81.5;93.7;12.2;"Letra";"10.7";"DI";"8";"MC";"Z2";"A3"
+93.8;105.6;11.8;"Escobilla";"10.8";"DI";"8";"MC";"Z3";"A2"
+105.7;110.8;5.1;"Escobilla";"10.9";"DC";"4";"MC";"Z3";"A1"
+110.9;114.6;3.7;"Cierre";"10.9";"DI";"2";"MI";"Z3";"A1"
+

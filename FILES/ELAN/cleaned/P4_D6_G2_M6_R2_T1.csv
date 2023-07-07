@@ -1,0 +1,15 @@
+Begin Time - ss.msec;End Time - ss.msec;Duration - ss.msec;Sequence;Bloques;Step;Music_Mode;Category;Baile;Guitarra
+7.1;19.0;21.5;Salida;2;3.1;MC;DC;Z2;A3
+19.0;28.7;9.7;Salida;2;3.1;MC;DC;Z1;A3
+28.7;38.8;10.1;Letra 1;2;3.2;MC;DC;Z3;A2
+38.8;48.1;9.3;Letra 1;2;3.2;MC;DC;Z2;A2
+48.1;67.7;19.6;Escobilla ;4;3.3;MC;DC;Z3;A3
+67.8;81.5;13.7;Escobilla + Remate + Respiro;3;3.4;MC;DC;Z3;A2
+81.5;88.9;7.4;Respiro;1;3.5;MC;DC;Z1;A2
+88.9;100.9;12.0;Escobilla + Subida;4;3.6;MC;DC;Z3;A1
+101.0;112.1;11.1;Escobilla;4;3.7;MC;DC;Z3;A2
+112.2;123.7;11.5;Escobilla;4;3.8;MC;DC;Z3;A2
+123.8;135.6;11.8;Marcaje;4;3.9;MC;DC;Z2;A2
+135.7;147.0;11.3;Escobilla + Remate;4;3.10;MC;DC;Z3;A1
+147.1;157.3;10.2;Llamada;4;3.11;MC;DC;Z2;A1
+157.4;163.2;5.8;Cierre;2;3.12;MC;DC;Z2;A1

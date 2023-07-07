@@ -1,0 +1,17 @@
+Begin Time - ss.msec;End Time - ss.msec;Duration - ss.msec;Sequence;Bloques;Step;Music_Mode;Category;Baile;Guitarra
+6.8;19.1;12.3;Introduction;4;2.1;MC;DI;Z1;A3
+19.2;31.2;12.0;Introduction;4;2.2;MC;DI;Z1;A3
+31.3;44.0;12.7;Letra 1;4;2.3;MC;DI;Z1;A3
+44.1;56.4;12.3;Letra 1;4;2.4;MC;DI;Z2;A3
+56.5;68.2;11.7;Letra 2 - Zapateado ;4;2.5;MC;DI;Z3;A3
+68.3;80.2;11.9;Letra 2 - Zapateado ;4;2.6;MC;DI;Z3;A3
+80.3;91.7;11.4;Zapateado 1;4;2.7;MC;DI;Z3;A2
+91.7;106.1;14.4;Letra 3 - Marcajes;5;2.8;MC;DI;Z1;A2
+106.2;118.1;11.9;Falseta - Movimientos;4.5;2.9;MC;DI;Z1;A2
+118.2;130.6;12.4;Zapateado 2;4.5;2.10;MC;DI;Z3;A3
+130.7;143.0;12.3;Falseta - Pies;4.5;2.11;MC;DI;Z3;A3
+143.1;154.1;11.0;Letra 3;4;2.12;MC;DI;Z3;A3
+154.2;165.5;11.3;Marcaje;4;2.13;MC;DI;Z2;A2
+165.5;175.7;10.2;Pies;4;2.14;MC;DI;Z3;A1
+175.7;186.6;10.9;Paseando;4;2.15;MC;DI;Z3;A1
+186.6;193.0;6.4;Cierre Final;2;2.16;MC;DI;Z2;A1

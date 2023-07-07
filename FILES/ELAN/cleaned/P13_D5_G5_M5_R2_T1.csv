@@ -1,0 +1,24 @@
+Begin Time - ss.msec;End Time - ss.msec;Duration - ss.msec;Sequence;Bloques;Step;Music_Mode;Category;Baile;Guitarra;Dance_Step
+2.8;7.3;4.5;Salida;21.21;1;MC;DC;Z1;A1;21.21
+7.3;17.5;10.2;Salida Pitos;21.1;2;MC;DI;Z1;A3;21.52
+17.5;28.1;10.6;Salida;21.2;2;MC;DC;Z2;A3;21.2
+28.1;37.4;9.3;Escobilla;21.3;2;MC;DC;Z3;A1;21.3
+37.4;46.6;9.2;Escobilla;21.4;2;MC;DC;Z3;A1;21.4
+46.6;51.5;4.9;Cierre;21.5;1;MC;DI;Z3;A1;21.53
+51.5;61.3;9.8;Baile Pitos ;21.6;2;MC;DI;Z2;A3;21.54
+61.3;71.3;10.0;Marcajes;21.29;2;MI;DC;Z2;A3;21.55
+71.3;76.5;5.2;Interludio;21.30;1;MI;DI;Z1;A3;21.56
+76.5;86.0;9.5;Escobilla;21.8;2;MC;DI;Z3;A2;21.57
+86.0;95.2;9.2;Escobilla;21.31;2;MI;DI;Z3;A1;21.58
+95.2;104.8;9.6;Escobilla;21.32;2;MI;DI;Z3;A1;21.59
+104.8;113.6;8.8;Escobilla;21.33;2;MI;DI;Z3;A1;21.60
+113.6;118.7;5.1;Cierre;21.34;1;MI;DI;Z3;A1;21.61
+118.7;126.8;8.1;Respiro;21.35;1;MI;DI;Z1;A2;21.62
+126.8;140.0;13.2;Falseta;21.36;4;MI;DI;Z2;A3;21.63
+140.0;153.3;13.3;Falseta;21.37;4;MI;DI;Z3;A3;21.64
+153.3;159.9;6.6;Interludio Palmas;21.38;2;MI;DI;Z2;A2;21.65
+160.0;166.0;6.0;Escobilla;21.17;2;MC;DC;Z3;A1;21.17
+166.0;171.0;5.0;Escobilla;21.18;2;MC;DC;Z3;A1;21.18
+171.1;176.3;5.2;Escobilla;21.19;2;MC;DI;Z3;A1;21.66
+176.4;182.5;6.1;Cierre;21.20;2;MC;DI;Z3;A1;21.67
+

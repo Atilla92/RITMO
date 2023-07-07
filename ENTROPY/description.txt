@@ -70,6 +70,10 @@ For time series analysis:
 A description of all the scripts can be found below.
 ######
 
+cleanELAN
+    If you want to replace , wtih ; and remove "" when creating new ELANannotation .csv
+
+
 ELANanalysis
     Estimates average flow and improvisation rating for each ELAN annotation.
     Includes both Guitarist and Dancer

@@ -1,0 +1,49 @@
+Begin Time - ss.msec;End Time - ss.msec;Duration - ss.msec;Sequence;Bloques;Step;Music_Mode;Category;Baile;Guitarra
+3.1;15.8;12.7;Salida;4;4.1;MC;DC;Z1;A3
+15.8;28.2;12.4;Salida;4;4.2;MC;DC;Z2;A3
+28.2;40.2;12.0;Letra 1;4;4.3;MC;DC;Z2;A3
+40.2;51.4;11.2;Letra;4;4.4;MC;DC;Z2;A3
+51.5;62.9;11.4;Letra;4;4.5;MC;DC;Z2;A3
+63.0;73.4;10.4;Letra;4;4.6;MC;DC;Z2;A3
+73.4;79.1;5.7;Escobilla;2;4.7.1;MC;DC;Z3;A3
+79.1;84.8;5.7;Escobilla, Marcaje;2;4.7;MC;DC;Z2;A3
+84.9;98.1;13.2;Marcaje, Cierre;4;4.8;MC;DC;Z1;A3
+98.2;103.7;5.5;Escobilla comienzo;2;4.9;MC;DC;Z3;A3
+103.7;107.3;3.6;Marcaje;2;4.9;MC;DC;Z2;A3
+107.4;114.8;7.4;Letra ;4;4.10;MC;DC;Z2;A2
+114.9;118.6;3.7;Pies, Letra;2;4.11;MC;DC;Z2;A2
+118.6;122.4;3.8;Escobilla;2;4.11;MC;DC;Z3;A2
+122.5;130.0;7.5;Marcaje;4;4.12;MC;DC;Z2;A2
+130.2;137.2;7.0;Escobilla, Giros;4;4.13;MC;DC;Z3;A1
+137.3;144.6;7.3;Baile, Marcaje;4;4.14;MC;DC;Z1;A1
+144.7;151.6;6.9;Moviemiento;4;4.15;MC;DC;Z1;A2
+151.7;157.6;5.9;Llamada;4;4.16;MC;DC;Z3;A1
+157.7;164.1;6.4;Cierre;4;4.17;MC;DC;Z3;A1
+164.2;172.0;7.8;Respiro, Giro;2;4.18;MC;DC;Z1;A1
+172.0;176.8;4.8;Marcaje;2;4.18;MC;DC;Z1;A1
+176.8;185.4;8.6;Letra 2;4;4.19;MC;DC;Z1;A1
+185.4;192.9;7.5;Letra 2;4;4.20;MC;DC;Z2;A1
+193.0;199.8;6.8;Marcake;4;4.21;MC;DC;Z2;A1
+199.9;212.1;12.2;Letra 2;4;4.22;MC;DC;Z1;A3
+212.2;223.8;11.6;Letra 2;4;4.23;MC;DC;Z1;A3
+223.8;229.3;5.5;Marcaje;2;4.24;MC;DC;Z2;A3
+229.3;240.1;10.8;Marcaje;4;4.25;MC;DC;Z2;A1
+240.2;248.7;8.5;Pies, Subida;4;4.26;MC;DC;Z3;A1
+248.8;255.4;6.6;Pies, Subida;4;4.27;MC;DC;Z3;A1
+255.4;262.0;6.6;Marcaje, Pies;4;4.28;MC;DC;Z3;A1
+262.1;270.75;8.65;Marcaje;6;4.29;MC;DC;Z3;A2
+270.8;277.5;6.7;Llamada ;4;4.30;MC;DC;Z3;A1
+277.5;283.7;6.2;Paseo;4;4.31;MC;DC;Z1;A1
+283.8;290.1;6.3;Movimiento;4;4.32;MC;DC;Z1;A1
+290.2;294.2;4.0;Giros, subida;4;4.33;MC;DC;Z1;A1
+294.3;300.1;5.8;Escobilla, comienzo;4;4.34;MC;DC;Z2;A1
+300.2;305.5;5.3;Escobilla comienzo;4;4.35;MC;DC;Z3;A3
+305.6;311.5;5.9;Escobilla;4;4.36;MC;DC;Z3;A3
+311.6;322.6;11.0;Movimiento;8;4.37;MC;DC;Z1;A3
+322.7;333.7;11.0;Zapateado;8;4.38;MC;DC;Z3;A3
+333.8;339.9;6.1;Marcaje;4;4.39;MC;DC;Z2;A1
+340.0;346.1;6.1;Marcaje;4;4.40;MC;DC;Z2;A1
+346.2;352.2;6.0;Escobilla;4;4.41;MC;DC;Z3;A1
+352.3;357.7;5.4;Escobilla, Cierre;4;4.42;MC;DC;Z3;A1
+357.8;363.7;5.9;Llamada;4;4.43;MC;DC;Z2;A1
+363.7;369.3;5.6;Llamada, cierre;4;4.44;MC;DC;Z2;A1

@@ -1,0 +1,17 @@
+Begin Time - ss.msec;End Time - ss.msec;Duration - ss.msec;Sequence;Bloques;Step;Music_Mode;Category;Baile;Guitarra;Dance_Step
+4.2;15.3;11.1;Salida;1;19.1;MC;DI;Z1;A3;19.1
+15.3;32.7;17.4;Salida;1;19.21;MI;DI;Z1;A3;19.36
+32.7;49.4;16.7;Salida;1;19.3;MC;DI;Z1;A3;19.37
+49.4;59.0;9.6;Interludio;1;19.4;MC;DI;Z3;A2;19.38
+59.0;78.4;19.4;Escobilla;1;19.22;MI;DI;Z3;A1;19.39
+78.4;88.0;9.6;Interludio;1;19.23;MI;DI;Z1;A2;19.40
+88.0;98.1;10.1;Falseta;1;19.9;MC;DI;Z1;A3;19.41
+98.1;107.1;9.0;Falseta;1;19.10;MC;DC;Z1;A3;19.10
+107.1;116.7;9.6;Falseta;1;19.11;MC;DI;Z2;A3;19.42
+116.7;126.0;9.3;Falseta;1;19.11;MC;DI;Z3;A3;19.43
+126.0;135.6;9.6;Pies;1;19.23;MI;DI;Z3;A2;19.44
+135.6;145.2;9.6;Interludio;1;19.24;MI;DI;Z2;A2;19.45
+145.2;145.3;0.1;Escobilla;1;19.25;MI;DC;Z3;A2;19.14
+145.3;164.6;19.3;Escobilla;2;19.25;MI;DI;Z3;A2;19.46
+164.6;183.6;19.0;Remate;2;19.26;MI;DI;Z3;A1;19.47
+

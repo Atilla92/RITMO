@@ -15,7 +15,7 @@ from functionsE import plotAudio_2, calc_lz_df_2, quantize_vector, quartile_vect
 import json
 
 # Output settings:
-file_output = "/Users/atillajv/CODE/RITMO/ENTROPY/output/main/25_Jun_2023_095/" # Name of folder to store plots. 
+file_output = "/Users/atillajv/CODE/RITMO/ENTROPY/output/main/25_Jun_2023_095/var/" # Name of folder to store plots. 
 #file_output = "/Users/atillajv/CODE/RITMO/ENTROPY/output/main/Test/" # Name of folder to store plots. 
 
 

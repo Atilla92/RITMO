@@ -1,0 +1,26 @@
+Begin Time - ss.msec;End Time - ss.msec;Duration - ss.msec;Sequence;Bloques;Step;Music_Mode;Category;Baile;Guitarra;Dance_Step
+3.4;8.4;5.0;Tapado;1;21.21;MC;DC;Z1;A1;21.21
+8.6;19.0;10.4;Salida;2;21.1;MC;DC;Z2;A3;21.1
+19.0;28.5;9.5;Salida;2;21.2;MC;DC;Z2;A3;21.2
+28.5;37.8;9.3;Escobilla;2;21.3;MC;DC;Z3;A1;21.3
+37.8;47.3;9.5;Escobilla;2;21.4;MC;DC;Z3;A1;21.4
+47.3;52.9;5.6;Cierre;1;21.5;MC;DC;Z3;A1;21.5
+52.9;62.1;9.2;Falseta;2;21.6;MC;DC;Z1;A3;21.6
+62.1;72.4;10.3;Marcaje;2;21.7;MC;DC;Z2;A3;21.7
+72.4;81.0;8.6;Escobilla;2;21.8;MC;DC;Z3;A2;21.8
+81.0;81.1;0.1;Escobilla;;;;;;;
+81.1;89.3;8.2;Escobilla;2;21.9;MC;DC;Z3;A2;21.9
+89.3;96.8;7.5;Escobilla;2;21.10;MC;DC;Z3;A2;21.10
+96.9;103.8;6.9;Escobilla;2;21.11;MC;DC;Z3;A1;21.11
+103.8;111.0;7.2;Llamada Cierre;2;21.12;MC;DC;Z3;A1;21.12
+111.0;114.5;3.5;Cierre;;;;;;;
+111.0;114.6;3.6;;0.5;21.13;MC;DC;Z1;A1;21.13
+114.5;114.6;0.1;Falseta;;;;;;;
+114.6;127.6;13.0;Falseta;4;21.14;MC;DC;Z3;A3;21.14
+127.6;140.1;12.5;Falseta;4;21.15;MC;DC;Z3;A3;21.15
+140.1;153.2;13.1;Falseta;4;21.16;MC;DC;Z3;A3;21.16
+153.2;161.8;8.6;Subida;3;21.17;MC;DC;Z3;A2;21.17
+161.8;169.5;7.7;Subida;3;21.18;MC;DC;Z3;A1;21.18
+169.5;175.3;5.8;Subida;2;21.19;MC;DC;Z3;A1;21.19
+175.3;181.4;6.1;Cierre;2;21.20;MC;DC;Z3;A1;21.20
+

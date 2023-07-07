@@ -1,0 +1,49 @@
+Begin Time - ss.msec;End Time - ss.msec;Duration - ss.msec;Sequence;Bloques;Step;Music_Mode;Category;Baile;Guitarra
+2.5;14.8;12.3;Salida;4;4.1;MC;DI;Z1;A3
+14.9;26.1;11.2;Salida;4;4.2;MC;DI;Z1;A3
+26.1;38.2;12.1;Letra, Marcaje;4;4.3;MC;DI;Z2;A3
+38.3;49.0;10.7;Letra;4;4.4;MC;DI;Z2;A3
+49.1;59.8;10.7;Letra;4;4.5;MC;DI;Z2;A3
+59.8;70.3;10.5;Letra;4;4.6;MC;DI;Z2;A2
+70.4;75.6;5.2;Pies;2;4.7;MC;DI;Z3;A3
+75.7;80.7;5.0;Pies;2;4.7;MC;DI;Z3;A3
+80.8;91.9;11.1;Marcaje;4;4.8;MC;DI;Z2;A3
+92.0;95.8;3.8;Marcaje, Pitos;2;4.9;MC;DI;Z1;A3
+95.9;99.0;3.1;Marcaje, Pitos;2;4.9;MC;DI;Z3;A3
+99.1;106.3;7.2;Escobilla;4;4.10;MC;DI;Z3;A2
+106.3;109.6;3.3;Marcaje;2;4.11;MC;DI;Z2;A1
+109.7;113.2;3.5;Marcaje, Pies;2;4.11;MC;DI;Z2;A1
+113.2;120.9;7.7;Pies, Marcaje;4;4.12;MC;DI;Z3;A1
+120.9;128.4;7.5;Pies, Pitos;4;4.13;MC;DI;Z3;A1
+128.5;135.7;7.2;Marcaje, Movimiento;4;4.14;MC;DI;Z2;A1
+135.7;142.9;7.2;Movimiento;4;4.15;MC;DI;Z2;A2
+143.0;149.1;6.1;Llamada;4;4.16;MC;DI;Z2;A1
+149.2;155.1;5.9;Llamada, Cierre, Movimientos;4;4.17;MC;DI;Z1;A1
+155.2;161.8;6.6;Escobilla;2;4.18;MC;DI;Z3;A1
+161.9;166.3;4.4;Escobilla;2;4.18;MC;DI;Z3;A1
+166.4;174.5;8.1;Marcaje, Poco Movimiento;4;4.19;MC;DI;Z2;A1
+174.5;182.2;7.7;Letra 2;4;4.20;MC;DI;Z2;A1
+182.3;188.5;6.2;Subida;4;4.21;MC;DI;Z3;A1
+188.6;199.0;10.4;Escobilla, Marcaje, Le fuerza a volver al baile no le sigue. ;4;4.22;MC;DI;Z3;A3
+199.1;209.3;10.3;Letra 2;4;4.23;MC;DI;Z1;A3
+209.3;214.2;4.9;Cierre Letra;4;4.24;MC;DI;Z1;A3
+214.3;223.0;8.7;Letra;4;4.25;MC;DI;Z2;A1
+223.0;232.3;9.3;Letra;4;4.26;MC;DI;Z2;A1
+232.3;239.9;7.6;Subida;4;4.27;MC;DI;Z3;A1
+240.0;245.8;5.8;Escobilla, ;4;4.28;MC;DI;Z3;A1
+245.9;255.0;9.1;Fin Letra;6;4.29;MC;DI;Z2;A2
+255.0;261.4;6.4;Baile, Bajada;4;4.30;MC;DI;Z2;A1
+261.5;266.8;5.3;Subida;4;4.31;MC;DI;Z3;A1
+266.8;273.3;6.5;Bajada;4;4.32;MC;DI;Z3;A1
+273.5;277.1;3.6;Subida;4;4.33;MC;DI;Z3;A1
+277.1;282.9;5.8;Subida, Cierre;4;4.34;MC;DI;Z2;A1
+282.9;288.7;5.8;Letra;4;4.35;MC;DI;Z1;A3
+288.8;294.3;5.5;Letra;4;4.36;MC;DI;Z1;A3
+294.4;305.8;11.4;Letra;8;4.37;MC;DI;Z1;A3
+305.9;317.1;11.2;Baile;8;4.38;MC;DI;Z3;A3
+317.2;323.7;6.5;Marcaje;4;4.39;MC;DI;Z2;A1
+323.8;329.9;6.1;Marcaje, Pies;4;4.40;MC;DI;Z3;A1
+330.0;336.0;6.0;Zapateado;4;4.41;MC;DI;Z3;A1
+336.1;341.9;5.8;Marcaje;4;4.42;MC;DI;Z3;A1
+341.9;347.7;5.8;Llamada;4;4.43;MC;DI;Z2;A1
+347.8;353.6;5.8;Llama + Cierre;4;4.44;MC;DI;Z2;A1

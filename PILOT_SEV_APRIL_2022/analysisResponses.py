@@ -6,7 +6,7 @@ from scipy import stats
 #import seaborn as sns
 import matplotlib.pyplot as plt
 
-df = pd.read_csv ('Responses/DuringExperiments_April2023_all.csv')
+df = pd.read_csv ('/Users/atillajv/CODE/RITMO/FILES/Subjective/DuringExperiments_23062023_Andalucia_DropW.csv')
 print(df)
 #df = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/17_Dec_2022/17122022_095_2s.csv')
 
@@ -82,7 +82,7 @@ print(df)
 
 
 #df.to_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/17_Dec_2022/17122022_095_2s_Corr.csv')
-df.to_csv('output/ratingsAnalysis/DuringExperiments_Sevilla_Lausanne_DropW.csv', index=False)
+df.to_csv('output/ratingsAnalysis/DuringExperiments_Andalucia_07072023_DropW.csv', index=False)
 
 #https://blog.4dcu.be/programming/2021/03/16/Code-Nugget-Correlation-Heatmaps.html
 
