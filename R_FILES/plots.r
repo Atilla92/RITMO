@@ -42,6 +42,8 @@ dataELAN_G <- dataELAN[!grepl("P", dataELAN$Participant),] #only dancers
 dataELAN_C <- dataELAN[grepl("D1_M1", dataELAN$Condition),] #only Fully flow
 
 
+# Checking whether data looks good. 
+
 
 
 

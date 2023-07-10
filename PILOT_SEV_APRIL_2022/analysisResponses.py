@@ -61,6 +61,8 @@ def InfotoColumns(df):
     music_array = []
     palo_array = []
     participant_array = []
+    condition_array = []
+    pair_array = []
     for i, item in enumerate(df['Name']):
 
         split_array = item.split('_')
@@ -68,11 +70,18 @@ def InfotoColumns(df):
         dance_array.append(split_array[1])
         music_array.append(split_array[3])
         palo_array.append(split_array[4])
-        print(split_array)
+        condition_array.append(str(split_array[1] +'_' + split_array[3]))
+        pair_array.append(str(split_array[0]+ '_' + split_array[2]))
+        #print(split_array)
 
     df['Dance_mode'] = dance_array
     df['Music_mode'] = music_array
     df['Palo'] = palo_array
+    df['Condition']= condition_array
+    df['Pair'] = pair_array
+
+
+df['Artist'] = df['Participant'].apply(lambda x: x[0])
 
 #df = df.dropna()
 #AverageFlowtoDF(df)
@@ -82,7 +91,7 @@ print(df)
 
 
 #df.to_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/17_Dec_2022/17122022_095_2s_Corr.csv')
-df.to_csv('output/ratingsAnalysis/DuringExperiments_Andalucia_07072023_DropW.csv', index=False)
+df.to_csv('output/ratingsAnalysis/DuringExperiments_Andalucia_10072023_DropW.csv', index=False)
 
 #https://blog.4dcu.be/programming/2021/03/16/Code-Nugget-Correlation-Heatmaps.html
 
