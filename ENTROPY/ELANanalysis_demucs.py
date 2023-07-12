@@ -14,7 +14,7 @@ path_ratings = '/Users/atillajv/CODE/RITMO/FILES/Ratings/'
 #file_output = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_097/' #check that this is the same as input file for entropy
 file_output = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_07072023_095/' #check that this is the same as input file for entropy
 #name_output = 'all_experimen'
-name_output = '07072023_all_experiments_drums_guitar_zd'
+name_output = '10072023_all_experiments_drums_guitar_zd'
 # Default settings 
 percentage = 0.1
 frac_round = 1 #Round/frac_round for moving rating to the left 
@@ -41,7 +41,7 @@ print(list_files)
 
 # Initiate dataframe before loop 
 store_i = 0
-df_store = pd.DataFrame(columns=['Name', 'Duration', 'Participant', 'Music_Imp', 'Dance_Imp', 'Baile_Level','Guitarra_Level' ,'Step', 
+df_store = pd.DataFrame(columns=['Name', 'Duration', 'Participant', 'Music_Imp', 'Dance_Imp', 'Baile_Level','Guitarra_Level' ,'Step', 'Artist', 
 'Imp_subj','Imp_avg', 'Flow_subj', 'Flow_avg',
 'CTW', 'LZ','Assigned_Cat', 'Rounds', 
 'Q1a',
@@ -130,7 +130,7 @@ for file_i, file_item_long in enumerate(list_files):
         dfI = pd.read_csv ('/Users/atillajv/CODE/RITMO/FILES/ELAN/cleaned/' + file_item + '.csv',  delimiter=';')
         # Csv file with during experiments results 
         #dfS = pd.read_csv('/Users/atillajv/CODE/RITMO/PILOT_SEV_APRIL_2022/output/ratingsAnalysis/DuringExperiments_Andalu_DropW.csv')
-        dfS = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/Subjective/DuringExperiments_Andalucia_07072023_DropW.csv')
+        dfS = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/Subjective/DuringExperiments_Andalucia_10072023_DropW.csv')
         # Rating files from CDRS
         dfR = pd.read_csv( '/Users/atillajv/CODE/RITMO/FILES/Ratings/'+ file_item_long +'_IMPRO.csv' )
         dfR_flow = pd.read_csv( '/Users/atillajv/CODE/RITMO/FILES/Ratings/'+ file_item_long +'_FLOW.csv' )
@@ -153,7 +153,7 @@ for file_i, file_item_long in enumerate(list_files):
         g_dfMIR_entropy = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/MIR/features_all_experiments/guitar_zoom/ENTROPY/' + file_item + '.csv')
         g_dfMIR_novelty = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/MIR/features_all_experiments/guitar_zoom/NOVELTY/' + file_item + '.csv')
         g_df_var = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_095_guitar_zd/var/'+file_item+'.csv')[1:]
-        print('ok1', file_item)
+        #print('ok1', file_item)
 
 
         # Estimate interval 
@@ -164,7 +164,6 @@ for file_i, file_item_long in enumerate(list_files):
         tI_1 = dfI['End Time - ss.msec'] + (dtI * percentage )
         dtI_2 = tI_1 - tI_0
 
-        print('hello')
 
         #Append end time to last row 
         dfR.loc[len(dfR.index)] = [tI_1.iloc[-1] ,dfR[' Value'].iloc[-1]]
@@ -376,6 +375,7 @@ for file_i, file_item_long in enumerate(list_files):
                 'Music_Imp': dfI['Music_Mode'].iloc[i],
                 'Dance_Imp': dfI['Category'].iloc[i],
                 'Step': dfI['Step'].iloc[i],
+                'Artist': dfTest['Artist'].iloc[0],
                 'Imp_subj': np.sum(np.multiply(mean_array,proportion_array)),
                 'Imp_avg' : dfR[' Value'].mean(),
                 'Flow_subj': np.sum(np.multiply(mean_array_flow,proportion_array_flow)),
@@ -470,7 +470,7 @@ for file_i, file_item_long in enumerate(list_files):
 
         pass
     dfTest = dfS[ (dfS['Name'].str.contains(file_name)) & (dfS['Participant'].str.contains(prefix)) ]
-    print(dfTest, 'TESTING!!!!!!!!')
+    #print(dfTest, 'TESTING!!!!!!!!')
 
 
 

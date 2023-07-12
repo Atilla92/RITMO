@@ -5,8 +5,8 @@ library(lmerTest)
 
 #dataMICRO <- read.csv("~/CODE/RITMO/ENTROPY/output/main/all_experiments_07072023_095/07072023_all_experiments_drums_guitar_zd.csv")
 data <- read.csv("~/CODE/RITMO/FILES/Subjective/DuringExperiments_Andalucia_10072023_DropW.csv")
-data_P <- data[!grepl("G", dataELAN$Participant),] #only dancers
-data_G <- data[!grepl("P", dataELAN$Participant),] #only dancers
+data_P <- data[!grepl("G", data$Participant),] #only dancers
+data_G <- data[!grepl("P", data$Participant),] #only dancers
 
 # ALl analysis
 data$Dance_mode <- as.factor(data$Dance_mode)
