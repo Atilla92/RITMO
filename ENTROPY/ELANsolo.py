@@ -12,8 +12,7 @@ loop_on = True # True if you want to loop through folder
 path_files = '/Users/atillajv/CODE/RITMO/FILES/ELAN/cleaned/'
 #path_ratings = '/Users/atillajv/CODE/RITMO/FILES/Ratings/'
 #file_output = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_097/' #check that this is the same as input file for entropy
-file_output = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_095/' #check that this is the same as input file 
-
+file_output = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_07072023_095/' #check that this is the same as input file 
 # Default settings 
 percentage = 0.1
 frac_round = 1 #Round/frac_round for moving rating to the left 

@@ -54,7 +54,7 @@ AverageFlowtoDF(df)
 # CronchbachAlpha(df_G)
 # correlMatrix(df_G, True)
 
-
+df = filterOut(df, 'D0')
 
 def InfotoColumns(df):
     dance_array = []
@@ -91,7 +91,7 @@ print(df)
 
 
 #df.to_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/17_Dec_2022/17122022_095_2s_Corr.csv')
-df.to_csv('output/ratingsAnalysis/DuringExperiments_Andalucia_10072023_DropW.csv', index=False)
+df.to_csv('output/ratingsAnalysis/DuringExperiments_Andalucia_10072023_DropW_DropDO.csv', index=False)
 
 #https://blog.4dcu.be/programming/2021/03/16/Code-Nugget-Correlation-Heatmaps.html
 

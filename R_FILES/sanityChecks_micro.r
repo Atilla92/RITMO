@@ -1,9 +1,16 @@
 
+library(ggplot2)
+library(sjPlot)
+library(sjlabelled)
+library(sjmisc)
+library(dplyr)
 
 
 data_raw <- read.csv("~/CODE/RITMO/ENTROPY/output/main/all_experiments_07072023_095/10072023_all_experiments_drums_guitar_zd.csv")
+data_raw_2 <- read.csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_07072023_095/12072023_ELAN_no_CDRS.csv')
+
 #drop duplicates
-data <- data %>% distinct(Name,Participant,number, .keep_all = TRUE)
+data <- data_raw_2 %>% distinct(Name,Participant,number, .keep_all = TRUE)
 
 
 data_P <- data[grepl("P", data$Participant),] #only dancers
@@ -26,10 +33,6 @@ data$Artist <- as.factor(data$Artist)
 
 # Check general stats
 plot.new()
-library(ggplot2)
-library(sjPlot)
-library(sjlabelled)
-library(sjmisc)
 
 
 participant_counts <- table(data$Participant[data$Q1a != ""])
@@ -38,7 +41,7 @@ print(sorted_counts)
 
 
 
-library(dplyr)
+
 
 # Count number of unique responses per participant and list unique names
 participant_unique_names <- data %>%
