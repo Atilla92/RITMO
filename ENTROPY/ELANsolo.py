@@ -17,7 +17,7 @@ file_output = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_07
 percentage = 0.1
 frac_round = 1 #Round/frac_round for moving rating to the left 
 dt_L = 2 #Number of seconds delay in rating of user. 
-name_output = '12072023_ELAN_no_CDRS'
+name_output = '20072023_ELAN_no_CDRS'
 
 list_files = []
 #error_files = []
@@ -128,7 +128,7 @@ def loopThroughFiles (list_files, artist_label, percentage = percentage , frac_r
             # ELAN folder with files with annotations
             dfI = pd.read_csv ('/Users/atillajv/CODE/RITMO/FILES/ELAN/cleaned/' + file_item + '.csv',  delimiter=';')
             # Csv file with during experiments results 
-            dfS = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/Subjective/DuringExperiments_Andalucia_10072023_DropW.csv')
+            dfS = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/Subjective/DuringExperiments_Andalucia_20072023_DropW.csv')
             # Features files based on original sound files
             dfE = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_095/'+file_item+'.csv')[1:]
             dfMIR_entropy = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/MIR/features_all_experiments/zoom/ENTROPY/' + file_item + '.csv')

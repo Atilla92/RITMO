@@ -14,7 +14,7 @@ path_ratings = '/Users/atillajv/CODE/RITMO/FILES/Ratings/'
 #file_output = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_097/' #check that this is the same as input file for entropy
 file_output = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_07072023_095/' #check that this is the same as input file for entropy
 #name_output = 'all_experimen'
-name_output = '10072023_all_experiments_drums_guitar_zd'
+name_output = '20072023_all_experiments_drums_guitar_zd'
 # Default settings 
 percentage = 0.1
 frac_round = 1 #Round/frac_round for moving rating to the left 
@@ -130,7 +130,7 @@ for file_i, file_item_long in enumerate(list_files):
         dfI = pd.read_csv ('/Users/atillajv/CODE/RITMO/FILES/ELAN/cleaned/' + file_item + '.csv',  delimiter=';')
         # Csv file with during experiments results 
         #dfS = pd.read_csv('/Users/atillajv/CODE/RITMO/PILOT_SEV_APRIL_2022/output/ratingsAnalysis/DuringExperiments_Andalu_DropW.csv')
-        dfS = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/Subjective/DuringExperiments_Andalucia_10072023_DropW.csv')
+        dfS = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/Subjective/DuringExperiments_Andalucia_20072023_DropW.csv')
         # Rating files from CDRS
         dfR = pd.read_csv( '/Users/atillajv/CODE/RITMO/FILES/Ratings/'+ file_item_long +'_IMPRO.csv' )
         dfR_flow = pd.read_csv( '/Users/atillajv/CODE/RITMO/FILES/Ratings/'+ file_item_long +'_FLOW.csv' )

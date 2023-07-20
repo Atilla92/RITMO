@@ -165,7 +165,6 @@ for i, item in enumerate(audio_files):
     f.suptitle('Entropy (w: ' + str(step_size) + ' qnt:'+ str(quartile) +') ' + file_name.strip('.wav') )
     ax4.set_xlabel('Time (s)')
     ax1.set_ylabel('LZ')
-
     ax3.set_ylabel('Squared')
     ax2.set_ylabel('Binarised')
     ax4.set_ylabel('Audio')

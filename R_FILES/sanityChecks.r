@@ -4,16 +4,17 @@ library(lme4)
 library(lmerTest)
 
 #dataMICRO <- read.csv("~/CODE/RITMO/ENTROPY/output/main/all_experiments_07072023_095/07072023_all_experiments_drums_guitar_zd.csv")
-data <- read.csv("~/CODE/RITMO/FILES/Subjective/DuringExperiments_Andalucia_10072023_DropW.csv")
+data_raw <- read.csv("~/CODE/RITMO/FILES/Subjective/DuringExperiments_Andalucia_20072023_DropW.csv")
+#data_raw <- read.csv('~/CODE/RITMO/ENTROPY/output/main/all_experiments_07072023_095/20072023_ELAN_no_CDRS.csv')
 data_P <- data[!grepl("G", data$Participant),] #only dancers
 data_G <- data[!grepl("P", data$Participant),] #only dancers
-
+data <- subset(data_raw, !grepl("D0", Dance_mode))
 # ALl analysis
 data$Dance_mode <- as.factor(data$Dance_mode)
 data$Condition <- as.factor(data$Condition)
 data$Condition <- relevel(data$Condition, "D6_M6")
 data$Dance_mode <- factor(data$Dance_mode, levels = c("D6", 'D5', 'D1'))
-data$Condition <- factor(data$Condition, levels = c('D6_M6', 'D5_M6', 'D1_M6', 'D5_M5', 'D1_M1'))
+data$Condition <- factor(data$Condition, levels = c('D6_M6', 'D5_M6', 'D1_M6', 'D5_M5', 'D1_M1', 'D6_D0'))
 #data$Condition_order <- as.factor(data$Condition_order)
 data$Palo <- as.factor(data$Palo)
 data$Music_mode <- as.factor(data$Music_mode)
@@ -28,7 +29,7 @@ library(ggplot2)
 library(sjPlot)
 library(sjlabelled)
 library(sjmisc)
-ggplot(data, aes(x = Imp_avg, y = Dance_mode))+ geom_point() + scale_x_continuous(1:8) + facet_wrap(~Participant)
+ggplot(data, aes(x = Q1a, y = Dance_mode))+ geom_point() + scale_x_continuous(1:8) + facet_wrap(~Participant)
 
 
 # MACRO Check
@@ -71,12 +72,53 @@ library(patchwork)
 library(sjPlot)
 
 ggplot(data, aes(Q1a, Q3a ))+geom_point(aes(group=Condition,color=factor(Condition)))+facet_wrap(~Participant)
-ggplot(data, aes(Q1a, Q3a ))+geom_point(aes(group=Participant,color=factor(Participant)))+guides(color=FALSE)+facet_wrap(~Pair) +
-  geom_smooth(method="lm", size=1.5, color="black", se=FALSE)
+
+
+x_limits <- c(min(data$Q1a), max(data$Q1a))
+ggplot(data, aes(Q1a, Q3a ))+
+  geom_point(aes(group=Participant,color=factor(Artist)))+
+  facet_wrap(~Dance_mode) +
+  geom_smooth(aes(group=Participant,color=factor(Artist)),method="lm", size=1.5, se=FALSE)+
+  xlim(x_limits)
+
+ggplot(data, aes(Q1a, Q3b )) +
+  geom_smooth(aes(x= Q1a, y= Q3b, group = Pair, color=factor(Pair)),method="lm" ,se=FALSE) +
+  geom_smooth(aes(x= Q1a, y= Q3b),method="lm" ,se=FALSE, color='black', linetype = 'dashed') +
+  facet_wrap(~Artist)
 
 ggplot(data, aes(Q1b, Q3b )) +
-  geom_smooth(aes(x= Q1b, y= Q3b, group = Pair, color=factor(Pair)),method="lm" ,se=FALSE) 
-  #geom_smooth(data, aes(Q1a, Q3a, group=Participant,color=factor(Participant))) 
+  geom_smooth(aes(x= Q1a, y= Q3b, group = Pair, color=factor(Pair)),method="lm" ,se=FALSE) +
+  geom_smooth(aes(x= Q1a, y= Q3b),method="lm" ,se=FALSE, color='black', linetype = 'dashed') +
+  facet_wrap(~Artist)
 
+
+ggplot(data, aes(Q1a, Q3b )) +
+  #geom_smooth(aes(x= Q1a, y= Q3b, group = Participant, color=factor(Participant)),method="lm" ,se=FALSE) +
+  geom_smooth(aes(x= Q1a, y= Q3b),method="lm" ,se=FALSE, color='black', linetype = 'dashed') +
+  facet_wrap(~Condition)
+
+ggplot(data, aes(Q1a, Q3b )) +
+  #geom_smooth(aes(x= Q1a, y= Q3b, group = Participant, color=factor(Participant)),method="lm" ,se=FALSE) +
+  geom_smooth(aes(x= Q1a, y= Q3b),method="lm" ,se=FALSE, color='black', linetype = 'dashed') +
+  facet_wrap(~Music_mode)
+
+ggplot(data, aes(Q1a, Q3b )) +
+  #geom_smooth(aes(x= Q1a, y= Q3b, group = Participant, color=factor(Participant)),method="lm" ,se=FALSE) +
+  geom_smooth(aes(x= Q1a, y= Q3b),method="lm" ,se=FALSE, color='black', linetype = 'dashed') +
+  facet_wrap(~Palo)
+
+ggplot(data, aes(Q1a, Q3b )) +
+  #geom_smooth(aes(x= Q1a, y= Q3b, group = Participant, color=factor(Participant)),method="lm" ,se=FALSE) +
+  geom_smooth(aes(x= Q1a, y= Q3b, group = Artist, color = factor(Artist)),method="lm", se = FALSE) +
+  geom_smooth(aes(group = Artist, color = factor(Artist)), method = "lm", se = TRUE, alpha = 0.3) +
+  geom_smooth(aes(x= Q1a, y= Q3b),method="lm", color='black', linetype = 'dashed') + 
+  facet_wrap(~Palo)
+
+
+
+library(lme4)
+library(lmerTest)
+model  = lmer(Q3b ~   Q1a + (1 | Participant) + (1 | Pair)  , data = dataELAN )
+summary(model)
 
 

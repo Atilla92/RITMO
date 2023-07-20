@@ -6,7 +6,7 @@ from scipy import stats
 #import seaborn as sns
 import matplotlib.pyplot as plt
 
-df = pd.read_csv ('/Users/atillajv/CODE/RITMO/FILES/Subjective/DuringExperiments_23062023_Andalucia_DropW.csv')
+df = pd.read_csv ('/Users/atillajv/CODE/RITMO/PILOT_SEV_APRIL_2022/Responses/DuringExperiments_Andalucia_20072023_DropW.csv')
 print(df)
 #df = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/17_Dec_2022/17122022_095_2s.csv')
 
@@ -54,7 +54,7 @@ AverageFlowtoDF(df)
 # CronchbachAlpha(df_G)
 # correlMatrix(df_G, True)
 
-df = filterOut(df, 'D0')
+#df = filterOut(df, ['D0'])
 
 def InfotoColumns(df):
     dance_array = []
@@ -91,7 +91,7 @@ print(df)
 
 
 #df.to_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/17_Dec_2022/17122022_095_2s_Corr.csv')
-df.to_csv('output/ratingsAnalysis/DuringExperiments_Andalucia_10072023_DropW_DropDO.csv', index=False)
+df.to_csv('output/ratingsAnalysis/DuringExperiments_Andalucia_20072023_DropW.csv', index=False)
 
 #https://blog.4dcu.be/programming/2021/03/16/Code-Nugget-Correlation-Heatmaps.html
 
