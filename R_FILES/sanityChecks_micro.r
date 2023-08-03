@@ -6,12 +6,12 @@ library(sjmisc)
 library(dplyr)
 
 
-data_raw <- read.csv("~/CODE/RITMO/ENTROPY/output/main/all_experiments_07072023_095/10072023_all_experiments_drums_guitar_zd.csv")
-data_raw_2 <- read.csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_07072023_095/12072023_ELAN_no_CDRS.csv')
+data_raw <- read.csv("~/CODE/RITMO/ENTROPY/output/main/all_experiments_07072023_095/20072023_all_experiments_drums_guitar_zd.csv")
+data_raw_2 <- read.csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_07072023_095/20072023_ELAN_no_CDRS.csv')
 
 #drop duplicates
 data <- data_raw_2 %>% distinct(Name,Participant,number, .keep_all = TRUE)
-
+data <- data_raw %>% distinct(Name,Participant,number, .keep_all = TRUE)
 
 data_P <- data[grepl("P", data$Participant),] #only dancers
 data_G <- data[grepl("G", data$Participant),] #only dancers
@@ -96,5 +96,182 @@ print(sorted_counts)
 df3 <- data %>% distinct(Name,Participant,number, .keep_all = TRUE)
 
 
+# SUBSET DATA MACRO
+m01 = lmer(Q3b ~   Q6a + Q5b + Q4c + (1 | Participant), data = subset_data )
+m02 = lmer(Q3b ~   Q6a + Q5b + Q4c + Q1b + (1 | Participant), data = subset_data )
+m03 = lmer(Q3b ~   Q6a  + Q4c + Q1b + (1 | Participant), data = subset_data )
+m04 = lmer(Q3b ~   Q6a  + Q1b + (1 | Participant), data = subset_data )
+m05 = lmer(Q3b ~   Q6a  + Q4c + Q3a + (1 | Participant), data = subset_data )
+m06 = lmer(Q3b ~   Q6a  + Q4c + Q3a +  Q1b + (1 | Participant), data = subset_data )
+m07 = lmer(Q3b ~   Q6a  + Q3a +  Q1b + (1 | Participant), data = subset_data )
+tab_model(m01, m02, m03, m04, m05,m06, m07,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m01", "m02","m03","m04", "m05", "m06", "m07"), digits = 5 )
+
+m01 = lmer(LZ_avg ~   Q6a + Q5b + Q4c + (1 | Participant), data = subset_data )
+m02 = lmer(Q3b ~   Q6a + Q5b + Q4c + Q1b + (1 | Participant), data = subset_data )
+m03 = lmer(Q3b ~   Q6a  + Q4c + Q1b + (1 | Participant), data = subset_data )
+m04 = lmer(Q3b ~   Q6a  + Q1b + (1 | Participant), data = subset_data )
+m05 = lmer(Q3b ~   Q6a  + Q4c + Q3a + (1 | Participant), data = subset_data )
+m06 = lmer(Q3b ~   Q6a  + Q4c + Q3a +  Q1b + (1 | Participant), data = subset_data )
+m07 = lmer(Q3b ~   Q6a  + Q3a +  Q1b + (1 | Participant), data = subset_data )
+tab_model(m01, m02, m03, m04, m05,m06, m07,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m01", "m02","m03","m04", "m05", "m06", "m07"), digits = 5 )
 
 
+m01  = lmer(LZ_avg ~   1 + (1 | Participant) + (1 | Pair)  , data = subset_data )
+m02  = lmer(LZ_avg ~   1 + (1 | Participant) , data = subset_data )
+m03  = lmer(LZ_avg ~   1 + (1 | Pair) , data = subset_data )
+m04  = lmer(LZ_avg ~   1 + (1 | Pair:Participant) , data = subset_data )
+m05  = lmer(LZ_avg ~   1 + (1 | Pair/Participant) , data = subset_data )
+m06 =  lmer(LZ_avg ~   1 + (1 | Artist) , data = subset_data )
+
+tab_model(m01, m02, m03, m04, m05,m06, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m01", "m02","m03","m04", "m05", "m06"), digits = 5 )
+
+
+m01  = lmer(LZ_avg ~   1 + (1 | Participant) , data = subset_data )
+m02  = lmer(var_entropy_avg ~   1 + (1 | Pair) , data = subset_data )
+m03  = lmer(var_entropy_avg ~   1 + (1 | Participant) , data = subset_data )
+m04  = lmer(MIR_novelty_avg ~   1 + (1 | Participant) , data = subset_data )
+m05  = lmer(MIR_entropy_avg ~   1 + (1 | Participant) , data = subset_data )
+m06  = lmer(MIR_rms_avg ~   1 + (1 | Participant) , data = subset_data )
+tab_model(m01, m02, m03, m04, m05,m06, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m01", "m02","m03","m04", "m05", "m06"), digits = 5 )
+
+
+
+m01  = lmer(var_entropy_avg ~   1 + (1 | Participant) + (1 | Pair)  , data = subset_data )
+m02  = lmer(var_entropy_avg ~   1 + (1 | Participant) , data = subset_data )
+m03  = lmer(var_entropy_avg ~   1 + (1 | Pair) , data = subset_data )
+m04  = lmer(var_entropy_avg ~   1 + (1 | Pair:Participant) , data = subset_data )
+m05  = lmer(var_entropy_avg ~   1 + (1 | Pair/Participant) , data = subset_data )
+m06 =  lmer(var_entropy_avg ~   1 + (1 | Artist) , data = subset_data )
+
+tab_model(m01, m02, m03, m04, m05,m06, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m01", "m02","m03","m04", "m05", "m06"), digits = 5 )
+
+
+m01  = lmer(var_entropy_avg ~   1 + (1 | Pair) , data = subset_data )
+m02  = lmer(var_entropy_avg ~   Q1a + (1 | Pair) , data = subset_data )
+m03  = lmer(var_entropy_avg ~   Q1b + (1 | Pair) , data = subset_data )
+m04  = lmer(var_entropy_avg ~   Q3a + (1 | Pair) , data = subset_data )
+m05  = lmer(var_entropy_avg ~   Q3b + (1 | Pair) , data = subset_data )
+m06  = lmer(var_entropy_avg ~   Perf_Av + (1 | Pair) , data = subset_data )
+m07  = lmer(var_entropy_avg ~   Abs_Av + (1 | Pair) , data = subset_data )
+m08  = lmer(var_entropy_avg ~   Condition + (1 | Pair) , data = subset_data )
+tab_model(m01, m02, m03, m04, m05,m06,m07,m08, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m01", "m02","m03","m04", "m05", "m06", "m07", "m08"), digits = 5 )
+
+m01  = lmer(var_entropy_avg ~   Q1a + (1 | Pair) , data = subset_data )
+m02  = lmer(var_entropy_avg ~   Q1a + Q3b +  (1 | Pair) , data = subset_data )
+m03  = lmer(var_entropy_avg ~   Q1a + Abs_Av +  (1 | Pair) , data = subset_data )
+m04  = lmer(var_entropy_avg ~    Q1a + Q3a + Abs_Av + (1 | Pair) , data = subset_data )
+m05  = lmer(var_entropy_avg ~   Q3b + Abs_Av + (1 | Pair) , data = subset_data )
+m06  = lmer(var_entropy_avg ~   Abs_Av + (1 | Pair) , data = subset_data )
+tab_model(m01, m02, m03, m04, m05,m06, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m01", "m02","m03","m04", "m05", "m06"), digits = 5 )
+
+m01  = lmer(var_entropy_avg ~   Q5a + (1 | Pair) , data = subset_data )
+m02  = lmer(var_entropy_avg ~   Q5b +  (1 | Pair) , data = subset_data )
+m03  = lmer(var_entropy_avg ~   Q4c+   (1 | Pair) , data = subset_data )
+m04  = lmer(var_entropy_avg ~    Q6a + (1 | Pair) , data = subset_data )
+m05  = lmer(var_entropy_avg ~   Q6b + (1 | Pair) , data = subset_data )
+m06  = lmer(var_entropy_avg ~   Q6a + (1 | Participant) , data = subset_data )
+tab_model(m01, m02, m03, m04, m05,m06, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m01", "m02","m03","m04", "m05", "m06"), digits = 5 )
+
+
+m01  = lmer(LZ_avg ~   Q5a + (1 | Pair) , data = subset_data )
+m02  = lmer(LZ_avg ~   Q5b +  (1 | Pair) , data = subset_data )
+m03  = lmer(LZ_avg ~   Q4c+   (1 | Pair) , data = subset_data )
+m04  = lmer(LZ_avg ~    Q6a + (1 | Pair) , data = subset_data )
+m05  = lmer(LZ_avg ~   Q6b + (1 | Pair) , data = subset_data )
+m06  = lmer(LZ_avg ~   Q6a + (1 | Pair) , data = subset_data )
+tab_model(m01, m02, m03, m04, m05,m06, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m01", "m02","m03","m04", "m05", "m06"), digits = 5 )
+
+m01  = lmer(var_entropy_avg ~   Q6a + (1 | Pair) , data = subset_data )
+m02  = lmer(var_entropy_avg ~   Q6a + Abs_Av + (1 | Pair) , data = subset_data )
+m03  = lmer(var_entropy_avg ~   Q1a + Q6a + (1 | Pair) , data = subset_data )
+m04  = lmer(var_entropy_avg ~   Q6a + Q3b + (1 | Pair), data = subset_data )
+tab_model(m01, m02, m03, m04, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m01", "m02","m03","m04"), digits = 5 )
+
+
+#MICRO MODELS
+
+m01  = lmer(LZ ~   1 + (1 | Participant) + (1 | Pair)  , data = data )
+m02  = lmer(LZ ~   1 + (1 | Participant) , data = data )
+m03  = lmer(LZ ~   1 + (1 | Pair) , data = data )
+m04  = lmer(LZ ~   1 + (1 | Pair:Participant) , data = data )
+m05  = lmer(LZ ~   1 + (1 | Pair/Participant) , data = data )
+m06 =  lmer(LZ ~   1 + (1 | Pair/Condition/number) , data = data )
+m07 =  lmer(LZ ~   1 + (1 | Pair/Palo/Music_mode) , data = data )
+m08 =  lmer(LZ ~   1 + (1 | Name/number) , data = data )
+m09 =  lmer(LZ ~   1 + (1 | Pair/Step) , data = data )
+tab_model(m01, m02, m03, m04, m05,m06,m07, m08, m09,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m01", "m02","m03","m04", "m05", "m06", "m07", "m08", "m09"), digits = 5 )
+
+
+
+
+
+m01 =  lmer(LZ ~   1 + (1 | Pair/Step) , data = data )
+m02 =  lmer(LZ ~   Condition + (1 | Pair/Step) , data = data )
+m03 =  lmer(LZ ~   Dance_Imp + (1 | Pair/Step) , data = data )
+m04 =  lmer(LZ ~   Music_Imp + (1 | Pair/Step) , data = data )
+m05 =  lmer(LZ ~   Baile_Level + (1 | Pair/Step) , data = data )
+m06 =  lmer(LZ ~   Guitarra_Level + (1 | Pair/Step) , data = data )
+tab_model(m01, m02, m03, m04, m05,m06,m07, m08, m09,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m01", "m02","m03","m04", "m05", "m06", "m07", "m08", "m09"), digits = 5 )
+
+m01 =  lmer(var_entropy ~   1 + (1 | Pair/Step) , data = data )
+m02 =  lmer(var_entropy ~   Condition + (1 | Pair/Step) , data = data )
+m03 =  lmer(var_entropy ~   Dance_Imp + (1 | Pair/Step) , data = data )
+m04 =  lmer(var_entropy ~   Music_Imp + (1 | Pair/Step) , data = data )
+m05 =  lmer(var_entropy ~   Baile_Level + (1 | Pair/Step) , data = data )
+m06 =  lmer(var_entropy ~   Guitarra_Level + (1 | Pair/Step) , data = data )
+tab_model(m01, m02, m03, m04, m05,m06,m07, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m01", "m02","m03","m04", "m05", "m06", "m07"), digits = 5 )
+
+
+m01 =  lmer(LZ ~   Condition + (1 | Pair/Step) , data = data )
+m02 =  lmer(var_entropy ~   Condition + (1 | Pair/Step) , data = data )
+m03 =  lmer(MIR_entropy ~   Condition + (1 | Pair/Step) , data = data )
+m04 =  lmer(MIR_novelty ~   Condition + (1 | Pair/Step) , data = data )
+m05 =  lmer(MIR_rms ~   Condition + (1 | Pair/Step) , data = data )
+
+tab_model(m01, m02, m03, m04, m05, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("LZ", "var_entropy", "MIR_entropy", "MIR_novelty", "MIR_rms"), digits = 5 )
+
+
+
+# MICRO ALL, CDRS included, data_raw
+m01 =  lmer(LZ ~   Flow_subj + (1 | Pair/Step) , data = data )
+m02 =  lmer(var_entropy ~   Flow_subj + (1 | Pair/Step) , data = data )
+m03 =  lmer(MIR_entropy ~   Flow_subj + (1 | Pair/Step) , data = data )
+m04 =  lmer(MIR_novelty ~   Flow_subj + (1 | Pair/Step) , data = data )
+m05 =  lmer(MIR_rms ~   Flow_subj + (1 | Pair/Step) , data = data )
+
+tab_model(m01, m02, m03, m04, m05, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("LZ", "var_entropy", "MIR_entropy", "MIR_novelty", "MIR_rms"), digits = 5 )
+
+
+
+subset_data <- subset(data, number == 0)
+m01 =  lmer(LZ_avg ~   Flow_avg + (1 | Pair) , data = subset_data )
+m02 =  lmer(LZ_avg ~   Imp_avg + (1 | Pair) , data = subset_data )
+m03 =  lmer(LZ ~   Flow_subj + (1 | Pair/Step) , data = data )
+m04 =  lmer(LZ ~   Imp_subj + (1 | Pair/Step) , data = data )
+m05 =  lmer(LZ_avg ~   Q6a + (1 | Pair/Step) , data = subset_data )
+tab_model(m01, m02, m03, m04, m05, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m01", "m02", "m03", "m04", "m05"), digits = 5 )
+
+
+m01 =  lmer(var_entropy_avg ~   Flow_avg + (1 | Pair) , data = subset_data )
+m02 =  lmer(var_entropy_avg ~   Imp_avg + (1 | Pair) , data = subset_data )
+m03 =  lmer(var_entropy ~   Flow_subj + (1 | Pair/Step) , data = data )
+m04 =  lmer(var_entropy ~   Imp_subj + (1 | Pair/Step) , data = data )
+m05 =  lmer(var_entropy_avg ~   Q6a + (1 | Pair/Step) , data = subset_data )
+tab_model(m01, m02, m03, m04, m05, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m01", "m02", "m03", "m04", "m05"), digits = 5 )
