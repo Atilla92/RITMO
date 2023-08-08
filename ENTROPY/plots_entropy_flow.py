@@ -12,11 +12,11 @@ from itertools import repeat
 # Parameters of plotting function.
 y_var = 'LZ'
 hue_var = 'Dance_mode'
-title_plot = 'Guitar (zd)'
+title_plot = 'General'
 #file_input = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_095_drums/var/'
-save_plot = '/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/all_experiments_095/'
+save_plot = '/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/all_experiments_07072023_095/'
 hue_var = 'Dance_mode'
-rating = 'FLOW'
+rating = 'IMPRO'
 
 file_name = str(y_var + '_t_%' + '_drums_' + hue_var +'_filtered' )
 
@@ -26,18 +26,18 @@ loop_off = 'P7_D5_G1_M6_R1_T1.csv'
 filter_out = True
 
 
-df_plots = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/all_experiments_095/data/t%_LZ_guitar_zd.csv')
-df_plots_2 = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/all_experiments_095/data/t%_LZ_drums.csv')
-df_plots_r = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/all_experiments_095/data/t%_ratings_FLOW.csv')
-df_plots_imp = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/all_experiments_095/data/t%_ratings_IMPRO.csv')
-df_plots_var_g = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/all_experiments_095/data/t%_var_guitar_zd.csv')
-df_plots_var_d = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/all_experiments_095/data/t%_var_drums.csv')
+df_plots = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/all_experiments_07072023_095/data/t%_LZ_guitar_zd.csv')
+df_plots_2 = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/all_experiments_07072023_095/data/t%_LZ_drums.csv')
+df_plots_flow = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/all_experiments_07072023_095/data/ratings/t%_ratings_FLOW.csv')
+df_plots_imp = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/all_experiments_07072023_095/data/ratings/t%_ratings_IMPRO.csv')
+df_plots_var_g = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/all_experiments_07072023_095/data/t%_var_guitar_zd.csv')
+df_plots_var_d = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/all_experiments_07072023_095/data/t%_var_drums.csv')
 #df_plots_imp = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/all_experiments_095/data/t%_.csv')
 
 if filter_out:
     df_plots = df_plots[~df_plots['Dance_mode'].str.contains("D0")]
     df_plots_2 = df_plots_2[~df_plots_2['Dance_mode'].str.contains("D0")]
-    df_plots_r = df_plots_r[~df_plots_r['Dance_mode'].str.contains("D0")]
+    df_plots_flow = df_plots_flow[~df_plots_flow['Dance_mode'].str.contains("D0")]
     df_plots_var_g = df_plots_var_g[~df_plots_var_g['Dance_mode'].str.contains("D0")]
     df_plots_var_d = df_plots_var_d[~df_plots_var_d['Dance_mode'].str.contains("D0")]
     df_plots_imp = df_plots_imp[~df_plots_imp['Dance_mode'].str.contains("D0")]
@@ -54,7 +54,7 @@ hue_order = ['D1', 'D5', 'D6']
 # axes[0,1].set_ylim([0, 7])
 # axes[0,0].set_ylim([0, 7])
 
-# fig = sns.lineplot( ax = axes[0,1], data = df_plots_r,  x="Assigned_%", y="y_var", hue = hue_var, hue_order=hue_order, palette=palette)
+# fig = sns.lineplot( ax = axes[0,1], data = df_plots_flow,  x="Assigned_%", y="y_var", hue = hue_var, hue_order=hue_order, palette=palette)
 # fig.set(xlabel='t [%]', ylabel = 'Flow Rating')
 
 
@@ -72,20 +72,20 @@ axes[1,0].set_ylim([0, 7])
 axes[0,0].set_ylim([0, 7])
 
 fig = sns.lineplot(legend=False, ax = axes[1,0], data = df_plots_imp[~df_plots_imp['Artist'].str.contains("P")],  x="Assigned_%", y="y_var", hue = 'Dance_mode', hue_order=hue_order, palette=palette)
-fig.set(xlabel='t [%]', ylabel = 'LZ', title = 'Guitarist')
+fig.set(xlabel='t [%]', ylabel = 'Impro Rating', title = 'Guitarist')
 
 
-fig = sns.lineplot(legend = False, ax = axes[0,1], data = df_plots_r[~df_plots_r['Artist'].str.contains("G")],  x="Assigned_%", y="y_var", hue = 'Dance_mode',  hue_order=hue_order, palette=palette)
-fig.set(xlabel='t [%]', ylabel = 'Impro Rating')
+fig = sns.lineplot(legend = False, ax = axes[0,1], data = df_plots_flow[~df_plots_flow['Artist'].str.contains("G")],  x="Assigned_%", y="y_var", hue = 'Dance_mode',  hue_order=hue_order, palette=palette)
+fig.set(xlabel='t [%]', ylabel = 'Flow Rating')
 axes[1,1].set_ylim([0, 7])
 axes[0,1].set_ylim([0, 7])
 
-data_plot_r = df_plots_r[~df_plots_r['Artist'].str.contains("G")]
+data_plot_r = df_plots_flow[~df_plots_flow['Artist'].str.contains("G")]
 fig = sns.lineplot(legend=False, ax = axes[0,2], data = df_plots_2,  x="Assigned_%", y="y_var", hue = 'Dance_mode', hue_order=hue_order, palette=palette)
 fig.set(xlabel='t [%]', ylabel = 'LZ')
 
 
-fig = sns.lineplot(legend = False, ax = axes[1,1], data = df_plots_r[~df_plots_r['Artist'].str.contains("P")],  x="Assigned_%", y="y_var", hue = 'Dance_mode' , hue_order=hue_order, palette=palette)
+fig = sns.lineplot(legend = False, ax = axes[1,1], data = df_plots_flow[~df_plots_flow['Artist'].str.contains("P")],  x="Assigned_%", y="y_var", hue = 'Dance_mode' , hue_order=hue_order, palette=palette)
 fig.set(xlabel='t [%]', ylabel = 'Flow rating')
 
 fig = sns.lineplot( legend = False, ax = axes[1,2], data = df_plots,  x="Assigned_%", y="y_var", hue = 'Dance_mode', hue_order=hue_order, palette=palette)
@@ -93,7 +93,7 @@ fig.set(xlabel='t [%]', ylabel = 'LZ')
 
 
 
-data_plot_r = df_plots_r[~df_plots_r['Artist'].str.contains("G")]
+data_plot_r = df_plots_flow[~df_plots_flow['Artist'].str.contains("G")]
 fig = sns.lineplot(  ax = axes[0,3], data = df_plots_var_d,  x="Assigned_%", y="y_var", hue = 'Dance_mode', hue_order=hue_order, palette=palette)
 fig.set(xlabel='t [%]', ylabel = 'var')
 axes[0,3].legend(loc='lower center', bbox_to_anchor=(0.5, 1.0),
@@ -106,5 +106,6 @@ fig.set(xlabel='t [%]', ylabel = 'var')
 
 
 
+
 plt.show()
-#plt.savefig(save_plot + 'Combined_2x2_t%_guitar_zd.png')
+#plt.savefig(save_plot + 'Combined_2x2_t2_guitar_zd.png')

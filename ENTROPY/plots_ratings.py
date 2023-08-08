@@ -25,8 +25,8 @@ Indicarw:
 # Parameters of plotting function.
 y_var = ' Value'
 file_input = '/Users/atillajv/CODE/RITMO/FILES/Ratings/'
-save_plot = '/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/all_experiments_095/'
-audio_input = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_095_drums/'
+save_plot = '/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/all_experiments_07072023_095/'
+audio_input = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_095/'
 
 
 hue_var = 'Artist'
@@ -53,7 +53,6 @@ if loop_on:
 else:
  entropy_files = [loop_off]
 
-#print(entropy_files)
 
 
 plt.figure()
@@ -98,7 +97,6 @@ for k, item_k in enumerate(entropy_files):
         item_new = "_".join(item_new[1:-1])
         name_list.extend(repeat(str(item_new),len(np.array(mean_array))))
         file_list.extend(repeat(str(item_k),len(np.array(mean_array))))
-        print(item_k.split('_')[0])
         df_plot = pd.DataFrame( {
             'Name': name_list,
             'file': file_list,
@@ -127,7 +125,6 @@ binningPlots(df_plots)
 # if filter_out:
 #     df_plots = df_plots[~df_plots['Dance_mode'].str.contains("D0")]
 #df_plots = df_plots[~df_plots['Rater'].str.contains("P")]
-print(df_plots)
     #df_plots = df_plots[~df_plots['Artist'].str.contains("G")]
 #df_plots = df_plots[~df_plots['Dance_mode'].str.contains("D5")]
 #print(df_plots)

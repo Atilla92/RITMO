@@ -4,9 +4,9 @@ import pandas as pd
 import numpy as np
 
 
-path_data = '/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/all_experiments_095/data/'
-path_FLOW = '/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/all_experiments_095/data/ratings/t%_ratings_FLOW.csv'
-path_IMPRO = '/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/all_experiments_095/data/ratings/t%_ratings_IMPRO.csv'
+path_data = '/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/all_experiments_07072023_095/data/'
+path_FLOW = '/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/all_experiments_07072023_095/data/ratings/t%_ratings_FLOW.csv'
+path_IMPRO = '/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/all_experiments_07072023_095/data/ratings/t%_ratings_IMPRO.csv'
 loop_on = True
 name_files = []
 dataframes = []
@@ -28,6 +28,7 @@ else:
     list_files = [file_name]
 
 
+print(name_files)
 # merged_df = pd.merge(dataframes[0][['Name', 't_%','y_var','t_0','Participant','Dance_mode','Music_mode','Palo','Condition','Assigned_%']], 
 #                      dataframes[1][['Name', 't_%','y_var','t_0','Assigned_%']],                 
 #                      on=['Name', 'Assigned_%'], how='outer', copy = False)

@@ -30,15 +30,16 @@ Indicarw:
 
 # Parameters of plotting function.
 y_var = 'var'
-source_var = '_guitar_zd'
+source_var = 'guitar_zd'
 hue_var = 'Dance_mode'
 title_plot = 'Zapateado'
-file_input = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_095'+source_var+'/var/'
-save_plot = '/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/all_experiments_095/var/'
-save_csv = '/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/all_experiments_095/'
+file_input = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_095_'+ source_var +'/var/'
+
+save_plot = '/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/all_experiments_07072023_095/'
+save_csv = '/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/all_experiments_07072023_095/'
 
 
-file_name = str(y_var + '_t_%' + '_drums_' + hue_var +'_filtered' )
+file_name = str(y_var + '_t_%' + '_' + source_var + '_' + hue_var +'_filtered' )
 
 # Loop or single file 
 loop_on = True #Set to false if only analysing one file. 
@@ -56,11 +57,10 @@ if loop_on:
     for filepath in glob.iglob(str(file_input + '*.csv')):
         if filepath.endswith('.csv'):
             filepath_split = filepath.partition(file_input[len(file_input)-10:])
-            if len(filepath_split[-1])<22:
+            if len(filepath_split[-1])<23:
                 entropy_files.append(filepath_split[2])
 else:
  entropy_files = [loop_off]
- 
 
 
 plt.figure()

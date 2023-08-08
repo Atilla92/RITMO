@@ -60,10 +60,11 @@ After all of the previous steps you can also create a time-series .csv based on 
 
 
 For time series analysis:
-    Time series have been binned in %time binned in 10 interval steps of 0.1. Three scripts have been made for plotting and for saving data as .csv 
+    Time series have been binned in %time binned in 10 interval steps of 0.1. Four scripts have been made for plotting and for saving data as .csv (Run 1,2,4 for creating a .csv for further analysis) 
     1. plots_ribbon.py: works with entropy data (main/DATE/...) allows both to plot a ribbon plot of entropy and variance of entropy over time (y_var). Can both save plots and csv files. One measure at the time. 
     2. plots_ratings.py: works with FLOW and IMPRO rating files. 
-    3. plots_entropy_flow.py: merges Ratings and Entropy measures in one .csv file for further analysis in R. Also binned at 0.1-1, 10 intervals. 
+    3. plots_entropy_flow.py: plot of subjective ratings versus entropy measures. 
+    4. time_series.py merges Ratings and Entropy measures in one .csv file for further analysis in R. Also binned at 0.1-1, 10 intervals. 
 
 
 ######
