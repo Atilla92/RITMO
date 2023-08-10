@@ -5,10 +5,12 @@ library(lmerTest)
 
 #dataMICRO <- read.csv("~/CODE/RITMO/ENTROPY/output/main/all_experiments_07072023_095/07072023_all_experiments_drums_guitar_zd.csv")
 data_raw <- read.csv("~/CODE/RITMO/FILES/Subjective/DuringExperiments_Andalucia_20072023_DropW.csv")
+
 #data_raw <- read.csv('~/CODE/RITMO/ENTROPY/output/main/all_experiments_07072023_095/20072023_ELAN_no_CDRS.csv')
+data <- subset(data_raw, !grepl("D0", Dance_mode))
 data_P <- data[!grepl("G", data$Participant),] #only dancers
 data_G <- data[!grepl("P", data$Participant),] #only dancers
-data <- subset(data_raw, !grepl("D0", Dance_mode))
+
 # ALl analysis
 data$Dance_mode <- as.factor(data$Dance_mode)
 data$Condition <- as.factor(data$Condition)
@@ -33,6 +35,11 @@ ggplot(data, aes(x = Q1a, y = Dance_mode))+ geom_point() + scale_x_continuous(1:
 
 
 # MACRO Check
+data$Q1 <- (data$Q1a + data$Q1b) / 2
+data$Q3 <- (data$Q3a + data$Q3b) / 2
+data$Q6 <- (data$Q6a + data$Q6b) /2
+data$Q5 <-  (data$Q5a + data$Q5b) /2
+data$Q4 <- (data$Q4a + data$Q4b + data$Q4c) /3
 
 # Check whether dataset has right amount of repsonses
 # G1,P6 lack one response, as one condition was not done due to lack of time. 
@@ -42,15 +49,17 @@ sorted_counts <- sort(participant_counts, decreasing = TRUE)
 print(sorted_counts)
 
 
-Q1a_counts <- table(data$Q3a)
+Q1a_counts <- table(data$Q5b)
 sorted_Q1a_counts <- sort(Q1a_counts)
-barplot(Q1a_counts, main = "Number of Data Points per Participant",
+barplot(Q1a_counts, main = "Number of Data Points per Participant (Q1b)",
         xlab = "Participants", ylab = "Data Points", col = "blue")
 
 all_responses <- unlist(data[, c("Q1a", "Q1b", "Q3a", "Q3b", "Q4a", "Q4b", "Q5a", "Q5b","Q4c", "Q6a", "Q6b")])
 response_counts <- table(all_responses)
 barplot(response_counts, main = "Number of Responses for Q1, Q3, Q4, Q5, Q6",
         xlab = "Number", ylab = "Response Count", col = "blue")
+
+
 
 #Check chronback alpha for these columns
 library('psych')
@@ -84,6 +93,11 @@ ggplot(data, aes(Q1a, Q3a ))+
 ggplot(data, aes(Q1a, Q3b )) +
   geom_smooth(aes(x= Q1a, y= Q3b, group = Pair, color=factor(Pair)),method="lm" ,se=FALSE) +
   geom_smooth(aes(x= Q1a, y= Q3b),method="lm" ,se=FALSE, color='black', linetype = 'dashed') +
+  facet_wrap(~Artist)
+
+ggplot(data, aes(Q1, Q3 )) +
+  geom_smooth(aes(x= Q1, y= Q3, group = Pair, color=factor(Pair)),method="lm" ,se=FALSE) +
+  geom_smooth(aes(x= Q1, y= Q3),method="lm" ,se=FALSE, color='black', linetype = 'dashed') +
   facet_wrap(~Artist)
 
 ggplot(data, aes(Q1b, Q3b )) +
@@ -130,6 +144,9 @@ ggplot(data, aes(Q1a, Q3b )) +
 
 
 
+
+
+
 library(lme4)
 library(lmerTest)
 m01  = lmer(Q3b ~   1 + (1 | Participant) + (1 | Pair)  , data = data )
@@ -142,16 +159,17 @@ m06 =  lmer(Q3b ~   1 + (1 | Artist) , data = data )
 tab_model(m01, m02, m03, m04, m05,m06, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
           dv.labels=c("m01", "m02","m03","m04", "m05", "m06"), digits = 5 )
 
-
+m00  = lmer(Q3b ~   1 + (1 | Participant), data = data )
 m01  = lmer(Q3b ~   Q1a + (1 | Participant), data = data )
 m02  = lmer(Q3b ~   Q1b + (1 | Participant), data = data )
 m03  = lmer(Q3b ~   Palo + (1 | Participant), data = data )
 m04  = lmer(Q3b ~   Condition + (1 | Participant), data = data )
 m05  = lmer(Q3b ~   Perf_Av + (1 | Participant), data = data )
-m06  = lmer(Q3b ~   Q3a + (1 | Participant), data = data )
+m06  = lmer(Q3b ~   Abs_Av + (1 | Participant), data = data )
+m07 =  lmer(Q3b ~   Q3a + (1 | Participant), data = data )
 
-tab_model(m01, m02, m03, m04, m05,m06,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
-          dv.labels=c("m01", "m02","m03","m04", "m05", "m06"), digits = 5 )
+tab_model(m00, m01, m02, m03, m04, m05,m06, m07,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m00", "m01", "m02","m03","m04", "m05", "m06", "m07"), digits = 5 )
 
 
 
@@ -185,8 +203,10 @@ m02  = lmer(Q3b ~   Q6b + (1 | Participant), data = data )
 m03 =  lmer(Q3b ~   Q5a + (1 | Participant) , data = data )
 m04  = lmer(Q3b ~   Q5b + (1 | Participant), data = data )
 m05  = lmer(Q3b ~   Q4c + (1 | Participant), data = data )
-tab_model(m01, m02, m03, m04, m05, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
-          dv.labels=c("m01", "m02","m03","m04", "m05"), digits = 5 )
+m06  = lmer(Q3b ~   Q4a + (1 | Participant), data = data )
+m07  = lmer(Q3b ~   Q4b + (1 | Participant), data = data )
+tab_model(m01, m02, m03, m04, m05, m06, m07,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m01", "m02","m03","m04", "m05", "m06", "m07"), digits = 5 )
 
 
 m01  = lmer(Q3b ~   Q4c + Q4a + (1 | Participant), data = data )
@@ -215,7 +235,7 @@ tab_model(m01, m02, m03, m04, m05,m06, m07,  p.style = "stars", show.aic = TRUE,
 
 
 m01  = lmer(Q3b ~   Q4a + (1 | Participant), data = data )
-m02  = lmer(Q3b ~   Condition + (1 | Participant), data = data )
+m02  = lmer(Q3b ~   Palo * Condition + (1 | Participant), data = data )
 m03  = lmer(Q3b ~   Q4a + Condition + (1 | Participant), data = data )
 m04  = lmer(Q3b ~   Q4a + Condition + Q4b + (1 | Participant), data = data )
 m05  = lmer(Q3b ~   Q4a + Condition + Q1a + (1 | Participant), data = data )
@@ -253,12 +273,156 @@ tab_model(m01, m02, m03, m04, m05,m06, p.style = "stars", show.aic = TRUE, show.
 
 
 
+m01 = lmer(Q3b ~   Q6a  + Q3a +  Q1b + (1 | Participant), data = data )
+m02 = lmer(Q3b ~   Q6a  + Q3a +  Q1b + (1 | Participant) + (1 | Dance_mode), data = data )
+m03 = lmer(Q3b ~   Q6a  * Q3a +  Q1b + (1 | Participant), data = data )
+m04 = lmer(Q3b ~   Q6a +  Q3a *  Q1b + (1 | Participant), data = data )
+m05 = lmer(Q3b ~   Q6a *  Q1b +  Q3a + (1 | Participant), data = data )
+m06 = lmer(Q3b ~   Q6a  + Q3a +  Q1b + (1 + Q6a |Participant), data = data )
+m07 = lmer(Q3b ~   Q6a  + Q3a +  Q1b + (1 | Participant)+ (1 | Condition), data = data )
+tab_model(m01, m02, m03, m04, m05,m06, m07,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m01", "m02","m03","m04", "m05", "m06", "m07"), digits = 5 )
 
+
+m01 = lmer(Q3b ~   Q6a + ( Q6a |Participant), data = data )
 
 tab_model(m01, m02, m03, m04, m05,m06, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
           dv.labels=c("m01", "m02","m03","m04", "m05", "m6"), digits = 5 )
 
 
 summary(model)
+
+###### Investigating improvisation and flow ######
+ggplot(data, aes(Q1, Q3 )) +
+  #geom_smooth(aes(x= Q1a, y= Q3b, group = Participant, color=factor(Participant)),method="lm" ,se=FALSE) +
+  geom_smooth(aes(x= Q1, y= Q3, group = Artist, color = factor(Artist)),method="lm", se = FALSE) +
+  geom_smooth(aes(group = Artist, color = factor(Artist)), method = "lm", se = TRUE, alpha = 0.3) +
+  geom_smooth(aes(x= Q1, y= Q3),method="lm", color='black', linetype = 'dashed')
+
+
+ggplot(data, aes(Q1b, Q3 )) +
+  #geom_smooth(aes(x= Q1a, y= Q3b, group = Participant, color=factor(Participant)),method="lm" ,se=FALSE) +
+  geom_smooth(aes(x= Q1b, y= Q3, group = Participant, color = factor(Participant)),method="lm", se = FALSE) +
+    geom_smooth(aes(x= Q1b, y= Q3),method="lm", color='black', linetype = 'dashed') 
+
+m01 = lmer(Q3 ~  Q1 + (1 | Participant), data = data )
+m02 = lmer(Q3 ~  Q1a +  (1 | Participant) , data = data )
+m03 = lmer(Q3 ~  Q1b +  (1 | Participant) , data = data )
+m04 = lmer(Q3a ~  Q1 +  (1 | Participant), data = data )
+m05 = lmer(Q3a ~  Q1a +  (1 | Participant) , data = data )
+m06 = lmer(Q3a ~  Q1b +  (1 | Participant), data = data )
+m07 = lmer(Q3b ~  Q1 +  (1 | Participant) , data = data )
+m08 = lmer(Q3b ~  Q1a +  (1 | Participant), data = data )
+m09 = lmer(Q3b ~  Q1b +  (1 | Participant) , data = data )
+
+tab_model(m01, m02, m03, m04, m05,m06, m07,m08, m09,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m01", "m02","m03","m04", "m05", "m06", "m07", "m08", "m09"), digits = 5 )
+
+m01 = lmer(Q3 ~  Q1b + ( 1 | Participant) , data = data )
+m02 = lmer(Q3 ~  Q1b + ( 1 | Participant)  + ( 1 | Condition), data = data )
+m03 = lmer(Q3 ~  Q1b + ( 1 | Participant)  + ( 1 | Music_mode), data = data )
+m04 = lmer(Q3 ~  Q1b + ( 1 | Participant)  + ( 1 | Artist), data = data )
+m05 = lmer(Q3 ~  Q1b* Artist + ( 1 | Participant) , data = data )
+m06 = lmer(Q3 ~  Q1b + Artist + ( 1 | Participant) , data = data )
+m07 = lmer(Q3 ~  Q1b + Condition + ( 1 | Participant) , data = data )
+tab_model(m01, m02, m03, m04, m05,m06, m07,m08, m09,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m01", "m02","m03","m04", "m05", "m06", "m07", "m08", "m09"), digits = 5 )
+
+m01 = lmer(Q3 ~  Condition + ( 1 | Participant) , data = data )
+m02 = lmer(Q3 ~  Music_mode + ( 1 | Participant), data = data )
+m03 = lmer(Q3 ~  Dance_mode + ( 1 | Participant), data = data )
+m04 = lmer(Q3 ~  Palo + ( 1 | Participant), data = data )
+m05 = lmer(Q3 ~  Artist + ( 1 | Participant), data = data )
+m06 = lmer(Q3 ~  1 + (1 | Condition) + ( 1 | Participant) , data = data )
+m07 = lmer(Q3 ~  1 + (1 |Music_mode) + ( 1 | Participant), data = data )
+m08 = lmer(Q3 ~  1 + (1 |Dance_mode) + ( 1 | Participant), data = data )
+m09 = lmer(Q3 ~  1 + (1 | Artist) + ( 1 | Participant), data = data )
+
+tab_model(m01, m02, m03, m04, m05,m06, m07,m08, m09,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m01", "m02","m03","m04", "m05", "m06", "m07", "m08", "m09"), digits = 5 )
+
+
+m01 = lmer(Q3 ~  1+  Condition + ( 1 | Participant)  , data = data )
+m02 = lmer(Q3 ~  1  + ( 1 | Participant)  + (1 |Dance_mode) , data = data )
+m03 = lmer(Q3 ~  1+  Condition + ( 1 | Participant)  + (1 |Dance_mode) , data = data )
+m04 = lmer(Q3 ~  Q1b +  Condition + ( 1 | Participant), data = data )
+m05 = lmer(Q3 ~  Q1b +  (1 |Condition) + ( 1 | Participant), data = data )
+m06 = lmer(Q3 ~  Q1b + (Q1b |  Condition )+ ( 1 | Participant), data = data )
+tab_model(m01, m02, m03, m04, m05,m06,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m01", "m02","m03","m04", "m05", "m06"), digits = 5 )
+
+
+
+##### Other subjective variables and flow. #####
+
+m01  = lmer(Q3 ~   1 + (1 | Participant) + (1 | Pair)  , data = data )
+m02  = lmer(Q3 ~   1 + (1 | Participant) , data = data )
+m03  = lmer(Q3 ~   1 + (1 | Pair) , data = data )
+m04  = lmer(Q3 ~   1 + (1 | Pair:Participant) , data = data )
+m05  = lmer(Q3 ~   1 + (1 | Pair/Participant) , data = data )
+m06 =  lmer(Q3 ~   1 + (1 | Artist) , data = data )
+tab_model(m01, m02, m03, m04, m05,m06,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m01", "m02","m03","m04", "m05", "m06"), digits = 5 )
+
+m00  = lmer(Q3 ~   Q1b + (1 | Pair:Participant), data = data )
+m01  = lmer(Q3 ~   Q4a + (1 | Pair:Participant), data = data )
+m02  = lmer(Q3 ~   Q4b + (1 | Pair:Participant), data = data )
+m03  = lmer(Q3 ~   Q5a + (1 | Pair:Participant), data = data )
+m04  = lmer(Q3 ~   Q5b + (1 | Pair:Participant), data = data )
+m05  = lmer(Q3 ~   Q6a + (1 | Pair:Participant), data = data )
+m06  = lmer(Q3 ~   Q6b + (1 | Pair:Participant), data = data )
+m07 =  lmer(Q3 ~   Q4c + (1 | Pair:Participant), data = data )
+m08  = lmer(Q3 ~   Q4 + (1 | Pair:Participant), data = data )
+m09  = lmer(Q3 ~   Q5 + (1 | Pair:Participant), data = data )
+m10  = lmer(Q3 ~   Q6 + (1 | Pair:Participant), data = data )
+
+tab_model(m00, m01, m02, m03, m04, m05,m06, m07, m08, m09, m10,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m00", "m01", "m02","m03","m04", "m05", "m06", "m07", "m08", "m09", "m10"), digits = 5 )
+
+m00  = lmer(Q3 ~   Q4 + (1 | Pair:Participant), data = data )
+m01  = lmer(Q3 ~   Q5 + (1 | Pair:Participant), data = data )
+m02  = lmer(Q3 ~   Q6 + (1 | Pair:Participant), data = data )
+m03  = lmer(Q3 ~   Q4 +Q5 +  (1 | Pair:Participant), data = data )
+m04  = lmer(Q3 ~   Q5 + Q6 +  (1 | Pair:Participant), data = data )
+m05  = lmer(Q3 ~   Q5+ Q6 + Q4 +(1 | Pair:Participant), data = data )
+m06  = lmer(Q3 ~   Q4+ Q6 +(1 | Pair:Participant), data = data )
+m07  = lmer(Q3 ~   Q6a + Q4 + (1 | Pair:Participant), data = data )
+m08  = lmer(Q3 ~   Q6b + Q4 + (1 | Pair:Participant), data = data )
+
+tab_model(m00, m01, m02, m03, m04, m05,m06, m07, m08,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m00", "m01", "m02","m03","m04", "m05", "m06", "m07", "m08"), digits = 5 )
+
+
+m01  = lmer(Q3 ~   Q6 + Q4 + (1 | Pair:Participant), data = data )
+m02  = lmer(Q3 ~   Q6 + Q4 + Q5a +  (1 | Pair:Participant), data = data )
+m03  = lmer(Q3 ~   Q6 + Q4 + Q5b +  (1 | Pair:Participant), data = data )
+m04  = lmer(Q3 ~   Q6 + Q4a + Q5b +  (1 | Pair:Participant), data = data )
+m05  = lmer(Q3 ~   Q6 + Q4b + Q5b +  (1 | Pair:Participant), data = data )
+m06  = lmer(Q3 ~   Q6 + Q4c + Q5b +  (1 | Pair:Participant), data = data )
+m07  = lmer(Q3 ~   Q6a + Q4c + Q5b +  (1 | Pair:Participant), data = data )
+m08  = lmer(Q3 ~   Q6b + Q4c + Q5b +  (1 | Pair:Participant), data = data )
+
+tab_model(m00, m01, m02, m03, m04, m05,m06, m07, m08,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m00", "m01", "m02","m03","m04", "m05", "m06", "m07", "m08"), digits = 5 )
+
+m00 =  lmer(Q3 ~   Q1b  + (Q1b|Condition) + (1 | Pair:Participant), data = data )
+m01  = lmer(Q3 ~   Q6 + Q4a + Q5b +  (1 | Pair:Participant), data = data )
+m02  = lmer(Q3 ~   Q1b + Q6 + Q4a + Q5b +  (1 | Pair:Participant), data = data )
+m03  = lmer(Q3 ~   Q1b + Q6 + Q4a + Q5b + (Q1b|Condition) + (1 | Pair:Participant), data = data )
+m04  = lmer(Q3 ~   Q1b + Q6 + Q4a  + (1 |Condition) + (1 | Pair:Participant), data = data )
+m05  = lmer(Q3 ~   Q1b + Q6 + Q4a  + (1 |Condition) + (1 |Participant), data = data )
+m06  = lmer(Q3 ~   Q1b + Q6 + Q4a  + (1 |Participant), data = data )
+m07  = lmer(Q3 ~   Q1b + Q6 + Q4a  + (Q4a |Condition) + (1 |Participant), data = data )
+m08  = lmer(Q3 ~   Q1b + Q6 + Q4a  + Perf_Av + (Q4a |Condition) + (1 |Participant), data = data )
+tab_model(m00, m01, m02, m03, m04, m05,m06, m07, m08,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m00", "m01", "m02","m03","m04", "m05", "m06", "m07", "m08"), digits = 5 )
+
+m00 =  lmer(Q3 ~   Q1b  + (Q1b|Condition) + (1 | Pair:Participant), data = data )
+m01 =  lmer(Q3 ~   Q1b  +  Perf_Av + (1|Condition) + (1 | Pair:Participant), data = data )
+m02 =  lmer(Q3 ~   Q1b  +  Abs_Av + (1|Condition) + (1 | Pair:Participant), data = data )
+m02 =  lmer(Q3 ~   Q1b  +  Abs_Av + (1|Condition) + (1 | Pair:Participant), data = data )
+tab_model(m00, m01, m02, m03, m04, m05,m06, m07, m08,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m00", "m01", "m02","m03","m04", "m05", "m06", "m07", "m08"), digits = 5 )
+
 
 
