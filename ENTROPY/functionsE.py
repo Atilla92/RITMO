@@ -7,6 +7,7 @@ import scipy
 #from scipy.signal import hilbert
 #import scipy.signal as sg
 import sys
+import scipy.signal as sg
 
 # Load Data
 
@@ -41,6 +42,18 @@ def javify(py_str, ab_dict):
     s = bytes([ab_dict[s] for s in py_str])
     #print(s, jstr(s), 'hello')
     return jstr(s) 
+
+
+def butter_filter(df, sampling_freq , f_ord = 4,lowcut = 0.05,cutoff = 100,plot=False):
+    data = np.array(df)
+    nyq = sampling_freq/2
+    W_c = [lowcut/nyq,cutoff/nyq]
+    fil_b,fil_a = sg.butter(int(f_ord/2),W_c,btype='bandpass',analog=False)
+    #fil_b,fil_a = sg.butter(f_ord,cutoff/nyq,btype='lowpass',analog=False)
+    fil_data = sg.filtfilt(fil_b,fil_a,data)
+
+    return fil_data # See whether you need to return as df or array
+
 
 
 #
