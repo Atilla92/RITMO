@@ -293,11 +293,16 @@ tab_model(m01, m02, m03, m04, m05,m06, p.style = "stars", show.aic = TRUE, show.
 summary(model)
 
 ###### Investigating improvisation and flow ######
-ggplot(data, aes(Q1b, Q3 )) +
+ggplot(data, aes(Q1, Q3 )) +
   #geom_smooth(aes(x= Q1a, y= Q3b, group = Participant, color=factor(Participant)),method="lm" ,se=FALSE) +
-  geom_smooth(aes(x= Q1b, y= Q3, group = Artist, color = factor(Artist)),method="lm", se = FALSE) +
+  geom_smooth(aes(x= Q1, y= Q3, group = Artist, color = factor(Artist)),method="lm", se = FALSE) +
   geom_smooth(aes(group = Artist, color = factor(Artist)), method = "lm", se = TRUE, alpha = 0.3) +
-  geom_smooth(aes(x= Q1b, y= Q3),method="lm", color='black', linetype = 'dashed')
+  geom_smooth(aes(x= Q1, y= Q3),method="lm", color='black', linetype = 'dashed')+ 
+  labs(x = "Improvisation", y = "Flow") +
+  theme(
+    axis.title = element_text(size = 18),  # Adjust the font size here
+    axis.text = element_text(size = 12)    # Adjust the font size of tick labels if needed
+  )
 
 
 ggplot(data, aes(Q1b, Q3 )) +
@@ -382,6 +387,23 @@ m10  = lmer(Q3 ~   Q6 + (1 | Pair:Participant), data = data )
 tab_model(m00, m01, m02, m03, m04, m05,m06, m07, m08, m09, m10,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
           dv.labels=c("m00", "m01", "m02","m03","m04", "m05", "m06", "m07", "m08", "m09", "m10"), digits = 5 )
 
+m00  = lmer(Q3 ~   Q1b + (1 | Participant), data = data )
+m01  = lmer(Q3 ~   Q4a + (1 | Participant), data = data )
+m02  = lmer(Q3 ~   Q4b + (1 | Participant), data = data )
+m03  = lmer(Q3 ~   Q5a + (1 | Participant), data = data )
+m04  = lmer(Q3 ~   Q5b + (1 | Participant), data = data )
+m05  = lmer(Q3 ~   Q6a + (1 | Participant), data = data )
+m06  = lmer(Q3 ~   Q6b + (1 | Participant), data = data )
+m07 =  lmer(Q3 ~   Q4c + (1 | Participant), data = data )
+m08  = lmer(Q3 ~   Q4 + (1 | Participant), data = data )
+m09  = lmer(Q3 ~   Q5 + (1 | Participant), data = data )
+m10  = lmer(Q3 ~   Q6 + (1 | Participant), data = data )
+
+tab_model(m00, m01, m02, m03, m04, m05,m06, m07, m08, m09, m10,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m00", "m01", "m02","m03","m04", "m05", "m06", "m07", "m08", "m09", "m10"), digits = 5 )
+
+
+
 m00  = lmer(Q3 ~   Q4 + (1 | Pair:Participant), data = data )
 m01  = lmer(Q3 ~   Q5 + (1 | Pair:Participant), data = data )
 m02  = lmer(Q3 ~   Q6 + (1 | Pair:Participant), data = data )
@@ -428,7 +450,7 @@ tab_model(m00, m01, m02, m03, m04, m05,m06, m07, m08,  p.style = "stars", show.a
           dv.labels=c("m00", "m01", "m02","m03","m04", "m05", "m06", "m07", "m08"), digits = 5 )
 
 m00  = lmer(Q3 ~   Q1b + Q6 + Q4a  + (1 |Participant), data = data )
-m01  = lmer(Q3 ~   Q1b + Q6 + Q4a  + (1 |Participant), data = data )
+m01  = lmer(Q3 ~   Q1b + Q6 + Q4a  + Condition + (1 |Participant), data = data )
 tab_model(m00, m01, m02, m03, m04, m05,m06, m07, m08,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
           dv.labels=c("m00", "m01", "m02","m03","m04", "m05", "m06", "m07", "m08"), digits = 5 )
 
@@ -454,10 +476,23 @@ tab_model(m00, m01,m02,m03, m04,   p.style = "stars", show.aic = TRUE, show.ci=F
 
 m01 = lmer(Q3 ~  Q1b * Artist + ( 1 | Participant) + ( 1 | Condition) , data = data )
 m02 = lmer(Q3 ~  Q1b + Q6 + Q4a + ( 1 | Participant) + ( 1 | Condition) , data = data )
-tab_model(m01, m02, m03, m04, m05,m06, m07,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
-          dv.labels=c("m01", "m02","m03","m04", "m05", "m06", "m07"), digits = 5 )
+tab_model(m01, m02, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m01", "m02"), digits = 5 )
+
+m01 = lmer(Q3 ~  Q1b + ( 1 | Participant) + ( 1 | Condition) , data = data )
+m02 = lmer(Q3 ~  Q1b + Q6 + ( 1 | Participant) + ( 1 | Condition) , data = data )
+tab_model(m01, m02, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m01", "m02"), digits = 5 )
 
 
+#####
+shapiro_test(data) #you want to have p-value above threshold
+bc_trans_async <- BoxCoxTrans (data)
+
+#look at correlation between the old data and new data (spearman), if it changes the order, you want to have a curve.
+# caret library
+# if the transformation does not make any difference, use the original data obviously. 
+# Plot raw data and partial residuals of model
 
 
 

@@ -6,9 +6,9 @@ import os
 
 
 #old_folder = '/Users/atillajv/Ritmo/L-Lausanne/DEMUCS/separated/htdemucs_6s/'
-old_folder = '/Volumes/Seagate/FlamencoProject/F_Andalucia/DEMUCS/separated/htdemucs_6s/'
+old_folder = '/Volumes/Seagate/AUDIO/REDO/separated/htdemucs_6s/'
 #new_folder = '/Users/atillajv/CODE/FILES/PILOT_SEV_APRIL_2022/Audio_Lausanne/htdemucs_6s/all_guitar/'
-new_folder = '/Volumes/Seagate/FlamencoProject/F_Andalucia/DEMUCS/separated/drums/'
+new_folder = '/Volumes/Seagate/AUDIO/REDO/separated/guitar/'
 
 
 # 1. Name all files in the path 
@@ -19,7 +19,7 @@ new_folder = '/Volumes/Seagate/FlamencoProject/F_Andalucia/DEMUCS/separated/drum
 for file in os.listdir(old_folder):
     print (file)
 
-    oldName = str(old_folder + file + "/drums.wav")
+    oldName = str(old_folder + file + "/guitar.wav")
     newName = str(new_folder + file + '.wav')    
     try:
         os.rename(oldName, newName)

@@ -11,7 +11,7 @@ from scipy.io.wavfile import read
 import matplotlib.pyplot as plt
 import numpy as np
 import time
-from functionsE import plotAudio_2, calc_lz_df_2, quantize_vector, quartile_vector, butter_filter
+from functionsE import plotAudio_2, calc_lz_df_2, InterOnsetInterval
 import json
 import matplotlib.pyplot as plt
 import time
@@ -24,8 +24,8 @@ from OnsetDetection import OnsetDetection
 
 
 # Output settings:
-file_output = "/Users/atillajv/CODE/RITMO/ENTROPY/output/main/25_Jun_2023_095/var/" # Name of folder to store plots. 
-wav_output = '/Volumes/Seagate/FlamencoProject/E_SEVILLA/06102022/EDITED/Mic360/'
+file_output = "/Users/atillajv/CODE/RITMO/ENTROPY/output/main/21_Aug_2023_all_Onset/" # Name of folder to store plots. 
+#wav_output = '/Volumes/Seagate/FlamencoProject/E_SEVILLA/06102022/EDITED/Mic360/'
 #file_output = "/Users/atillajv/CODE/RITMO/ENTROPY/output/main/Test/" # Name of folder to store plots. 
 
 
@@ -40,8 +40,9 @@ else:
 # Code settings:
 #audio_path = '/Volumes/Seagate/FlamencoProject/F_Andalucia/ensemble_rode/'
 #audio_path = '/Volumes/Seagate/FlamencoProject/E_SEVILLA/06102022/EDITED/Mic360/'
-audio_path = '/Volumes/WHITE LOTUS/FlamencoProject/L_Lausanne/Audio/all_drums/'
-loop_on = False # Set to True if you want to loop through a certain folder. Else not. 
+#audio_path = '/Volumes/WHITE LOTUS/FlamencoProject/L_Lausanne/Audio/all_drums/'
+audio_path = '/Volumes/Seagate/AUDIO/ORIGINAL/'
+loop_on = True # Set to True if you want to loop through a certain folder. Else not. 
 #loop_off = 'P7_D1_G1_M6_R2_T1.wav'
 loop_off = 'P8_D1_G4_M6_R1_T1.wav'
 downsample_on = True #if you want to downsample. 
@@ -49,15 +50,15 @@ downsample_factor = 32 # Set to 1 if False.
 butter_filter_on = True
 onsetDetection_on = True
 preBinarise_on= True #If you want to binarise data prior to passing dataframe to LZ
-absolute_on = True #Takes the absolute value of input data. 
 channel_num= 1 # 0 for Left channel, 1 for Right Channel. 
 t_start = 0 #[s] if you want analysis to start from different time frame.Need to set to 0 if whole length.  
 tempMiddle = True # If you want to displace entropy values a bit further than beginning of window. 
 tempNum = 2 # start + windowsize/tempNum  (where windowsize = step_size)
 # Initiate variables
 length_df = [] # Takes subset samples. Set to [] if you want to whole length. 
-step_size = 6000  # Window of LZ/CTW estimation. 
-quartile = 0.95 #Set threshold for binarisation. 
+#step_size = 6000  # Window of LZ/CTW estimation. 
+dt_interval = 4 # Give the amount of seconds you would like to have for time-window 
+
 
 
 ##Empty lists, default values
@@ -92,6 +93,7 @@ for i, item in enumerate(audio_files):
     print('Loop: ', item ,i)
     file_name = item
     samplerate, data_raw = read(str( audio_path+ file_name))
+    step_size = int(dt_interval * samplerate / downsample_factor) 
     print(samplerate,'samplerate', ' seconds:',np.divide(downsample_factor * step_size,samplerate))
     data = data_raw[:,channel_num]
     
@@ -104,7 +106,7 @@ for i, item in enumerate(audio_files):
 
     if onsetDetection_on:
         t= np.linspace(0, len(data) / (samplerate/downsample_factor), len(data))
-        onsetDetection = OnsetDetection(data,fs = samplerate/downsample_factor, threshold = 0.8, hopTime=0.01 )
+        onsetDetection = OnsetDetection(data,fs = samplerate/downsample_factor, threshold = 1.2, hopTime=0.01 )
         onsetTimes = onsetDetection.getOnsetTimes()
         new_values_array = np.zeros(len(t), dtype=int)
         matching_indices = np.searchsorted(t, onsetTimes)
@@ -143,6 +145,8 @@ for i, item in enumerate(audio_files):
     output_lz, temp_lz  =calc_lz_df_2(df, style='LZ', window=step_size, binarise=preBinarise_on)
     #output_ctw, temp_ctw =calc_lz_df_2(df, style='CTW', window=step_size, binarise=preBinarise_on)
 
+    IOIs = InterOnsetInterval(df, step_size, dt_interval)
+    print(IOIs)
     
     # Create time array for entropy, divide by samplerate of audio. 
     n_windows = int( len(df) / step_size ) 
@@ -162,14 +166,16 @@ for i, item in enumerate(audio_files):
 
 
     # Store data in dataframe
-    df_out = pd.DataFrame(index = time_array, columns=['t0', 'LZ','CTW'])
+    df_out = pd.DataFrame(index = time_array, columns=['t0', 'LZ', 'dt_LZ', 'IOI'])
     df_out['t0']= time_array
     df_out['LZ'] = temp_lz
+    df_out['dt_LZ'] = np.insert(np.diff(temp_lz),0,0)
+    df_out['IOI'] = IOIs
     #df_out['CTW'] = temp_ctw
     #df_out = pd.DataFrame([[len(df),output_lz.values[0], output_ctw.values[0]]], index = ['mean'], columns=df_out.columns).append(df_out)
 
     #df_out.to_csv(file_output + 'Entropy_LZ_CTW_(w='+ str(step_size)+'_s='+str(length_df) +'_ds='+str(downsample_factor)+'_b=' + binString + '_abs='+ absString +'_t0=' +str(t_str) + ')_'+ file_name.strip('.wav') + '.csv')
-    #df_out.to_csv(file_output + file_name.strip('.wav') + '.csv')
+    df_out.to_csv(file_output + file_name.strip('.wav') + '.csv')
 
 
     # Plot data
@@ -183,14 +189,15 @@ for i, item in enumerate(audio_files):
     ax3.plot(time_binary, dataDown)
     #ax4.plot(time_binary, dataDown)
     ax4.plot(time_binary, new_values_array)
-    f.suptitle('Entropy (w: ' + str(step_size) + ' qnt:'+ str(quartile) +') ' + file_name.strip('.wav') )
+    f.suptitle('Entropy (w: ' + str(step_size) + file_name.strip('.wav') )
     ax4.set_xlabel('Time (s)')
     ax1.set_ylabel('LZ')
     ax3.set_ylabel('Squared')
     ax2.set_ylabel('Binarised')
     ax4.set_ylabel('Audio')
-
     plt.show()
+
+    plt.savefig(file_output + file_name.strip('.wav')+ '.png')
 
     end = time.time()
     # total time taken

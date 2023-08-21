@@ -189,6 +189,24 @@ def calc_lz_df_2(df, style='LZ', hil=False, window=2000, max_windows=np.inf, bin
     return lz, temp
 
 
+def InterOnsetInterval(df, window, t_window):
+    n_windows = int( len(df) / window )
+    IOIs = []
+    for c in df.columns:
+        data = df[c]
+        for n in range(n_windows):
+            w = data.iloc[ n*window : (n+1)*window ] 
+            n_counts = w.sum()
+            interOI = t_window/n_counts
+            IOIs.append(interOI)
+
+    return IOIs  
+    
+            
+
+
+
+
 def calc_lz_df_3(df, style='LZ', hil=False, window=2000, max_windows=np.inf):
     
     # find time indices

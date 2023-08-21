@@ -48,5 +48,13 @@ tab_model(m01, m02, m03, m04, m05, m06,m07,  p.style = "stars", show.aic = TRUE,
           dv.labels=c("m01", "m02","m03","m04", "m05", "m06", "m07"), digits = 5 )
 
 subset_data <- subset(data, Assigned_t == 0.9)
-m01  = lmer(IMPRO ~   t_var +  (1 | Participant)  , data = subset_data ) 
+m01  = lmer(IMPRO ~   FLOW  + Condition +   (1 | Participant/Assigned_t), data = data )
+m02  = lmer(IMPRO ~   t_LZ  + Condition +   (1 | Participant/Assigned_t), data = data ) 
+m03  = lmer(FLOW ~   t_LZ  + Condition +   (1 | Participant/Assigned_t), data = data ) 
+m02  = lmer(FLOW ~   t_LZ + Condition +  (1 | Pair), data = data ) 
+m04  = lmer( t_LZ~   Assigned_t +   (1 | Participant), data = data ) 
+
+tab_model(m01, m02, m03, m04, m05, m06,m07,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m01", "m02","m03","m04", "m05", "m06", "m07"), digits = 5 )
+
 summary(m01)

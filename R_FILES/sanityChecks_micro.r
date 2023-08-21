@@ -16,6 +16,9 @@ data <- data_raw %>% distinct(Name,Participant,number, .keep_all = TRUE)
 data_P <- data[grepl("P", data$Participant),] #only dancers
 data_G <- data[grepl("G", data$Participant),] #only dancers
 
+subsetdata_P <- subset_data[grepl("P", subset_data$Participant),] #only dancers
+
+
 # ALl analysis
 data$Dance_mode <- as.factor(data$Dance_mode)
 data$Condition <- as.factor(data$Condition)
@@ -405,10 +408,22 @@ m02 = lmer(Q3 ~   var_entropy_avg +  (1 | Pair), data = subset_data )
 m03 = lmer(Q3 ~   MIR_novelty_avg +  (1 | Pair), data = subset_data )
 m04 = lmer(Q3 ~   MIR_rms_avg +  (1 | Pair), data = subset_data )
 m05 = lmer(Q3 ~   MIR_entropy_avg +  (1 | Pair), data = subset_data )
-m06 = lmer(Q3 ~   g_LZ_avg + Music_mode + (1 | Participant), data = subset_data )
+m06 = lmer(Q3 ~   g_LZ_avg  + (1 | Participant), data = subset_data )
+m07 = lmer(Q3 ~   p_LZ_avg  + (1 | Participant), data = subsetdata_P )
 
+tab_model(m01, m02, m03, m04, m05,m06, m07,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m01", "m02","m03","m04", "m05", "m06", "m07"), digits = 5 )
+
+m01 = lmer(Q3 ~   LZ_avg +  (1 | Participant), data = subset_data )
+m02 = lmer(Q3 ~   Q6 +  (1 | Participant), data = subset_data )
+m03 = lmer(LZ_avg ~   Q6a +  (1 | Participant), data = subset_data )
+m04 = lmer(LZ ~   Q6 +  (1 | Participant/Step), data = data )
 
 tab_model(m01, m02, m03, m04, m05,m06, m07,m08,   p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
           dv.labels=c("m01", "m02","m03","m04", "m05", "m06", "m07", "m08"), digits = 5 )
+
+
+
+
 
 
