@@ -81,6 +81,7 @@ print(subset_dataset)
 # Print the subset dataset
 print(subset_dataset)
 
+
 subset_data <- subset(data, number == 0)
 
 
@@ -342,15 +343,16 @@ m08 = lmer(LZ_avg ~    Condition +   (1 | Participant), data = subset_data )
 tab_model(m01, m02, m03, m04, m05,m06, m07,m08,   p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
           dv.labels=c("m01", "m02","m03","m04", "m05", "m06", "m07", "m08"),  digits = 5 )
 
-m01 = lmer(LZ_avg ~   Abs_Av+ Condition +  (1 | Pair), data = subset_data )
+m01 = lmer(LZ_avg ~   Q3 +  (1 | Pair), data = subset_data )
 m02 = lmer(LZ_avg ~    Condition +  (1 | Pair), data = subset_data )
 m03 = lmer(LZ_avg ~    Palo +  (1 | Pair), data = subset_data )
 m04 = lmer(LZ_avg ~    Dance_mode +  (1 | Pair), data = subset_data )
 m05= lmer(LZ_avg ~    Abs_Av  +  (Palo | Pair), data = subset_data )
 m06= lmer(LZ_avg ~    Music_mode + (Palo | Pair), data = subset_data )
 m07= lmer(LZ_avg ~     Abs_Av +  Q1 + (Palo | Pair) , data = subset_data )
-tab_model(m01, m02, m03, m04, m05,m06, m07,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
-          dv.labels=c("m01", "m02","m03","m04", "m05", "m06", "m07"), digits = 5 )
+m08= lmer(LZ_avg ~      Q3 + Condition +  (1 | Pair) , data = subset_data )
+tab_model(m01, m02, m03, m04, m05,m06, m07, m08,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m01", "m02","m03","m04", "m05", "m06", "m07", "m08"), digits = 5 )
 
 
 

@@ -1,0 +1,10 @@
+{
+    "downsample": true,
+    "tempNum": 2,
+    "tempMiddle": "True",
+    "onsetLibrosa": "True",
+    "onsetDetection": "False",
+    "windowSize": 4000,
+    "sampleRate": 48000,
+    "dt": 0.001
+}

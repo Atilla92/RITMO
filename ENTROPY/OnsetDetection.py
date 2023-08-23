@@ -2,6 +2,7 @@ import numpy as np
 from PeakPicking import PeakPicking
 from scipy.fftpack import fft
 from scipy.signal import medfilt
+import warnings
 
 class OnsetDetection(object):
 	"""
@@ -66,10 +67,17 @@ class OnsetDetection(object):
 
 	@staticmethod
 	def rectifiedComplexDomain(currentMag, prevMag, currentPhase, targetPhase):
-		if (currentMag >= prevMag):
-			rcd = np.sqrt(pow(prevMag, 2) + pow(currentMag, 2) - 2 * prevMag * currentMag * np.cos(currentPhase - targetPhase))
-		else:
-			rcd = 0
+		try:
+			with warnings.catch_warnings():
+				warnings.simplefilter("error", RuntimeWarning)
+				if (currentMag >= prevMag):
+					rcd = np.sqrt(pow(prevMag, 2) + pow(currentMag, 2) - 2 * prevMag * currentMag * np.cos(currentPhase - targetPhase))
+				else:
+					rcd = 0
+		except (ValueError, RuntimeWarning):
+			print(currentMag,prevMag, currentPhase, targetPhase)
+			rcd = 0.0  # Set a default value or handle the exception as needed
+
 		return rcd
 
 	def processFrame(self):

@@ -9,6 +9,7 @@ import scipy
 import sys
 import scipy.signal as sg
 
+
 # Load Data
 
 #data = pd.read_pickle('../data/applause1')
@@ -197,14 +198,29 @@ def InterOnsetInterval(df, window, t_window):
         for n in range(n_windows):
             w = data.iloc[ n*window : (n+1)*window ] 
             n_counts = w.sum()
-            interOI = t_window/n_counts
+            if n_counts == 0:
+                interOI = 0.0  # Set a default value or handle the case as needed
+            else:
+                interOI = t_window / n_counts
             IOIs.append(interOI)
 
     return IOIs  
+
+
+def findDivisor(target_divisor, sr):
+    # Find divisors of the number
+    divisors = [i for i in range(1, sr+1) if sr % i == 0]
+
+    # Find the closest divisor to the target divisor
+    closest_divisor = min(divisors, key=lambda x: abs(x - target_divisor))
+
+    # Calculate the result of the division
+    result = sr // closest_divisor
+    dFactor = closest_divisor
+
+    return dFactor
     
             
-
-
 
 
 def calc_lz_df_3(df, style='LZ', hil=False, window=2000, max_windows=np.inf):
