@@ -25,7 +25,7 @@ import librosa
 print('hello')
 
 # Output settings:
-file_output = "/Users/atillajv/CODE/RITMO/ENTROPY/output/main/22_Aug_2023_all_Onset/" # Name of folder to store plots. 
+file_output = "/Users/atillajv/CODE/RITMO/ENTROPY/output/main/24_Aug_2023_all_Onset_1s/" # Name of folder to store plots. 
 #wav_output = '/Volumes/Seagate/FlamencoProject/E_SEVILLA/06102022/EDITED/Mic360/'
 #file_output = "/Users/atillajv/CODE/RITMO/ENTROPY/output/main/Test/" # Name of folder to store plots. 
 
@@ -42,8 +42,8 @@ else:
 #audio_path = '/Volumes/Seagate/FlamencoProject/F_Andalucia/ensemble_rode/'
 #audio_path = '/Volumes/Seagate/FlamencoProject/E_SEVILLA/06102022/EDITED/Mic360/'
 #audio_path = '/Volumes/WHITE LOTUS/FlamencoProject/L_Lausanne/Audio/all_drums/'
-#audio_path = '/Volumes/WHITE LOTUS/FlamencoProject/AUDIO/DRUMS_DEMUCS/'
-audio_path = '/Volumes/Seagate/AUDIO/ORIGINAL/'
+audio_path = '/Volumes/WHITE LOTUS/FlamencoProject/AUDIO/ORIGINAL/'
+#audio_path = '/Volumes/Seagate/AUDIO/ORIGINAL/'
 #audio_path = '/Volumes/Seagate/AUDIO/ORIGINAL/'
 loop_on = True # Set to True if you want to loop through a certain folder. Else not. 
 #loop_off = 'P7_D1_G1_M6_R2_T1.wav'
@@ -61,7 +61,7 @@ tempNum = 2 # start + windowsize/tempNum  (where windowsize = step_size)
 # Initiate variables
 length_df = [] # Takes subset samples. Set to [] if you want to whole length. 
 #step_size = 6000  # Window of LZ/CTW estimation. 
-dt_interval = 4 # Give the amount of seconds you would like to have for time-window 
+dt_interval = 1 # Give the amount of seconds you would like to have for time-window 
  
 
 ##Empty lists, default values

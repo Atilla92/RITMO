@@ -8,15 +8,19 @@ library(dplyr)
 
 data_raw <- read.csv("~/CODE/RITMO/ENTROPY/output/main/all_experiments_07072023_095/20072023_all_experiments_drums_guitar_zd.csv")
 data_raw_2 <- read.csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_07072023_095/20072023_ELAN_no_CDRS.csv')
-
+data_raw_dt <- read.csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/22_Aug_2023/23082023_ELAN_no_CDRS_onset_dt_LZ.csv')
+data_lag <- read.csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/22_Aug_2023/23082023_ELAN_no_CDRS_onset_dt_LZ_sync.csv')
+data_lag_1s <- read.csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/24_Aug_2023/23082023_ELAN_no_CDRS_onset_dt_LZ_1s_sync.csv')
 #drop duplicates
+data <- data_lag_1s %>% distinct(Name,Participant,number, .keep_all = TRUE)
+data <- data_lag %>% distinct(Name,Participant,number, .keep_all = TRUE)
+data <- data_raw_dt %>% distinct(Name,Participant,number, .keep_all = TRUE)
 data <- data_raw_2 %>% distinct(Name,Participant,number, .keep_all = TRUE)
 data <- data_raw %>% distinct(Name,Participant,number, .keep_all = TRUE)
 
 data_P <- data[grepl("P", data$Participant),] #only dancers
 data_G <- data[grepl("G", data$Participant),] #only dancers
 
-subsetdata_P <- subset_data[grepl("P", subset_data$Participant),] #only dancers
 
 
 # ALl analysis
@@ -40,6 +44,19 @@ data$Q3 <- (data$Q3a + data$Q3b) / 2
 data$Q6 <- (data$Q6a + data$Q6b) /2
 data$Q5 <-  (data$Q5a + data$Q5b) /2
 data$Q4 <- (data$Q4a + data$Q4b + data$Q4c) /3
+
+
+# Subset data
+subset_data <- subset(data, number == 0)
+
+# Check
+participant_name_counts <- subset_data %>%
+  group_by(Participant) %>%
+  summarise(Unique_Name_Count = n_distinct(Name))
+print(participant_name_counts)
+
+subsetdata_P <- subset_data[grepl("P", subset_data$Participant),] #only dancers
+
 
 
 # Check general stats
@@ -142,7 +159,7 @@ m06 =  lmer(LZ_avg ~   1 + (1 | Artist) , data = subset_data )
 
 tab_model(m01, m02, m03, m04, m05,m06, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
           dv.labels=c("m01", "m02","m03","m04", "m05", "m06"), digits = 5 )
-
+summary(m02)
 
 m01  = lmer(LZ_avg ~   1 + (1 | Participant) , data = subset_data )
 m02  = lmer(var_entropy_avg ~   1 + (1 | Pair) , data = subset_data )
@@ -346,14 +363,35 @@ tab_model(m01, m02, m03, m04, m05,m06, m07,m08,   p.style = "stars", show.aic = 
 m01 = lmer(LZ_avg ~   Q3 +  (1 | Pair), data = subset_data )
 m02 = lmer(LZ_avg ~    Condition +  (1 | Pair), data = subset_data )
 m03 = lmer(LZ_avg ~    Palo +  (1 | Pair), data = subset_data )
-m04 = lmer(LZ_avg ~    Dance_mode +  (1 | Pair), data = subset_data )
-m05= lmer(LZ_avg ~    Abs_Av  +  (Palo | Pair), data = subset_data )
-m06= lmer(LZ_avg ~    Music_mode + (Palo | Pair), data = subset_data )
-m07= lmer(LZ_avg ~     Abs_Av +  Q1 + (Palo | Pair) , data = subset_data )
+m04 = lmer(LZ_avg ~    Dance_mode * Palo +  (1 | Pair), data = subset_data )
+m05= lmer(LZ_avg ~    Condition * Palo  +  (1 | Pair), data = subset_data )
+m06= lmer(LZ_avg ~    Music_mode * Palo + (1 | Pair), data = subset_data )
+m07= lmer(LZ_avg ~     Abs_Av +  Q1 + (1 | Pair) , data = subset_data )
 m08= lmer(LZ_avg ~      Q3 + Condition +  (1 | Pair) , data = subset_data )
 tab_model(m01, m02, m03, m04, m05,m06, m07, m08,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
           dv.labels=c("m01", "m02","m03","m04", "m05", "m06", "m07", "m08"), digits = 5 )
 
+m01 = lmer(dt_LZ_avg ~   Q3 +  (1 | Pair), data = subset_data )
+m02 = lmer(dt_LZ_avg ~    Condition +  (1 | Pair), data = subset_data )
+m03 = lmer(dt_LZ_avg ~    Palo +  (1 | Pair), data = subset_data )
+m04 = lmer(dt_LZ_avg ~    Dance_mode * Palo +  (1 | Pair), data = subset_data )
+m05= lmer(dt_LZ_avg ~    Condition * Palo  +  (1 | Pair), data = subset_data )
+m06= lmer(dt_LZ_avg ~    Music_mode * Palo +  (1 | Pair), data = subset_data )
+m07= lmer(dt_LZ_avg ~     Abs_Av +  Q1 + (1 | Pair) , data = subset_data )
+m08= lmer(dt_LZ_avg ~      Q3 + Condition +  (1 | Pair) , data = subset_data )
+tab_model(m01, m02, m03, m04, m05,m06, m07, m08,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m01", "m02","m03","m04", "m05", "m06", "m07", "m08"), digits = 5 )
+
+m01 = lmer(IOI_avg ~   Q3 +  (1 | Pair), data = subset_data )
+m02 = lmer(IOI_avg ~    Condition +  (1 | Pair), data = subset_data )
+m03 = lmer(IOI_avg ~    Palo +  (1 | Pair), data = subset_data )
+m04 = lmer(IOI_avg ~    Dance_mode * Palo +  (1 | Pair), data = subset_data )
+m05= lmer(IOI_avg ~    Condition * Palo  +  (1 | Pair), data = subset_data )
+m06= lmer(IOI_avg ~    Music_mode * Palo +  (1 | Pair), data = subset_data )
+m07= lmer(g_IOI ~     Guitarra_Level +  Q1 + (1 | Pair) , data = subset_data )
+m08= lmer(p_IOI ~      Baile_Level +  (1 | Pair) , data = data )
+tab_model(m01, m02, m03, m04, m05,m06, m07, m08,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m01", "m02","m03","m04", "m05", "m06", "m07", "m08"), digits = 5 )
 
 
 
@@ -426,6 +464,75 @@ tab_model(m01, m02, m03, m04, m05,m06, m07,m08,   p.style = "stars", show.aic = 
 
 
 
+m01 = lmer(p_lag_avg ~   Q3 +  (1 | Pair), data = subset_data )
+m02 = lmer(p_lag_avg ~    Condition +  (1 | Pair), data = subset_data )
+m03 = lmer(p_lag_avg ~    Palo +  (1 | Pair), data = subset_data )
+m04 = lmer(p_lag_avg ~    Dance_mode * Palo +  (1 | Pair), data = subset_data )
+m05= lmer(p_lag_avg ~    Condition * Palo  +  (1 | Pair), data = subset_data )
+m06= lmer(p_lag_avg ~    Music_mode * Palo +  (1 | Pair), data = subset_data )
+m07= lmer(p_lag_avg ~     Abs_Av +  Q1 + (1 | Pair) , data = subset_data )
+m08= lmer(p_lag_avg ~      Q3 + Condition +  (1 | Pair) , data = subset_data )
+tab_model(m01, m02, m03, m04, m05,m06, m07, m08,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m01", "m02","m03","m04", "m05", "m06", "m07", "m08"), digits = 5 )
 
+
+m01 = lmer(p_lag_0 ~   Q3 +  (1 | Pair), data = subset_data )
+m02 = lmer(p_lag_0 ~    Condition +  (1 | Pair), data = subset_data )
+m03 = lmer(p_lag_0 ~    Palo +  (1 | Pair), data = subset_data )
+m04 = lmer(p_lag_0 ~    Dance_mode * Palo +  (1 | Pair), data = subset_data )
+m05= lmer(p_lag_0 ~    Condition * Palo  +  (1 | Pair), data = subset_data )
+m06= lmer(p_lag_0 ~    Music_mode * Palo +  (1 | Pair), data = subset_data )
+m07= lmer(p_lag_0 ~     Abs_Av +  Q1 + (1 | Pair) , data = subset_data )
+m08= lmer(p_lag_0 ~      Q3 + Condition +  (1 | Pair) , data = subset_data )
+tab_model(m01, m02, m03, m04, m05,m06, m07, m08,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m01", "m02","m03","m04", "m05", "m06", "m07", "m08"), digits = 5 )
+
+
+m01 = lmer(p_lag_0 ~   Q3 +  (1 | Pair), data = subset_data )
+m02 = lmer(p_lag_0 ~    Q1 +  (1 | Pair), data = subset_data )
+m03 = lmer(p_lag_0 ~    Q4 +  (1 | Pair), data = subset_data )
+m04 = lmer(p_lag_0 ~    Q5 * Palo +  (1 | Pair), data = subset_data )
+m05= lmer(p_lag_0 ~    Abs_Av  +  (1 | Pair), data = subset_data )
+m06= lmer(p_lag_0 ~    Perf_Av +  (1 | Pair), data = subset_data )
+m07= lmer(p_lag_0 ~     Dance_mode  + (1 | Pair) , data = subset_data )
+m08= lmer(g_lag_avg ~     Music_mode +  (1 | Pair) , data = subset_data )
+tab_model(m01, m02, m03, m04, m05,m06, m07, m08,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m01", "m02","m03","m04", "m05", "m06", "m07", "m08"), digits = 5 )
+
+
+m01 = lmer(g_lag_avg ~   Q3 +  (1 | Pair), data = subset_data )
+m02 = lmer(g_lag_avg ~    Q1 +  (1 | Pair), data = subset_data )
+m03 = lmer(g_lag_avg ~    Q4 +  (1 | Pair), data = subset_data )
+m04 = lmer(g_lag_avg ~    Q5 * Palo +  (1 | Pair), data = subset_data )
+m05= lmer(g_lag_avg ~    Abs_Av  +  (1 | Pair), data = subset_data )
+m06= lmer(g_lag_avg ~    Perf_Av +  (1 | Pair), data = subset_data )
+m07= lmer(g_lag_avg ~     Dance_mode  + (1 | Pair) , data = subset_data )
+m08= lmer(g_lag_avg ~     Music_mode +  (1 | Pair) , data = subset_data )
+tab_model(m01, m02, m03, m04, m05,m06, m07, m08,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m01", "m02","m03","m04", "m05", "m06", "m07", "m08"), digits = 5 )
+
+
+m01 = lmer(p_lag_avg ~   Q3 +  (1 | Pair), data = subset_data )
+m02 = lmer(p_lag_avg ~    Q1 +  (1 | Pair), data = subset_data )
+m03 = lmer(p_lag_avg ~    Q4 +  (1 | Pair), data = subset_data )
+m04 = lmer(p_lag_avg ~    Q5 * Palo +  (1 | Pair), data = subset_data )
+m05= lmer(p_lag_avg ~    Abs_Av  +  (1 | Pair), data = subset_data )
+m06= lmer(p_lag_avg ~    Perf_Av +  (1 | Pair), data = subset_data )
+m07= lmer(p_lag_avg ~     Dance_mode  + (1 | Pair) , data = subset_data )
+m08= lmer(p_lag_avg ~     Music_mode +  (1 | Pair) , data = subset_data )
+tab_model(m01, m02, m03, m04, m05,m06, m07, m08,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m01", "m02","m03","m04", "m05", "m06", "m07", "m08"), digits = 5 )
+
+
+m01 = lmer(p_dt_LZ ~   Baile_Level +  (1 | Pair), data = data )
+m02 = lmer(p_dt_LZ ~    Guitarra_Level +  (1 | Pair), data = data )
+m03 = lmer(LZ ~   Baile_Level +  (1 | Pair), data = data )
+m04 = lmer(p_lag_avg ~    Baile_Level +  (1 | Pair), data = subset_data )
+m05= lmer(LZ_avg ~    Q3  +  (1 | Pair), data = subset_data )
+m06= lmer(dt_LZ_avg ~    Q3 +  (1 | Pair), data = subset_data )
+m07= lmer(p_dt_LZ ~     Baile_Level  + (1 | Pair) , data = data )
+m08= lmer(p_lag_avg ~     Music_mode +  (1 | Pair) , data = subset_data )
+tab_model(m01, m02, m03, m04, m05,m06, m07, m08,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m01", "m02","m03","m04", "m05", "m06", "m07", "m08"), digits = 5 )
 
 

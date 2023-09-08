@@ -5,9 +5,10 @@ library(lmerTest)
 
 #dataMICRO <- read.csv("~/CODE/RITMO/ENTROPY/output/main/all_experiments_07072023_095/07072023_all_experiments_drums_guitar_zd.csv")
 data_raw <- read.csv("~/CODE/RITMO/FILES/Subjective/DuringExperiments_Andalucia_20072023_DropW.csv")
-
+data_exp <- read.csv('/Users/atillajv/CODE/RITMO/FILES/Subjective/DuringExperiments_Andalucia_05092023_DropW_Expertise.csv')
 #data_raw <- read.csv('~/CODE/RITMO/ENTROPY/output/main/all_experiments_07072023_095/20072023_ELAN_no_CDRS.csv')
 data <- subset(data_raw, !grepl("D0", Dance_mode))
+data <- subset(data_exp, !grepl("D0", Dance_mode))
 data_P <- data[!grepl("G", data$Participant),] #only dancers
 data_G <- data[!grepl("P", data$Participant),] #only dancers
 
@@ -23,6 +24,7 @@ data$Music_mode <- as.factor(data$Music_mode)
 data$Music_mode <- factor(data$Music_mode, levels = c("M6",'M5','M1'))
 data$Participant <- as.factor(data$Participant)
 data$Pair <- as.factor(data$Pair)
+#data$Artist <- ifelse(data$Artist == "G", 0, ifelse(data$Artist == "P", 1, data$Artist))
 data$Artist <- as.factor(data$Artist)
 
 
@@ -460,7 +462,7 @@ m00 = lmer(Q1~ Condition + (1| Participant), data = data  )
 m01 =  lmer(Q1~ Condition + (1| Pair), data = data  )
 m02 = lmer(Q1~ Artist + (1 | Participant), data = data  )
 m03 =  lmer(Q1~ Artist * Condition + (1| Participant), data = data  )
-m04 =  lmer(Q1~ Palo + (1| Participant), data = data  )
+m04 =  lmer(Q1~ Palo  + (1| Participant), data = data  )
 tab_model(m00, m01,m02,m03, m04,   p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
           dv.labels=c("m00", "m01", "m02", "m03", "m04"), digits = 5 )
 
@@ -468,24 +470,42 @@ m00 = lmer(Q3~ Condition + (1| Participant), data = data  )
 m01 =  lmer(Q3~ Condition + (1| Pair), data = data  )
 m02 = lmer(Q3~ Artist + (1 | Participant), data = data  )
 m03 =  lmer(Q3~ Artist * Condition + (1| Participant), data = data  )
-m04 =  lmer(Q3~ Palo + (1| Participant), data = data  )
+m04 =  lmer(Q3~  Palo + (1  | Participant), data = data  )
 tab_model(m00, m01,m02,m03, m04,   p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
           dv.labels=c("m00", "m01", "m02", "m03", "m04"), digits = 5 )
 
 
 
 m01 = lmer(Q3 ~  Q1b * Artist + ( 1 | Participant) + ( 1 | Condition) , data = data )
-m02 = lmer(Q3 ~  Q1b + Q6 + Q4a + ( 1 | Participant) + ( 1 | Condition) , data = data )
-tab_model(m01, m02, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
-          dv.labels=c("m01", "m02"), digits = 5 )
+m02 = lmer(Q3 ~  Q1b + GDSI + GMSI + (  1 | Participant)  , data = data )
+m03 = lmer(Q3 ~  Q1b + GDSI + (  GDSI | Participant)  , data = data )
+m04 = lmer(Q3 ~  Q1b + Q6 + Q4a + ( 1 | Participant) , data = data )
+m05 = lmer(Q3 ~  Q1b* Artist + Q6 + Q4a + ( 1 | Participant) + ( 1 | Condition) , data = data )
+m06 = lmer(Q3 ~  Q1b * GMSI + (  1 | Participant)  , data = data )
+m07 = lmer(Q3 ~  Q1b + GDSI + Q6 + Q4a + ( 1 | Participant) , data = data )
+tab_model(m01, m02, m03,m04, m05, m06,m07, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m01", "m02", "m03", "m04", "m05", "m06", "m07"), digits = 5 )
 
-m01 = lmer(Q3 ~  Q1b + ( 1 | Participant) + ( 1 | Condition) , data = data )
+m01 = lmer(Q3 ~  Q1b * Artist + ( 1 | Participant) + ( 1 | Condition) , data = data )
 m02 = lmer(Q3 ~  Q1b + Q6 + ( 1 | Participant) + ( 1 | Condition) , data = data )
 tab_model(m01, m02, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
           dv.labels=c("m01", "m02"), digits = 5 )
 
 
-#####
+m01 = lmer(Q3_normalized ~  Q1b_normalized + ( 1 | Participant) , data = data )
+m02 = lmer(Q3_normalized ~  Q1b_normalized * Artist + ( 1 | Participant) , data = data )
+tab_model(m01, m02, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m01", "m02"), digits = 5 )
+
+m01 = lmer(Q3_normalized ~  Q1b_normalized + ( 1 | Participant) , data = data )
+m02 = lmer(Q3_normalized ~  Q1b_normalized * Artist + ( 1 | Participant) , data = data )
+m03 = lmer(Q3_norm_part ~  Q1b_norm_part + ( 1 | Participant) , data = data )
+m04 = lmer(Q3_norm_part ~  Q1b_norm_part * Artist + ( 1 | Participant) , data = data )
+tab_model(m01, m02, m03, m04,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m01", "m02", "m03", "m04"), digits = 5 )
+
+
+##### PETER KELLER's SUGGESTION to DO THIS ON DATA
 shapiro_test(data) #you want to have p-value above threshold
 bc_trans_async <- BoxCoxTrans (data)
 
@@ -493,6 +513,134 @@ bc_trans_async <- BoxCoxTrans (data)
 # caret library
 # if the transformation does not make any difference, use the original data obviously. 
 # Plot raw data and partial residuals of model
+
+
+
+### Looking a bit further into the dataset 
+
+library(ggplot2)
+
+# Create a violin plot
+ggplot(data, aes(x = Artist, y = Q3)) +
+  geom_violin(fill = "lightblue", color = "blue") +
+  geom_jitter(width = 0.1, alpha = 0.5) +  # Add jittered points for individual data points
+  labs(x = "Artist", y = "Q3") +  # Label the axes
+  ggtitle("Distribution of Q3 by Artist") +  # Add a title
+  theme_minimal()  # Choose a minimal theme (optional)
+
+ggplot(data, aes(x = Artist, y = Q3)) +
+  geom_violin(fill = "lightblue", color = "blue") +
+  geom_boxplot(width = 0.15, fill = "white", color = "black", outlier.shape = NA) +  # Add boxplot
+  geom_jitter(width = 0.1, alpha = 0.5) +  # Add jittered points for individual data points
+  labs(x = "Artist", y = "Q3") +
+  ggtitle("Distribution of Q3 by Artist") +
+  theme_minimal()
+
+library(patchwork)
+
+ochre_yellow <- "#e3c360ff"  # You can adjust the color code to your preference
+
+# Create a plot for Q1 with different colors for "P" and "G"
+plot_q1_1 <- ggplot(data, aes(x = Artist, y = Q1, fill = Artist)) +
+  geom_violin(color = "black") +
+  labs(x = "Artist", y = "Q1") +
+  ggtitle("Distribution of Q1 by Artist") +
+  geom_boxplot(width = 0.15, fill = "white", color = "black", outlier.shape = NA) +
+  geom_jitter(width = 0.1, alpha = 0.5) +
+  scale_fill_manual(values = c("G" = "lightblue", "P" = ochre_yellow)) +  # Specify colors
+  theme_minimal()
+
+# Create a plot for Q3 with different colors for "P" and "G"
+plot_q3_1 <- ggplot(data, aes(x = Artist, y = Q3, fill = Artist)) +
+  geom_violin(color = "black") +
+  labs(x = "Artist", y = "Q3") +
+  ggtitle("Distribution of Q3 by Artist") +
+  geom_boxplot(width = 0.15, fill = "white", color = "black", outlier.shape = NA) +
+  geom_jitter(width = 0.1, alpha = 0.5) +
+  scale_fill_manual(values = c("G" = "lightblue", "P" = ochre_yellow)) +  # Specify colors
+  theme_minimal()
+
+# Arrange the plots side by side
+final_plot <- plot_q1_1 + plot_q3_1
+
+# Display the final plot
+final_plot
+
+
+
+# What happens if we normalize the data. Looks like each participant will have a different relationship based on normalizing their data. 
+# Or do we normalize over the whole set?
+library(dplyr)
+
+# Calculate the mean and standard deviation of Q1
+mean_Q1b <- mean(data$Q1b, na.rm = TRUE)
+sd_Q1b <- sd(data$Q1b, na.rm = TRUE)
+
+# Create a new column with normalized values
+data <- data %>%
+  mutate(Q1b_normalized = (Q1b - mean_Q1b) / sd_Q1b)
+
+# Calculate the mean and standard deviation of Q3
+mean_Q3 <- mean(data$Q3, na.rm = TRUE)
+sd_Q3 <- sd(data$Q1, na.rm = TRUE)
+
+# Create a new column with normalized values
+data <- data %>%
+  mutate(Q3_normalized = (Q3 - mean_Q3) / sd_Q3)
+
+
+
+
+# Create a plot for Q1 with different colors for "P" and "G"
+plot_q1 <- ggplot(data, aes(x = Artist, y = Q1b_normalized, fill = Artist)) +
+  geom_violin(color = "black") +
+  labs(x = "Artist", y = "Q1") +
+  ggtitle("Distribution of Q1 by Artist") +
+  geom_boxplot(width = 0.15, fill = "white", color = "black", outlier.shape = NA) +
+  geom_jitter(width = 0.1, alpha = 0.5) +
+  scale_fill_manual(values = c("G" = "lightblue", "P" = ochre_yellow)) +  # Specify colors
+  theme_minimal()
+
+# Create a plot for Q3 with different colors for "P" and "G"
+plot_q3 <- ggplot(data, aes(x = Artist, y = Q1b_norm_part, fill = Artist)) +
+  geom_violin(color = "black") +
+  labs(x = "Artist", y = "Q3") +
+  ggtitle("Distribution of Q3 by Artist") +
+  geom_boxplot(width = 0.15, fill = "white", color = "black", outlier.shape = NA) +
+  geom_jitter(width = 0.1, alpha = 0.5) +
+  scale_fill_manual(values = c("G" = "lightblue", "P" = ochre_yellow)) +  # Specify colors
+  theme_minimal()
+
+# Arrange the plots side by side
+final_plot <- plot_q1 + plot_q3 
+
+# Display the final plot
+final_plot
+
+
+
+library(dplyr)
+
+# Calculate the mean Q1b per Participant
+data <- data %>%
+  group_by(Participant) %>%
+  mutate(Q1b_mean = mean(Q1b, na.rm = TRUE)) %>%
+  ungroup()
+
+# Create a new column with Q1b normalized per Participant
+data <- data %>%
+  mutate(Q1b_norm_part = Q1b / Q1b_mean)
+
+
+# Calculate the mean Q3 per Participant
+data <- data %>%
+  group_by(Participant) %>%
+  mutate(Q3_mean = mean(Q3, na.rm = TRUE)) %>%
+  ungroup()
+
+# Create a new column with Q1b normalized per Participant
+data <- data %>%
+  mutate(Q3_norm_part = Q3 / Q3_mean)
 
 
 

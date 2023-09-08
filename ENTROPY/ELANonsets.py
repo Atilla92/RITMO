@@ -12,12 +12,12 @@ loop_on = True # True if you want to loop through folder
 path_files = '/Users/atillajv/CODE/RITMO/FILES/ELAN/cleaned/'
 #path_ratings = '/Users/atillajv/CODE/RITMO/FILES/Ratings/'
 #file_output = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_097/' #check that this is the same as input file for entropy
-file_output = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/22_Aug_2023/' #check that this is the same as input file 
+file_output = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/24_Aug_2023/' #check that this is the same as input file 
 # Default settings 
 percentage = 0.1
 frac_round = 1 #Round/frac_round for moving rating to the left 
 dt_L = 2 #Number of seconds delay in rating of user. 
-name_output = '23082023_ELAN_no_CDRS_onset_dt_LZ'
+name_output = '23082023_ELAN_no_CDRS_onset_dt_LZ_1s_sync'
 
 list_files = []
 #error_files = []
@@ -89,7 +89,7 @@ df_store = pd.DataFrame(columns=['Name', 'Duration', 'Participant', 'Music_Imp',
 'LZ_avg',
 'dt_LZ_avg',
 'IOI',
-'IOI_avg'
+'IOI_avg',
 'p_LZ',
 'p_dt_LZ',
 'p_LZ_avg',
@@ -110,6 +110,10 @@ df_store = pd.DataFrame(columns=['Name', 'Duration', 'Participant', 'Music_Imp',
 'g_dt_LZ_avg',
 'g_IOI',
 'g_IOI_avg',
+'p_lag_0', 
+'g_lag_0' ,
+'p_lag_avg',
+'g_lag_avg',
 # 'g_MIR_entropy',
 # 'g_MIR_entropy_avg',
 # 'g_MIR_rms',
@@ -125,7 +129,7 @@ df_store = pd.DataFrame(columns=['Name', 'Duration', 'Participant', 'Music_Imp',
 def loopThroughFiles (list_files, artist_label, percentage = percentage , frac_round = frac_round, dt_L = dt_L, error_files = [], store_i= 0 , df_store = df_store  ):
 
     for file_i, file_item in enumerate(list_files):
-        print('FILE BEING ANALYSED: ')
+        print('FILE BEING ANALYSED: ', file_item)
         #prefix = file_item_long.partition('_')[1]
         #prefixParticipant = file_item_long.partition('_')[0]
         #file_item = file_item_long.split('_',1)[1]
@@ -135,21 +139,24 @@ def loopThroughFiles (list_files, artist_label, percentage = percentage , frac_r
             dfI = pd.read_csv ('/Users/atillajv/CODE/RITMO/FILES/ELAN/cleaned/' + file_item + '.csv',  delimiter=';')
             # Csv file with during experiments results 
             dfS = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/Subjective/DuringExperiments_Andalucia_20072023_DropW.csv')
+            p_dfL = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/24_Aug_2023/LeadingFollowing_1s_Dancer.csv', skiprows=[1])
+            g_dfL = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/24_Aug_2023/LeadingFollowing_1s_Guitarist.csv', skiprows=[1])
+            print('OK!!!!')
             # Features files based on original sound files
-            dfE = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/22_Aug_2023_all_Onset/'+file_item+'.csv')[1:]
+            dfE = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/24_Aug_2023_all_Onset_1s/'+file_item+'.csv')[1:]
             #dfMIR_entropy = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/MIR/features_all_experiments/zoom/ENTROPY/' + file_item + '.csv')
             #dfMIR_novelty = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/MIR/features_all_experiments/zoom/NOVELTY/' + file_item + '.csv')
             #df_var = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_095/var/'+file_item+'.csv')[1:]
             #print('ok')
 
             # Features files based on drums sound files
-            p_dfE = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/22_Aug_2023_all_Onset_drums/'+file_item+'.csv')[1:]
+            p_dfE = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/24_Aug_2023_all_Onset_drums_1s/'+file_item+'.csv')[1:]
             # p_dfMIR_entropy = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/MIR/features_all_experiments/drums/ENTROPY/' + file_item + '.csv')
             # p_dfMIR_novelty = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/MIR/features_all_experiments/drums/NOVELTY/' + file_item + '.csv')
             # p_df_var = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_095_drums/var/'+file_item+'.csv')[1:]
             #print('ok2')
             # Features files based on drums sound files
-            g_dfE = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/22_Aug_2023_all_Onset_guitar_zd/'+file_item+'.csv')[1:]
+            g_dfE = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/24_Aug_2023_all_Onset_guitar_zd_1s/'+file_item+'.csv')[1:]
             # g_dfMIR_entropy = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/MIR/features_all_experiments/guitar_zoom/ENTROPY/' + file_item + '.csv')
             # g_dfMIR_novelty = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/MIR/features_all_experiments/guitar_zoom/NOVELTY/' + file_item + '.csv')
             # g_df_var = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_095_guitar_zd/var/'+file_item+'.csv')[1:]
@@ -223,6 +230,8 @@ def loopThroughFiles (list_files, artist_label, percentage = percentage , frac_r
 
                 # Store values in new dataframe
                 dfTest = dfS[ (dfS['Name'].str.contains(file_item))& (dfS['Participant'].str.contains(artist_label)) ]
+                p_dFL_test = p_dfL[p_dfL[p_dfL.columns[0]].str.contains(file_item)]
+                g_dFL_test = g_dfL[g_dfL[g_dfL.columns[0]].str.contains(file_item)]
             
                 #print(dfTest, 'TESSST')
                 df_store.loc[store_i] = {
@@ -306,6 +315,10 @@ def loopThroughFiles (list_files, artist_label, percentage = percentage , frac_r
                     # 'g_MIR_novelty_avg' : g_dfMIR_novelty['novelty'].mean(),
                     # 'g_var_entropy' : g_list_var['var'].mean(),
                     # 'g_var_entropy_avg' : g_df_var['var'].mean(),
+                    'p_lag_0' : p_dFL_test['Lag_0'].iloc[0],
+                    'g_lag_0' : g_dFL_test['Lag_0'].iloc[0],
+                    'p_lag_avg': p_dFL_test['Row_Avg'].iloc[0] ,
+                    'g_lag_avg':g_dFL_test['Row_Avg'].iloc[0] ,
                     'annot_frac' : '',
                     'number': i,
                     }

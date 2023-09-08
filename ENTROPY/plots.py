@@ -8,10 +8,17 @@ from statsmodels.graphics.mosaicplot import mosaic
 Plots different statistics of the dataset
 '''
 
-file_input = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_095/'
-save_plot = '/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/all_experiments_095/' 
+# file_input = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_095/CSV/'
+save_plot = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/Test/' 
 
-df_file = '18042023_all_experiments_drums_guitar_zd'
+file_input= '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_07072023_095/'
+df_file = '20072023_ELAN_no_CDRS'
+# df_file = '18042023_all_experiments_drums_guitar_zd'
+# file_input = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/22_Aug_2023/'
+# save_plot = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/22_Aug_2023/' 
+
+#df_file = '23082023_ELAN_no_CDRS_onset_dt_LZ'
+
 df = pd.read_csv(file_input + df_file + '.csv', index_col=0)
 df.drop_duplicates(subset=None, keep="first", inplace=True)
 df = df[~df['Dance_mode'].str.contains("D0")]
@@ -80,68 +87,68 @@ def stdMean(column, variable, colour ):
 
 # '''
 
-variables = ['Imp_subj', 'Flow_subj', 'LZ', 'p_LZ','g_LZ']
-for j, itemj in enumerate(variables):
-    list_columns = ['Music_Imp','Dance_Imp', 'Music_mode', 'Dance_mode', 'Palo',  'Guitarra_Level','Baile_Level']
-    list_colour = ['black', 'red', 'black', 'red','cyan', 'green', 'blue','green']
-    lsts_mean = []
-    lsts_std  = []
-    lsts_col  = []
-    lsts_colour = []
-    lsts_counts = []
-    list_data = []
+# variables = ['Imp_subj', 'Flow_subj', 'LZ', 'p_LZ','g_LZ']
+# for j, itemj in enumerate(variables):
+#     list_columns = ['Music_Imp','Dance_Imp', 'Music_mode', 'Dance_mode', 'Palo',  'Guitarra_Level','Baile_Level']
+#     list_colour = ['black', 'red', 'black', 'red','cyan', 'green', 'blue','green']
+#     lsts_mean = []
+#     lsts_std  = []
+#     lsts_col  = []
+#     lsts_colour = []
+#     lsts_counts = []
+#     list_data = []
     
-    plt.figure()
+#     plt.figure()
 
-    for i, item in enumerate(list_columns):
+#     for i, item in enumerate(list_columns):
 
-        lst_mean, lst_std, lst_col, lst_colour,lst_data, lst_counts = stdMean(item, itemj, list_colour[i])
-        lsts_mean = lsts_mean + lst_mean
-        lsts_std = lsts_std + lst_std
-        lsts_col = lsts_col + lst_col
-        lsts_colour = lsts_colour + lst_colour
-        list_data  = list_data + lst_data
-        lsts_counts = lsts_counts + lst_counts
+#         lst_mean, lst_std, lst_col, lst_colour,lst_data, lst_counts = stdMean(item, itemj, list_colour[i])
+#         lsts_mean = lsts_mean + lst_mean
+#         lsts_std = lsts_std + lst_std
+#         lsts_col = lsts_col + lst_col
+#         lsts_colour = lsts_colour + lst_colour
+#         list_data  = list_data + lst_data
+#         lsts_counts = lsts_counts + lst_counts
 
-        x = np.arange(len(list_data))
-        plt.ylabel(itemj)
+#         x = np.arange(len(list_data))
+#         plt.ylabel(itemj)
 
 
 
-        violin_parts = plt.violinplot(list_data, x, points=60, widths=0.9, showmeans=False,
-                        showextrema=False, showmedians=False, bw_method=0.5,
+#         violin_parts = plt.violinplot(list_data, x, points=60, widths=0.9, showmeans=False,
+#                         showextrema=False, showmedians=False, bw_method=0.5,
                         
-                        )
+#                         )
     
             
-    for pc in violin_parts['bodies']:
-            pc.set_facecolor('green')
-            pc.set_edgecolor('black')
+#     for pc in violin_parts['bodies']:
+#             pc.set_facecolor('green')
+#             pc.set_edgecolor('black')
                         
-    plt.boxplot(list_data, positions = x)
-    plt.xticks(x,  lsts_col)
+#     plt.boxplot(list_data, positions = x)
+#     plt.xticks(x,  lsts_col)
 
-    #plt.show()
+#     #plt.show()
 
 
-    if bar_plot: 
-        plt.figure()
-        x = np.arange(len(lsts_col))
-        print(lsts_mean)
-        y = lsts_mean
-        plt.xticks(x, lsts_col)
-        plt.ylabel(itemj)
-        plt.bar(x,y, yerr = lsts_std,   align='center',
-            #alpha=0.5,
-            ecolor='black',
-            color= lsts_colour,
-            capsize=10)
+#     if bar_plot: 
+#         plt.figure()
+#         x = np.arange(len(lsts_col))
+#         print(lsts_mean)
+#         y = lsts_mean
+#         plt.xticks(x, lsts_col)
+#         plt.ylabel(itemj)
+#         plt.bar(x,y, yerr = lsts_std,   align='center',
+#             #alpha=0.5,
+#             ecolor='black',
+#             color= lsts_colour,
+#             capsize=10)
 
-        #plt.show() 
+#         #plt.show() 
     
-    if save_violin_plot:
+#     if save_violin_plot:
     
-        plt.savefig(save_plot +'ViolinPlots_'+ itemj +  '.png')
+#         plt.savefig(save_plot +'ViolinPlots_'+ itemj +  '.png')
 
 
 
@@ -225,9 +232,8 @@ def addFracAnnot(df):
     column = 'Name'
     list_files = df[column].unique().tolist()
     df['frac_annot'] = np.nan
-    print(np)
     ds = df.groupby(['Name', 'Participant'])[['Rounds']].sum()
-
+    
     i = 0
     for name, group in ds.index:
         sum_rounds = ds['Rounds'].iloc[i]
@@ -262,15 +268,15 @@ def HeatMapCategoriesFrac(df, categories, loopName = '', name = ''):
     ax1.set_title('Distribution(%) ' + str(name))
     plt.savefig(save_plot + str(categories) + '_HeatMap_FracAnnot_' +str(loopName) +'.png')
 
-# HeatMapCategoriesFrac(df,["Baile_Level", 'Dance_Imp'] )
-# HeatMapCategoriesFrac(df,["Baile_Level", 'Condition'] )
-# HeatMapCategoriesFrac(df,["Dance_Imp", 'Condition'] )
-# HeatMapCategoriesFrac(df,["Dance_Imp", 'Palo'] )
-# HeatMapCategoriesFrac(df,["Guitarra_Level", 'Condition'] )
-# HeatMapCategoriesFrac(df,["Music_Imp", 'Condition'] )
-# HeatMapCategoriesFrac(df,["Baile_Level", 'Palo'] )
-# HeatMapCategoriesFrac(df,["Baile_Level", 'Guitarra_Level'] )
-# HeatMapCategoriesFrac(df,["Baile_Level", 'Music_Imp'] )
+HeatMapCategoriesFrac(df,["Baile_Level", 'Dance_Imp'] )
+HeatMapCategoriesFrac(df,["Baile_Level", 'Condition'] )
+HeatMapCategoriesFrac(df,["Dance_Imp", 'Condition'] )
+HeatMapCategoriesFrac(df,["Dance_Imp", 'Palo'] )
+HeatMapCategoriesFrac(df,["Guitarra_Level", 'Condition'] )
+HeatMapCategoriesFrac(df,["Music_Imp", 'Condition'] )
+HeatMapCategoriesFrac(df,["Baile_Level", 'Palo'] )
+HeatMapCategoriesFrac(df,["Baile_Level", 'Guitarra_Level'] )
+HeatMapCategoriesFrac(df,["Baile_Level", 'Music_Imp'] )
 HeatMapCategoriesFrac(df,["Dance_Imp", 'Music_Imp'] )
 
 

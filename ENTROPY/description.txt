@@ -112,6 +112,50 @@ variance.py
     Stores plots and outputs in seperate folder. 
 
 
+######
+A new series of scripts has been created to analyse the data with different OnsetDetection algorithms, followed up with a leading following analysis. All scripts start with OnsetXXX.py
+######
+!!!!
+OnsetDetection.py - Original detection script, do not edit
+PeakPicking.py - Original detection script, do not edit
+PitchEstimation.py - Original detection script, do not edit
+!!!!
+
+OnsetLibrosa.py
+     Testing the Librosa based onset detection algorithm. 
+
+OnsetTesting.py
+    Uses the original detection scripts. A different based onset detection algorithm. 
+    For now has not been implemented in OnsetMain.py because it raises an error when trying to downsample the .wav files. For larger downsampling values than 8. 
+
+OnsetMain.py
+    Uses the librosas onset detection algorithm. The .wav file is not downsample for this, as the algorithm works best on the original sampling rate. After that the resulting binarised array is spaced at dt interval (0.001 works good enough) and the step_size (window_size) for the LZ-estimation is estimated based on a desired dt_interval (set in the beginning). 
+    There is no downsampling of the .wav file needed. Plots will show both LZ, and dt_LZ.
+    LZ, dt_LZ, IOI and time are stored in separate .csv files for each file_name. Plots for all files are stored as well.
+
+OnsetLeadingFollowing.py
+    After running OnsetMain.py both for guitarist and drums (dancer) a sync analysis (leading following) can be done, you can change the time_lags you want (depending on the dt from OnsetMain.py giher values will make more sense than others).
+    - speficy amount of time_lags
+    - specify who is leading "Dancer" or "Guitarist"
+    - stores .csv as output, with "Dancer" or "Guittarist" in name. 
+    - First row of .csv file will contain the average sum for the specific time_lag, you can compare them and see for which lag the duo is most in sync. 
+
+    The algorithm compares dt_LZ of Guitarist and Dancer at a specific time lag. If both have the same sign (+,+)(-,-) a value of 1 is given, else 0. It's the simplest version of seeing whether one is following the other in terms of complexity. One could also do this for dt_IOI, this however has not been implemented yet. 
+
+    !! Might get a runtime warning, just abort mission and restart. It will skip the files that already have been analysed. 
+
+
+ELANonset.py
+    Run this script in the end to merge all the estimations in one .csv file. It needs the 
+    - leading following .csv from OnsetLeadingFollowing for both Guitarist and Dancer as leader, if not comment out. It also takes lag_0 from the .csv, check whether these are the highest values for both cases, else change it to a different lag that is more prevalent.
+    - main .csv from experiment containing all subjective ratings. 
+    - .csv files containing LZ, dt_LZ and IOI for each recording (name_file).
+
+    Make sure you have all the paths correctly. There is a bug in the script so all files will be stored in the "error" logged json file.  
+    
+
+
+
 
 
 
