@@ -1,6 +1,6 @@
 % Define input and output directories
-inputDirectory = '/Volumes/Seagate/AUDIO/ONSET/drums/';
-outputDirectory = '/Volumes/Seagate/AUDIO/ONSET/output/';
+inputDirectory = '/Volumes/WHITE LOTUS/ONSET/drums_demucs/';
+outputDirectory = '/Volumes/WHITE LOTUS/ONSET/output_week_37/';
 
 % Get a list of .wav files in the input directory
 wavFiles = dir(fullfile(inputDirectory, '*.wav'));
@@ -15,6 +15,7 @@ set(0, 'DefaultFigureVisible', 'off');
 
 % Loop through each .wav file
 for i = 1:length(wavFiles)
+    
     % Get the filename without extension
     [~, filename, ~] = fileparts(wavFiles(i).name);
     
@@ -26,9 +27,15 @@ for i = 1:length(wavFiles)
     [y, fs] = audioread(inputPath);
     
     % Estimate the onset times
-    onsetTimes  = name_ons(inputPath, outsuffix = '_niels', outpath = outputDirectory, overwrite = true, audiosave = true, echange = true);
+    [onsetTimes, intensity, ons]  = name_ons(inputPath, outsuffix = '_niels', outpath = outputDirectory, overwrite = true, audiosave = true, echange = true, dynbuffer = 32);
+    
     %numOnsets = length(onsetTimes);
-    csvwrite(outputPath, onsetTimes);
+    %outputCSV = cell(length(onsetTimes),2);
+    %outputCSV = {onsetTimes', intensity'};
+    outputCSV = [onsetTimes'; intensity'];
+
+    csvwrite(outputPath, outputCSV);
+    
       
     % Update the summary data
     summaryData{i, 1} = wavFiles(i).name;
@@ -86,10 +93,6 @@ writetable(summaryTable, summaryPath);
 
 disp('Onset times and summary have been saved.');
 
-
-
-
-
 disp('Onset counts have been saved.');
 
 
@@ -117,8 +120,13 @@ disp('Onset counts have been saved.');
 % after it will remove it. Could try to put it at 100ms. 
 % 'dur' in ms, it didnt have much effect when he tried, increase to 50ms. 
 
-
-
+%%% Meeting 2
+% name_onsed
+% need to add a shortcuts file, 
+% Increase dynbuffer to 36 for silent movement periods, lower background noise
+% changening "int" did not do much, certain things get excluded else.
+% For guitar, behaves better than MIR toolbox. See whether you can lower
+% it, or even remove the 32 db, look at the noise plot. 
 
 
 %onsets = name_ons('P13_D1_G5_M1_R1_T1.wav', outsuffix = '_tryingout', outpath = '/Users/atillajv/Ritmo/F-Andalucia/Rode/test/', overwrite = true, audiosave = true, echange = true, int = 10);
