@@ -1,6 +1,6 @@
 % Define input and output directories
-inputDirectory = '/Volumes/WHITE LOTUS/ONSET/drums_demucs/';
-outputDirectory = '/Volumes/WHITE LOTUS/ONSET/output_week_37/';
+inputDirectory = '/Volumes/WHITE LOTUS/FlamencoProject/AUDIO/HALF_AUDIO/GUITAR';
+outputDirectory = '/Volumes/WHITE LOTUS/FlamencoProject/AUDIO/HALF_AUDIO/OUTPUT_GUITAR/';
 
 % Get a list of .wav files in the input directory
 wavFiles = dir(fullfile(inputDirectory, '*.wav'));
@@ -21,13 +21,14 @@ for i = 1:length(wavFiles)
     
     % Construct the full paths for input and output
     inputPath = fullfile(inputDirectory, wavFiles(i).name);
-    outputPath = fullfile(outputDirectory, [filename '_onsets.csv']);
+    outputPath = fullfile(outputDirectory, [filename '.csv']);
     
     % Read the .wav file
+    inputPath
     [y, fs] = audioread(inputPath);
     
     % Estimate the onset times
-    [onsetTimes, intensity, ons]  = name_ons(inputPath, outsuffix = '_niels', outpath = outputDirectory, overwrite = true, audiosave = true, echange = true, dynbuffer = 32);
+    [onsetTimes, intensity, ons]  = name_ons(inputPath, outpath = outputDirectory, overwrite = true, audiosave = true, echange = true);
     
     %numOnsets = length(onsetTimes);
     %outputCSV = cell(length(onsetTimes),2);
@@ -71,9 +72,9 @@ for i = 1:length(wavFiles)
     sgtitle(filename);
     
     % Save the figure as an image
-    figPNG = fullfile(outputDirectory, [filename '_plot.png']);
+    figPNG = fullfile(outputDirectory, [filename '.png']);
     saveas(gcf, figPNG);
-    figPath = fullfile(outputDirectory, [filename '_plot.fig']);
+    figPath = fullfile(outputDirectory, [filename '.fig']);
     savefig(figPath);
     
     close;

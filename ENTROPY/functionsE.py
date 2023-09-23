@@ -193,6 +193,7 @@ def calc_lz_df_2(df, style='LZ', hil=False, window=2000, max_windows=np.inf, bin
 def InterOnsetInterval(df, window, t_window):
     n_windows = int( len(df) / window )
     IOIs = []
+    nCounts = []
     for c in df.columns:
         data = df[c]
         for n in range(n_windows):
@@ -203,8 +204,9 @@ def InterOnsetInterval(df, window, t_window):
             else:
                 interOI = t_window / n_counts
             IOIs.append(interOI)
+            nCounts.append(n_counts)
 
-    return IOIs  
+    return IOIs, nCounts  
 
 
 def findDivisor(target_divisor, sr):

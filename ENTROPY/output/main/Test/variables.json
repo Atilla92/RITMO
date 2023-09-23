@@ -1,7 +1,8 @@
 {
-    "downsample": 32,
-    "preBinarise": true,
-    "quantile": 0.95,
-    "absoluteOn": true,
-    "windowSize": 6000
+    "tempNum": 2,
+    "tempMiddle": "True",
+    "onsetLibrosa": "True",
+    "windowSize": 4000,
+    "sampleRate": 44100,
+    "dt": 0.001
 }

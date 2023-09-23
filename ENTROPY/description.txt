@@ -154,6 +154,20 @@ ELANonset.py
     Make sure you have all the paths correctly. There is a bug in the script so all files will be stored in the "error" logged json file.  
     
 
+#### Scripts for using Niels onset detection
+
+Assuming you have first run onsetNiels.m and performed onset detection and intensity analysis for audio files.  
+
+extractOnsetNiels.py
+    Run this script to save the onset times and onset intensity times in a new output folder, in correct dataframe format (two columns: t_onset, int_onset) for further analysis. 
+    Provide input and output folder. Currently files are saved in "/Users/atillajv/CODE/RITMO/source_separation/ONSET"
+
+OnsetNielsMain.py
+    Run script to estimate entropy based on onset detection from Niels. 
+    
+
+
+
 
 
 
