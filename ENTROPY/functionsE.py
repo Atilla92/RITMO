@@ -202,7 +202,7 @@ def InterOnsetInterval(df, window, t_window):
             if n_counts == 0:
                 interOI = 0.0  # Set a default value or handle the case as needed
             else:
-                interOI = t_window / n_counts
+                interOI = t_window * window / n_counts
             IOIs.append(interOI)
             nCounts.append(n_counts)
 
