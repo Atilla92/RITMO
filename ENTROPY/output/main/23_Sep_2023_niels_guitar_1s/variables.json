@@ -2,6 +2,6 @@
     "tempNum": 2,
     "tempMiddle": "True",
     "windowSize": 1000,
-    "sampleRate": 48000,
+    "sampleRate": 44100,
     "dt": 0.001
 }

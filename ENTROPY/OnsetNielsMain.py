@@ -24,7 +24,7 @@ from OnsetDetection import OnsetDetection
 
 # Output settings:
 #file_output = "/Users/atillajv/CODE/RITMO/ENTROPY/output/main/22_Sep_2023_niels_drums/" # 
-file_output = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/22_Sep_2023_niels_guitar/'
+file_output = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/09_Oct_2023_niels_guitar_4s/'
 #Name of folder to store plots. 
 
 
@@ -36,12 +36,12 @@ else:
 
 
 # Input directory
-audio_path = '/Volumes/WHITE LOTUS/FlamencoProject/AUDIO/HALF_AUDIO/GUITAR/'
+audio_path = '/Volumes/WHITE LOTUS/FlamencoProject/AUDIO/HALF_AUDIO_PART_1/guitar/'
 csv_path = '/Users/atillajv/CODE/RITMO/ONSET/output_guitar/'
-
+#csv_path = '/Volumes/WHITE LOTUS/FlamencoProject/AUDIO/HALF_AUDIO_PART_1/output_drums/'
 
 loop_on = True # Set to True if you want to loop through a certain folder. Else not. 
-loop_off = 'P10_D6_G5_M6_R1_T1.wav' 
+loop_off = 'P3_D1_G1_M1_R1_T1.wav' 
 
 
 

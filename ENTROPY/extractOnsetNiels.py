@@ -11,9 +11,9 @@ Provide input (audio_path) and output_path to store files.
 
 loop_on = True
 
-audio_path = '/Volumes/WHITE LOTUS/FlamencoProject/AUDIO/HALF_AUDIO/OUTPUT_GUITAR/'
-output_path = '/Users/atillajv/CODE/RITMO/ONSET/output_guitar/'
-loop_off = 'P10_D6_G5_M6_R1_T1.csv'
+audio_path = '/Volumes/WHITE LOTUS/FlamencoProject/AUDIO/HALF_AUDIO_PART_1/output_guitar/'
+output_path = '/Users/atillajv/CODE/RITMO/ONSET/output_guitar_1/'
+loop_off = 'P3_D1_G1_M1_R1_T1.csv'
 
 audio_files = []
 #Load Data

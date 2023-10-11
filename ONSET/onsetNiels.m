@@ -1,6 +1,6 @@
 % Define input and output directories
-inputDirectory = '/Volumes/WHITE LOTUS/FlamencoProject/AUDIO/HALF_AUDIO/GUITAR';
-outputDirectory = '/Volumes/WHITE LOTUS/FlamencoProject/AUDIO/HALF_AUDIO/OUTPUT_GUITAR/';
+inputDirectory = '/Volumes/WHITE LOTUS/FlamencoProject/AUDIO/HALF_AUDIO_PART_1/guitar/';
+outputDirectory = '/Volumes/WHITE LOTUS/FlamencoProject/AUDIO/HALF_AUDIO_PART_1/output_guitar/';
 
 % Get a list of .wav files in the input directory
 wavFiles = dir(fullfile(inputDirectory, '*.wav'));
@@ -28,7 +28,7 @@ for i = 1:length(wavFiles)
     [y, fs] = audioread(inputPath);
     
     % Estimate the onset times
-    [onsetTimes, intensity, ons]  = name_ons(inputPath, outpath = outputDirectory, overwrite = true, audiosave = true, echange = true);
+    [onsetTimes, intensity, ons]  = name_ons(inputPath, outpath = outputDirectory, overwrite = true, audiosave = true, echange = true, visualize = false, dynbuffer = 0 );
     
     %numOnsets = length(onsetTimes);
     %outputCSV = cell(length(onsetTimes),2);

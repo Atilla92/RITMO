@@ -29,9 +29,14 @@ data$Participant <- as.factor(data$Participant)
 data$Pair <- as.factor(data$Pair)
 data$Artist <- as.factor(data$Artist)
 
-
+# MACRO Additional 
+data$Q1 <- (data$Q1a + data$Q1b) / 2
+data$Q3 <- (data$Q3a + data$Q3b) / 2
+data$Q6 <- (data$Q6a + data$Q6b) /2
+data$Q5 <-  (data$Q5a + data$Q5b) /2
+data$Q4 <- (data$Q4a + data$Q4b + data$Q4c) /3
 # Clustering
-clustering_data <- data[, c("p_LZ", "p_dt_LZ", "p_IOI", "p_ncounts", 'Condition', 'Dance_mode', "Duration", 'Participant', 'Baile_Level', 'Name', 'Q3')]
+clustering_data <- data[, c("p_LZ", "p_dt_LZ", "p_IOI", "p_ncounts", 'Condition', 'Dance_mode', "Duration", 'Participant', 'Baile_Level', 'Name', 'Q3', 'Q4', 'Q5', 'Q6', 'Palo', 'Artist', 'Abs_Av', 'Perf_Av', 'Q1', 'Pair', 'Music_mode', 'number')]
 
 clustering_data <- na.omit(clustering_data)
 #scaled_data <- scale(clustering_data[,c("norm_p_LZ", "norm_p_dt_LZ", "norm_p_IOI", "norm_p_ncounts")])
@@ -71,9 +76,9 @@ print(cluster_centers)
 
 clustering_data <- clustering_data %>%
   mutate(cluster = case_when(
-    cluster == 1 ~ "2",
-    cluster == 2 ~ "3",
-    cluster == 3 ~ "1",
+    cluster == 1 ~ "3",
+    cluster == 2 ~ "1",
+    cluster == 3 ~ "2",
     # Add more cases as needed
     TRUE ~ as.character(cluster)  # Keep other values unchanged
   ))
@@ -146,10 +151,6 @@ name_dance_mode <- df_filtered %>%
 summary_table <- summary_table %>%
   left_join(name_dance_mode, by = "Name")
 
-
-
-
-library(dplyr)
 
 
 # Group by Dance_mode and calculate the averages and standard errors for specific columns
@@ -345,9 +346,25 @@ lmer_data <- clustering_data %>%
   ) %>%
   ungroup()
 
+
+lmer_data <- clustering_data %>%
+  group_by(Name, cluster) %>%
+  mutate(
+    cl_mean_LZ = mean(kn_p_LZ),
+    cl_std_p_LZ = sd(kn_p_LZ),
+    cl_mean_p_dt_LZ = mean(kn_p_dt_LZ),
+    cl_std_p_dt_LZ = sd(kn_p_dt_LZ),
+    cl_mean_p_IOI = mean(kn_p_IOI),
+    cl_std_p_IOI = sd(kn_p_IOI),
+    cl_mean_p_ncounts = mean(kn_p_ncounts),
+    cl_std_p_ncounts = sd(kn_p_ncounts)
+  ) %>%
+  ungroup()
+
+
 # View the resulting summary data
 unique_lmer_data <- lmer_data %>%
-  distinct(Name, .keep_all = TRUE)
+  distinct(Name, cluster, .keep_all = TRUE)
 
 # View the resulting dataset
 print(unique_lmer_data)
@@ -356,20 +373,39 @@ print(unique_lmer_data)
 
 
 # ALl analysis
-merged_data$Dance_mode <- as.factor(merged_data$Dance_mode)
-merged_data$Condition <- as.factor(merged_data$Condition)
-merged_data$Condition <- relevel(merged_data$Condition, "D6_M6")
-merged_data$Dance_mode <- factor(merged_data$Dance_mode, levels = c("D1", 'D5', 'D6'))
-merged_data$Condition <- factor(merged_data$Condition, levels = c('D6_M6', 'D5_M6', 'D1_M6', 'D5_M5', 'D1_M1'))
+lmer_data$Dance_mode <- as.factor(lmer_data$Dance_mode)
+lmer_data$Condition <- as.factor(lmer_data$Condition)
+lmer_data$Condition <- relevel(lmer_data$Condition, "D6_M6")
+lmer_data$Dance_mode <- factor(lmer_data$Dance_mode, levels = c("D1", 'D5', 'D6'))
+lmer_data$Condition <- factor(lmer_data$Condition, levels = c('D6_M6', 'D5_M6', 'D1_M6', 'D5_M5', 'D1_M1'))
 #data$Condition_order <- as.factor(data$Condition_order)
-merged_data$Participant <- as.factor(merged_data$Participant)
+lmer_data$Participant <- as.factor(lmer_data$Participant)
+lmer_data$cluster <- as.factor(lmer_data$cluster)
+
+lmer_data$Palo <- as.factor(lmer_data$Palo)
+lmer_data$Music_mode <- as.factor(lmer_data$Music_mode)
+lmer_data$Music_mode <- factor(lmer_data$Music_mode, levels = c("M6",'M5','M1'))
+lmer_data$Pair <- as.factor(lmer_data$Pair)
+lmer_data$Artist <- as.factor(lmer_data$Artist)
 
 
-merged_data$Palo <- as.factor(merged_data$Palo)
-merged_data$Music_mode <- as.factor(merged_data$Music_mode)
-merged_data$Music_mode <- factor(merged_data$Music_mode, levels = c("M6",'M5','M1'))
-merged_data$Pair <- as.factor(merged_data$Pair)
-merged_data$Artist <- merged_data(merged_data$Artist)
+
+# ALl analysis
+unique_lmer_data$Dance_mode <- as.factor(unique_lmer_data$Dance_mode)
+unique_lmer_data$Condition <- as.factor(unique_lmer_data$Condition)
+unique_lmer_data$Condition <- relevel(unique_lmer_data$Condition, "D6_M6")
+unique_lmer_data$Dance_mode <- factor(unique_lmer_data$Dance_mode, levels = c("D1", 'D5', 'D6'))
+unique_lmer_data$Condition <- factor(unique_lmer_data$Condition, levels = c('D6_M6', 'D5_M6', 'D1_M6', 'D5_M5', 'D1_M1'))
+#data$Condition_order <- as.factor(data$Condition_order)
+unique_lmer_data$Participant <- unique_lmer_data(lmer_data$Participant)
+
+
+unique_lmer_data$Palo <- as.factor(unique_lmer_data$Palo)
+unique_lmer_data$Music_mode <- as.factor(unique_lmer_data$Music_mode)
+unique_lmer_data$Music_mode <- factor(unique_lmer_data$Music_mode, levels = c("M6",'M5','M1'))
+unique_lmer_data$Pair <- as.factor(unique_lmer_data$Pair)
+unique_lmer_data$Artist <- as.factor(unique_lmer_data$Artist)
+
 
 
 library(lme4)
@@ -378,7 +414,79 @@ m01  = lmer(Q3 ~   Condition + (1 | Participant)  , data = unique_lmer_data )
 m02  = lmer(Q3 ~   mean_p_LZ  + std_p_LZ+ (1 | Participant)  , data = unique_lmer_data )
 m03  = lmer(Q3 ~   Dance_mode + (1 | Participant)  , data = unique_lmer_data)
 m04  = lmer(Q3 ~   mean_p_dt_LZ + (1 | Participant)  , data = unique_lmer_data)
+m05  = lmer(Q3 ~   mean_p_ncounts + (1 | Participant)  , data = unique_lmer_data)
+m06  = lmer(Q3 ~   mean_p_IOI + (1 | Participant)  , data = unique_lmer_data)
 
 
-tab_model(m01, m02, m03, m04, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
-          dv.labels=c("m01", "m02","m03","m04"), digits = 5 )
+tab_model(m01, m02, m03, m04, m05, m06, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m01", "m02","m03","m04", "m05", 'm06'), digits = 5 )
+
+m01  = lmer(mean_p_LZ ~   Dance_mode + (1 | Participant)  , data = unique_lmer_data )
+m02  = lmer(mean_p_IOI ~   Dance_mode+ (1 | Participant)  , data = unique_lmer_data )
+m03  = lmer(mean_p_dt_LZ ~   Dance_mode + (1 | Participant)  , data = unique_lmer_data)
+m04  = lmer(mean_p_ncounts ~   Dance_mode + (1 | Participant)  , data = unique_lmer_data)
+m05  = lmer(Q3 ~   mean_p_dt_LZ * Condition + (1 | Participant)  , data = unique_lmer_data)
+m06  = lmer(Q3 ~   mean_p_dt_LZ * Dance_mode+ (1 | Participant)  , data = unique_lmer_data)
+
+
+tab_model(m01, m02, m03, m04, m05, m06, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m01", "m02","m03","m04", "m05", 'm06'), digits = 5 )
+
+m01  = lmer(mean_p_LZ ~   Palo + (1 | Participant)  , data = unique_lmer_data )
+m02  = lmer(mean_p_IOI ~   Palo+ (1 | Participant)  , data = unique_lmer_data )
+m03  = lmer(mean_p_dt_LZ ~   Palo + (1 | Participant)  , data = unique_lmer_data)
+m04  = lmer(mean_p_ncounts ~   Palo + (1 | Participant)  , data = unique_lmer_data)
+m05  = lmer(Q1 ~   mean_p_LZ * Palo + (1 | Participant)  , data = unique_lmer_data)
+m06  = lmer(Q1 ~   mean_p_IOI * Palo + (1 | Participant)  , data = unique_lmer_data)
+
+
+tab_model(m01, m02, m03, m04, m05, m06, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m01", "m02","m03","m04", "m05", 'm06'), digits = 5 )
+
+
+m01  = lmer(mean_p_dt_LZ ~   Q3 *Dance_mode + (1 | Participant)  , data = unique_lmer_data )
+m02  = lmer(mean_p_dt_LZ ~   Q4*Dance_mode + (1 | Participant)  , data = unique_lmer_data )
+m03  = lmer(mean_p_dt_LZ ~   Q5*Dance_mode + (1 | Participant)  , data = unique_lmer_data )
+m04  = lmer(mean_p_dt_LZ ~   Q6*Dance_mode + (1 | Participant)  , data = unique_lmer_data )
+m05  = lmer(mean_p_dt_LZ ~   Abs_Av *Dance_mode+ (1 | Participant)  , data = unique_lmer_data )
+m06  = lmer(mean_p_dt_LZ ~   Perf_Av *Dance_mode+ (1 | Participant)  , data = unique_lmer_data )
+
+
+tab_model(m01, m02, m03, m04, m05, m06, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m01", "m02","m03","m04", "m05", 'm06'), digits = 5 )
+
+
+m01  = lmer(mean_p_LZ ~   Q3 *Dance_mode + (1 | Participant)  , data = unique_lmer_data )
+m02  = lmer(mean_p_LZ ~   Q4*Dance_mode + (1 | Participant)  , data = unique_lmer_data )
+m03  = lmer(mean_p_LZ ~   Q5*Dance_mode + (1 | Participant)  , data = unique_lmer_data )
+m04  = lmer(mean_p_LZ ~   Q6*Dance_mode + (1 | Participant)  , data = unique_lmer_data )
+m05  = lmer(mean_p_LZ ~   Abs_Av *Dance_mode+ (1 | Participant)  , data = unique_lmer_data )
+m06  = lmer(mean_p_LZ ~   Perf_Av *Dance_mode+ (1 | Participant)  , data = unique_lmer_data )
+
+
+tab_model(m01, m02, m03, m04, m05, m06, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m01", "m02","m03","m04", "m05", 'm06'), digits = 5 )
+
+m01  = lmer(cl_mean_LZ ~   cluster * Dance_mode + (1 | Name)  , data = lmer_data )
+m02  = lmer(cl_std_p_LZ ~   cluster * Dance_mode + (1 | Name)  , data = lmer_data )
+m03  = lmer(cl_mean_p_ncounts ~   cluster * Dance_mode + (1 | Name)  , data = lmer_data )
+m04  = lmer(cl_std_p_ncounts ~   cluster * Dance_mode + (1 | Name)  , data = lmer_data )
+m05  = lmer(cl_mean_LZ ~   cluster *Condition + (1 | Name) + (1 | Participant) , data = lmer_data )
+m06  = lmer(cl_mean_LZ ~   cluster *Q3+ (1 | Name)  , data = lmer_data )
+
+
+tab_model(m01, m02, m03, m04, m05, m06, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m01", "m02","m03","m04", "m05", 'm06'), digits = 5 )
+
+
+m01  = lmer(Q3 ~   cl_mean_LZ *cluster + (1 | Name)  , data = unique_lmer_data )
+m02  = lmer(mean_p_LZ ~   Q4*Dance_mode + (1 | Participant)  , data = unique_lmer_data )
+m03  = lmer(mean_p_LZ ~   Q5*Dance_mode + (1 | Participant)  , data = unique_lmer_data )
+m04  = lmer(mean_p_LZ ~   Q6*Dance_mode + (1 | Participant)  , data = unique_lmer_data )
+m05  = lmer(mean_p_LZ ~   Abs_Av *Dance_mode+ (1 | Participant)  , data = unique_lmer_data )
+m06  = lmer(mean_p_LZ ~   Perf_Av *Dance_mode+ (1 | Participant)  , data = unique_lmer_data )
+
+
+tab_model(m01, m02, m03, m04, m05, m06, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m01", "m02","m03","m04", "m05", 'm06'), digits = 5 )
+

@@ -18,8 +18,8 @@ file_output = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/22_Sep_2023_niels/
 percentage = 0.1
 frac_round = 1 #Round/frac_round for moving rating to the left 
 dt_L = 2 #Number of seconds delay in rating of user. 
-name_output = '22092023_ELAN_no_CDRS_onset_niels_1s'
-
+#name_output = '22092023_ELAN_no_CDRS_onset_niels_1s'
+name_output = '09102023_ELAN_no_CDRS_onset_niels_1s_all'
 list_files = []
 #error_files = []
 
@@ -132,13 +132,13 @@ def loopThroughFiles (list_files, artist_label, percentage = percentage , frac_r
 
             # Features files based on drums sound files
 
-            p_dfE = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/23_Sep_2023_niels_drums_1s/'+file_item+'.csv')[1:]
+            p_dfE = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/09_Oct_2023_niels_drums_4s/'+file_item+'.csv')[1:]
             # p_dfMIR_entropy = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/MIR/features_all_experiments/drums/ENTROPY/' + file_item + '.csv')
             # p_dfMIR_novelty = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/MIR/features_all_experiments/drums/NOVELTY/' + file_item + '.csv')
             # p_df_var = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_095_drums/var/'+file_item+'.csv')[1:]
             #print('ok2')
             # Features files based on drums sound files
-            g_dfE = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/23_Sep_2023_niels_guitar_1s/'+file_item+'.csv')[1:]
+            g_dfE = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/09_Oct_2023_niels_guitar_4s/'+file_item+'.csv')[1:]
             # g_dfMIR_entropy = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/MIR/features_all_experiments/guitar_zoom/ENTROPY/' + file_item + '.csv')
             # g_dfMIR_novelty = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/MIR/features_all_experiments/guitar_zoom/NOVELTY/' + file_item + '.csv')
             # g_df_var = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_095_guitar_zd/var/'+file_item+'.csv')[1:]
@@ -420,7 +420,6 @@ InfotoColumns(df_store)
 # Drop duplicates due to running code twice for flow and impro ratings. 
 
 df_store.drop_duplicates(subset=None, keep="first", inplace=True)
-
 df_store.to_csv(file_output + name_output + '.csv')
 
 
