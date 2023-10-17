@@ -156,7 +156,7 @@ for (baile_level in unique_baile_levels) {
       filter(Dance_mode == condition2)
     
     # Perform t-test
-    t_test_result <- t.test(data_condition1$sum_category, data_condition2$sum_category)
+    t_test_result <- t.test(data_condition1$sum_category, data_condition2$sum_category, paired = TRUE)
     
     # Store the results in the data frame
     result_row <- data.frame(
@@ -258,8 +258,8 @@ print(t_test_results)
 
 df_filtered_R1 <- df_filtered[grepl("R1", df_filtered$Palo),] #only dancers 
 
-summary_table <- df_filtered_R1 %>%
-  group_by(Name, Baile_Level) %>%
+summary_table <- df_filtered %>%
+  group_by(Name, Baile_Level, Palo) %>%
   summarize(percentage_occurrence = sum(percentage_duration)) %>%
   pivot_wider(names_from = Baile_Level, values_from = percentage_occurrence, values_fill = 0) %>%
   rowwise() %>%
@@ -357,3 +357,58 @@ plot2<- ggplot(summary_stats_by_mode, aes(x = Dance_mode, y = Value, fill = Clus
 
 combined_plots <- plot1 / plot2
 combined_plots
+
+
+
+#########################################################
+# Check whether there is a difference accross Palos. 
+library(lme4)
+library(lmerTest)
+
+# Longformat 
+summary_table_2 <- df_filtered %>%
+  group_by(Name, Baile_Level, Palo) %>%
+  summarize(percentage_occurrence = sum(percentage_duration)) %>%
+  ungroup()
+summary_table_2 <- left_join(summary_table_2, distinct(df_filtered %>% select(Name, Dance_mode)))
+summary_table_2 <- left_join(summary_table_2, distinct(df_filtered %>% select(Participant, Dance_mode)))
+
+
+
+head(summary_table_2)
+
+# ALl analysis
+summary_table_2$Dance_mode <- as.factor(summary_table_2$Dance_mode)
+summary_table_2$Palo <- as.factor(summary_table_2$Palo)
+summary_table_2$Dance_mode <- factor(summary_table_2$Dance_mode, levels = c("D6", 'D5', 'D1'))
+data$Condition <- factor(data$Condition, levels = c('D6_M6', 'D5_M6', 'D1_M6', 'D5_M5', 'D1_M1'))
+#data$Condition_order <- as.factor(data$Condition_order)
+summary_table_2$Baile_Level <- as.factor(summary_table_2$Baile_Level)
+
+
+
+
+m01  = lmer(percentage_occurrence ~   Baile_Level + (1 | Participant)  , data = summary_table_2 )
+m02  = lmer(percentage_occurrence ~   Palo * Baile_Level + (1 | Participant)  , data = summary_table_2 )
+m03  = lmer(percentage_occurrence ~   Palo * Dance_mode + (1 | Participant)  , data = summary_table_2 )
+m04  = lmer(percentage_occurrence ~   Dance_mode * Baile_Level + (1 | Participant)  , data = summary_table_2 )
+m05  = lmer(percentage_occurrence ~   Dance_mode  + (1 | Participant)  , data = summary_table_2 )
+m06  = lmer(percentage_occurrence ~   Palo  + (1 | Participant)  , data = summary_table_2 )
+
+tab_model(m01, m02,m03,m04,m05, m06, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m01", "m02", 'm03', 'm04', 'm05', 'm06'), digits = 5 )
+
+
+m02  = lmer(Q3 ~   mean_p_LZ  + std_p_LZ+ (1 | Participant)  , data = summary_table_2 )
+m03  = lmer(Q3 ~   Dance_mode + (1 | Participant)  , data = summary_table_2)
+m04  = lmer(Q3 ~   mean_p_dt_LZ + (1 | Participant)  , data = summary_table_2)
+m05  = lmer(Q3 ~   mean_p_ncounts + (1 | Participant)  , data = summary_table_2)
+m06  = lmer(Q3 ~   mean_p_IOI + (1 | Participant)  , data = summary_table_2)
+
+
+
+
+### General LMER analysis #####
+
+
+

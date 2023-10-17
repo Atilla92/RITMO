@@ -1,0 +1,233 @@
+library(ggplot2)
+library(sjPlot)
+library(sjlabelled)
+library(sjmisc)
+library(dplyr)
+library(tidyr)
+
+library(lme4)
+library(lmerTest)
+
+data <- read.csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/22_Sep_2023_niels/05102023_ELAN_no_CDRS_onset_niels_1s_complete.csv')
+data3 <- data3[grepl("P", data3$Participant),] #only dancers
+
+data <- data %>%
+  distinct(Name, Artist, .keep_all = TRUE)
+
+
+# First the general analysis
+
+
+# MACRO Check
+data$Q1 <- (data$Q1a + data$Q1b) / 2
+data$Q3 <- (data$Q3a + data$Q3b) / 2
+data$Q6 <- (data$Q6a + data$Q6b) /2
+data$Q5 <-  (data$Q5a + data$Q5b) /2
+data$Q4 <- (data$Q4a + data$Q4b + data$Q4c) /3
+
+# Factorize
+# ALl analysis
+data$Dance_mode <- as.factor(data$Dance_mode)
+data$Condition <- as.factor(data$Condition)
+data$Condition <- relevel(data$Condition, "D6_M6")
+data$Dance_mode <- factor(data$Dance_mode, levels = c("D6", 'D5', 'D1'))
+data$Condition <- factor(data$Condition, levels = c('D6_M6', 'D5_M6', 'D1_M6', 'D5_M5', 'D1_M1', 'D6_D0'))
+#data$Condition_order <- as.factor(data$Condition_order)
+data$Palo <- as.factor(data$Palo)
+data$Music_mode <- as.factor(data$Music_mode)
+data$Music_mode <- factor(data$Music_mode, levels = c("M6",'M5','M1'))
+data$Participant <- as.factor(data$Participant)
+data$Pair <- as.factor(data$Pair)
+#data$Artist <- ifelse(data$Artist == "G", 0, ifelse(data$Artist == "P", 1, data$Artist))
+data$Artist <- as.factor(data$Artist)
+
+
+
+# Base models
+
+m00  = lmer(Q1 ~   Q3 + (1 | Participant), data = data )
+m01  = lmer(Q1 ~   Q1a + (1 | Participant), data = data )
+m02  = lmer(Q1 ~   Q1b + (1 | Participant), data = data )
+m03  = lmer(Q1 ~   Palo + (1 | Participant), data = data )
+m04  = lmer(Q1 ~   Condition + (1 | Participant), data = data )
+m05  = lmer(Q1 ~   Perf_Av + (1 | Participant), data = data )
+m06  = lmer(Q1 ~   Abs_Av + (1 | Participant), data = data )
+
+
+tab_model(m00, m01, m02, m03, m04, m05,m06,   p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m00", "m01", "m02","m03","m04", "m05", "m06"), digits = 5 )
+
+
+m00  = lmer(Q1a ~   Q3 + (1 | Participant), data = data )
+m01  = lmer(Q1b ~   Q3 + (1 | Participant), data = data )
+m02  = lmer(Q1 ~   Q3+ (1 | Participant), data = data )
+m03  = lmer(Q1a ~   Q3a + (1 | Participant), data = data )
+m04  = lmer(Q1b ~   Q3a + (1 | Participant), data = data )
+m05  = lmer(Q1 ~   Q3a + (1 | Participant), data = data )
+m06  = lmer(Q1a ~   Q3b + (1 | Participant), data = data )
+m07  = lmer(Q1b ~   Q3b + (1 | Participant), data = data )
+m08  = lmer(Q1 ~   Q3b + (1 | Participant), data = data )
+m09  = lmer(Q1a ~   Perf_Av + (1 | Participant), data = data )
+m10  = lmer(Q1b ~   Perf_Av + (1 | Participant), data = data )
+m11  = lmer(Q1 ~   Perf_Av+ (1 | Participant), data = data )
+m12  = lmer(Q1a ~   Abs_Av + (1 | Participant), data = data )
+m13  = lmer(Q1b ~   Abs_Av + (1 | Participant), data = data )
+m14  = lmer(Q1 ~   Abs_Av + (1 | Participant), data = data )
+
+
+tab_model(m00, m01, m02, m03, m04, m05,m06, m07, m08,m09, m10, m11, m12, m13, m14,   p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m00", "m01", "m02","m03","m04", "m05", "m06", 'm07', 'm08','m09', 'm10', 'm11', 'm12','m13','m14'), digits = 5 )
+
+
+m00  = lmer(Perf_Av ~   Condition + (1 | Participant), data = data )
+m01  = lmer(Perf_Av ~   Artist + (1 | Participant), data = data )
+m02  = lmer(Q1 ~   Perf_Av+ (1 | Participant), data = data )
+m03  = lmer(Q1a ~   Abs_Av + (1 | Participant), data = data )
+m04  = lmer(Q1b ~   Abs_Av + (1 | Participant), data = data )
+m05  = lmer(Q1 ~   Abs_Av + (1 | Participant), data = data )
+
+tab_model(m00, m01, m02, m03, m04, m05,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m00", "m01", "m02","m03","m04", "m05"), digits = 5 )
+
+
+
+
+m00  = lmer(Q1 ~   Q3 + (1 | Participant), data = data )
+m01  = lmer(Q1 ~   Q4 + (1 | Participant), data = data )
+m02  = lmer(Q1 ~   Q5 + (1 | Participant), data = data )
+m03  = lmer(Q1 ~   Q6 + (1 | Participant), data = data )
+m04  = lmer(Q1 ~   Condition + (1 | Participant), data = data )
+m05  = lmer(Q1 ~   Perf_Av + (1 | Participant), data = data )
+m06  = lmer(Q1 ~   Abs_Av + (1 | Participant), data = data )
+m07 =  lmer(Q1 ~   Palo + (1 | Participant), data = data )
+m08 =  lmer(Q1 ~   Artist + (1 | Participant), data = data )
+m09 =  lmer(Q3 ~   Condition + (1 | Participant), data = data )
+
+
+tab_model(m00, m01, m02, m03, m04, m05,m06, m07, m08, m09,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m00", "m01", "m02","m03","m04", "m05", "m06", "m07", "m08", "m09"), digits = 5 )
+
+m00  = lmer(Q1 ~   Artist + (1 | Participant), data = data )
+m01  = lmer(Q1 ~   Palo + (1 | Participant), data = data )
+m02  = lmer(Q1 ~   Condition + (1 | Participant), data = data )
+m03  = lmer(Q3 ~   Artist + (1 | Participant), data = data )
+m04  = lmer(Q3 ~   Palo + (1 | Participant), data = data )
+m05  = lmer(Q3 ~   Condition + (1 | Participant), data = data )
+m06  = lmer(Q3 ~   Dance_mode + (1 | Participant), data = data )
+m07  = lmer(Q3 ~   Music_mode + (1 | Participant), data = data )
+
+tab_model(m00, m01, m02, m03, m04, m05, m06, m07,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m00", "m01", "m02","m03","m04", "m05", 'm06', 'm07'), digits = 5 )
+
+
+m00  = lmer(Q1 ~   Palo + (1 | Participant), data = data )
+m01  = lmer(Q3 ~   Palo + (1 | Participant), data = data )
+m02  = lmer(Q4 ~   Palo + (1 | Participant), data = data )
+m03  = lmer(Q5 ~   Palo + (1 | Participant), data = data )
+m04  = lmer(Q6 ~   Palo + (1 | Participant), data = data )
+m05  = lmer(Q6a ~   Palo + (1 | Participant), data = data )
+m06  = lmer(Q6b ~   Palo + (1 | Participant), data = data )
+m07  = lmer(Perf_Av ~   Palo + (1 | Participant), data = data )
+m08  = lmer(Abs_Av ~   Palo + (1 | Participant), data = data )
+
+tab_model(m00, m01, m02, m03, m04, m05, m06, m07, m08,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m00", "m01", "m02","m03","m04", "m05", 'm06', 'm07', 'm08'), digits = 5 )
+
+
+
+
+m00  = lmer(Q1 ~   Palo * Artist + (1 | Participant), data = data )
+m01  = lmer(Q1 ~   Dance_mode * Palo + (1 | Participant), data = data )
+m02 =  lmer(Q1 ~   Palo* Condition + (1 | Participant), data = data )
+m03 =  lmer(Q1 ~   Artist* Condition + (1 | Participant), data = data )
+
+tab_model(m00, m01, m02, m03,   p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m00", "m01", "m02","m03"), digits = 5 )
+
+
+
+
+
+
+
+m01  = lmer(Q3b ~   1 + (1 | Participant) + (1 | Pair)  , data = data )
+m02  = lmer(Q3b ~   1 + (1 | Participant) , data = data )
+m03  = lmer(Q3b ~   1 + (1 | Pair) , data = data )
+m04  = lmer(Q3b ~   1 + (1 | Pair:Participant) , data = data )
+m05  = lmer(Q3b ~   1 + (1 | Pair/Participant) , data = data )
+m06 =  lmer(Q3b ~   1 + (1 | Artist) , data = data )
+
+tab_model(m01, m02, m03, m04, m05,m06, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m01", "m02","m03","m04", "m05", "m06"), digits = 5 )
+
+m00  = lmer(Q3b ~   1 + (1 | Participant), data = data )
+m01  = lmer(Q3b ~   Q1a + (1 | Participant), data = data )
+m02  = lmer(Q3b ~   Q1b + (1 | Participant), data = data )
+m03  = lmer(Q3b ~   Palo + (1 | Participant), data = data )
+m04  = lmer(Q3b ~   Condition + (1 | Participant), data = data )
+m05  = lmer(Q3b ~   Perf_Av + (1 | Participant), data = data )
+m06  = lmer(Q3b ~   Abs_Av + (1 | Participant), data = data )
+m07 =  lmer(Q3b ~   Q3a + (1 | Participant), data = data )
+m08 =  lmer(Q3b ~   Artist + (1 | Participant), data = data )
+
+tab_model(m00, m01, m02, m03, m04, m05,m06, m07, m08,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m00", "m01", "m02","m03","m04", "m05", "m06", "m07", 'm08'), digits = 5 )
+
+
+
+m00  = lmer(Q3 ~   Q1 + (1 | Participant), data = data )
+m01  = lmer(Q3 ~   Q4 + (1 | Participant), data = data )
+m02  = lmer(Q3 ~   Q5 + (1 | Participant), data = data )
+m03  = lmer(Q3 ~   Q6 + (1 | Participant), data = data )
+m04  = lmer(Q3 ~   Condition + (1 | Participant), data = data )
+m05  = lmer(Q3 ~   Perf_Av + (1 | Participant), data = data )
+m06  = lmer(Q3 ~   Abs_Av + (1 | Participant), data = data )
+m07 =  lmer(Q3 ~   Palo + (1 | Participant), data = data )
+m08 =  lmer(Q3 ~   Artist + (1 | Participant), data = data )
+
+tab_model(m00, m01, m02, m03, m04, m05,m06, m07, m08,   p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m00", "m01", "m02","m03","m04", "m05", "m06", "m07", "m08"), digits = 5 )
+
+
+m00  = lmer(Q3 ~   Q4a + (1 | Participant), data = data )
+m01  = lmer(Q3 ~   Q4b + (1 | Participant), data = data )
+m02  = lmer(Q3 ~   Q4c + (1 | Participant), data = data )
+m03  = lmer(Q3 ~   Q4 + (1 | Participant), data = data )
+m04  = lmer(Q3 ~   Q5a  + (1 | Participant), data = data )
+m05  = lmer(Q3 ~   Q5b + (1 | Participant), data = data )
+m06  = lmer(Q3 ~   Q5 + (1 | Participant), data = data )
+m07 =  lmer(Q3 ~   Q6a + (1 | Participant), data = data )
+m08 =  lmer(Q3 ~   Q6b + (1 | Participant), data = data )
+m09 =  lmer(Q3 ~   Q6 + (1 | Participant), data = data )
+tab_model(m00, m01, m02, m03, m04, m05,m06, m07, m08, m09,   p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m00", "m01", "m02","m03","m04", "m05", "m06", "m07", "m08", 'm09'), digits = 5 )
+
+
+m00  = lmer(Q3 ~   Condition + (1 | Participant), data = data )
+m01  = lmer(Q3 ~   Q4a + (1 | Participant), data = data )
+m02  = lmer(Q3 ~   Q4b + (1 | Participant), data = data )
+m03  = lmer(Q3 ~   Q4c + (1 | Participant), data = data )
+m04  = lmer(Q3 ~  Q4 + (1 | Participant), data = data )
+m05  = lmer(Q3 ~  Palo +  (1 | Participant), data = data )
+m06  = lmer(Q3 ~  Artist +  (1 | Participant), data = data )
+tab_model(m00, m01, m02, m03, m04, m05,m06,   p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m00", "m01", "m02","m03","m04", "m05", "m06"), digits = 5 )
+
+
+
+
+
+
+m00  = lmer(Q3b ~  Condition + (1 | Participant), data = data )
+m01  = lmer(Q3b ~  Palo +  (1 | Participant), data = data )
+m02  = lmer(Q3b ~  Artist +  (1 | Participant), data = data )
+m03  = lmer(Q3b ~   Q4 + (1 | Participant), data = data )
+m04  = lmer(Q1 ~   Q5 + (1 | Participant), data = data )
+m05  = lmer(Q1 ~   Q6 + (1 | Participant), data = data )
+m06 =  lmer(Q1 ~   Palo + (1 | Participant), data = data )
+m07 =  lmer(Q1 ~   Artist + (1 | Participant), data = data )
+
+tab_model(m00, m01, m02, m03, m04, m05,m06, m07,   p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m00", "m01", "m02","m03","m04", "m05", "m06", "m07"), digits = 5 )
+
+
