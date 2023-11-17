@@ -271,6 +271,9 @@ t_test_results$Result <- ifelse(t_test_results$p_value < 0.001, "***",
 print(t_test_results)
 
 
+### Perhaps try this one instead
+
+
 
 ### do t-test analysis accross conditions
 

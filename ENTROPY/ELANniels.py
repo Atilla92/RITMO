@@ -19,7 +19,7 @@ percentage = 0.1
 frac_round = 1 #Round/frac_round for moving rating to the left 
 dt_L = 2 #Number of seconds delay in rating of user. 
 #name_output = '22092023_ELAN_no_CDRS_onset_niels_1s'
-name_output = '09102023_ELAN_no_CDRS_onset_niels_1s_all'
+name_output = '27102023_ELAN_no_CDRS_onset_niels_4s_final'
 list_files = []
 #error_files = []
 
@@ -40,7 +40,7 @@ print(list_files)
 
 # Initiate dataframe before loop 
 store_i = 0
-df_store = pd.DataFrame(columns=['Name', 'Duration', 'Participant', 'Music_Imp', 'Dance_Imp', 'Baile_Level','Guitarra_Level' ,'Step', 'Artist',
+df_store = pd.DataFrame(columns=['Name', 'Duration', 'Participant', 'GDSI','GMSI','Music_Imp', 'Dance_Imp', 'Baile_Level','Guitarra_Level' ,'Step', 'Artist',
 'Rounds', 
 'Q1a',
 'Q1b',
@@ -119,7 +119,8 @@ def loopThroughFiles (list_files, artist_label, percentage = percentage , frac_r
             # ELAN folder with files with annotations
             dfI = pd.read_csv ('/Users/atillajv/CODE/RITMO/FILES/ELAN/cleaned/' + file_item + '.csv',  delimiter=';')
             # Csv file with during experiments results 
-            dfS = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/Subjective/DuringExperiments_Andalucia_20072023_DropW.csv')
+            #dfS = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/Subjective/DuringExperiments_Andalucia_20072023_DropW.csv')
+            dfS  = pd.read_csv('/Users/atillajv/CODE/RITMO/FILES/Subjective/DuringExperiments_Andalucia_05092023_DropW_Expertise.csv')
             #p_dfL = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/24_Aug_2023/LeadingFollowing_1s_Dancer.csv', skiprows=[1])
             #g_dfL = pd.read_csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/24_Aug_2023/LeadingFollowing_1s_Guitarist.csv', skiprows=[1])
             print('OK!!!!')
@@ -253,6 +254,8 @@ def loopThroughFiles (list_files, artist_label, percentage = percentage , frac_r
                     'Name': file_item,
                     'Duration': dfI['Duration - ss.msec'].iloc[i],
                     'Participant' : dfTest['Participant'].iloc[0],
+                    'GDSI' : dfTest['GDSI'].iloc[0],
+                    'GMSI' : dfTest['GMSI'].iloc[0],
                     'Music_Imp': dfI['Music_Mode'].iloc[i],
                     'Dance_Imp': dfI['Category'].iloc[i],
                     'Step': dfI['Step'].iloc[i],
@@ -415,6 +418,45 @@ def InfotoColumns(df):
     #df['Participant'] = participant_array
 
 InfotoColumns(df_store)
+
+
+
+# Adding familiarity code
+df_store.loc[df_store['Pair'] == 'P10_G5', 'Fam'] = 1
+df_store.loc[df_store['Pair'] == 'P6_G1', 'Fam'] = 0
+df_store.loc[df_store['Pair'] == 'P12_G7', 'Fam'] = 0
+df_store.loc[df_store['Pair'] == 'P13_G5', 'Fam'] = 0
+df_store.loc[df_store['Pair'] == 'P9_G4', 'Fam'] = 1
+df_store.loc[df_store['Pair'] == 'P3_G1', 'Fam'] = 1
+df_store.loc[df_store['Pair'] == 'P11_G6', 'Fam'] = 1
+df_store.loc[df_store['Pair'] == 'P7_G1', 'Fam'] = 0
+df_store.loc[df_store['Pair'] == 'P4_G2', 'Fam'] = 1
+df_store.loc[df_store['Pair'] == 'P5_G3', 'Fam'] = 0
+df_store.loc[df_store['Pair'] == 'P8_G4 ', 'Fam'] = 1
+
+
+# Adding gender code
+
+df_store.loc[df_store['Participant'] == '', 'Gender'] = 0
+
+df_store.loc[df_store['Participant'] == 'G1', 'Gender'] = 1
+df_store.loc[df_store['Participant'] == 'G2', 'Gender'] = 1
+df_store.loc[df_store['Participant'] == 'G3', 'Gender'] = 0
+df_store.loc[df_store['Participant'] == 'G4', 'Gender'] = 1
+df_store.loc[df_store['Participant'] == 'G5', 'Gender'] = 1
+df_store.loc[df_store['Participant'] == 'G6', 'Gender'] = 1
+df_store.loc[df_store['Participant'] == 'G7', 'Gender'] = 1
+df_store.loc[df_store['Participant'] == 'P10', 'Gender'] = 0
+df_store.loc[df_store['Participant'] == 'P11', 'Gender'] = 0
+df_store.loc[df_store['Participant'] == 'P12', 'Gender'] = 0
+df_store.loc[df_store['Participant'] == 'P13', 'Gender'] = 1
+df_store.loc[df_store['Participant'] == 'P3', 'Gender'] = 0
+df_store.loc[df_store['Participant'] == 'P4', 'Gender'] = 0
+df_store.loc[df_store['Participant'] == 'P5', 'Gender'] = 0
+df_store.loc[df_store['Participant'] == 'P6', 'Gender'] = 0
+df_store.loc[df_store['Participant'] == 'P7', 'Gender'] = 1
+df_store.loc[df_store['Participant'] == 'P8', 'Gender'] = 0
+df_store.loc[df_store['Participant'] == 'P9', 'Gender'] = 1
 
 
 # Drop duplicates due to running code twice for flow and impro ratings. 
