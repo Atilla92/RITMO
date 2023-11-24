@@ -39,14 +39,15 @@ data_ole <- data %>%
   distinct(Name, Artist, .keep_all = TRUE)
 
 
-
 # Create a new column with concatenated strings
 data_ole$instruction <- paste(data_ole$Condition, data_ole$Artist, sep = "_")
-
+data_ole$instruction_2 <- paste(data_ole$instruction, data_ole$Palo, sep = "_")
 # Print the updated data frame
 unique_instructions <- unique(data_ole$instruction)
 print(unique_instructions)
-
+ 
+unique_instructions_2 <- unique(data_ole$instruction_2)
+print(unique_instructions_2)
 
 # MACRO Check
 data_ole$Q1 <- (data_ole$Q1a + data_ole$Q1b) / 2
@@ -54,6 +55,7 @@ data_ole$Q3 <- (data_ole$Q3a + data_ole$Q3b) / 2
 data_ole$Q6 <- (data_ole$Q6a + data_ole$Q6b) /2
 data_ole$Q5 <-  (data_ole$Q5a + data_ole$Q5b) /2
 data_ole$Q4 <- (data_ole$Q4a + data_ole$Q4b + data_ole$Q4c) /3
+
 
 # Factorize
 # ALl analysis
@@ -71,19 +73,22 @@ data_ole$Pair <- as.factor(data_ole$Pair)
 #data_ole$Artist <- ifelse(data_ole$Artist == "G", 0, ifelse(data_ole$Artist == "P", 1, data_ole$Artist))
 data_ole$Artist <- as.factor(data_ole$Artist)
 data_ole$Fam <- as.factor(data_ole$Fam)
+# Instructions
 data_ole$instruction <- as.factor(data_ole$instruction)
 data_ole$instruction <-factor(data_ole$instruction, levels = c("D5_M6_P", "D5_M6_G",  "D1_M6_P", "D1_M6_G","D6_M6_P", "D6_M6_G",  "D5_M5_P", "D5_M5_G","D1_M1_P", "D1_M1_G"))
+data_ole$instruction_2 <- as.factor(data_ole$instruction_2)
+data_ole$instruction_2 <-factor(data_ole$instruction_2, levels = c("D5_M6_P_R1", "D5_M6_G_R1",  "D1_M6_P_R1", "D1_M6_G_R1","D6_M6_P_R1", "D6_M6_G_R1",  "D5_M5_P_R1", "D5_M5_G_R1","D1_M1_P_R1", "D1_M1_G_R1",
+                                                               "D5_M6_P_R2", "D5_M6_G_R2",  "D1_M6_P_R2", "D1_M6_G_R2","D6_M6_P_R2", "D6_M6_G_R2",  "D5_M5_P_R2", "D5_M5_G_R2","D1_M1_P_R2", "D1_M1_G_R2"
+                                                               ))
 
-
+# Checking contrasts without including Palos
 # Check levels
-
 levels(data_ole$instruction)
 
 
-# Model
+# Models Version 1
 
-
-m00  = lmer(Q3b ~   instruction + (1 | Participant), data = data_ole )
+m00  = lmer(Q3 ~   instruction + (1 | Participant), data = data_ole )
 summary(m00)
 # ANOVA with orthogonal planned contrasts: (1) Homophonic vs Polyphonic; (2) Pairing with Melody vs No Melody; (3) Melody-to-Other vs Other-to-Melody
 # Check order of conditions (important for specifying contrast coefficients)
@@ -99,6 +104,290 @@ Contrasts = list(A_FIXvsOther, B_MIXvsIMP, C_INDvsGR,D_DANvsMUS,DxA, DxB, DxC )
 FlamencoImp_Comp.output <- contrast(FlamencoImp_Comp, Contrasts, adjust="none") # No need for adjust for multiple comparisons since contrasts are planned & orthogonal
 #capture.output(FlamencoImp_Comp.output, file = "/Users/atillajv/CODE/RITMO/R_FILES/m00_planned_contrasts.txt")
 FlamencoImp_Comp.output
+
+
+#Best prediciting model 
+
+m00 = lmer(Q3b ~     instruction_2+ Q1b + Q4 + Q6 + (1 |GMSI) + (1 |Participant), data = data_ole)
+m01 = lmer(Q3b ~    instruction_2 + Q1b + Q4 + Q6 + (1 |GMSI) + (1 |Participant), data = data_ole)
+m02 = lmer(Q3b ~    Q1b + Q4 + Q6 + Abs_Av + (1 |GMSI) + (1 |Participant), data = data_ole)
+m03 = lmer(Q3b ~    instruction_2 + Q1b + Q4  + Q6 + Perf_Av +  Abs_Av + (1 |GMSI) + (1 |Participant), data = data_ole)
+anova(m00, m01, m02, m03)
+
+
+#Models Version 2
+m00  = lmer(Q1a~ 1 +  (1 | Participant), data = data_ole )
+m01  = lmer(Q1a ~ 1 +  (1 | Pair), data = data_ole )
+m02  = lmer(Q1a ~ 1 +  (1 | Participant)+  (1 | Pair), data = data_ole )
+m03  = lmer(Q1a ~  instruction_2 + (1 | Participant), data = data_ole )
+m04  = lmer(Q1a ~  instruction_2 + (1 | Participant)+  (1 | Pair), data = data_ole )
+anova(m00,m01, m02,m03, m04)
+
+
+m00  = lmer(Q3b ~ 1 +  (1 | Participant), data = data_ole )
+m01  = lmer(Q3b ~ 1 +  (1 | Pair), data = data_ole )
+m02  = lmer(Q3b ~ 1 +  (1 | Participant)+  (1 | Pair), data = data_ole )
+m03  = lmer(Q3b ~ 1 +  (1 | Pair/Participant), data = data_ole )
+m04  = lmer(Q3b ~  instruction_2 + (1 | Participant) + (1|Pair), data = data_ole )
+m05  = lmer(Q3b ~  instruction_2  + (1|Pair), data = data_ole )
+m06  = lmer(Q3b ~  instruction_2 + (1 | Participant) + (1 | Pair), data = data_ole )
+m07  = lmer(Q3b ~  instruction_2 + (1 | Pair/Participant), data = data_ole )
+anova(m00,m01, m02,m03, m04,m05, m06, m07)
+
+tab_model(m00, m01, m02,m03,m04,m05, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m00","m01", "m02", 'm03', 'm04',"m05"), digits = 5 )
+
+m06  = lmer(Q3b ~   + (1 | Participant) + (1 | Pair), data = data_ole )
+m07  = lmer(Q3b ~  instruction_2 + (1 | Pair/Participant), data = data_ole )
+
+
+
+# Fit separate models for each group
+model_participant <- lmer(Perf_Av ~ instruction_2 + (1 | Participant), data = data_ole)
+model_pair <- lmer(Perf_Av ~ instruction_2 + (1 | Pair), data = data_ole)
+model_nested <- lmer(Perf_Av ~ instruction_2 + (1 | Pair/Participant), data = data_ole)
+
+# Extract random intercepts for each group
+participant_intercept <- ranef(model_participant)$Participant[, 1]
+pair_intercept <- ranef(model_pair)$Pair[, 1]
+nested_intercept <- ranef(model_nested)$`Participant:Pair`[, 1]
+
+
+# Get the random intercepts for the Participant:Pair level
+random_intercepts <- ranef(model_nested)$`Participant:Pair`
+# Get the level names for the random intercepts
+level_names <- rownames(random_intercepts)
+
+
+## ONLY RUN ONCE
+# Extract the pair and participant numbers from the level names
+level_names_split <- strsplit(level_names, split = ":|_")
+pairs <- sapply(level_names_split, function(x) paste(x[2], x[3], sep = "_"))
+participants <- sapply(level_names_split, function(x) x[1])
+
+
+# Only run ONCE
+# Create a data frame to map each pair+participant to its nested name
+#mapping_df <- data.frame(Pair = pairs, Participant = participants, Nested_Name = level_names)
+
+# Merge the mappings into the original data frame
+#data_ole <- merge(data_ole, mapping_df, by = c("Participant", "Pair"))
+
+# Create new numerical variables for "participant" and "pair"
+data_ole$participant_num <- as.numeric(factor(data_ole$Participant))
+data_ole$pair_num <- as.numeric(factor(data_ole$Pair))
+data_ole$nested_num <- as.numeric(factor(data_ole$Nested_Name))
+
+# Add random intercepts to the new variables
+data_ole$participant_intercept <- participant_intercept[data_ole$participant_num]
+data_ole$pair_intercept <- pair_intercept[data_ole$pair_num]
+data_ole$nested_intercept <- nested_intercept[data_ole$nested_num]
+
+# Check for collinearity between random intercepts
+cor(data_ole$participant_intercept, data_ole$pair_intercept)
+cor(data_ole$participant_intercept, data_ole$nested_intercept)
+cor(data_ole$pair_intercept, data_ole$nested_intercept)
+
+
+# Create a scatter plot with a fitted line for all three models
+ggplot() +
+  geom_jitter(data = data_ole, aes(x = participant_num, y = participant_intercept, color = "Participant"), width = 0.2, height = 0.2) +
+  geom_smooth(data = data_ole, aes(x = participant_num, y = participant_intercept), method = "lm", color = "blue") +
+  geom_jitter(data = data_ole, aes(x = participant_num, y = pair_intercept, color = "Pair"), width = 0.2, height = 0.2) +
+  geom_smooth(data = data_ole, aes(x = participant_num, y = pair_intercept), method = "lm", color = "red") +
+  geom_jitter(data = data_ole, aes(x = participant_num, y = nested_intercept, color = "Nested"), width = 0.2, height = 0.2) +
+  geom_smooth(data = data_ole, aes(x = participant_num, y = nested_intercept), method = "lm", color = "green") +
+  scale_color_manual(values = c("green","red", "blue")) +
+  xlab("Group") +
+  ylab("Random Intercept") +
+  ggtitle("Random Intercepts for Participant, Pair, and Nested Models")
+
+
+ggplot() +
+  geom_jitter(data = data_ole, aes(x = participant_num, y = participant_intercept, color = "Participant"), width = 0.2, height = 0.2) +
+  geom_smooth(data = data_ole, aes(x = participant_num, y = participant_intercept), method = "lm", color = "blue") +
+  geom_jitter(data = data_ole, aes(x = participant_num, y = pair_intercept, color = "Pair"), width = 0.2, height = 0.2) +
+  geom_smooth(data = data_ole, aes(x = pair_num, y = pair_intercept), method = "lm", color = "red") +
+  geom_jitter(data = data_ole, aes(x = participant_num, y = nested_intercept, color = "Nested"), width = 0.2, height = 0.2) +
+  geom_smooth(data = data_ole, aes(x = nested_num, y = nested_intercept), method = "lm", color = "green") +
+  scale_color_manual(values = c("green","red", "blue")) +
+  xlab("Group") +
+  ylab("Random Intercept") +
+  ggtitle("Random Intercepts for Participant, Pair, and Nested Models")
+
+
+
+
+ggplot() +
+  geom_jitter(data = data_ole, aes(x = pair_num, y = participant_intercept, color = "Participant"), width = 0.2, height = 0.2) +
+  geom_smooth(data = data_ole, aes(x = pair_num, y = participant_intercept), method = "lm", color = "blue") +
+  geom_jitter(data = data_ole, aes(x = pair_num, y = pair_intercept, color = "Pair"), width = 0.2, height = 0.2) +
+  geom_smooth(data = data_ole, aes(x = pair_num, y = pair_intercept), method = "lm", color = "red") +
+  geom_jitter(data = data_ole, aes(x = pair_num, y = nested_intercept, color = "Nested"), width = 0.2, height = 0.2) +
+  geom_smooth(data = data_ole, aes(x = pair_num, y = nested_intercept), method = "lm", color = "green") +
+  scale_color_manual(values = c("green","red", "blue")) +
+  xlab("Group") +
+  ylab("Random Intercept") +
+  ggtitle("Random Intercepts for Participant, Pair, and Nested Models")
+
+
+
+# Print the results
+data_ole_q1a_pair
+
+
+
+m00  = lmer(Perf_Av ~  instruction_2 + (1 | Participant), data = data_ole )
+m01  = lmer(Perf_Av ~ 1 +  (1 | Participant), data = data_ole )
+anova(m00, m01)
+
+
+
+m00  = lmer(Perf_Av ~  1 + (1 | Pair/Participant), data = data_ole )
+m01  = lmer(Q1a ~ instruction_2 + (1 | Pair/Participant), data = data_ole )
+summary(m01)
+
+# var_pair <- summary(m01)$varcor$Pair[[1]]
+# var_participant <- summary(m01)$varcor$Participant[[1]]
+# var_nested <- summary(m01)$varcor$`Participant:Pair`[[1]]
+# var_residual <- summary(m01)$varcor$Residual[[1]]
+# var_total = var_pair + var_participant + var_nested + var_residual
+
+
+# Calculate percentage of variance for each random effect
+# pct_var_pair <- (var_pair / var_total) * 100
+# pct_var_participant <- (var_participant / var_total) * 100
+# pct_var_nested <- (var_nested / var_total) * 100
+# pct_var_residual <- (var_residual / var_total) * 100
+
+# # Print results
+# cat("Percentage of variance for Pair random effect: ", round(pct_var_pair, 2), "%\n")
+# cat("Percentage of variance for Participant random effect: ", round(pct_var_participant, 2), "%\n")
+# cat("Percentage of variance for Participant:Pair random effect: ", round(pct_var_nested, 2), "%\n")
+# cat("Percentage of variance for residual: ", round(pct_var_residual, 2), "%\n")
+
+
+anova(m00, m01)
+
+
+m00 = lmer(Q4a ~     instruction_2  + Abs_Av + Q4a + Q6a +  (1 |GMSI) + (1 |Participant), data = data_ole)
+m00  = lmer(Q3b ~  instruction_2 + Q1b + (1 |Pair/Participant), data = data_ole )
+summary(m00)
+levels(data_ole$instruction_2)
+# ANOVA with orthogonal planned contrasts: (1) Homophonic vs Polyphonic; (2) Pairing with Melody vs No Melody; (3) Melody-to-Other vs Other-to-Melody
+# Check order of conditions (important for specifying contrast coefficients)
+FlamencoImp_Comp <- lsmeans(m00, "instruction_2")
+
+
+# Define names for contrast coefficients
+names_contrasts <- c("A_FIXvsOther", "B_MIXvsIMP", "C_INDvsGR", "D_DANvsMUS", "E_R1vsR2", "DxA", "DxB", "DxC")
+contrasts <- list(
+  A_FIXvsOther = c(1,1,1,1,-4,-4,1,1,1,1,1,1,1,1,-4,-4,1,1,1,1),
+  B_MIXvsIMP = c(-1,-1,1,1,0,0,-1,-1,1,1,-1,-1,1,1,0,0,-1,-1,1,1),
+  C_INDvsGR = c(-1,-1,-1,-1,0,0,1,1,1,1,-1,-1,-1,-1,0,0,1,1,1,1),
+  D_DANvsMUS = c(1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1),
+  E_R1vsR2 = c(1,1,1,1,1,1,1,1,1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1),
+  DxA = c(1,-1,1,-1,-4,4,1,-1,1,-1,1,-1,1,-1,-4,4,1,-1,1,-1),
+  DxB = c(-1,1,1,-1,0,0,-1,1,1,-1,-1,1,1,-1,0,0,-1,1,1,-1),
+  DxC = c(-1,1,-1,1,0,0,1,-1,1,-1,-1,1,-1,1,0,0,1,-1,1,-1),
+  ExA = c(1,1,1,1,-4,-4,1,1,1,1,-1,-1,-1,-1,4,4,-1,-1,-1,-1),
+  ExB = c(-1,-1,1,1,0,0,-1,-1,1,1,1,1,-1,-1,0,0,1,1,-1,-1),
+  ExC = c(-1,-1,-1,-1,0,0,1,1,1,1,1,1,1,1,0,0,-1,-1,-1,-1),
+  ExD = c(1,-1,1,-1,1,-1,1,-1,1,-1,-1,1,-1,1,-1,1,-1,1,-1,1),
+  DxAxE = c(1,-1,1,-1,-4,4,1,-1,1,-1,-1,1,-1,1,4,-4,-1,1,-1,1),
+  DxBxE = c(-1,1,1,-1,0,0,-1,1,1,-1,1,-1,-1,1,0,0,1,-1,-1,1),
+  DxCxE = c(-1,1,-1,1,0,0,1,-1,1,-1,1,-1,1,-1,0,0,-1,1,-1,1)
+)
+
+# Run contrasts and assign names to output table
+FlamencoImp_Comp.output <- contrast(FlamencoImp_Comp, contrasts, adjust="none", names = names_contrasts)
+FlamencoImp_Comp.output
+levels(FlamencoImp_Comp$A_FIXvsOther)
+
+FlamencoImp_Comp.output.ci <- confint(FlamencoImp_Comp.output)
+FlamencoImp_Comp.output.ci
+
+max_Q3b <- max(data_ole$Q3b, na.rm = TRUE)
+
+max_Q3b
+
+# Run lsmeans for factor A (instruction_2)
+lsmeans_output <- lsmeans(FlamencoImp_Comp, "instruction_2")
+
+# Display the estimated marginal means for each level of factor A
+summary(lsmeans_output)
+
+
+
+
+# Fit separate models for each group
+model_participant <- lmer(Abs_Av ~ instruction_2 + (1 | Participant), data = data_ole)
+model_pair <- lmer(Abs_Av ~ instruction_2 + (1 | Pair), data = data_ole)
+
+# Extract random intercepts for each group
+participant_intercept <- ranef(model_participant)$Participant[, 1]
+pair_intercept <- ranef(model_pair)$Pair[, 1]
+
+# Create new numerical variables for "participant" and "pair"
+data_ole$participant_num <- as.numeric(factor(data_ole$Participant))
+data_ole$pair_num <- as.numeric(factor(data_ole$Pair))
+
+# Add random intercepts to the new variables
+data_ole$participant_intercept <- participant_intercept[data_ole$participant_num]
+data_ole$pair_intercept <- pair_intercept[data_ole$pair_num]
+
+# Check for collinearity between "participant_intercept" and "pair_intercept"
+cor(data_ole$participant_intercept, data_ole$pair_intercept)
+
+
+# Create a scatter plot with a fitted line for both the participant and pair models
+ggplot() +
+  geom_jitter(data = data_ole, aes(x = participant_num, y = participant_intercept, color = "Participant"), width = 0.2, height = 0.2) +
+  geom_smooth(data = data_ole, aes(x = participant_num, y = participant_intercept), method = "lm", color = "red") +
+  geom_jitter(data = data_ole, aes(x = pair_num, y = pair_intercept, color = "Pair"), width = 0.2, height = 0.2) +
+  geom_smooth(data = data_ole, aes(x = pair_num, y = pair_intercept), method = "lm", color = "blue") +
+  scale_color_manual(values = c("blue", "red")) +
+  xlab("Group") +
+  ylab("Random Intercept") +
+  ggtitle("Random Intercepts for Participant and Pair Models")
+
+
+
+
+#contrasts <- list(A_FIXvsOther = c(-1,-1,-1,-1,4,4,-1,-1,-1,-1,-1,-1,-1,-1,4,4,-1,-1,-1,-1),
+#                  B_MIXvsIMP = c(-1,-1,1,1,0,0,-1,-1,1,1,-1,-1,1,1,0,0,-1,-1,1,1),
+#                  C_INDvsGR = c(-1,-1,-1,-1,0,0,1,1,1,1,-1,-1,-1,-1,0,0,1,1,1,1),
+#                  D_DANvsMUS = c(-1,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1),
+#                  E_R1vsR2 = c(1,1,1,1,1,1,1,1,1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1),
+#                  DxA = c(1,-1,1,-1,-4,4,1,-1,1,-1,1,-1,1,-1,-4,4,1,-1,1,-1),
+#                  DxB = c(1,-1,-1,1,0,0,1,-1,-1,1,1,-1,-1,1,0,0,1,-1,-1,1),
+#                  DxC = c(1,-1,1,-1,0,0,-1,1,-1,1,1,-1,1,-1,0,0,-1,1,-1,1),
+#                  ExA = c(-1,-1,-1,-1,4,4,-1,-1,-1,-1,1,1,1,1,-4,-4,1,1,1,1),
+#                  ExB = c(-1,-1,1,1,0,0,-1,-1,1,1,1,1,-1,-1,0,0,1,1,-1,-1),
+#                  ExC = c(-1,-1,-1,-1,0,0,1,1,1,1,1,1,1,1,0,0,-1,-1,-1,-1),
+#                  ExD = c(-1,1,-1,1,-1,1,-1,1,-1,1,1,-1,1,-1,1,-1,1,-1,1,-1),
+#                  DxAxE = c(1,-1,1,-1,-4,4,1,-1,1,-1,-1,1,-1,1,4,-4,-1,1,-1,1),
+#                  DxBxE = c(1,-1,-1,1,0,0,1,-1,-1,1,-1,1,1,-1,0,0,-1,1,1,-1),
+#                 DxCxE = c(1,-1,1,-1,0,0,-1,1,-1,1,-1,1,-1,1,0,0,1,-1,1,-1)
+#                 )
+
+
+#A_FIXvsOther = c(-1,-1,-1,-1,4,4,-1,-1,-1,-1,-1,-1,-1,-1,4,4,-1,-1,-1,-1) # Contrasting individual vs both instruction
+#B_MIXvsIMP = c(-1,-1,1,1,0,0,-1,-1,1,1,-1,-1,1,1,0,0,-1,-1,1,1) # Contrasting mixed vs free improvisation
+#C_INDvsGR = c(-1,-1,-1,-1,0,0,1,1,1,1,-1,-1,-1,-1,0,0,1,1,1,1) # Contrast comparing Individual vs Group
+#D_DANvsMUS = c(-1,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1) # Contrast comparing Dancer vs Musician
+#E_R1vsR2 = c(1,1,1,1,1,1,1,1,1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1)
+#DxA = c(1,-1,1,-1,-4,4,1,-1,1,-1,1,-1,1,-1,-4,4,1,-1,1,-1) # Interaction DxA
+#DxB = c(1,-1,-1,1,0,0,1,-1,-1,1,1,-1,-1,1,0,0,1,-1,-1,1) # Interaction DxB
+#DxC = c(1,-1,1,-1,0,0,-1,1,-1,1,1,-1,1,-1,0,0,-1,1,-1,1) # Interaction DxC
+#Contrasts = list(A_FIXvsOther, B_MIXvsIMP, C_INDvsGR,D_DANvsMUS, E_R1vsR2, DxA, DxB, DxC )
+#FlamencoImp_Comp.output <- contrast(FlamencoImp_Comp, Contrasts, adjust="none") # No need for adjust for multiple comparisons since contrasts are planned & orthogonal
+#capture.output(FlamencoImp_Comp.output, file = "/Users/atillajv/CODE/RITMO/R_FILES/m00_planned_contrasts.txt")
+#FlamencoImp_Comp.output
+
+
+
+
 
 
 levels(data_ole$Condition)
@@ -401,3 +690,54 @@ Melody_PlannedComp.glme.output
 Melody_PlannedComp.glme.output.ci <- confint(Melody_PlannedComp.glme.output)
 Melody_PlannedComp.glme.output.ci
 capture.output(Melody_PlannedComp.glme.output.ci, file = "Melody_GLMM_PlannedComp.output_CI.txt")
+
+
+
+
+##### ANALYSIS 2
+
+
+library(corrplot)
+library(symnum)
+library(psych)
+
+# Select columns of interest
+plot.new()
+
+corr_mat <- data_ole[, c("Q1a", "Q1b", "Q3a", "Q3b", "Q4a", "Q4b", "Q5a", "Q5b", "Q6a", "Q6b", "Perf_Av", "Abs_Av")]
+corr_mat <- data_ole[, c( "Q1b", "Q3b", "Q4a", "Q6a")]
+
+corr_mat <- data_ole[, c("Q1a", "Q1b", "Q3a", "Q3b")]
+
+
+# Compute correlation matrix
+M <- cor(corr_mat, use = 'complete.obs', method='spearman')
+
+
+# Plot correlation matrix
+corrplot(M, order = "AOE", tl.col = "black", tl.srt = 45, p.mat = corr.test(corr_mat)$p, insig = 'label_sig', sig.level = c(.001, .01, .05),
+         pch.cex = 1.2, pch.col = 'red', 
+         addCoef.col = "white", # add correlation values as text labels
+         title = paste('Correlation Plot (', name_plot , ')'), cex.main = 1.8,
+         mar=c(0,0,2,0))
+
+# Save plot as image file
+png(filename = paste("/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/Stats/R/corr_", name_plot, '_AOE.png'), 
+    width = 865, height = 636)
+corrplot(M, order = "AOE", tl.col = "black", tl.srt = 45, p.mat = corr.test(corr_mat)$p, insig = 'label_sig', sig.level = c(.001, .01, .05),
+         pch.cex = 0.8, pch.col = 'red',
+         title = paste('Correlation Plot (', name_plot , ')'),
+         mar=c(0,0,2,0))
+dev.off()
+
+# Add correlation coefficients and p-values as text labels to the plot
+p_corr_test <-corr.test(corr_mat)$p
+cor_test_star <- symnum(p_corr_test, cutpoints = c(0, 0.001, 0.01, 0.05, 1), symbols = c("***","**","*",""))
+r = round(cor(corr_mat, use = 'complete.obs', method='spearman'), digits = 2)
+txt <- paste(r, cor_test_star, sep = " ")
+cex.cor <- 0.8/strwidth(txt)
+text(0.5, 0.5, txt, cex = cex.cor*r)
+
+
+
+

@@ -890,6 +890,40 @@ data %>%
 library(ggplot2)
 library(see)
 
+
+# Create the violin plot
+ggplot(data, aes(Condition, Q1, fill = Condition)) +
+  geom_violinhalf(flip = TRUE, aes(fill = Condition), trim = FALSE) +
+  stat_summary(fun = "mean", geom = "point", shape = 20, size = 3, color = "black") +
+  stat_summary(fun.data = "mean_cl_boot", geom = "errorbar", width = 0.2, color = "black") +
+  theme_minimal() +
+  labs(x = "Condition", y = "Q1")
+
+
+ggplot(data, aes(Condition, Q3, fill = Condition)) +
+  geom_violinhalf(flip = FALSE, aes(fill = Condition), trim = FALSE) +
+  stat_summary(fun = "mean", geom = "point", shape = 20, size = 3, color = "black") +
+  stat_summary(fun.data = "mean_cl_boot", geom = "errorbar", width = 0.2, color = "black") +
+  theme_minimal() +
+  labs(x = "Condition", y = "Q3")
+
+
+
+ggplot(data, aes(Condition, Q1, fill = Condition)) +
+  geom_violinhalf(flip = TRUE, aes(fill = Condition), trim = FALSE) +
+  stat_summary(aes(label = round(..y.., 2)), fun.y = "mean", geom = "text", vjust = -0.5, size = 3) +
+  stat_summary(fun = "mean", geom = "point", shape = 20, size = 3, color = "black") +
+  stat_summary(fun.data = "mean_cl_boot", geom = "errorbar", width = 0.2, color = "black") +
+  geom_violinhalf(data = data, aes(Condition, Abs_Av, fill = Condition), flip = FALSE, trim = FALSE, width = 0.6) +
+  stat_summary(aes(label = round(..y.., 2)), fun.y = "mean", geom = "text", vjust = -0.5, size = 3) +
+  stat_summary(data = data, fun = "mean", geom = "point", shape = 20, size = 3, color = "black") +
+  stat_summary(data = data, fun.data = "mean_cl_boot", geom = "errorbar", width = 0.2, color = "black") +
+  theme_minimal() +
+  labs(x = "Condition", y = "Values") 
+
+
+
+
 ## Do a pair-wise t-test and bonferroni correction. If no p-values are found then i guess no correction is to be made. 
 
 
