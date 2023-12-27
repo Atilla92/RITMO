@@ -20,7 +20,7 @@
 18,P10_D5_G5_M6_R2_T1,Escobilla,Z3,Z3,True,A1,A1,True
 19,P10_D5_G5_M6_R2_T1,Cierre,Z3,Z3,True,A1,A1,True
 20,P10_D5_G5_M6_R2_T1,Respiro,Z1,Z1,True,A2,A2,True
-21,P10_D5_G5_M6_R2_T1,Marcaje,Z1,Z1,True,A3,A3	,False
+21,P10_D5_G5_M6_R2_T1,Marcaje,Z1,Z1,True,A3,A3,False
 22,P10_D5_G5_M6_R2_T1,Marcaje,Z2,Z2,True,A3,A3,True
 23,P10_D5_G5_M6_R2_T1,Marcaje,Z2,Z2,True,A3,A3,True
 24,P10_D5_G5_M6_R2_T1,Llamada,Z2,Z2,True,A1,A1,True

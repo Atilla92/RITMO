@@ -54,7 +54,7 @@ data_ole$Q1 <- (data_ole$Q1a + data_ole$Q1b) / 2
 data_ole$Q3 <- (data_ole$Q3a + data_ole$Q3b) / 2
 data_ole$Q6 <- (data_ole$Q6a + data_ole$Q6b) /2
 data_ole$Q5 <-  (data_ole$Q5a + data_ole$Q5b) /2
-data_ole$Q4 <- (data_ole$Q4a + data_ole$Q4b + data_ole$Q4c) /3
+data_ole$Q4 <- (data_ole$Q4a + data_ole$Q4b) /3
 
 
 # Factorize
@@ -243,35 +243,13 @@ anova(m00, m01)
 
 
 
-m00  = lmer(Perf_Av ~  1 + (1 | Pair/Participant), data = data_ole )
-m01  = lmer(Q1a ~ instruction_2 + (1 | Pair/Participant), data = data_ole )
-summary(m01)
-
-# var_pair <- summary(m01)$varcor$Pair[[1]]
-# var_participant <- summary(m01)$varcor$Participant[[1]]
-# var_nested <- summary(m01)$varcor$`Participant:Pair`[[1]]
-# var_residual <- summary(m01)$varcor$Residual[[1]]
-# var_total = var_pair + var_participant + var_nested + var_residual
-
-
-# Calculate percentage of variance for each random effect
-# pct_var_pair <- (var_pair / var_total) * 100
-# pct_var_participant <- (var_participant / var_total) * 100
-# pct_var_nested <- (var_nested / var_total) * 100
-# pct_var_residual <- (var_residual / var_total) * 100
-
-# # Print results
-# cat("Percentage of variance for Pair random effect: ", round(pct_var_pair, 2), "%\n")
-# cat("Percentage of variance for Participant random effect: ", round(pct_var_participant, 2), "%\n")
-# cat("Percentage of variance for Participant:Pair random effect: ", round(pct_var_nested, 2), "%\n")
-# cat("Percentage of variance for residual: ", round(pct_var_residual, 2), "%\n")
-
-
+m00  = lmer(Q6 ~  1 + (1 | Participant), data = data_ole )
+m01  = lmer(Q6 ~ instruction_2 + (1 | Participant), data = data_ole )
 anova(m00, m01)
 
 
 m00 = lmer(Q4a ~     instruction_2  + Abs_Av + Q4a + Q6a +  (1 |GMSI) + (1 |Participant), data = data_ole)
-m00  = lmer(Q3b ~  instruction_2 + Q1b + (1 |Pair/Participant), data = data_ole )
+m00  = lmer(Q6 ~  instruction_2 + (1 |Participant), data = data_ole )
 summary(m00)
 levels(data_ole$instruction_2)
 # ANOVA with orthogonal planned contrasts: (1) Homophonic vs Polyphonic; (2) Pairing with Melody vs No Melody; (3) Melody-to-Other vs Other-to-Melody
@@ -386,24 +364,82 @@ ggplot() +
 #FlamencoImp_Comp.output
 
 
+#### ANALYSIS 2 #### 
+
+library(ggplot2)
+library(sjPlot)
+library(sjlabelled)
+library(sjmisc)
+library(dplyr)
+library(tidyr)
+
+library(lme4)
+library(lmerTest)
+library(psych)
+
+m00  = lmer(Q3b ~ 1 +  (1 | Participant), data = data_ole )
+m01  = lmer(Q3b ~ 1 +  (1 | Pair), data = data_ole )
+m02  = lmer(Q3b ~ 1 +  (1 | Participant)+  (1 | Pair), data = data_ole )
+m03  = lmer(Q3b ~ 1 +  (1 | Pair/Participant), data = data_ole )
+anova(m00,m01, m02,m03)
+
+# (1|Pair) + (1|Participant) is better, but they are very similar. 
+
+
+m00  = lmer(Q3b ~  Q1b + (1 | Participant), data = data_ole )
+m01  = lmer(Q3b ~  Q1b  + (1|Participant/Pair), data = data_ole )
+m02  = lmer(Q3b ~  Q1b + (1 | Participant) + (1 | Pair), data = data_ole )
+m03  = lmer(Q3b ~  Q1b + (1 | Pair), data = data_ole )
+anova(m00,m01, m02,m03)
+
+tab_model(m00, m01, m02,m03, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m00","m01", "m02", 'm03'), digits = 5 )
+
+m00  = lmer(Q3b ~  Q1a  + (1|Participant), data = data_ole )
+m01  = lmer(Q3b ~  Q1b  + (1|Participant), data = data_ole )
+m02  = lmer(Q3b ~  Q4  + (1|Participant), data = data_ole )
+m03  = lmer(Q3b ~  Q5  + (1|Participant), data = data_ole )
+m04  = lmer(Q3b ~  Q6  + (1|Participant), data = data_ole )
+tab_model(m00, m01, m02,m03,m04, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m00","m01", "m02", 'm03', 'm04'), digits = 5 )
+anova(m00,m01)
+anova(m02,m04)
+
+m00  = lmer(Q3b ~  Q4a  +Q1b + Abs_Av + GDSI +  (1 | Participant), data = data_ole )
+m01  = lmer(Q3b ~  Q4a + Q1b + Abs_Av + GDSI +  (1 | Participant),  data = data_ole )
+anova(m00,m01)
+tab_model(m00, m01, m02,m03,m04, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m00","m01", "m02", 'm03', 'm04'), digits = 5 )
 
 
 
 
-levels(data_ole$Condition)
-m01  = lmer(Q3b ~   Condition + (1 | Participant), data = data_ole )
-summary(m01)
-# ANOVA with orthogonal planned contrasts: (1) Homophonic vs Polyphonic; (2) Pairing with Melody vs No Melody; (3) Melody-to-Other vs Other-to-Melody
-# Check order of conditions (important for specifying contrast coefficients)
-FlamencoImp_Comp <- lsmeans(m01, "Condition")
-INDvsGr1 = c(0,1,1,-1,-1) # Contrasting individual vs both instruction
-FIXvsMIXvsIMP = c(0,1,-1,1, -1) # Contrasting fixed vs mixed vs free improvisation
-Int12 = c(0,1, -1, -1, 1)
-#DANvsMUS = c(1,-1,1,-1,1,-1,1,-1,1,-1) # Contrast comparing Dancer vs Musician
-Contrasts = list(INDvsGr1, FIXvsMIXvsIMP, Int12)
-FlamencoImp_Comp.output <- contrast(FlamencoImp_Comp, Contrasts, adjust="none") # No need for adjust for multiple comparisons since contrasts are planned & orthogonal
-#capture.output(FlamencoImp_Comp.output, file = "/Users/atillajv/CODE/RITMO/R_FILES/m00_planned_contrasts.txt")
-FlamencoImp_Comp.output
+m00  = lmer(Q3b ~  Q4a  +Q1b + Abs_Av +  Q6 *GDSI +  (1 | Participant), data = data_ole )
+m01  = lmer(Q3b ~  Q4a + Q1b +  Abs_Av + Q6 +GDSI +  (1 | Participant),  data = data_ole )
+m02  = lmer(Q3b ~  Q4a + Q1b +  Abs_Av + GDSI * Q6a +  (1 | Participant),  data = data_ole )
+m00  = lmer(Q3b ~  Q6a +  (1 | Participant), data = data_ole )
+m01  = lmer(Q3b ~ Q6b + (1 | Participant),  data = data_ole )
+m02  = lmer(Q3b ~ Q6 + (1 | Participant),  data = data_ole )
+anova(m00,m02, m01)
+
+tab_model(m00, m01, m02,m03,m04, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m00","m01", "m02", 'm03', 'm04'), digits = 5 )
+
+
+#BEST FITTING MODELS
+#m00 = lmer(Q3b ~ 1 +  (1 | Participant),  data = data_ole )
+m00 = lmer(Q3b ~  Q4a * Palo + Q1b + Abs_Av + GDSI +  (1 | Participant),  data = data_ole )
+m01 = lmer(Q3b ~  Q4a * Palo + Q1b + Abs_Av + GDSI +  (1 | Participant),  data = data_ole )
+m02 = lmer(Q3b ~  Q4a + Q1b + Abs_Av + GDSI +  (1 | Participant),  data = data_ole )
+
+m03  = lmer(Q3b ~  Q4a  +Q1b + Abs_Av +  Q6a *GDSI +  (1 | Participant), data = data_ole )
+m04  = lmer(Q3b ~  Q4a  +Q1b + Abs_Av +  Q6 *GDSI +  (1 | Participant), data = data_ole )
+m05  = lmer(Q3b ~  Q4a*Palo  +Q1b + Abs_Av +  Q6 *GDSI +  (1 | Participant), data = data_ole )
+anova(m04, m05)
+
+tab_model(m00, m01,m02,m03, m04,m05,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m00","m01", "m02", "m03", "m04", "m05"), digits = 5 )
+
 
 
 

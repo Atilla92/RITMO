@@ -21,6 +21,8 @@ data <- read.csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/22_Sep_2023_nie
 data_ole <- data %>%
   distinct(Name, Artist, .keep_all = TRUE)
 
+data_ole$instruction <- paste(data_ole$Condition, data_ole$Artist, sep = "_")
+data_ole$instruction_2 <- paste(data_ole$instruction, data_ole$Palo, sep = "_")
 data_ole$instruction_2 <- as.factor(data_ole$instruction_2)
 data_ole$instruction_2 <-factor(data_ole$instruction_2, levels = c("D5_M6_P_R1", "D5_M6_G_R1",  "D1_M6_P_R1", "D1_M6_G_R1","D6_M6_P_R1", "D6_M6_G_R1",  "D5_M5_P_R1", "D5_M5_G_R1","D1_M1_P_R1", "D1_M1_G_R1",
                                                                    "D5_M6_P_R2", "D5_M6_G_R2",  "D1_M6_P_R2", "D1_M6_G_R2","D6_M6_P_R2", "D6_M6_G_R2",  "D5_M5_P_R2", "D5_M5_G_R2","D1_M1_P_R2", "D1_M1_G_R2"
@@ -78,83 +80,549 @@ library(ggplot2)
 
 
 data_test$A <- factor(data_test$A, labels = c("Fixed", "Other"))
-levels(data_test$B)
+levels(data_test$D)
 data_test$B <- factor(data_test$B)
 data_test$B <- factor(data_test$B, labels = c("Mixed", "Fixed", "Free"))
+data_test$C <- factor(data_test$C)
+data_test$C <- factor(data_test$C, labels = c("Individual",'Neutral', 'Group'))
+
+data_test$D <- factor(data_test$D)
+data_test$D <- factor(data_test$D, labels = c("Musician",'Dancer'))
 
 
+data_test$E <- factor(data_test$E)
+data_test$E <- factor(data_test$E, labels = c("Solea",'Tangos'))
 
-# Create the violin plot
-# Create the violin plot
-ggplot(data_test, aes(x = A, y = Q1a, fill = A)) +
-  geom_violin() +
-  scale_fill_manual(values = c("Other" = "#1F77B4", "Fixed" = "#FF7F0E")) +
-  labs(x = "A", y = "Q1a", fill = "A")
 
 
 
 # Load the required library
-library(gridExtra)
 
-# Create the plot grouped and filled by A
-p1 <- ggplot(data_test, aes(x = A, y = Q1a, fill = A)) +
-  geom_violin() +
-  scale_fill_manual(values = c("Other" = "#1F77B4", "Fixed" = "#FF7F0E")) +
-  labs(x = "A", y = "Q1a", fill = "A")
-
-# Create the plot grouped by B and filled with only Mixed and Free
-p2 <- ggplot(data_test[data_test$B != "Fixed", ], aes(x = B, y = Q1a, fill = B)) +
-  geom_violin() +
-  scale_fill_manual(values = c("Mixed" = "#1F77B4", "Free" = "#2CA02C")) +
-  labs(x = "B", y = "Q1a", fill = "B")
-
-# Combine the plots into a single figure
-grid.arrange(p1, p2, ncol = 2)
-
-
-# Load the required libraries
 library(gridExtra)
 library(ggplot2)
 
 # Set the alpha transparency value for the violins to 0.5
-alpha_val <- 0.5
+colors <- c("#8DD3C7", "#FFFFB3", "#BEBADA", "#FB8072", "#80B1D3", "#FDB462", "#B3DE69", "#FCCDE5", "#00008B", "#BC80BD")
+labels_names <- c('Fixed', 'Other','Mixed', 'Free','Individual', 'Group', 'Musician', 'Dancer', 'Tangos', 'Solea')
+alpha_val <- 0.6
 
+# Quantity of imporviation
 # Create the plot grouped and filled by A with boxplot
-p1 <- ggplot(data_test, aes(x = A, y = Q1a, fill = A)) +
-  geom_boxplot(outlier.shape = NA, alpha = alpha_val, width = 0.2) +
-  geom_violin(alpha = alpha_val, position = position_nudge(x = 0.25), scale = "count", show.legend = FALSE) +
-  scale_fill_manual(values = c("Other" = "#1F77B4", "Fixed" = "#FF7F0E")) +
-  labs(x = "A", y = "Q1a", fill = "A")
+data_test$title1 <- "Quantity of Improvisation"
+p11 <- ggplot(data_test, aes(x = A, y = Q1a, fill = A)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE) +
+  geom_boxplot(outlier.shape = NA, alpha = alpha_val, width = 0.15, show.legend = FALSE) +
+  scale_fill_manual(values = c("Fixed" = colors[1], "Other" = colors[2])) +
+  labs(x = "A", y = "Rating", fill = "A") +
+  facet_grid(. ~ title1)
 
 # Create the plot grouped by B and filled with only Mixed and Free with boxplot
-p2 <- ggplot(data_test[data_test$B != "Fixed", ], aes(x = B, y = Q1a, fill = B)) +
-  geom_boxplot(outlier.shape = NA, alpha = alpha_val, width = 0.2) +
+p12 <- ggplot(data_test[data_test$B != "Fixed", ], aes(x = B, y = Q1a, fill = B)) +
   geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE) +
-  scale_fill_manual(values = c("Mixed" = "#1F77B4", "Free" = "#2CA02C")) +
-  labs(x = "B", y = "Q1a", fill = "B")
+  geom_boxplot(outlier.shape = NA, alpha = alpha_val, width = 0.15,  show.legend = FALSE,) +
+  scale_fill_manual(values = c("Mixed" = colors[3], "Free" = colors[4])) +
+  labs(x = "B", y = "Rating", fill = "B") +
+  facet_grid(. ~ title1)
 
-# Combine the plots into a single figure
-grid.arrange(p1, p2, ncol = 2)
+p13 <- ggplot(data_test[data_test$C != "Neutral", ], aes(x = C, y = Q1a, fill = C)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE) +
+  scale_fill_manual(values = c("Individual" = colors[5], "Group" = colors[6])) +
+  geom_boxplot(outlier.shape = NA, alpha = alpha_val, width = 0.12,  show.legend = FALSE,) +
+  labs(x = "C", y = "Rating", fill = "C") +
+  facet_grid(. ~ title1)
+
+p14 <-  ggplot(data_test, aes(x = D, y = Q1a, fill = D)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE) +
+  geom_boxplot(outlier.shape = NA, alpha = alpha_val, width = 0.15,  show.legend = FALSE,) +
+  scale_fill_manual(values = c("Musician" = colors[7], "Dancer" = colors[8])) +
+  labs(x = "D", y = "Rating", fill = "D") +
+  facet_grid(. ~ title1)
+
+#data_test$groupAD <- interaction(data_test$A, data_test$D)
+
+p15 <- ggplot(data_test, aes(x = D, y = Q1a, fill = D)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE, position = position_dodge(width = 0.9)) +
+  geom_boxplot(aes(fill = D), width = 0.12, outlier.shape = NA, alpha = alpha_val, position = position_dodge(width = 0.9),  show.legend = FALSE) +
+  scale_fill_manual(values = c("Musician" = colors[7], "Dancer" = colors[8])) +
+  labs(x = "A x D - Quantity of Improvisation", y = "Rating", fill = "D") +
+  facet_wrap(~ A, ncol = 2)  
 
 
-# Create the plot grouped and filled by A with boxplot
-p1 <- ggplot(data_test, aes(x = A, y = Q1a, fill = A)) +
-  geom_violin(alpha = alpha_val, position = position_nudge(x = 0.5), scale = "count", show.legend = FALSE) +
-  geom_boxplot(outlier.shape = NA, alpha = alpha_val, width = 0.2, position = position_nudge(x = 0.5)) +
-  scale_fill_manual(values = c("Other" = "#1F77B4", "Fixed" = "#FF7F0E")) +
-  labs(x = "A", y = "Q1a", fill = "A")
+data_test$groupDC <- interaction(data_test$C, data_test$D)
+
+  
+p16 <- ggplot(data_test[data_test$C != "Neutral", ], aes(x = D, y = Q1a, fill = D)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE, position = position_dodge(width = 0.9) ) +
+  geom_boxplot(aes(fill = D), width = 0.12, outlier.shape = NA, alpha = alpha_val, position = position_dodge(width = 0.9), show.legend = FALSE) +
+  scale_fill_manual(values = c("Musician" = colors[7], "Dancer" = colors[8])) +
+  labs(x = "C x D - Quantity of Improvisation", y = "Rating", fill = "D") +
+  facet_wrap(~ C, ncol = 2) 
+
+
+grid.arrange(
+  # First column with plots p1, p2, and p3
+  arrangeGrob(p11, p13, p15, ncol = 1),
+  # Second column with plots p4, p5, and p6
+  arrangeGrob(p12,p14,p16, ncol = 1),
+  ncol = 2
+)
+
+
+
+
+
+### Quality of improv
+data_test$title2 <- "Quality of Improvisation"
+p21 <- ggplot(data_test, aes(x = A, y = Q1b, fill = A)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE) +
+  geom_boxplot(outlier.shape = NA, alpha = alpha_val, width = 0.12, show.legend = FALSE) +
+  scale_fill_manual(values = c("Fixed" = colors[1], "Other" = colors[2])) +
+  labs(x = "A", y = "Rating", fill = "A")+
+  facet_grid(. ~ title2)
 
 # Create the plot grouped by B and filled with only Mixed and Free with boxplot
-p2 <- ggplot(data_test[data_test$B != "Fixed", ], aes(x = B, y = Q1a, fill = B)) +
-  geom_boxplot(outlier.shape = NA, alpha = alpha_val, width = 0.2) +
+p22 <- ggplot(data_test[data_test$B != "Fixed", ], aes(x = B, y = Q1b, fill = B)) +
   geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE) +
-  scale_fill_manual(values = c("Mixed" = "#1F77B4", "Free" = "#2CA02C")) +
-  labs(x = "B", y = "Q1a", fill = "B")
+  geom_boxplot(outlier.shape = NA, alpha = alpha_val, width = 0.15, show.legend = FALSE) +
+  scale_fill_manual(values = c("Mixed" = colors[3], "Free" = colors[4])) +
+  labs(x = "B", y = "Rating", fill = "B")+
+  facet_grid(. ~ title2)
 
-# Combine the plots into a single figure
-grid.arrange(p1, p2, ncol = 2)
+p23 <- ggplot(data_test[data_test$C != "Neutral", ], aes(x = C, y = Q1b, fill = C)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE) +
+  scale_fill_manual(values = c("Individual" = colors[5], "Group" = colors[6])) +
+  geom_boxplot(outlier.shape = NA, alpha = alpha_val, width = 0.12, show.legend = FALSE) +
+  labs(x = "C", y = "Rating", fill = "C")+
+  facet_grid(. ~ title2)
 
 
+data_test$groupDC <- interaction(data_test$C, data_test$D)
+p24 <- ggplot(data_test[data_test$C != "Neutral", ], aes(x = D, y = Q1b, fill = D)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE, position = position_dodge(width = 0.9)) +
+  geom_boxplot(aes(fill = D), width = 0.12, outlier.shape = NA, alpha = alpha_val, position = position_dodge(width = 0.9), show.legend = FALSE) +
+  scale_fill_manual(values = c("Musician" = colors[7], "Dancer" = colors[8])) +
+  labs(x = "C x D - Quality of Improvisation", y = "Rating", fill = "D") +
+  facet_wrap(~ C, ncol = 2)
+
+
+
+
+
+grid.arrange(
+  # First column with plots p1, p2, and p3
+  arrangeGrob(p21, p23, ncol = 1),
+  # Second column with plots p4, p5, and p6
+  arrangeGrob(p22,p24, ncol = 1),
+  ncol = 2
+)
+
+
+
+
+
+
+### Quantity of Flow
+data_test$title3 <- "Quantity of flow"
+p31 <- ggplot(data_test, aes(x = A, y = Q3a, fill = A)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE) +
+  geom_boxplot(outlier.shape = NA, alpha = alpha_val, width = 0.12, show.legend = FALSE) +
+  scale_fill_manual(values = c("Fixed" = colors[1], "Other" = colors[2])) +
+  labs(x = "A", y = "Rating", fill = "A")+
+  facet_grid(. ~ title3)
+
+# Create the plot grouped by B and filled with only Mixed and Free with boxplot
+p32 <- ggplot(data_test[data_test$B != "Fixed", ], aes(x = B, y = Q3a, fill = B)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE) +
+  geom_boxplot(outlier.shape = NA, alpha = alpha_val, width = 0.12, show.legend = FALSE) +
+  scale_fill_manual(values = c("Mixed" = colors[3], "Free" = colors[4])) +
+  labs(x = "B", y = "Rating", fill = "B")+
+  facet_grid(. ~ title3)
+
+p33 <- ggplot(data_test[data_test$C != "Neutral", ], aes(x = C, y = Q3a, fill = C)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE) +
+  scale_fill_manual(values = c("Individual" = colors[5], "Group" = colors[6])) +
+  geom_boxplot(outlier.shape = NA, alpha = alpha_val, width = 0.12, show.legend = FALSE) +
+  labs(x = "C", y = "Rating", fill = "C") +
+  facet_grid(. ~ title3)
+
+
+grid.arrange(
+  # First column with plots p1, p2, and p3
+  arrangeGrob(p31, p32, p33, ncol = 3)
+  # Second column with plots p4, p5, and p6
+)
+
+
+### Intensity of Flow
+data_test$title41 <- "Flow intensity"
+p41 <- ggplot(data_test, aes(x = A, y = Q3b, fill = A)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE) +
+  geom_boxplot(outlier.shape = NA, alpha = alpha_val, width = 0.12, show.legend = FALSE) +
+  scale_fill_manual(values = c("Fixed" = colors[1], "Other" = colors[2])) +
+  labs(x = "A", y = "Rating", fill = "A") +
+  facet_grid(. ~ title41)
+
+# Create the plot grouped by B and filled with only Mixed and Free with boxplot
+p42 <- ggplot(data_test[data_test$B != "Fixed", ], aes(x = B, y = Q3b, fill = B)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE) +
+  geom_boxplot(outlier.shape = NA, alpha = alpha_val, width = 0.12, show.legend = FALSE) +
+  scale_fill_manual(values = c("Mixed" = colors[3], "Free" = colors[4])) +
+  labs(x = "B", y = "Rating", fill = "B") +
+  facet_grid(. ~ title41)
+
+
+p43 <- ggplot(data_test[data_test$C != "Neutral", ], aes(x = C, y = Q3b, fill = C)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE) +
+  scale_fill_manual(values = c("Individual" = colors[5], "Group" = colors[6])) +
+  geom_boxplot(outlier.shape = NA, alpha = alpha_val, width = 0.12, show.legend = FALSE) +
+  labs(x = "C", y = "Rating", fill = "C") +
+  facet_grid(. ~ title41)
+
+
+grid.arrange(
+  # First column with plots p1, p2, and p3
+  arrangeGrob(p41, p42, p43, ncol = 3)
+  # Second column with plots p4, p5, and p6
+)
+
+
+grid.arrange(
+  # First row with plots p11, p13, p15, and p17
+  arrangeGrob(p11, p21, p31, p41, ncol = 4),
+  # Second row with plots p12,p14,p16, and p18
+  arrangeGrob(p12,p22,p32, p42, ncol = 4),
+  arrangeGrob(p13,p23,p33, p43, ncol = 4),
+  arrangeGrob(p14,p15,p16, p24, ncol = 4),
+  nrow = 4 # Set the number of rows to 2
+)
+
+
+
+
+
+### Communication with partner
+
+data_test$groupEA <- interaction(data_test$A, data_test$E)
+p51 <- ggplot(data_test, aes(x = E, y = Q4a, fill = E)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE, position = position_dodge(width = 0.9)) +
+  geom_boxplot(aes(fill = E), width = 0.12, outlier.shape = NA, alpha = alpha_val, position = position_dodge(width = 0.9), show.legend = FALSE) +
+  scale_fill_manual(values = c("Tangos" = colors[9], "Solea" = colors[10])) +
+  labs(x = "A x E", y = "Q4a - Communication with partner", fill = "E") +
+  facet_wrap(~ A, ncol = 2) 
+p51
+
+
+
+grid.arrange(
+  # First column with plots p1, p2, and p3
+  arrangeGrob(p1, ncol = 1)
+  # Second column with plots p4, p5, and p6
+)
+
+
+
+
+### Q6a Complexity of piece
+data_test$title6a <- "Complexity of piece"
+p61 <- ggplot(data_test, aes(x = A, y = Q6a, fill = A)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE) +
+  geom_boxplot(outlier.shape = NA, alpha = alpha_val, width = 0.12, show.legend = FALSE) +
+  scale_fill_manual(values = c("Fixed" = colors[1], "Other" = colors[2])) +
+  labs(x = "A", y = "Rating", fill = "A")  +
+  facet_grid(. ~ title6a)
+p61
+
+# Create the plot grouped by B and filled with only Mixed and Free with boxplot
+p62 <- ggplot(data_test[data_test$B != "Fixed", ], aes(x = B, y = Q6a, fill = B)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE) +
+  geom_boxplot(outlier.shape = NA, alpha = alpha_val, width = 0.12, show.legend = FALSE) +
+  scale_fill_manual(values = c("Mixed" = colors[3], "Free" = colors[4])) +
+  labs(x = "B", y = "Rating", fill = "B") +
+  facet_grid(. ~ title6a)
+p62
+
+p63 <- ggplot(data_test[data_test$C != "Neutral", ], aes(x = C, y = Q6a, fill = C)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE) +
+  scale_fill_manual(values = c("Individual" = colors[5], "Group" = colors[6])) +
+  geom_boxplot(outlier.shape = NA, alpha = alpha_val, width = 0.12, show.legend = FALSE) +
+  labs(x = "C", y = "Rating", fill = "C") +
+  facet_grid(. ~ title6a)
+p63
+
+p64 <- ggplot(data_test, aes(x = E, y = Q6a, fill = E)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE) +
+  scale_fill_manual(values = c("Tangos" = colors[9], "Solea" = colors[10])) +
+  geom_boxplot(outlier.shape = NA, alpha = alpha_val, width = 0.12, show.legend = FALSE) +
+  labs(x = "E", y = "", fill = "E") +
+  facet_grid(. ~ title6a)
+
+p64
+
+data_test$groupDC <- interaction(data_test$C, data_test$D)
+p65 <- ggplot(data_test[data_test$C != "Neutral", ], aes(x = D, y = Q6a, fill = D)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE, position = position_dodge(width = 0.9)) +
+  geom_boxplot(aes(fill = D), width = 0.12, outlier.shape = NA, alpha = alpha_val, show.legend = FALSE,position = position_dodge(width = 0.9)) +
+  scale_fill_manual(values = c("Musician" = colors[7], "Dancer" = colors[8])) +
+  labs(x = "C x D", y = "Complexity of piece", fill = "D") +
+  facet_wrap(~ C, ncol = 2) 
+p65
+
+
+
+
+
+
+### Q6b Rhythmic complexity
+data_test$title7 <- "Rhythmic complexity"
+p71 <- ggplot(data_test, aes(x = A, y = Q6b, fill = A)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE) +
+  geom_boxplot(outlier.shape = NA, alpha = alpha_val, width = 0.12, show.legend = FALSE) +
+  scale_fill_manual(values = c("Fixed" = colors[1], "Other" = colors[2])) +
+  labs(x = "A", y = "Rating", fill = "A") +
+  facet_grid(. ~ title7)
+p71
+# Create the plot grouped by B and filled with only Mixed and Free with boxplot
+p72 <- ggplot(data_test[data_test$B != "Fixed", ], aes(x = B, y = Q6b, fill = B)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE) +
+  geom_boxplot(outlier.shape = NA, alpha = alpha_val, width = 0.12,  show.legend = FALSE) +
+  scale_fill_manual(values = c("Mixed" = colors[3], "Free" = colors[4])) +
+  labs(x = "B", y = "Rating", fill = "B")+
+  facet_grid(. ~ title7)
+p72
+
+grid.arrange(
+  # First column with plots p1, p2, and p3
+  p1, p2, ncol = 2
+
+)
+
+
+### Absorption 
+data_test$title8 <- "Absorption of activity"
+p81 <- ggplot(data_test, aes(x = A, y = Abs_Av, fill = A)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE) +
+  geom_boxplot(outlier.shape = NA, alpha = alpha_val, width = 0.12, show.legend = FALSE) +
+  scale_fill_manual(values = c("Fixed" = colors[1], "Other" = colors[2])) +
+  labs(x = "A", y = "Rating", fill = "A")+
+  facet_grid(. ~ title8)
+p81
+# p82 <- ggplot(data_test, aes(x = D, y = Abs_Av, fill = D)) +
+#   geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE) +
+#   geom_boxplot(outlier.shape = NA, alpha = alpha_val, width = 0.12, show.legend = FALSE) +
+#   scale_fill_manual(values = c("Fixed" = colors[1], "Other" = colors[2])) +
+#   labs(x = "D", y = "Rating", fill = "D")+
+#   facet_grid(. ~ title8)
+# p82
+
+data_test$groupBD <- interaction(data_test$B, data_test$D)
+p82 <- ggplot(data_test[data_test$B != "Fixed", ], aes(x = D, y = Abs_Av, fill = D)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE, position = position_dodge(width = 0.9)) +
+  geom_boxplot(aes(fill = D), width = 0.12, outlier.shape = NA, alpha = alpha_val, position = position_dodge(width = 0.9), show.legend = FALSE) +
+  scale_fill_manual(values = c("Musician" = colors[7], "Dancer" = colors[8])) +
+  labs(x = "B x D", y = "Absorption of activity", fill = "D") +
+  facet_wrap(~ B, ncol = 2) 
+p82
+
+
+# grid.arrange(
+#   # First column with plots p1, p2, and p3
+#   arrangeGrob(p1, p2, ncol = 1),
+#   # Second column with plots p4, p5, and p6
+#   arrangeGrob(p3, ncol = 1),
+#   ncol = 2
+# )
+
+grid.arrange(
+  # First column with plots p1, p2, and p3
+  p1, p2, ncol = 2
+  
+)
+
+
+### Fluency of performance
+data_test$title9 <- "Fluency of performance"
+p91 <- ggplot(data_test[data_test$C != "Neutral", ], aes(x = C, y = Perf_Av, fill = C)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE) +
+  geom_boxplot(outlier.shape = NA, alpha = alpha_val, width = 0.12,  show.legend = FALSE) +
+  scale_fill_manual(values = c("Individual" = colors[5], "Group" = colors[6])) +
+  labs(x = "C", y = "Rating", fill = "C")+
+  facet_grid(. ~ title9)
+p91
+# Create the plot grouped by B and filled with only Mixed and Free with boxplot
+p92 <- ggplot(data_test, aes(x = E, y = Perf_Av, fill = E)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE) +
+  geom_boxplot(outlier.shape = NA, alpha = alpha_val, width = 0.12,  show.legend = FALSE) +
+  scale_fill_manual(values = c("Tangos" = colors[9], "Solea" = colors[10])) +
+  labs(x = "E", y = "Rating", fill = "E")+
+  facet_grid(. ~ title9)
+p92
+
+grid.arrange(
+  # First column with plots p1, p2, and p3
+  p1, p2, ncol = 2
+  
+)
+
+
+grid.arrange(
+  # First row with plots p11, p13, p15, and p17
+  arrangeGrob(p61, p71, p81, ncol = 3),
+  # Second row with plots p12,p14,p16, and p18
+  arrangeGrob(p62,p72,p91, ncol = 3),
+  arrangeGrob(p63,p64,p92, ncol = 3),
+  arrangeGrob(p65, p82, p51, ncol = 3),
+  nrow = 4 # Set the number of rows to 2
+)
+
+
+grid.arrange(
+  # First row with plots p11, p13, p15, and p17
+  arrangeGrob(p61, p71, p81, ncol = 3),
+  # Second row with plots p12,p14,p16, and p18
+  arrangeGrob(p62,p72,p91, ncol = 3),
+  arrangeGrob(p63,p64,p92, ncol = 3),
+  arrangeGrob(p65, p82, p51, ncol = 3),
+  nrow = 4 # Set the number of rows to 2
+)
+
+
+grid.arrange(
+  # First row with plots p11, p13, p15, and p17
+  arrangeGrob(p61, p71, p81, p82, ncol = 4),
+  # Second row with plots p12,p14,p16, and p18
+  arrangeGrob(p62,p72,p91,p92, ncol = 4),
+  arrangeGrob(p63, p64, p65, p51, ncol = 4),
+  nrow = 3 # Set the number of rows to 2
+)
+
+
+grid.arrange(
+  # First row with plots p11, p13, p15, and p17
+  arrangeGrob(p61, p71, p81, p82, ncol = 4),
+  # Second row with plots p12,p14,p16, and p18
+  arrangeGrob(p62,p72,p91,p63, ncol = 4),
+  arrangeGrob(p64, p92, p51,p65, ncol = 4),
+  nrow = 3 # Set the number of rows to 2
+)
+
+
+
+##### Correlation plot 
+
+library(corrplot)
+library(symnum)
+library(psych)
+
+# Select columns of interest
+plot.new()
+corr_mat <- data_ole[, c("Q1a", "Q1b", "Q3a", "Q3b")]
+
+
+# Compute correlation matrix
+M <- cor(corr_mat, use = 'complete.obs', method='spearman')
+
+
+# Plot correlation matrix
+corrplot(M, order = "AOE", tl.col = "black", 
+         tl.srt = 45, 
+         p.mat = corr.test(corr_mat)$p, 
+         insig = 'label_sig',
+         sig.level = c(.001, .01, .05),
+         pch.cex = 1.2, pch.col = 'red', 
+         addCoef.col = "white",
+         title = paste('Correlation Plot (', name_plot , ')'), cex.main = 1.8,
+         mar=c(0,0,2,0))
+
+
+### Bonferroni corrected.
+
+# Define the variables for correlation
+corr_vars <- c("Q1a", "Q1b", "Q3a", "Q3b", "Q4a", "Q4b", "Q4c", "Q5a", "Q5b","Q6a", "Q6b", "Abs_Av", "Perf_Av", 'GDSI','GMSI')
+corr_vars <- c("Q1b", "Q3b", "Q4a", "Q6a","Q6b", "Abs_Av", 'GDSI')
+
+# Subset the data for correlation
+corr_mat <- data_ole[, corr_vars]
+
+# Compute correlation matrix
+M <- cor(corr_mat, use = 'complete.obs', method = 'spearman')
+
+# Bonferroni correction on p-values
+p_values <- corr.test(corr_mat, method = "spearman", adjust = "bonferroni")$p
+
+# Define the name for the plot
+name_plot <- "data_ole"
+
+# Plot correlation matrix with Bonferroni-corrected p-values
+corrplot(M, order = "AOE", tl.col = "black", tl.srt = 45,
+         p.mat = p_values,
+         insig = 'label_sig',
+         addCoef.col = "white",
+         sig.level = c(.001, .01, .05),
+         pch.cex = 1.8, pch.col = 'red',
+         #addCoef.col = "white",
+         title = paste('Correlation Plot (', name_plot, ')'),
+         cex.main = 1.8,
+         mar = c(0, 0, 2, 0))
+
+
+
+
+#### Between variables
+
+plot.new()
+
+name_plot <- 'Quantity & Quality of Improvisation'
+corr_vars <- c("Q1a", "Q1b", 'Q1')
+
+
+name_plot <- 'Quantity & Quality of Flow'
+corr_vars <- c("Q3a", "Q3b", "Q3")
+
+
+name_plot <- 'Communication & Coordination'
+corr_vars <- c("Q4a", "Q4b", "Q4c", "Q4")
+
+name_plot <- 'Timing & Rhythmic originality'
+corr_vars <- c("Q5a", "Q5b", "Q5")
+
+name_plot <- 'Complexity of Performance & Rhythm'
+corr_vars <- c("Q6a", "Q6b", "Q6")
+
+name_plot <- 'Quality'
+corr_vars <- c("Q1b", "Q5b", "Q5a", "Q4b")
+name_plot <- 'Quality & Complexity'
+corr_vars <- c("Q1b", "Q6a", "Q6b")
+
+
+name_plot <- 'Coordination and in tune'
+corr_vars <- c("Q4b", "Q5a")
+
+corr_vars <- c("Q3","Q2a", "Q2b", "Q2c", "Q2d", "Q2e", "Q2f", "Q2g", 'Q2h', "Q2i", "Q2j")
+
+
+
+# Subset the data for correlation
+corr_mat <- data_ole[, corr_vars]
+
+# Compute correlation matrix
+M <- cor(corr_mat, use = 'complete.obs', method = 'spearman')
+
+# Bonferroni correction on p-values
+p_values <- corr.test(corr_mat, method = "spearman", adjust = "bonferroni")$p
+
+# Define the name for the plot
+
+# Plot correlation matrix with Bonferroni-corrected p-values
+corrplot(M, order = "AOE", tl.col = "black", tl.srt = 45,
+         p.mat = p_values,
+         insig = 'label_sig',
+         addCoef.col = "white",
+         sig.level = c(.001, .01, .05),
+         pch.cex = 0.1, pch.col = 'red',
+         #addCoef.col = "white",
+         title = paste( name_plot),
+         cex.main = 1.8,
+         mar = c(6, 6, 6, 6))
 
 
 

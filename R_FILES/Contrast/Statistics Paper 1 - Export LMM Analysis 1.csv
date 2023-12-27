@@ -1,0 +1,20 @@
+Dependent Variable;;Correlation;Observation;Random effect;Anova Test;Contrast;;;;;Interaction;;;
+;Fixed;;N;Random;"Full vs Reduced
+(_2)";A;B;C;D;E;DxA;DxB;DxC;ExA
+Quantity of improvisation;Q1a;0.52;238;;***;***;***;***;***;;***;;***;
+Quality of improvisation;Q1b;;238;( 1 | Participant);***;***;**;***;;;;;**;
+Quantity of flow;Q3a;0.86;238;;***;***;**;*;;;;;;
+Quality of flow;Q3b;;238;;***;***;**;**;;;;;;
+;Q3;;238;;***;***;**;*;;;;;;
+Connection with partner;Q4a;0.7;202;;*;;;;;;;;;*
+Coordination with partner;Q4b;0.61;202;;0.36;;;;;;;;;
+Connection with onself;Q4c;;144;( 1 | Participant);0.064;;;;;;;;;
+;Q4;;202;;0.1029;;;;;;;;;
+In tune;Q5a;0.63;143;;0.7;;;;;;;;;
+Rhythmic creativity;Q5b;;143;;0.11;;;;;;;;;
+;Q5;;;;0.3662;;;;;;;;;
+Complexity of piece;Q6a;0.69;143;;***;**;**;**;;**;;;*;
+Rhythmic complexity;Q6b;;144;( 1 | Participant);**;**;**;;;;;;;
+;Q6;;144;( 1 | Participant);***;**;**;;;**;;;*;
+Absorption;Abs_Av;;238;;**;**;;;;;;*;;
+Fluency of performance;Perf_Av;;238;( 1 | Participant);*;;;**;;*;;;;
