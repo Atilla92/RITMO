@@ -4,6 +4,7 @@ library(sjlabelled)
 library(sjmisc)
 library(dplyr)
 library(tidyr)
+library(emmeans)
 
 
 data <- read.csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/22_Sep_2023_niels/27102023_ELAN_no_CDRS_onset_niels_4s_final.csv')
@@ -64,152 +65,137 @@ levels(data_ole$instruction_2)
 data_ole <- data_ole %>%
   mutate(FIXvsOther = ifelse(Condition == "D6_M6", "Fixed", "Other"))
 
+
 unique_data <- data_ole
 ### do t-test analysis accross conditions
 
 
 
-#### Tests for Q1a 
-t_test_results <- data.frame()
-# Loop through unique Baile_Levels
-unique_baile_levels <- unique(unique_data$Artist)
-for (baile_level in unique_baile_levels) {
-  # Subset the data for the current Baile_Level
-  data_baile_level <- unique_data %>%
-    filter(Artist == baile_level)
+perform_t_tests <- function(data, artist_col, condition_col, variable_col) {
+  # Create an empty data frame to store the t-test results
+  t_test_results <- data.frame()
   
-  # Perform t-tests for each pair of conditions
-  condition_pairs <- combn(unique(data_baile_level$FIXvsOther), 2, simplify = FALSE)
-  for (pair in condition_pairs) {
-    condition1 <- pair[1]
-    condition2 <- pair[2]
+  # Loop through unique levels of the Artist column
+  unique_artists <- unique(data[[artist_col]])
+  print(unique_artists)
+  for (artist_level in unique_artists) {
+    # Subset the data for the current artist level
+    # data_artist_level <- data %>%
+    #   filter({{ artist_col }} == artist_level)
     
-    # Subset the data for the two conditions
-    data_condition1 <- data_baile_level %>%
-      filter(FIXvsOther == condition1)
-    data_condition2 <- data_baile_level %>%
-      filter(FIXvsOther == condition2)
+    data_artist_level <- data[data[[artist_col]] == artist_level, ]
     
-    # Perform t-test
-    t_test_result <- t.test(data_condition1$Q1a, data_condition2$Q1a)
+    cat(sprintf("Number of rows in data_artist_level for Artist '%s': %d\n", artist_level, nrow(data_artist_level)))
     
-    # Store the results in the data frame
-    result_row <- data.frame(
-      Baile_Level = baile_level,
-      Condition1 = condition1,
-      Condition2 = condition2,
-      p_value = t_test_result$p.value,
-      significant = t_test_result$p.value < 0.05  # You can adjust the significance level here
-    )
+    # Check if there are at least 2 unique levels of the condition column
+    unique_conditions <- unique(data_artist_level[[ condition_col]])
+    print(unique_conditions)
+    if (length(unique_conditions) < 2) {
+      cat(sprintf("Cannot perform t-tests for artist level '%s Less than 2 unique conditions\n", artist_level))
+      next
+    }
     
-    t_test_results <- bind_rows(t_test_results, result_row)
+    # Perform t-tests for each pair of conditions
+    condition_pairs <- combn(unique_conditions, 2, simplify = FALSE)
+    for (pair in condition_pairs) {
+      condition1 <- pair[1]
+      condition2 <- pair[2]
+      
+      # Subset the data for the two conditions
+      data_condition1 <- data_artist_level[data_artist_level[[condition_col]] == condition1, ]
+      data_condition2 <- data_artist_level[data_artist_level[[condition_col]] == condition2, ]
+      
+      # Perform t-test
+      t_test_result <- t.test(data_condition1[{{ variable_col }}], data_condition2[{{ variable_col }}], paired = TRUE)
+      
+      # Store the results in the data frame
+      result_row <- data.frame(
+        Artist = artist_level,
+        Condition1 = condition1,
+        Condition2 = condition2,
+        p_value = t_test_result$p.value,
+        significant = t_test_result$p.value < 0.05  # You can adjust the significance level here
+      )
+      
+      t_test_results <- bind_rows(t_test_results, result_row)
+    }
   }
+  
+  # Add a "Result" column based on significance level
+  t_test_results$Result <- ifelse(t_test_results$p_value < 0.001, "***",
+                                  ifelse(t_test_results$p_value < 0.01, "**",
+                                         ifelse(t_test_results$p_value < 0.05, "*", "")))
+  
+  # Apply Bonferroni correction
+  alpha <- 0.05  # Desired significance level (e.g., 0.05)
+  num_comparisons <- nrow(t_test_results)  # Number of comparisons
+  
+  # Adjust p-values using Bonferroni correction
+  t_test_results$adjusted_p_value <- p.adjust(t_test_results$p_value, method = "bonferroni", n = num_comparisons)
+  
+  # Set the significance threshold
+  significance_threshold <- alpha / num_comparisons
+  
+  # Update the "significant" column based on the Bonferroni-corrected p-values
+  t_test_results$significant <- t_test_results$adjusted_p_value < significance_threshold
+  
+  # Add a "Result" column based on significance
+  t_test_results$Result <- ifelse(t_test_results$adjusted_p_value < 0.001, "***",
+                                  ifelse(t_test_results$adjusted_p_value < 0.01, "**",
+                                         ifelse(t_test_results$adjusted_p_value < 0.05, "*", "")))
+  
+  return(t_test_results)
 }
 
 
-t_test_results$Result <- ifelse(t_test_results$p_value < 0.001, "***",
-                                ifelse(t_test_results$p_value < 0.01, "**",
-                                       ifelse(t_test_results$p_value < 0.05, "*", "")))
 
 
-# View the t-test results
-print(t_test_results)
+#### DEBUGGING
 
+data_ole <- data_ole %>%
+  inner_join(name_palo, by = c("Participant", "Palo")) %>%
+  group_by(Participant, Palo, FIXvsOther) %>%
+  mutate(mean_Q1a = mean(Q1a, na.rm = TRUE))
 
-# Apply Bonferroni correction
-alpha <- 0.05  # Desired significance level (e.g., 0.05)
-num_comparisons <- nrow(t_test_results)  # Number of comparisons
-
-# Adjust p-values using Bonferroni correction
-t_test_results$adjusted_p_value <- p.adjust(t_test_results$p_value, method = "bonferroni", n = num_comparisons)
-
-# Set the significance threshold
-significance_threshold <- alpha / num_comparisons
-
-# Update the "significant" column based on the Bonferroni-corrected p-values
-t_test_results$significant <- t_test_results$adjusted_p_value < significance_threshold
-
-# Add a "Result" column based on significance
-t_test_results$Result <- ifelse(t_test_results$adjusted_p_value < 0.001, "***",
-                                ifelse(t_test_results$adjusted_p_value < 0.01, "**",
-                                       ifelse(t_test_results$adjusted_p_value < 0.05, "*", "")))
-
-# View the results
-print(t_test_results)
+print(data_ole)
 
 
 
 
-#### Tests for Q1a 
-t_test_results <- data.frame()
-# Loop through unique Baile_Levels
-unique_baile_levels <- unique(unique_data$Artist)
-for (baile_level in unique_baile_levels) {
-  # Subset the data for the current Baile_Level
-  data_baile_level <- unique_data %>%
-    filter(Artist == baile_level)
-  
-  # Perform t-tests for each pair of conditions
-  condition_pairs <- combn(unique(data_baile_level$FIXvsOther), 2, simplify = FALSE)
-  for (pair in condition_pairs) {
-    condition1 <- pair[1]
-    condition2 <- pair[2]
-    
-    # Subset the data for the two conditions
-    data_condition1 <- data_baile_level %>%
-      filter(FIXvsOther == condition1)
-    data_condition2 <- data_baile_level %>%
-      filter(FIXvsOther == condition2)
-    
-    # Perform t-test
-    t_test_result <- t.test(data_condition1$Q1a, data_condition2$Q1a)
-    
-    # Store the results in the data frame
-    result_row <- data.frame(
-      Baile_Level = baile_level,
-      Condition1 = condition1,
-      Condition2 = condition2,
-      p_value = t_test_result$p.value,
-      significant = t_test_result$p.value < 0.05  # You can adjust the significance level here
-    )
-    
-    t_test_results <- bind_rows(t_test_results, result_row)
-  }
-}
+
+data_ole <- data_ole %>%
+  mutate(FIXvsOther = ifelse(Condition == "D6_M6", "Fixed", "Other"))
+
+Q1a_DxA <- perform_t_tests(data_ole, "Artist", "FIXvsOther", "Q1a")
+Q1a_DxA
 
 
-t_test_results$Result <- ifelse(t_test_results$p_value < 0.001, "***",
-                                ifelse(t_test_results$p_value < 0.01, "**",
-                                       ifelse(t_test_results$p_value < 0.05, "*", "")))
+data_ole_2 <- data_ole %>%
+  mutate(INDvsGR = case_when(
+    Condition %in% c("D1_M1", "D5_M5") ~ "Group",
+    Condition %in% c("D5_M6", "D1_M6") ~ "Indiv",
+    TRUE ~ NA_character_
+  ))
+
+data_ole_2 <- data_ole_2[complete.cases(data_ole_2$INDvsGR), ]
 
 
-# View the t-test results
-print(t_test_results)
+Q1a_DxC <- perform_t_tests(data_ole_2, "Artist", "INDvsGR", "Q1a")
+Q1a_DxC
+Q1a_DxC_2 <- perform_t_tests(data_ole_2, "INDvsGR","Artist", "Q1a")
+Q1a_DxC_2
 
 
-# Apply Bonferroni correction
-alpha <- 0.05  # Desired significance level (e.g., 0.05)
-num_comparisons <- nrow(t_test_results)  # Number of comparisons
-
-# Adjust p-values using Bonferroni correction
-t_test_results$adjusted_p_value <- p.adjust(t_test_results$p_value, method = "bonferroni", n = num_comparisons)
-
-# Set the significance threshold
-significance_threshold <- alpha / num_comparisons
-
-# Update the "significant" column based on the Bonferroni-corrected p-values
-t_test_results$significant <- t_test_results$adjusted_p_value < significance_threshold
-
-# Add a "Result" column based on significance
-t_test_results$Result <- ifelse(t_test_results$adjusted_p_value < 0.001, "***",
-                                ifelse(t_test_results$adjusted_p_value < 0.01, "**",
-                                       ifelse(t_test_results$adjusted_p_value < 0.05, "*", "")))
-
-# View the results
-print(t_test_results)
+Q1b_DxC <- perform_t_tests(data_ole_2, "Artist", "INDvsGR", "Q1b")
+Q1b_DxC
+Q1b_DxC_2 <- perform_t_tests(data_ole_2, "INDvsGR","Artist", "Q1b")
+Q1b_DxC_2
 
 
-
+Q4a_ExA <- perform_t_tests(data_ole, "Palo", "FIXvsOther", "Q4a")
+Q4a_ExA
+Q4a_ExA_2 <- perform_t_tests(data_ole, "FIXvsOther","Palo", "Q4a")
+Q4a_ExA_2
 
 #### Code Peter Keller to Plot 
 Adapt   = lmer(Q1a ~ Artist * FIXvsOther + (1 | Participant), data = data_ole )
@@ -227,7 +213,6 @@ p0 <- Adapt_Alpha.effects.plot
 
 
 
-
 Adapt_Alpha.effects <- ggemmeans(Adapt, c("Artist", "FIXvsOther"))
 Adapt_Alpha.effects.plot <- plot(Adapt_Alpha.effects, facet = FALSE, rawdata = TRUE, alpha = .2, dot.alpha = .2, dot.size = 2, limit.range = TRUE, jitter = NULL) +
   labs(x= "", y = "Predictor", title = "Q1a - Quanitity of Improvisation") +
@@ -239,6 +224,76 @@ Adapt_Alpha.effects.plot <- plot(Adapt_Alpha.effects, facet = FALSE, rawdata = T
 p1 <- Adapt_Alpha.effects.plot
 
 library(gridExtra)
+grid.arrange(
+  # First column with plots p1, p2, and p3
+  p0, p1, ncol = 2
+  
+)
+
+
+##### Q1a CxD
+
+Adapt   = lmer(Q1a ~ Artist * INDvsGR + (1 | Participant), data = data_ole_2 )
+summary(Adapt)
+
+Adapt_Alpha.effects <- ggemmeans(Adapt, c("INDvsGR", "Artist"))
+Adapt_Alpha.effects.plot <- plot(Adapt_Alpha.effects, facet = FALSE, rawdata = TRUE, alpha = .2, dot.alpha = .2, dot.size = 2, limit.range = TRUE, jitter = NULL) +
+  labs(x= "", y = "Predictor", title = "Q1a - Quanitity of Improvisation") +
+  coord_cartesian(ylim = c(0, 7)) +
+  scale_colour_manual(values = c("red","darkred")) +
+  scale_fill_manual(values= c("red","darkred")) +
+  geom_smooth(method=lm,se=FALSE,fullrange=FALSE) +
+  geom_line(size=1.75) 
+p0 <- Adapt_Alpha.effects.plot
+
+
+
+Adapt_Alpha.effects <- ggemmeans(Adapt, c("Artist", "INDvsGR"))
+Adapt_Alpha.effects.plot <- plot(Adapt_Alpha.effects, facet = FALSE, rawdata = TRUE, alpha = .2, dot.alpha = .2, dot.size = 2, limit.range = TRUE, jitter = NULL) +
+  labs(x= "", y = "Predictor", title = "Q1a - Quanitity of Improvisation") +
+  coord_cartesian(ylim = c(0, 7)) +
+  scale_colour_manual(values = c("red","darkred")) +
+  scale_fill_manual(values= c("red","darkred")) +
+  geom_smooth(method=lm,se=FALSE,fullrange=FALSE) +
+  geom_line(size=1.75) 
+p1 <- Adapt_Alpha.effects.plot
+
+
+grid.arrange(
+  # First column with plots p1, p2, and p3
+  p0, p1, ncol = 2
+  
+)
+
+
+##### Q1b CxD
+
+Adapt   = lmer(Q1b ~ Artist * INDvsGR + (1 | Participant), data = data_ole_2 )
+summary(Adapt)
+
+Adapt_Alpha.effects <- ggemmeans(Adapt, c("INDvsGR", "Artist"))
+Adapt_Alpha.effects.plot <- plot(Adapt_Alpha.effects, facet = FALSE, rawdata = TRUE, alpha = .2, dot.alpha = .2, dot.size = 2, limit.range = TRUE, jitter = NULL) +
+  labs(x= "", y = "Predictor", title = "Q1b - Quanitity of Improvisation") +
+  coord_cartesian(ylim = c(0, 7)) +
+  scale_colour_manual(values = c("red","darkred")) +
+  scale_fill_manual(values= c("red","darkred")) +
+  geom_smooth(method=lm,se=FALSE,fullrange=FALSE) +
+  geom_line(size=1.75) 
+p0 <- Adapt_Alpha.effects.plot
+
+
+
+Adapt_Alpha.effects <- ggemmeans(Adapt, c("Artist", "INDvsGR"))
+Adapt_Alpha.effects.plot <- plot(Adapt_Alpha.effects, facet = FALSE, rawdata = TRUE, alpha = .2, dot.alpha = .2, dot.size = 2, limit.range = TRUE, jitter = NULL) +
+  labs(x= "", y = "Predictor", title = "Q1b - Quanitity of Improvisation") +
+  coord_cartesian(ylim = c(0, 7)) +
+  scale_colour_manual(values = c("red","darkred")) +
+  scale_fill_manual(values= c("red","darkred")) +
+  geom_smooth(method=lm,se=FALSE,fullrange=FALSE) +
+  geom_line(size=1.75) 
+p1 <- Adapt_Alpha.effects.plot
+
+
 grid.arrange(
   # First column with plots p1, p2, and p3
   p0, p1, ncol = 2

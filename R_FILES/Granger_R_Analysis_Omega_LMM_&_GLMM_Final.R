@@ -243,13 +243,13 @@ anova(m00, m01)
 
 
 
-m00  = lmer(Q6 ~  1 + (1 | Participant), data = data_ole )
-m01  = lmer(Q6 ~ instruction_2 + (1 | Participant), data = data_ole )
+m00  = lmer(Q3 ~  1 + (1 | Pair/Participant), data = data_ole )
+m01  = lmer(Q3 ~ instruction_2 + (1 | Participant), data = data_ole )
 anova(m00, m01)
 
 
 m00 = lmer(Q4a ~     instruction_2  + Abs_Av + Q4a + Q6a +  (1 |GMSI) + (1 |Participant), data = data_ole)
-m00  = lmer(Q6 ~  instruction_2 + (1 |Participant), data = data_ole )
+m00  = lmer(Q1b ~  instruction_2 + (1 |Participant), data = data_ole )
 summary(m00)
 levels(data_ole$instruction_2)
 # ANOVA with orthogonal planned contrasts: (1) Homophonic vs Polyphonic; (2) Pairing with Melody vs No Melody; (3) Melody-to-Other vs Other-to-Melody
@@ -362,6 +362,13 @@ ggplot() +
 #FlamencoImp_Comp.output <- contrast(FlamencoImp_Comp, Contrasts, adjust="none") # No need for adjust for multiple comparisons since contrasts are planned & orthogonal
 #capture.output(FlamencoImp_Comp.output, file = "/Users/atillajv/CODE/RITMO/R_FILES/m00_planned_contrasts.txt")
 #FlamencoImp_Comp.output
+
+
+
+##### T-TEST Interaction Effect #### 
+
+
+
 
 
 #### ANALYSIS 2 #### 
