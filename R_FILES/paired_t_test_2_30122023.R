@@ -10,6 +10,19 @@ data_ole <- data_ole %>%
 
 
 data_ole <- data_ole %>%
+  mutate(MIXvsIMP = case_when(
+    Condition %in% c("D1_M1", "D1_M6") ~ "Impro",
+    Condition %in% c("D5_M6", "D5_M5") ~ "Mixed",
+    TRUE ~ NA_character_
+  ))
+
+# Add a new column based on a condition
+data_ole <- data_ole %>%
+  mutate(FIXvsOther = ifelse(Condition == "D6_M6", "Fixed", "Other"))
+
+
+
+data_ole <- data_ole %>%
   mutate(FIXvsOther = ifelse(Condition == "D6_M6", "Fixed", "Other"))
 
 
@@ -359,17 +372,18 @@ grid.arrange(
 
 
 #### Complexity of piece DxC
+ 
 data_ole <- data_ole %>%
   inner_join(name_palo, by = c("Participant", "Palo")) %>%
   group_by(Participant, Palo, INDvsGR) %>%
-  mutate(mean_Q6a = mean(Q6a, na.rm = TRUE))
+  mutate(mean_Abs_Av = mean(Abs_Av, na.rm = TRUE))
 
 filtered_data <- data_ole %>%
-  distinct(Participant, Palo, INDvsGR, mean_Q6a, Artist) %>%
+  distinct(Participant, Palo, INDvsGR, mean_Abs_Av, Artist) %>%
   filter(!is.na(INDvsGR))  # Remove rows with missing INDvsGR values
 
 grouped_data <- filtered_data %>%
-  pivot_wider(names_from = INDvsGR, values_from = mean_Q6a)
+  pivot_wider(names_from = INDvsGR, values_from = mean_Abs_Av)
 
 print(grouped_data)
 
@@ -389,7 +403,6 @@ Group_G <- grouped_G$Group
 Indiv_P <- grouped_P$Indiv
 Indiv_G <- grouped_G$Indiv
 # Plot paired data
-
 
 
 # Calculate means and standard deviations
@@ -413,9 +426,6 @@ cat("Mean_Indiv_P:", Mean_Indiv_P, "\n")
 cat("SD_Indiv_P:", SD_Indiv_P, "\n")
 cat("Mean_Indiv_G:", Mean_Indiv_G, "\n")
 cat("SD_Indiv_G:", SD_Indiv_G, "\n")
-
-
-
 
 
 library(PairedData)
@@ -443,6 +453,92 @@ grid.arrange(
   p1, p2, ncol = 2
   
 )
+
+
+
+#### Abs_Av DxB
+data_ole <- data_ole %>%
+  inner_join(name_palo, by = c("Participant", "Palo")) %>%
+  group_by(Participant, Palo, MIXvsIMP) %>%
+  mutate(mean_Abs_Av = mean(Abs_Av, na.rm = TRUE))
+
+filtered_data <- data_ole %>%
+  distinct(Participant, Palo, MIXvsIMP, mean_Abs_Av, Artist) %>%
+  filter(!is.na(MIXvsIMP))  # Remove rows with missing MIXvsIMP values
+
+grouped_data <- filtered_data %>%
+  pivot_wider(names_from = MIXvsIMP, values_from = mean_Abs_Av)
+
+print(grouped_data)
+
+# Split in two groups
+grouped_P <- grouped_data[grepl("P", grouped_data$Artist),] #only dancers
+print(grouped_P)
+
+
+grouped_G <- grouped_data[grepl("G", grouped_data$Artist),] #only dancers
+print(grouped_G)
+
+
+# Subset weight data before treatment
+Mix_P <- grouped_P$Mixed
+Mix_G <- grouped_G$Mixed
+# subset weight data after treatment
+Impro_P <- grouped_P$Impro
+Impro_G <- grouped_G$Impro
+# Plot paired data
+
+
+# Calculate means and standard deviations
+Mean_Mix_P <- mean(na.omit(Mix_P))
+SD_Mix_P <- sd(na.omit(Mix_P))
+Mean_Mix_G <- mean(na.omit(Mix_G))
+SD_Mix_G <- sd(na.omit(Mix_G))
+Mean_Impro_P <- mean(na.omit(Impro_P))
+SD_Impro_P <- sd(na.omit(Impro_P))
+Mean_Impro_G <- mean(na.omit(Impro_G))
+SD_Impro_G <- sd(na.omit(Impro_G))
+
+# Print means and standard deviations for Mix_P and Mix_G
+cat("Mean_Mix_P:", Mean_Mix_P, "\n")
+cat("SD_Mix_P:", SD_Mix_P, "\n")
+cat("Mean_Mix_G:", Mean_Mix_G, "\n")
+cat("SD_Mix_G:", SD_Mix_G, "\n")
+
+# Print means and standard deviations for Impro_P and Impro_G
+cat("Mean_Impro_P:", Mean_Impro_P, "\n")
+cat("SD_Impro_P:", SD_Impro_P, "\n")
+cat("Mean_Impro_G:", Mean_Impro_G, "\n")
+cat("SD_Impro_G:", SD_Impro_G, "\n")
+
+
+library(PairedData)
+pd_P <- paired(Mix_P, Impro_P)
+p1 <- plot(pd_P, type = "profile") + theme_bw()
+
+pd_G <- paired(Mix_G, Impro_G)
+p2 <- plot(pd_G, type = "profile") + theme_bw()
+
+t.test(Impro_P, Mix_P, paired = TRUE, correct = TRUE, alternative = 'two.sided')
+t.test(Impro_G, Mix_G, paired = TRUE, correct = TRUE, alternative = 'two.sided')
+
+
+shapiro.test(Impro_P)
+shapiro.test(Mix_P)
+shapiro.test(Impro_G)
+shapiro.test(Mix_G)
+
+wilcox.test(Impro_P, Mix_P, paired = TRUE)
+wilcox.test(Impro_G, Mix_G, paired = TRUE)
+
+library(gridExtra)
+grid.arrange(
+  # First column with plots p1, p2, and p3
+  p1, p2, ncol = 2
+  
+)
+
+
 
 
 

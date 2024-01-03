@@ -58,6 +58,7 @@ data_ole$instruction_2 <-factor(data_ole$instruction_2, levels = c("D5_M6_P_R1",
 
 # Checking contrasts without including Palos
 # Check levels
+
 levels(data_ole$instruction_2)
 
 
@@ -84,7 +85,6 @@ perform_t_tests <- function(data, artist_col, condition_col, variable_col) {
     #   filter({{ artist_col }} == artist_level)
     
     data_artist_level <- data[data[[artist_col]] == artist_level, ]
-    
     cat(sprintf("Number of rows in data_artist_level for Artist '%s': %d\n", artist_level, nrow(data_artist_level)))
     
     # Check if there are at least 2 unique levels of the condition column
@@ -98,15 +98,29 @@ perform_t_tests <- function(data, artist_col, condition_col, variable_col) {
     # Perform t-tests for each pair of conditions
     condition_pairs <- combn(unique_conditions, 2, simplify = FALSE)
     for (pair in condition_pairs) {
+      print('pair')
       condition1 <- pair[1]
       condition2 <- pair[2]
       
       # Subset the data for the two conditions
       data_condition1 <- data_artist_level[data_artist_level[[condition_col]] == condition1, ]
       data_condition2 <- data_artist_level[data_artist_level[[condition_col]] == condition2, ]
-      
+   
       # Perform t-test
-      t_test_result <- t.test(data_condition1[{{ variable_col }}], data_condition2[{{ variable_col }}], paired = TRUE)
+      t_test_result <- t.test(data_condition1[{{ variable_col }}], data_condition2[{{ variable_col }}])
+      print(t_test_result)
+      # # Extract mean and standard deviation for each variable
+      # mean_variable1 <- mean(data_condition1[[variable_col]])
+      # sd_variable1 <- sd(data_condition1[[variable_col]])
+      # mean_variable2 <- mean(data_condition2[[variable_col]])
+      # sd_variable2 <- sd(data_condition2[[variable_col]])
+      # 
+      # # Print the mean and standard deviation with variable names
+      # # Print the mean and standard deviation with condition names
+      # cat("Mean", unique_conditions[condition1], ":", mean_variable1, "\n")
+      # cat("Standard Deviation", unique_conditions[condition1], ":", sd_variable1, "\n")
+      # cat("Mean", unique_conditions[condition2], ":", mean_variable2, "\n")
+      # cat("Standard Deviation", unique_conditions[condition2], ":", sd_variable2, "\n")
       
       # Store the results in the data frame
       result_row <- data.frame(
@@ -147,9 +161,6 @@ perform_t_tests <- function(data, artist_col, condition_col, variable_col) {
   return(t_test_results)
 }
 
-
-
-
 #### DEBUGGING
 
 data_ole <- data_ole %>%
@@ -162,15 +173,26 @@ print(data_ole)
 
 
 
-
 data_ole <- data_ole %>%
   mutate(FIXvsOther = ifelse(Condition == "D6_M6", "Fixed", "Other"))
 
 Q1a_DxA <- perform_t_tests(data_ole, "Artist", "FIXvsOther", "Q1a")
 Q1a_DxA
+Q1a_DxA_2 <- perform_t_tests(data_ole, "FIXvsOther", "Artist", "Q1a")
+Q1a_DxA_2
 
 
-data_ole_2 <- data_ole %>%
+# Sort the dataframe by FIXvsOther column
+data_ole_sorted <- data_ole[order(data_ole$FIXvsOther), ]
+# Group by Artist and FIXvsOther columns and calculate mean and std for Q1a
+summary_table <- aggregate(Q1a ~ Artist + FIXvsOther, data_ole_sorted, function(x) c(mean = mean(x), std = sd(x)))
+# Display the summary table
+summary_table
+
+
+
+
+data_ole <- data_ole %>%
   mutate(INDvsGR = case_when(
     Condition %in% c("D1_M1", "D5_M5") ~ "Group",
     Condition %in% c("D5_M6", "D1_M6") ~ "Indiv",
@@ -192,10 +214,83 @@ Q1b_DxC_2 <- perform_t_tests(data_ole_2, "INDvsGR","Artist", "Q1b")
 Q1b_DxC_2
 
 
+# Sort the dataframe by FIXvsOther column
+data_ole_sorted <- data_ole[order(data_ole$INDvsGR), ]
+# Group by Artist and FIXvsOther columns and calculate mean and std for Q1a
+summary_table <- aggregate(Q1b ~ Artist + INDvsGR, data_ole_sorted, function(x) c(mean = mean(x), std = sd(x)))
+# Display the summary table
+summary_table
+
+
+
 Q4a_ExA <- perform_t_tests(data_ole, "Palo", "FIXvsOther", "Q4a")
 Q4a_ExA
 Q4a_ExA_2 <- perform_t_tests(data_ole, "FIXvsOther","Palo", "Q4a")
 Q4a_ExA_2
+
+
+# Sort the dataframe by FIXvsOther column
+data_ole_sorted <- data_ole[order(data_ole$FIXvsOther), ]
+# Group by Artist and FIXvsOther columns and calculate mean and std for Q1a
+summary_table <- aggregate(Q4a ~ Palo + FIXvsOther, data_ole_sorted, function(x) c(mean = mean(x), std = sd(x)))
+# Display the summary table
+summary_table
+
+
+# Create a new dataset by omitting NA values in the column "Q6a"
+data_filtered_Q6a <- na.omit(data_ole[, "Q6a"])
+
+# Copy all columns from the original dataset to the filtered dataset
+data_filtered_Q6a <- data_ole[which(!is.na(data_ole$Q6a)), ]
+
+
+# Create a new dataset by omitting NA values in the column "Q6a"
+data_filtered_Q6 <- na.omit(data_filtered_Q6a[, "INDvsGR"])
+
+# Copy all columns from the original dataset to the filtered dataset
+data_filtered_Q6 <- data_filtered_Q6a[which(!is.na(data_filtered_Q6a$INDvsGR)), ]
+
+
+# Display the filtered dataset
+print(data_filtered_Q6)
+Q6a_ExA <- perform_t_tests(data_filtered_Q6, "Artist", "INDvsGR", "Q6a")
+Q6a_ExA
+Q6a_ExA_2 <- perform_t_tests(data_filtered_Q6, "INDvsGR","Artist", "Q6a")
+Q6a_ExA_2
+
+
+# Sort the dataframe by FIXvsOther column
+data_ole_sorted <- data_filtered_Q6[order(data_filtered_Q6$INDvsGR), ]
+# Group by Artist and FIXvsOther columns and calculate mean and std for Q1a
+summary_table <- aggregate(Q6a ~ Artist + INDvsGR, data_ole_sorted, function(x) c(mean = mean(x), std = sd(x)))
+# Display the summary table
+summary_table
+
+
+# Display the filtered dataset
+data_filtered_Abs_Av <- na.omit(data_ole[, "Abs_Av"])
+
+# Copy all columns from the original dataset to the filtered dataset
+data_filtered_Abs_Av <- data_[which(!is.na(data_ole$Abs_Av)), ]
+
+
+# Create a new dataset by omitting NA values in the column "Abs_Av"
+data_filtered_Abs <- na.omit(data_filtered_Abs_Av[, "MIXvsIMP"])
+
+# Copy all columns from the original dataset to the filtered dataset
+data_filtered_Abs <- data_filtered_Abs_Av[which(!is.na(data_filtered_Abs_Av$MIXvsIMP)), ]
+
+
+
+Abs_Av_ExA <- perform_t_tests(data_filtered_Abs, "Artist", "MIXvsIMP", "Abs_Av")
+Abs_Av_ExA
+Abs_Av_ExA_2 <- perform_t_tests(data_filtered_Abs, "MIXvsIMP","Artist", "Abs_Av")
+Abs_Av_ExA_2
+
+
+
+
+
 
 #### Code Peter Keller to Plot 
 Adapt   = lmer(Q1a ~ Artist * FIXvsOther + (1 | Participant), data = data_ole )
@@ -299,3 +394,114 @@ grid.arrange(
   p0, p1, ncol = 2
   
 )
+
+
+
+##### Q4a CxD
+
+Adapt   = lmer(Q4a ~ Palo * FIXvsOther + (1 | Pair/Participant), data = data_ole )
+summary(Adapt)
+
+Adapt_Alpha.effects <- ggemmeans(Adapt, c("FIXvsOther", "Palo"))
+Adapt_Alpha.effects.plot <- plot(Adapt_Alpha.effects, facet = FALSE, rawdata = TRUE, alpha = .2, dot.alpha = .2, dot.size = 2, limit.range = TRUE, jitter = NULL) +
+  labs(x= "", y = "Predictor", title = "Q4a - Connection with partner") +
+  coord_cartesian(ylim = c(0, 7)) +
+  scale_colour_manual(values = c("red","darkred")) +
+  scale_fill_manual(values= c("red","darkred")) +
+  geom_smooth(method=lm,se=FALSE,fullrange=FALSE) +
+  geom_line(size=1.75) 
+p0 <- Adapt_Alpha.effects.plot
+
+
+
+Adapt_Alpha.effects <- ggemmeans(Adapt, c("Palo", "FIXvsOther"))
+Adapt_Alpha.effects.plot <- plot(Adapt_Alpha.effects, facet = FALSE, rawdata = TRUE, alpha = .2, dot.alpha = .2, dot.size = 2, limit.range = TRUE, jitter = NULL) +
+  labs(x= "", y = "Predictor", title = "Q4a - Connection with partner") +
+  coord_cartesian(ylim = c(0, 7)) +
+  scale_colour_manual(values = c("red","darkred")) +
+  scale_fill_manual(values= c("red","darkred")) +
+  geom_smooth(method=lm,se=FALSE,fullrange=FALSE) +
+  geom_line(size=1.75) 
+p1 <- Adapt_Alpha.effects.plot
+
+
+grid.arrange(
+  # First column with plots p1, p2, and p3
+  p0, p1, ncol = 2
+  
+)
+
+
+
+##### Q1b CxD
+
+Adapt   = lmer(Q6a ~ Artist * INDvsGR + (1 | Pair/Participant), data = data_ole )
+summary(Adapt)
+
+Adapt_Alpha.effects <- ggemmeans(Adapt, c("Artist", "INDvsGR"))
+Adapt_Alpha.effects.plot <- plot(Adapt_Alpha.effects, facet = FALSE, rawdata = TRUE, alpha = .2, dot.alpha = .2, dot.size = 2, limit.range = TRUE, jitter = NULL) +
+  labs(x= "", y = "Predictor", title = "Q6a - Complexity of Piece") +
+  coord_cartesian(ylim = c(0, 7)) +
+  scale_colour_manual(values = c("red","darkred")) +
+  scale_fill_manual(values= c("red","darkred")) +
+  geom_smooth(method=lm,se=FALSE,fullrange=FALSE) +
+  geom_line(size=1.75) 
+p0 <- Adapt_Alpha.effects.plot
+
+
+
+Adapt_Alpha.effects <- ggemmeans(Adapt, c("INDvsGR", "Artist"))
+Adapt_Alpha.effects.plot <- plot(Adapt_Alpha.effects, facet = FALSE, rawdata = TRUE, alpha = .2, dot.alpha = .2, dot.size = 2, limit.range = TRUE, jitter = NULL) +
+  labs(x= "", y = "Predictor", title = "Q6a - Complexity of Piece") +
+  coord_cartesian(ylim = c(0, 7)) +
+  scale_colour_manual(values = c("red","darkred")) +
+  scale_fill_manual(values= c("red","darkred")) +
+  geom_smooth(method=lm,se=FALSE,fullrange=FALSE) +
+  geom_line(size=1.75) 
+p1 <- Adapt_Alpha.effects.plot
+
+
+grid.arrange(
+  # First column with plots p1, p2, and p3
+  p0, p1, ncol = 2
+  
+)
+
+
+
+##### Abs_Av BxD
+
+Adapt   = lmer(Abs_Av ~ Artist * MIXvsIMP + (1 | Pair/Participant), data = data_ole )
+summary(Adapt)
+
+Adapt_Alpha.effects <- ggemmeans(Adapt, c("Artist", "MIXvsIMP"))
+Adapt_Alpha.effects.plot <- plot(Adapt_Alpha.effects, facet = FALSE, rawdata = TRUE, alpha = .2, dot.alpha = .2, dot.size = 2, limit.range = TRUE, jitter = NULL) +
+  labs(x= "", y = "Predictor", title = "Absorption of Activity") +
+  coord_cartesian(ylim = c(0, 7)) +
+  scale_colour_manual(values = c("red","darkred")) +
+  scale_fill_manual(values= c("red","darkred")) +
+  geom_smooth(method=lm,se=FALSE,fullrange=FALSE) +
+  geom_line(size=1.75) 
+p0 <- Adapt_Alpha.effects.plot
+
+
+
+Adapt_Alpha.effects <- ggemmeans(Adapt, c("MIXvsIMP", "Artist"))
+Adapt_Alpha.effects.plot <- plot(Adapt_Alpha.effects, facet = FALSE, rawdata = TRUE, alpha = .2, dot.alpha = .2, dot.size = 2, limit.range = TRUE, jitter = NULL) +
+  labs(x= "", y = "Predictor", title = "Absorption of Activity") +
+  coord_cartesian(ylim = c(0, 7)) +
+  scale_colour_manual(values = c("red","darkred")) +
+  scale_fill_manual(values= c("red","darkred")) +
+  geom_smooth(method=lm,se=FALSE,fullrange=FALSE) +
+  geom_line(size=1.75) 
+p1 <- Adapt_Alpha.effects.plot
+
+
+grid.arrange(
+  # First column with plots p1, p2, and p3
+  p0, p1, ncol = 2
+  
+)
+
+
+

@@ -22,7 +22,6 @@ library(Rmisc)
 library(rstatix)
 library(stargazer) 
 source("https://gist.githubusercontent.com/benmarwick/2a1bb0133ff568cbe28d/raw/fb53bd97121f7f9ce947837ef1a4c65a73bffb3f/geom_flat_violin.R")
-source("~/Documents/R/geom_flat_violin.R") # set own path!!!
 
 # Read in csv data ---------
 setwd("~/Documents/Work-MARCS/EXPERIMENTS/Omega Ensemble/Omega Ensemble Rehearsal/Analysis_2020/Sanket_analysis/Granger Causality") # set path to folder with csv-files
@@ -37,6 +36,8 @@ data <- read.csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/22_Sep_2023_nie
 
 data_ole <- data %>%
   distinct(Name, Artist, .keep_all = TRUE)
+data_ole$GMSI <- ifelse(data_ole$Participant == "G7", 5, data_ole$GMSI)
+data_ole$GDSI <- ifelse(data_ole$Participant == "G7", 3.65, data_ole$GDSI)
 
 
 # Create a new column with concatenated strings
@@ -243,13 +244,13 @@ anova(m00, m01)
 
 
 
-m00  = lmer(Q3 ~  1 + (1 | Pair/Participant), data = data_ole )
-m01  = lmer(Q3 ~ instruction_2 + (1 | Participant), data = data_ole )
+m00  = lmer(Q6a ~  1 + (1 | Pair/Participant), data = data_ole )
+m01  = lmer(Q6a ~ instruction_2 + (1 | Pair/Participant), data = data_ole )
 anova(m00, m01)
 
 
 m00 = lmer(Q4a ~     instruction_2  + Abs_Av + Q4a + Q6a +  (1 |GMSI) + (1 |Participant), data = data_ole)
-m00  = lmer(Q1b ~  instruction_2 + (1 |Participant), data = data_ole )
+m00  = lmer(Q6a ~  instruction_2 + (1 |Pair/Participant), data = data_ole )
 summary(m00)
 levels(data_ole$instruction_2)
 # ANOVA with orthogonal planned contrasts: (1) Homophonic vs Polyphonic; (2) Pairing with Melody vs No Melody; (3) Melody-to-Other vs Other-to-Melody
@@ -447,6 +448,124 @@ anova(m04, m05)
 tab_model(m00, m01,m02,m03, m04,m05,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
           dv.labels=c("m00","m01", "m02", "m03", "m04", "m05"), digits = 5 )
 
+
+
+#### BEST FITTING MODELS 2024 # WHOLE DATASET
+
+
+# data_filtered_Q4a <- na.omit(data_ole[, c("Q4a")]) 
+# data_filtered_Q4a <- data_ole[!is.na(data_ole$Q4a), ]
+# 
+
+data_filtered_Q4a <- data_ole[!is.na(data_ole$GDSI) & !is.na(data_ole$Q4a), ]
+data_filtered_Q6a <- data_ole[!is.na(data_ole$GMSI) & !is.na(data_ole$Q6a), ]
+
+m00a = lmer(Q3 ~  1 +  (1 | Participant), data = data_filtered_Q4a)
+m01a = lmer(Q3 ~  Q4a + Q1b + GDSI +  (1 | Participant), data = data_filtered_Q4a)
+
+anova(m00a, m01a)
+
+tab_model(m00a, m01a, m02a,  m03a, m04a,m02b,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m00","m01", "m02", "m03", "m04", "m05", "m06"), digits = 5 )
+
+m00 = lmer(Q3 ~  Q1b +  (1 | Participant), data = data_ole)
+m01 = lmer(Q3 ~  Q1b  +Q4a +   (1 | Participant), data = data_ole)
+anova(m00, m01)
+summary(m00)
+
+
+m00a = lmer(Q3 ~  1 +  (1 | Participant), data = data_filtered_Q4a)
+m01a = lmer(Q3 ~  Q4a + Q1b + GDSI +  (1 | Participant), data = data_filtered_Q4a)
+m00b = lmer(Q3 ~ 1 + (1 |Participant), data = data_filtered_Q6a )
+m01b = lmer(Q3 ~    Q1b + Q4a + Q6b + Abs_Av + (1 |GMSI) + (1 | Participant), data = data_filtered_Q6a)
+
+anova(m00a,m01a)
+
+tab_model(m00a, m01a, m00b,  m01b,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("Flow","Flow", "Flow", "Flow"), digits = 5 )
+
+
+library(webshot)
+tab_model(
+  m00a, m01a, m00b,  m01b,
+  p.style = "stars",
+  show.aic = TRUE,
+  show.ci = FALSE,
+  show.r2 = FALSE,
+  dv.labels = c("Flow", "Flow", "Flow", "Flow"),
+  digits = 5,
+  pred.labels = c("Intercept", "Connection with Partner", "Quality of Improvisation", "Dance Experience (GDSI)", "Rhythmic complexity", "Absorption of Activity (FSS)")
+)
+  #file = "/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_table.html"
+)
+webshot("/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_table.html", "/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_table.png")
+
+
+  
+
+library(sjPlot)
+
+m00 = lmer(Q3 ~  Q1a +  (1 |Pair/Participant), data = data_ole)
+m01 = lmer(Q3 ~  Q1b +  (1 |Pair/Participant), data = data_ole)
+m02 = lmer(Q3 ~  Q4a +  (1 |Participant), data = data_ole)
+m03 = lmer(Q3 ~  Q4b +  (1 |Participant), data = data_ole)
+m04 = lmer(Q3 ~  Q5a +  (1 |Participant), data = data_ole)
+m05 = lmer(Q3 ~  Q5b +  (1 |Pair/Participant), data = data_ole)
+m06 = lmer(Q3 ~  Q6a +  (1 |Participant), data = data_ole)
+m07 = lmer(Q3 ~  Q6b +  (1 |Participant), data = data_ole)
+m08 = lmer(Q3 ~  Perf_Av +  (1 |Pair/Participant), data = data_ole)
+m09 = lmer(Q3 ~  Abs_Av +  (1 |Pair/Participant), data = data_ole)
+m10 = lmer(Q3 ~  GDSI +  (1 |Pair/Participant), data = data_ole)
+m11 = lmer(Q3 ~  GMSI +  (1 |Pair/Participant), data = data_ole)
+
+tab_model(m00, m01, m02,  m03, m04, m05, m06, m07, m08, m09, m10, m11,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("Flow","Flow", "Flow", "Flow","Flow","Flow", "Flow", "Flow","Flow","Flow", "Flow", "Flow"), digits = 5 )
+
+
+m02 = lmer(Q3 ~  MIXvsIMP +  (1 |Pair/Participant), data = data_ole)
+m02 = lmer(Q3 ~  MIXvsIMP +  (1 |Pair/Participant), data = data_ole)
+m02 = lmer(Q3 ~  Palo +  (1 |Pair/Participant), data = data_ole)
+m03 = lmer(Q3 ~  Artist +  (1 |Pair/Participant), data = data_ole)
+
+
+anova(m00a,m01a)
+
+tab_model(m00a, m01a, m00b,  m01b,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("Flow","Flow", "Flow", "Flow"), digits = 5 )
+
+
+
+# m00a = lmer(Q3 ~  1+ (1 | Participant), data = data_ole)
+# m01a = lmer(Q3 ~  Q4a + Q1b + Abs_Av  + (1 | Participant), data = data_ole)
+# m02a = lmer(Q3 ~  Q4a + Q1b + Abs_Av  + GDSI +  (1 | Participant), data = data_ole)
+# m03a = lmer(Q3 ~  Q4a + Q1b + GDSI +  (1 | Participant), data = data_ole)
+# m04a = lmer(Q3 ~  Q4b +  Q1b + GDSI +  (1 | Participant), data = data_ole)
+# anova(m04a, m03a)
+
+
+
+#### BEST FITTING MODELS 2024 # HALF DATASET
+
+# Display the filtered dataset
+data_filtered_Q6a <- na.omit(data_ole[, "Q6a"])
+
+data_filtered_Q6a <- na.omit(data_ole[, c("GMSI", "Q6a")])
+# Copy all columns from the original dataset to the filtered dataset
+data_filtered_Q6a <- data_ole[which(!is.na(data_ole$Q6a)), ]
+
+
+
+ 
+m00b = lmer(Q3 ~ 1 +(1 |GMSI) + (1 |Participant), data = data_filtered_Q6a )
+m01b = lmer(Q3 ~    Q1b + Q4a + Q6b + Abs_Av + (1 |GMSI) + (1 | Participant), data = data_filtered_Q6a)
+m02b = lmer(Q3 ~    Q1b + Q4a + Q6 + Abs_Av + (1 |GMSI) + (1 | Participant), data = data_filtered_Q6a)
+#m02 = lmer(Q3 ~    Q1b + Q4a + Q6b + (1 |GMSI) + (1 |Participant), data = data_filtered_Q6a)
+#m03 = lmer(Q3 ~    Q1b + Q4a + Q6b + Abs_Av +  (1 |Participant), data = data_filtered_Q6a)
+anova(m00b, m01b)
+summary(m00b, m01b)
+
+tab_model(m00a, m01a, m02a,  m00b, m01b,m02b,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m00","m01", "m02", "m03", "m04", "m05", "m06"), digits = 5 )
 
 
 
