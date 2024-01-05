@@ -1,6 +1,6 @@
 
 # Preparing data
-
+name_palo <- data_ole %>% select(Participant, Palo) %>% distinct()
 data_ole <- data_ole %>%
   mutate(INDvsGR = case_when(
     Condition %in% c("D1_M1", "D5_M5") ~ "Group",
@@ -17,11 +17,6 @@ data_ole <- data_ole %>%
   ))
 
 # Add a new column based on a condition
-data_ole <- data_ole %>%
-  mutate(FIXvsOther = ifelse(Condition == "D6_M6", "Fixed", "Other"))
-
-
-
 data_ole <- data_ole %>%
   mutate(FIXvsOther = ifelse(Condition == "D6_M6", "Fixed", "Other"))
 
@@ -57,8 +52,6 @@ Other_G <- grouped_G$Other
 Fixed_P <- grouped_P$Fixed
 Fixed_G <- grouped_G$Fixed
 # Plot paired data
-
-
 
 
 # Calculate means and standard deviations
@@ -539,10 +532,172 @@ grid.arrange(
 )
 
 
+#### Q2a DxC
+
+data_ole <- data_ole %>%
+  inner_join(name_palo, by = c("Participant", "Palo")) %>%
+  group_by(Participant, Palo, INDvsGR) %>%
+  mutate(mean_Q2a = mean(Q2a, na.rm = TRUE))
+
+filtered_data <- data_ole %>%
+  distinct(Participant, Palo, INDvsGR, mean_Q2a, Artist) %>%
+  filter(!is.na(INDvsGR))  # Remove rows with missing INDvsGR values
+
+grouped_data <- filtered_data %>%
+  pivot_wider(names_from = INDvsGR, values_from = mean_Q2a)
+
+print(grouped_data)
+
+# Split in two groups
+grouped_P <- grouped_data[grepl("P", grouped_data$Artist),] #only dancers
+print(grouped_P)
+
+
+grouped_G <- grouped_data[grepl("G", grouped_data$Artist),] #only dancers
+print(grouped_G)
+
+
+# Subset weight data before treatment
+Group_P <- grouped_P$Group
+Group_G <- grouped_G$Group
+# subset weight data after treatment
+Indiv_P <- grouped_P$Indiv
+Indiv_G <- grouped_G$Indiv
+# Plot paired data
+
+
+# Calculate means and standard deviations
+Mean_Group_P <- mean(na.omit(Group_P))
+SD_Group_P <- sd(na.omit(Group_P))
+Mean_Group_G <- mean(na.omit(Group_G))
+SD_Group_G <- sd(na.omit(Group_G))
+Mean_Indiv_P <- mean(na.omit(Indiv_P))
+SD_Indiv_P <- sd(na.omit(Indiv_P))
+Mean_Indiv_G <- mean(na.omit(Indiv_G))
+SD_Indiv_G <- sd(na.omit(Indiv_G))
+
+# Print means and standard deviations for Group_P and Group_G
+cat("Mean_Group_P:", Mean_Group_P, "\n")
+cat("SD_Group_P:", SD_Group_P, "\n")
+cat("Mean_Group_G:", Mean_Group_G, "\n")
+cat("SD_Group_G:", SD_Group_G, "\n")
+
+# Print means and standard deviations for Indiv_P and Indiv_G
+cat("Mean_Indiv_P:", Mean_Indiv_P, "\n")
+cat("SD_Indiv_P:", SD_Indiv_P, "\n")
+cat("Mean_Indiv_G:", Mean_Indiv_G, "\n")
+cat("SD_Indiv_G:", SD_Indiv_G, "\n")
+
+
+library(PairedData)
+pd_P <- paired(Group_P, Indiv_P)
+p1 <- plot(pd_P, type = "profile") + theme_bw()
+
+pd_G <- paired(Group_G, Indiv_G)
+p2 <- plot(pd_G, type = "profile") + theme_bw()
+
+t.test(Indiv_P, Group_P, paired = TRUE, correct = TRUE, alternative = 'two.sided')
+t.test(Indiv_G, Group_G, paired = TRUE, correct = TRUE, alternative = 'two.sided')
+
+
+shapiro.test(Indiv_P)
+shapiro.test(Group_P)
+shapiro.test(Indiv_G)
+shapiro.test(Group_G)
+
+wilcox.test(Indiv_P, Group_P, paired = TRUE)
+wilcox.test(Indiv_G, Group_G, paired = TRUE)
+
+library(gridExtra)
+grid.arrange(
+  # First column with plots p1, p2, and p3
+  p1, p2, ncol = 2
+  
+)
 
 
 
+#### Q2a, DxA
+data_ole <- data_ole %>%
+  inner_join(name_palo, by = c("Participant", "Palo")) %>%
+  group_by(Participant, Palo, FIXvsOther) %>%
+  mutate(mean_Q2a = mean(Q2a, na.rm = TRUE))
 
+filtered_data <- data_ole %>%
+  distinct(Participant, Palo, FIXvsOther, mean_Q2a, Artist) %>%
+  filter(!is.na(FIXvsOther))  # Remove rows with missing FIXvsOther values
+
+grouped_data <- filtered_data %>%
+  pivot_wider(names_from = FIXvsOther, values_from = mean_Q2a)
+
+print(grouped_data)
+
+# Split in two groups
+grouped_P <- grouped_data[grepl("P", grouped_data$Artist),] #only dancers
+print(grouped_P)
+
+
+grouped_G <- grouped_data[grepl("G", grouped_data$Artist),] #only dancers
+print(grouped_G)
+
+
+# Subset weight data before treatment
+Other_P <- grouped_P$Other
+Other_G <- grouped_G$Other
+# subset weight data after treatment
+Fixed_P <- grouped_P$Fixed
+Fixed_G <- grouped_G$Fixed
+# Plot paired data
+
+
+# Calculate means and standard deviations
+Mean_Other_P <- mean(Other_P)
+SD_Other_P <- sd(Other_P)
+Mean_Other_G <- mean(Other_G)
+SD_Other_G <- sd(Other_G)
+Mean_Fixed_P <- mean(Fixed_P)
+SD_Fixed_P <- sd(Fixed_P)
+Mean_Fixed_G <- mean(Fixed_G)
+SD_Fixed_G <- sd(Fixed_G)
+
+# Print means and standard deviations for Other_P and Other_G
+cat("Mean_Other_P:", Mean_Other_P, "\n")
+cat("SD_Other_P:", SD_Other_P, "\n")
+cat("Mean_Other_G:", Mean_Other_G, "\n")
+cat("SD_Other_G:", SD_Other_G, "\n")
+
+# Print means and standard deviations for Fixed_P and Fixed_G
+cat("Mean_Fixed_P:", Mean_Fixed_P, "\n")
+cat("SD_Fixed_P:", SD_Fixed_P, "\n")
+cat("Mean_Fixed_G:", Mean_Fixed_G, "\n")
+cat("SD_Fixed_G:", SD_Fixed_G, "\n")
+
+
+library(PairedData)
+pd_P <- paired(Other_P, Fixed_P)
+p1 <- plot(pd_P, type = "profile") + theme_bw()
+
+pd_G <- paired(Other_G, Fixed_G)
+p2 <- plot(pd_G, type = "profile") + theme_bw()
+
+t.test(Fixed_P, Other_P, paired = TRUE, correct = TRUE, alternative = 'two.sided')
+t.test(Fixed_G, Other_G, paired = TRUE, correct = TRUE, alternative = 'two.sided')
+
+
+shapiro.test(Fixed_P)
+shapiro.test(Other_P)
+shapiro.test(Fixed_G)
+shapiro.test(Other_G)
+
+wilcox.test(Fixed_P, Other_P, paired = TRUE)
+wilcox.test(Fixed_G, Other_G, paired = TRUE)
+
+library(gridExtra)
+grid.arrange(
+  # First column with plots p1, p2, and p3
+  p1, p2, ncol = 2
+  
+)
 
 
 

@@ -1,0 +1,201 @@
+,Name,Sequence,Baile_1,Baile_2,Comparisson_Baile,Guitarra_1,Guitarra_2,Comparisson_Guitarra
+0,P7_D5_G1_M5_R2_T1,Salida,Z2,Z2,True,A1,A1,True
+1,P7_D5_G1_M5_R2_T1,Escobilla,Z3,Z3,True,A1,A1,True
+2,P7_D5_G1_M5_R2_T1,Escobilla,Z3,Z3,True,A1,A1,True
+3,P7_D5_G1_M5_R2_T1,Escobilla Cierre,Z3,Z3,True,A1,A1,True
+4,P7_D5_G1_M5_R2_T1,Respiro Pitos,Z1,Z1,True,A2,A2,True
+5,P7_D5_G1_M5_R2_T1,Escobilla,Z3,Z3,True,A2,A2,True
+6,P7_D5_G1_M5_R2_T1,Interludio Marcaje,Z2,Z2,True,A3,A3,True
+7,P7_D5_G1_M5_R2_T1,Interludio Pitos,Z1,Z1,True,A3,A3,True
+8,P7_D5_G1_M5_R2_T1,Respiro Bajada,Z1,Z1,True,A3,A3,True
+9,P7_D5_G1_M5_R2_T1,Escobilla,Z3,Z3,True,A2,A2,True
+10,P7_D5_G1_M5_R2_T1,Escobilla,Z3,Z3,True,A2,A2,True
+11,P7_D5_G1_M5_R2_T1,Cierre,Z3,Z3,True,A1,A1,True
+12,P7_D5_G1_M5_R2_T1,Escobilla Cierre,Z3,Z3,True,A1,A1,True
+13,P10_D5_G5_M6_R2_T1,Salida,Z1,Z1,True,A3,A3,True
+14,P10_D5_G5_M6_R2_T1,Salida,Z1,Z1,True,A3,A3,True
+15,P10_D5_G5_M6_R2_T1,Salida,Z1,Z1,True,A3,A3,True
+16,P10_D5_G5_M6_R2_T1,Letra,Z2,Z2,True,A2,A2,True
+17,P10_D5_G5_M6_R2_T1,Escobilla,Z3,Z3,True,A1,A1,True
+18,P10_D5_G5_M6_R2_T1,Escobilla,Z3,Z3,True,A1,A1,True
+19,P10_D5_G5_M6_R2_T1,Cierre,Z3,Z3,True,A1,A1,True
+20,P10_D5_G5_M6_R2_T1,Respiro,Z1,Z1,True,A2,A2,True
+21,P10_D5_G5_M6_R2_T1,Marcaje,Z1,Z1,True,A3,A3,True
+22,P10_D5_G5_M6_R2_T1,Marcaje,Z2,Z2,True,A3,A3,True
+23,P10_D5_G5_M6_R2_T1,Marcaje,Z2,Z2,True,A3,A3,True
+24,P10_D5_G5_M6_R2_T1,Llamada,Z2,Z2,True,A1,A1,True
+25,P10_D5_G5_M6_R2_T1,Marcaje,Z2,Z2,True,A2,A2,True
+26,P10_D5_G5_M6_R2_T1,Pies,Z3,Z3,True,A2,A2,True
+27,P10_D5_G5_M6_R2_T1,Pies,Z2,Z2,True,A2,A2,True
+28,P10_D5_G5_M6_R2_T1,Escobilla Cierre,Z3,Z3,True,A1,A1,True
+29,P9_D1_G4_M1_R1_T1,Salida,Z2,Z2,True,A1,A1,True
+30,P9_D1_G4_M1_R1_T1,Salida,Z2,Z2,True,A1,A1,True
+31,P9_D1_G4_M1_R1_T1,Letra Impro,Z2,Z2,True,A3,A3,True
+32,P9_D1_G4_M1_R1_T1,Letra Impro,Z2,Z2,True,A3,A3,True
+33,P9_D1_G4_M1_R1_T1,Letra Impro,Z2,Z2,True,A3,A3,True
+34,P9_D1_G4_M1_R1_T1,Baile Impro,Z2,Z2,True,A3,A3,True
+35,P9_D1_G4_M1_R1_T1,Cierre,Z2,Z2,True,A2,A2,True
+36,P9_D1_G4_M1_R1_T1,Escobilla,Z3,Z3,True,A2,A2,True
+37,P9_D1_G4_M1_R1_T1,Escobilla,Z3,Z3,True,A2,A2,True
+38,P9_D1_G4_M1_R1_T1,Llamada Cierre,Z3,Z3,True,A1,A1,True
+39,P9_D1_G4_M1_R1_T1,Respiro,Z2,Z2,True,A1,A1,True
+40,P9_D1_G4_M1_R1_T1,Marcaje,Z2,Z2,True,A2,A2,True
+41,P9_D1_G4_M1_R1_T1,Maracje Llamada,Z2,Z2,True,A2,A2,True
+42,P9_D1_G4_M1_R1_T1,Llamada,Z3,Z3,True,A2,A2,True
+43,P9_D1_G4_M1_R1_T1,Escobilla,Z3,Z3,True,A2,A2,True
+44,P9_D1_G4_M1_R1_T1,Escobilla,Z2,Z2,True,A2,A2,True
+45,P9_D1_G4_M1_R1_T1,Maracjes Pies,Z2,Z2,True,A2,A2,True
+46,P9_D1_G4_M1_R1_T1,Cierre,Z2,Z2,True,A1,A1,True
+47,P9_D1_G4_M1_R1_T1,Escobilla,Z3,Z3,True,A1,A1,True
+48,P9_D1_G4_M1_R1_T1,Escobilla,Z3,Z3,True,A1,A1,True
+49,P9_D1_G4_M1_R1_T1,Escobilla Impro,Z3,Z3,True,A1,A1,True
+50,P9_D1_G4_M1_R1_T1,Escobilla,Z3,Z3,True,A1,A1,True
+51,P9_D1_G4_M1_R1_T1,Llamada Cierre,Z3,Z3,True,A1,A1,True
+52,P12_D6_G7_M6_R1_T1,Entrada,Z3,Z3,True,A1,A1,True
+53,P12_D6_G7_M6_R1_T1,Palmas,Z2,Z2,True,A1,A1,True
+54,P12_D6_G7_M6_R1_T1,Entrada,Z2,Z2,True,A2,A2,True
+55,P12_D6_G7_M6_R1_T1,Pies,Z3,Z3,True,A2,A2,True
+56,P12_D6_G7_M6_R1_T1,Cierre,Z3,Z3,True,A1,A1,True
+57,P12_D6_G7_M6_R1_T1,Escobilla,Z3,Z3,True,A1,A1,True
+58,P12_D6_G7_M6_R1_T1,Escobilla,Z3,Z3,True,A1,A1,True
+59,P12_D6_G7_M6_R1_T1,Escobilla,Z3,Z3,True,A1,A1,True
+60,P12_D6_G7_M6_R1_T1,Falseta,Z2,Z2,True,A3,A3,True
+61,P12_D6_G7_M6_R1_T1,Falseta Marcaje,Z2,Z2,True,A3,A3,True
+62,P12_D6_G7_M6_R1_T1,Marcaje,Z3,Z3,True,A1,A1,True
+63,P12_D6_G7_M6_R1_T1,Llamada Cierre,Z3,Z3,True,A1,A1,True
+64,P12_D6_G7_M6_R1_T1,Respiro Pitos,Z2,Z2,True,A1,A1,True
+65,P12_D6_G7_M6_R1_T1,Falseta,Z2,Z2,True,A3,A3,True
+66,P12_D6_G7_M6_R1_T1,Marcaje,Z2,Z2,True,A3,A3,True
+67,P12_D6_G7_M6_R1_T1,Marcaje,Z2,Z2,True,A2,A2,True
+68,P12_D6_G7_M6_R1_T1,Llamada Cierre,Z3,Z3,True,A1,A1,True
+69,P6_D5_G1_M6_R1_T1,Salida,Z2,Z2,True,A3,A3,True
+70,P6_D5_G1_M6_R1_T1,Marcaje,Z1,Z1,True,A3,A3,True
+71,P6_D5_G1_M6_R1_T1,Zapateado,Z3,Z3,True,A3,A3,True
+72,P6_D5_G1_M6_R1_T1,Escobilla Cierre,Z3,Z3,True,A3,A3,True
+73,P6_D5_G1_M6_R1_T1,Zapateado,Z3,Z3,True,A3,A3,True
+74,P6_D5_G1_M6_R1_T1,Cierre,Z3,Z3,True,A3,A3,True
+75,P6_D5_G1_M6_R1_T1,Paseo Marcaje Pitos,Z2,Z2,True,A3,A3,True
+76,P6_D5_G1_M6_R1_T1,Llamada Cierre,Z3,Z3,True,A1,A1,True
+77,P6_D5_G1_M6_R1_T1,Respiro,Z1,Z1,True,A1,A1,True
+78,P6_D5_G1_M6_R1_T1,Marcaje,Z2,Z2,True,A1,A1,True
+79,P6_D5_G1_M6_R1_T1,Cierre,Z3,Z3,True,A1,A1,True
+80,P6_D5_G1_M6_R1_T1,Respiro,Z1,Z1,True,A1,A1,True
+81,P13_D5_G5_M5_R2_T1,Salida,Z1,Z1,True,A1,A1,True
+82,P13_D5_G5_M5_R2_T1,Salida Pitos,Z1,Z1,True,A2,A2,True
+83,P13_D5_G5_M5_R2_T1,Salida,Z2,Z2,True,A2,A2,True
+84,P13_D5_G5_M5_R2_T1,Escobilla,Z3,Z3,True,A1,A1,True
+85,P13_D5_G5_M5_R2_T1,Escobilla,Z3,Z3,True,A1,A1,True
+86,P13_D5_G5_M5_R2_T1,Cierre,Z3,Z3,True,A1,A1,True
+87,P13_D5_G5_M5_R2_T1,Baile Pitos ,Z1,Z1,True,A3,A3,True
+88,P13_D5_G5_M5_R2_T1,Marcajes,Z2,Z2,True,A3,A3,True
+89,P13_D5_G5_M5_R2_T1,Interludio,Z1,Z1,True,A3,A3,True
+90,P13_D5_G5_M5_R2_T1,Escobilla,Z3,Z3,True,A2,A2,True
+91,P13_D5_G5_M5_R2_T1,Escobilla,Z3,Z3,True,A1,A1,True
+92,P13_D5_G5_M5_R2_T1,Escobilla,Z3,Z3,True,A1,A1,True
+93,P13_D5_G5_M5_R2_T1,Escobilla,Z3,Z3,True,A1,A1,True
+94,P13_D5_G5_M5_R2_T1,Cierre,Z3,Z3,True,A1,A1,True
+95,P13_D5_G5_M5_R2_T1,Respiro,Z1,Z1,True,A2,A2,True
+96,P13_D5_G5_M5_R2_T1,Falseta,Z2,Z2,True,A3,A3,True
+97,P13_D5_G5_M5_R2_T1,Falseta,Z3,Z3,True,A3,A3,True
+98,P13_D5_G5_M5_R2_T1,Interludio Palmas,Z2,Z2,True,A2,A2,True
+99,P13_D5_G5_M5_R2_T1,Escobilla,Z3,Z3,True,A2,A2,True
+100,P13_D5_G5_M5_R2_T1,Escobilla,Z3,Z3,True,A1,A1,True
+101,P13_D5_G5_M5_R2_T1,Escobilla,Z3,Z3,True,A1,A1,True
+102,P13_D5_G5_M5_R2_T1,Cierre,Z3,Z3,True,A1,A1,True
+103,P5_D1_G3_M1_R1_T1,Introduction,Z1,Z1,True,A1,A1,True
+104,P5_D1_G3_M1_R1_T1,Introduction,Z1,Z1,True,A3,A3,True
+105,P5_D1_G3_M1_R1_T1,Salida,Z3,Z3,True,A3,A3,True
+106,P5_D1_G3_M1_R1_T1,Salida,Z1,Z1,True,A3,A3,True
+107,P5_D1_G3_M1_R1_T1,Escobilla,Z3,Z3,True,A3,A3,True
+108,P5_D1_G3_M1_R1_T1,Escobilla Cierre,Z3,Z3,True,A1,A1,True
+109,P5_D1_G3_M1_R1_T1,Respiro,Z1,Z1,True,A1,A1,True
+110,P5_D1_G3_M1_R1_T1,Marcaje,Z2,Z2,True,A2,A2,True
+111,P5_D1_G3_M1_R1_T1,Marcajes,Z2,Z2,True,A2,A2,True
+112,P5_D1_G3_M1_R1_T1,Zapateado,Z3,Z3,True,A2,A2,True
+113,P5_D1_G3_M1_R1_T1,Zapateado,Z3,Z3,True,A2,A2,True
+114,P5_D1_G3_M1_R1_T1,Zapateado,Z3,Z3,True,A2,A2,True
+115,P5_D1_G3_M1_R1_T1,Zapateado,Z3,Z3,True,A2,A2,True
+116,P5_D1_G3_M1_R1_T1,Remate Cierre,Z3,Z3,True,A1,A1,True
+117,P4_D1_G2_M6_R2_T1,Salida,Z1,Z1,True,A3,A3,True
+118,P4_D1_G2_M6_R2_T1,Letra 1,Z2,Z2,True,A3,A3,True
+119,P4_D1_G2_M6_R2_T1,Escobilla - Letra,Z2,Z2,True,A2,A2,True
+120,P4_D1_G2_M6_R2_T1,Subida. Letra2. Cierre,Z1,Z1,True,A2,A2,True
+121,P4_D1_G2_M6_R2_T1,Silencio,Z1,Z1,True,A1,A1,True
+122,P4_D1_G2_M6_R2_T1,Escobilla Comienzo,Z3,Z3,True,A2,A2,True
+123,P4_D1_G2_M6_R2_T1,Escobilla,Z3,Z3,True,A2,A2,True
+124,P4_D1_G2_M6_R2_T1,Escobilla,Z3,Z3,True,A2,A2,True
+125,P4_D1_G2_M6_R2_T1,Escobilla + Marcaje,Z3,Z3,True,A2,A2,True
+126,P4_D1_G2_M6_R2_T1,Escobilla. Falla un poco,Z3,Z3,True,A2,A2,True
+127,P4_D1_G2_M6_R2_T1,Llamada. intenta,Z3,Z3,True,A1,A1,True
+128,P4_D1_G2_M6_R2_T1,Cierre,Z3,Z3,True,A1,A1,True
+129,P11_D5_G6_M5_R2_T1,Guitarra solo,Z1,Z1,True,A1,A1,True
+130,P11_D5_G6_M5_R2_T1,Salida,Z1,Z1,True,A3,A3,True
+131,P11_D5_G6_M5_R2_T1,Letra,Z1,Z1,True,A3,A3,True
+132,P11_D5_G6_M5_R2_T1,Llamada Cierre,Z2,Z2,True,A3,A3,True
+133,P11_D5_G6_M5_R2_T1,Escobilla,Z3,Z3,True,A1,A1,True
+134,P11_D5_G6_M5_R2_T1,Escobilla,Z3,Z3,True,A1,A1,True
+135,P11_D5_G6_M5_R2_T1,Letra,Z1,Z1,True,A2,A2,True
+136,P11_D5_G6_M5_R2_T1,Letra,Z1,Z1,True,A2,A2,True
+137,P11_D5_G6_M5_R2_T1,Letra,Z2,Z2,True,A2,A2,True
+138,P11_D5_G6_M5_R2_T1,Pies,Z3,Z3,True,A2,A2,True
+139,P11_D5_G6_M5_R2_T1,Letra,Z2,Z2,True,A2,A2,True
+140,P11_D5_G6_M5_R2_T1,Baile,Z1,Z1,True,A3,A3,True
+141,P11_D5_G6_M5_R2_T1,Falseta,Z2,Z2,True,A3,A3,True
+142,P11_D5_G6_M5_R2_T1,Escobilla,Z3,Z3,True,A3,A3,True
+143,P11_D5_G6_M5_R2_T1,Cierre,Z3,Z3,True,A1,A1,True
+144,P11_D5_G6_M5_R2_T1,Respiro,Z1,Z1,True,A1,A1,True
+145,P11_D5_G6_M5_R2_T1,Escobilla,Z3,Z3,True,A1,A1,True
+146,P11_D5_G6_M5_R2_T1,Escobilla,Z3,Z3,True,A2,A2,True
+147,P11_D5_G6_M5_R2_T1,Escobilla,Z3,Z3,True,A2,A2,True
+148,P11_D5_G6_M5_R2_T1,Escobilla,Z3,Z3,True,A2,A2,True
+149,P11_D5_G6_M5_R2_T1,Subida,Z3,Z3,True,A1,A1,True
+150,P11_D5_G6_M5_R2_T1,Subida,Z3,Z3,True,A1,A1,True
+151,P11_D5_G6_M5_R2_T1,Subida,Z3,Z3,True,A1,A1,True
+152,P11_D5_G6_M5_R2_T1,Escobilla,Z3,Z3,True,A1,A1,True
+153,P11_D5_G6_M5_R2_T1,Escobilla,Z3,Z3,True,A1,A1,True
+154,P11_D5_G6_M5_R2_T1,Escobilla,Z3,Z3,True,A1,A1,True
+155,P11_D5_G6_M5_R2_T1,Subida,Z3,Z3,True,A1,A1,True
+156,P11_D5_G6_M5_R2_T1,Llamada Cierre,Z3,Z3,True,A1,A1,True
+157,P11_D5_G6_M5_R2_T1,Respiro,Z1,Z1,True,A2,A2,True
+158,P11_D5_G6_M5_R2_T1,Letra,Z2,Z2,True,A3,A3,True
+159,P11_D5_G6_M5_R2_T1,Letra,Z2,Z2,True,A3,A3,True
+160,P11_D5_G6_M5_R2_T1,Interludio,Z2,Z2,True,A2,A2,True
+161,P11_D5_G6_M5_R2_T1,Baile,Z2,Z2,True,A2,A2,True
+162,P11_D5_G6_M5_R2_T1,Cierre Respiro,Z3,Z3,True,A1,A1,True
+163,P11_D5_G6_M5_R2_T1,Falseta,Z1,Z1,True,A3,A3,True
+164,P11_D5_G6_M5_R2_T1,Falseta,Z1,Z1,True,A3,A3,True
+165,P11_D5_G6_M5_R2_T1,Falseta,Z1,Z1,True,A3,A3,True
+166,P11_D5_G6_M5_R2_T1,Bajada,Z1,Z1,True,A3,A3,True
+167,P3_D6_G1_M6_R2_T1,Introduction - 4x12 - No movement,Z1,Z1,True,A2,A2,True
+168,P3_D6_G1_M6_R2_T1,Letra 1 - 4x12 - Movement,Z1,Z1,True,A3,A3,True
+169,P3_D6_G1_M6_R2_T1,Letra 2 - 4x12 - Snapping some steps,Z2,Z2,True,A3,A3,True
+170,P3_D6_G1_M6_R2_T1,Falseta 1 - Zapateado - 4x12 - Continues,Z3,Z3,True,A3,A3,True
+171,P3_D6_G1_M6_R2_T1,Falseta 2- Escobilla comienzo - 4x12 ,Z3,Z3,True,A3,A3,True
+172,P3_D6_G1_M6_R2_T1,Escobilla continued - 4x12,Z3,Z3,True,A2,A2,True
+173,P3_D6_G1_M6_R2_T1,Letra 2 - Zapateado - 2x8,Z3,Z3,True,A3,A3,True
+174,P3_D6_G1_M6_R2_T1,Escobilla 2- 4x12,Z3,Z3,True,A2,A2,True
+175,P3_D6_G1_M6_R2_T1,3x12 Paseando,Z3,Z3,True,A2,A2,True
+176,P3_D6_G1_M6_R2_T1,Remate - Cierre 3x12,Z3,Z3,True,A3,A3,True
+177,P8_D1_G4_M6_R1_T1,Salida,Z2,Z2,True,A1,A1,True
+178,P8_D1_G4_M6_R1_T1,Marcaje,Z2,Z2,True,A1,A1,True
+179,P8_D1_G4_M6_R1_T1,Marcaje,Z2,Z2,True,A1,A1,True
+180,P8_D1_G4_M6_R1_T1,Marcaje,Z2,Z2,True,A1,A1,True
+181,P8_D1_G4_M6_R1_T1,Escobilla,Z3,Z3,True,A1,A1,True
+182,P8_D1_G4_M6_R1_T1,Escobilla,Z3,Z3,True,A1,A1,True
+183,P8_D1_G4_M6_R1_T1,Escobilla,Z3,Z3,True,A1,A1,True
+184,P8_D1_G4_M6_R1_T1,Llamda,Z3,Z3,True,A1,A1,True
+185,P8_D1_G4_M6_R1_T1,Cierre,Z3,Z3,True,A1,A1,True
+186,P8_D1_G4_M6_R1_T1,Respiro,Z1,Z1,True,A2,A2,True
+187,P8_D1_G4_M6_R1_T1,Letra,Z3,Z3,True,A3,A3,True
+188,P8_D1_G4_M6_R1_T1,Letra,Z3,Z3,True,A2,A2,True
+189,P8_D1_G4_M6_R1_T1,Cierre,Z2,Z2,True,A2,A2,True
+190,P8_D1_G4_M6_R1_T1,Paseo,Z1,Z1,True,A3,A3,True
+191,P8_D1_G4_M6_R1_T1,Movimientos,Z2,Z2,True,A3,A3,True
+192,P8_D1_G4_M6_R1_T1,Escobilla,Z3,Z3,True,A2,A2,True
+193,P8_D1_G4_M6_R1_T1,Llamada Cierre,Z3,Z3,True,A1,A1,True
+194,P8_D1_G4_M6_R1_T1,Silencio,Z2,Z2,True,A1,A1,True
+195,P8_D1_G4_M6_R1_T1,Escobilla,Z3,Z3,True,A1,A1,True
+196,P8_D1_G4_M6_R1_T1,Escobilla,Z3,Z3,True,A1,A1,True
+197,P8_D1_G4_M6_R1_T1,Subida,Z3,Z3,True,A1,A1,True
+198,P8_D1_G4_M6_R1_T1,Subida,Z3,Z3,True,A1,A1,True
+199,P8_D1_G4_M6_R1_T1,Cierre,Z3,Z3,True,A1,A1,True

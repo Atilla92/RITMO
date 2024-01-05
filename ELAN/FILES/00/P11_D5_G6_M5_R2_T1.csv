@@ -2,7 +2,7 @@ Begin Time - ss.msec;End Time - ss.msec;Duration - ss.msec;Sequence;Bloques;Step
 2.5;7.7;5.2;Guitarra solo;0.25;15.27;MI;DI;Z1;A1;15.1
 7.8;19.2;11.4;Salida;1;15.28;MI;DI;Z1;A3;15.49
 19.2;30.4;11.2;Letra;1;15.29;MI;DI;Z1;A3;15.50
-30.4;40.9;10.5;Llamada Cierre;1;15.30;MI;DI;Z2;A2;15.51
+30.4;40.9;10.5;Llamada Cierre;1;15.30;MI;DI;Z2;A3;15.51
 41.0;50.2;9.2;Escobilla;1;15.31;MI;DI;Z3;A1;15.52
 50.3;60.4;10.1;Escobilla;1;15.32;MI;DI;Z3;A1;15.53
 60.4;71.4;11.0;Letra;1;15.5;MC;DI;Z1;A2;15.54
@@ -16,9 +16,9 @@ Begin Time - ss.msec;End Time - ss.msec;Duration - ss.msec;Sequence;Bloques;Step
 143.8;148.9;5.1;Cierre;1;15.31;MI;DI;Z3;A1;15.62
 148.9;156.9;8.0;Respiro;1;15.32;MI;DI;Z1;A1;15.63
 156.9;163.9;7.0;Escobilla;1;15.12;MC;DC;Z3;A1;15.12
-163.9;170.9;7.0;Escobilla;1;15.13;MC;DC;Z3;A1;15.13
-170.9;177.6;6.7;Escobilla;1;15.33;MI;DI;Z3;A1;15.64
-177.7;184.6;6.9;Escobilla;1;15.34;MI;DI;Z3;A1;15.65
+163.9;170.9;7.0;Escobilla;1;15.13;MC;DC;Z3;A2;15.13
+170.9;177.6;6.7;Escobilla;1;15.33;MI;DI;Z3;A2;15.64
+177.7;184.6;6.9;Escobilla;1;15.34;MI;DI;Z3;A2;15.65
 184.6;190.7;6.1;Subida;1;15.35;MI;DI;Z3;A1;15.66
 190.7;197.3;6.6;Subida;1;15.36;MI;DI;Z3;A1;15.67
 197.3;203.6;6.3;Subida;1;15.37;MI;DI;Z3;A1;15.68
@@ -28,10 +28,10 @@ Begin Time - ss.msec;End Time - ss.msec;Duration - ss.msec;Sequence;Bloques;Step
 222.7;229.0;6.3;Subida;1;15.18;MC;DC;Z3;A1;15.18
 229.0;236.0;7.0;Llamada Cierre;1;15.19;MC;DC;Z3;A1;15.19
 236.0;242.3;6.3;Respiro;1;15.40;MI;DI;Z1;A2;15.71
-242.4;248.7;6.3;Letra;1;15.21;MC;DI;Z1;A3;15.72
-248.7;255.3;6.6;Letra;1;15.41;MI;DI;Z1;A3;15.73
+242.4;248.7;6.3;Letra;1;15.21;MC;DI;Z2;A3;15.72
+248.7;255.3;6.6;Letra;1;15.41;MI;DI;Z2;A3;15.73
 255.3;261.9;6.6;Interludio;1;15.42;MI;DI;Z2;A2;15.74
-262.0;268.4;6.4;Baile;1;15.43;MI;DI;Z1;A2;15.75
+262.0;268.4;6.4;Baile;1;15.43;MI;DI;Z2;A2;15.75
 268.5;275.3;6.8;Cierre Respiro;1;15.44;MI;DI;Z3;A1;15.76
 275.3;281.7;6.4;Falseta;1;15.45;MI;DI;Z1;A3;15.77
 281.8;288.1;6.3;Falseta;1;15.46;MI;DI;Z1;A3;15.78

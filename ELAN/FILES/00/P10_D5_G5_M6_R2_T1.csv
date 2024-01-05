@@ -13,6 +13,6 @@ Begin Time - ss.msec;End Time - ss.msec;Duration - ss.msec;Sequence;Bloques;Step
 141.0;148.8;7.8;Llamada;1;19.12;MC;DI;Z2;A1;19.19
 148.8;159.0;10.2;Marcaje;1;19.13;MC;DC;Z2;A2;19.13
 159.0;169.1;10.1;Pies;1;19.14;MC;DC;Z3;A2;19.14
-169.2;178.2;9.0;Pies;1;19.15;MC;DI;Z3;A2;19.20
+169.2;178.2;9.0;Pies;1;19.15;MC;DI;Z2;A2;19.20
 178.2;196.8;18.6;Escobilla Cierre;1;19.16;MC;DI;Z3;A1;19.21
 

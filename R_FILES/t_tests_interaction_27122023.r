@@ -288,6 +288,37 @@ Abs_Av_ExA_2 <- perform_t_tests(data_filtered_Abs, "MIXvsIMP","Artist", "Abs_Av"
 Abs_Av_ExA_2
 
 
+Q2a_DxA <- perform_t_tests(data_ole, "Artist", "FIXvsOther", "Q2a")
+Q2a_DxA
+Q2a_DxA_2 <- perform_t_tests(data_ole, "FIXvsOther","Artist", "Q2a")
+Q2a_DxA_2
+
+# Sort the dataframe by FIXvsOther column
+data_ole_sorted <- data_ole[order(data_ole$FIXvsOther), ]
+# Group by Artist and FIXvsOther columns and calculate mean and std for Q1a
+summary_table <- aggregate(Q2a ~ Artist + FIXvsOther, data_ole_sorted, function(x) c(mean = mean(x), std = sd(x)))
+# Display the summary table
+summary_table
+
+
+# Create a new dataset by omitting NA values in the column "Q6a"
+data_filtered_Q6 <- na.omit(data_ole[, "INDvsGR"])
+
+# Copy all columns from the original dataset to the filtered dataset
+data_filtered_Q6 <- data_filtered_Q6a[which(!is.na(data_filtered_Q6a$INDvsGR)), ]
+Q2a_DxC <- perform_t_tests(data_filtered_Q6, "Artist", "INDvsGR", "Q2a")
+Q2a_DxC
+Q2a_DxC_2 <- perform_t_tests(data_filtered_Q6, "INDvsGR","Artist", "Q2a")
+Q2a_DxC_2
+
+# Sort the dataframe by FIXvsOther column
+data_ole_sorted <- data_ole[order(data_ole$INDvsGR), ]
+# Group by Artist and FIXvsOther columns and calculate mean and std for Q1a
+summary_table <- aggregate(Q2a ~ Artist + INDvsGR, data_ole_sorted, function(x) c(mean = mean(x), std = sd(x)))
+# Display the summary table
+summary_table
+
+
 
 
 

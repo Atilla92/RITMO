@@ -10,7 +10,8 @@ data <- data[grepl("P", data$Participant),] #only dancers
 data <- read.csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/22_Sep_2023_niels/05102023_ELAN_no_CDRS_onset_niels_1s_complete.csv')
 data <- data[grepl("G", data$Participant),] #only dancers
 
-
+data_ole$GMSI <- ifelse(data_ole$Participant == "G7", 5, data_ole$GMSI)
+data_ole$GDSI <- ifelse(data_ole$Participant == "G7", 3.65, data_ole$GDSI)
 # Check sums up to 1
 
 
