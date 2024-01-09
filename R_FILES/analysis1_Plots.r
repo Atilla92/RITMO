@@ -100,12 +100,183 @@ data_test$E <- factor(data_test$E, labels = c("Solea",'Tangos'))
 
 library(gridExtra)
 library(ggplot2)
-
+library(ggsignif)
 # Set the alpha transparency value for the violins to 0.5
 colors <- c("#8DD3C7", "#FFFFB3", "#BEBADA", "#FB8072", "#80B1D3", "#FDB462", "#B3DE69", "#FCCDE5", "#00008B", "#BC80BD")
 labels_names <- c('Fixed', 'Other','Mixed', 'Free','Individual', 'Group', 'Musician', 'Dancer', 'Tangos', 'Solea')
 alpha_val <- 0.6
 
+### Plots for paper 3x3 
+common_theme <- theme(
+  axis.text.y = element_text(size = 10),   # Adjust y-axis text size
+  axis.text.x = element_text(size = 10),   # Adjust y-axis text size
+  strip.text = element_text(size = 12)     # Adjust facet titles size
+  #plot.margin = margin(1, 1, 1, 1, "cm")
+) 
+
+textsize_val <- 6
+vjust_val <- 1.5
+
+
+
+data_test$title2 <- "Quality of Improvisation"
+p21 <- ggplot(data_test, aes(x = A, y = Q1b, fill = A)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE) +
+  geom_boxplot(outlier.shape = NA, alpha = alpha_val, width = 0.12, show.legend = FALSE) +
+  scale_fill_manual(values = c("Fixed" = colors[1], "Other" = colors[2])) +
+  labs(x = "", y = "Rating", fill = "A")+
+  facet_grid(. ~ title2) +
+  geom_signif(comparisons = list(c("Fixed", "Other")), 
+                                          textsize = textsize_val, 
+                                          vjust = vjust_val,
+                                          map_signif_level = TRUE,
+                                          show.legend = FALSE
+                                          ) +
+  common_theme 
+
+p21 
+# Create the plot grouped by B and filled with only Mixed and Free with boxplot
+p22 <- ggplot(data_test[data_test$B != "Fixed", ], aes(x = B, y = Q1b, fill = B)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE) +
+  geom_boxplot(outlier.shape = NA, alpha = alpha_val, width = 0.15, show.legend = FALSE) +
+  scale_fill_manual(values = c("Mixed" = colors[3], "Free" = colors[4])) +
+  labs(x = "", y = "", fill = "B")+
+  facet_grid(. ~ title2)+
+   common_theme + 
+  geom_signif(comparisons = list(c("Mixed", "Free")), 
+            textsize = textsize_val, 
+            vjust = vjust_val,
+            map_signif_level = TRUE,
+            show.legend = FALSE)
+
+p22
+
+p23 <- ggplot(data_test[data_test$C != "Neutral", ], aes(x = C, y = Q1b, fill = C)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE) +
+  scale_fill_manual(values = c("Individual" = colors[5], "Group" = colors[6])) +
+  geom_boxplot(outlier.shape = NA, alpha = alpha_val, width = 0.12, show.legend = FALSE) +
+  labs(x = "", y = "", fill = "C")+
+  facet_grid(. ~ title2)+
+  geom_signif(comparisons = list(c("Individual", "Group")), 
+              textsize = textsize_val, 
+              vjust = vjust_val,
+              map_signif_level = TRUE,
+              show.legend = FALSE) + 
+  common_theme
+p23
+
+###  Flow
+data_test$title41 <- "Flow"
+p41 <- ggplot(data_test, aes(x = A, y = Q3, fill = A)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE) +
+  geom_boxplot(outlier.shape = NA, alpha = alpha_val, width = 0.12, show.legend = FALSE) +
+  scale_fill_manual(values = c("Fixed" = colors[1], "Other" = colors[2])) +
+  labs(x = "", y = "Rating", fill = "A") +
+  facet_grid(. ~ title41)+
+  geom_signif(comparisons = list(c("Fixed", "Other")), 
+              textsize = textsize_val, 
+              vjust = vjust_val,
+              map_signif_level = TRUE,
+              show.legend = FALSE) + 
+  common_theme
+p41
+
+# Create the plot grouped by B and filled with only Mixed and Free with boxplot
+p42 <- ggplot(data_test[data_test$B != "Fixed", ], aes(x = B, y = Q3, fill = B)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE) +
+  geom_boxplot(outlier.shape = NA, alpha = alpha_val, width = 0.12, show.legend = FALSE) +
+  scale_fill_manual(values = c("Mixed" = colors[3], "Free" = colors[4])) +
+  labs(x = "", y = "", fill = "B") +
+  facet_grid(. ~ title41) +
+  geom_signif(comparisons = list(c("Mixed", "Free")), 
+              textsize = textsize_val, 
+              vjust = vjust_val,
+              map_signif_level = TRUE,
+              show.legend = FALSE) + 
+  common_theme
+
+p42
+
+p43 <- ggplot(data_test[data_test$C != "Neutral", ], aes(x = C, y = Q3, fill = C)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE) +
+  scale_fill_manual(values = c("Individual" = colors[5], "Group" = colors[6])) +
+  geom_boxplot(outlier.shape = NA, alpha = alpha_val, width = 0.12, show.legend = FALSE) +
+  labs(x = "", y = "", fill = "C") +
+  facet_grid(. ~ title41) +
+  geom_signif(comparisons = list(c("Individual", "Group")), 
+              textsize = textsize_val, 
+              vjust = vjust_val,
+              map_signif_level = TRUE,
+              show.legend = FALSE) + 
+  common_theme 
+p43
+
+
+data_test$title7 <- "Rhythmic complexity"
+p71 <- ggplot(data_test, aes(x = A, y = Q6b, fill = A)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE) +
+  geom_boxplot(outlier.shape = NA, alpha = alpha_val, width = 0.12, show.legend = FALSE) +
+  scale_fill_manual(values = c("Fixed" = colors[1], "Other" = colors[2])) +
+  labs(x = "", y = "Rating", fill = "A") +
+  facet_grid(. ~ title7) + 
+  geom_signif(comparisons = list(c("Fixed", "Other")), 
+              textsize = textsize_val, 
+              vjust = vjust_val,
+              map_signif_level = TRUE,
+              show.legend = FALSE,
+              annotations = c("**")) + 
+  common_theme
+p71
+# Create the plot grouped by B and filled with only Mixed and Free with boxplot
+p72 <- ggplot(data_test[data_test$B != "Fixed", ], aes(x = B, y = Q6b, fill = B)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE) +
+  geom_boxplot(outlier.shape = NA, alpha = alpha_val, width = 0.12,  show.legend = FALSE) +
+  scale_fill_manual(values = c("Mixed" = colors[3], "Free" = colors[4])) +
+  labs(x = "", y = "", fill = "B")+
+  facet_grid(. ~ title7) +
+  geom_signif(comparisons = list(c("Mixed", "Free")), 
+              textsize = textsize_val, 
+              vjust = vjust_val,
+              map_signif_level = TRUE,
+              show.legend = FALSE,
+              annotations = c("***")) +
+  common_theme
+
+p72
+
+### Absorption 
+data_test$title8 <- "Absorption of activity"
+p81 <- ggplot(data_test, aes(x = A, y = Abs_Av, fill = A)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE) +
+  geom_boxplot(outlier.shape = NA, alpha = alpha_val, width = 0.12, show.legend = FALSE) +
+  scale_fill_manual(values = c("Fixed" = colors[1], "Other" = colors[2])) +
+  labs(x = "", y = "", fill = "A")+
+  facet_grid(. ~ title8) +
+  geom_signif(comparisons = list(c("Fixed", "Other")), 
+              textsize = textsize_val, 
+              vjust = vjust_val,
+              map_signif_level = TRUE,
+              show.legend = FALSE) +
+  common_theme
+p81
+
+
+grid.arrange(
+  # First row with plots p11, p13, p15, and p17
+  arrangeGrob(p21, p22, p23, ncol = 3),
+  # Second row with plots p12,p14,p16, and p18
+  arrangeGrob(p41,p42,p43, ncol = 3),
+  arrangeGrob(p71,p72,p81, ncol = 3),
+  nrow = 3 # Set the number of rows to 2
+)
+
+
+
+
+
+
+
+#### ALL PLOTS from Results
 # Quantity of imporviation
 # Create the plot grouped and filled by A with boxplot
 data_test$title1 <- "Quantity of Improvisation"
