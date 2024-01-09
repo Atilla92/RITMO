@@ -162,6 +162,8 @@ nested_intercept <- ranef(model_nested)$`Participant:Pair`[, 1]
 random_intercepts <- ranef(model_nested)$`Participant:Pair`
 # Get the level names for the random intercepts
 level_names <- rownames(random_intercepts)
+data_ole <- data_ole %>%
+  mutate(Nested = paste(Participant, Pair, sep = ":"))
 
 
 ## ONLY RUN ONCE
@@ -169,7 +171,12 @@ level_names <- rownames(random_intercepts)
 level_names_split <- strsplit(level_names, split = ":|_")
 pairs <- sapply(level_names_split, function(x) paste(x[2], x[3], sep = "_"))
 participants <- sapply(level_names_split, function(x) x[1])
+mapping_df <- data.frame(Pair = pairs, Participant = participants, Nested_Name = level_names)
+#data_ole <- merge(data_ole, mapping_df, by = c("participant_num", "Pair"))
 
+
+# Convert the level_names to a data frame
+library(tidyr)
 
 # Only run ONCE
 # Create a data frame to map each pair+participant to its nested name
@@ -181,7 +188,7 @@ participants <- sapply(level_names_split, function(x) x[1])
 # Create new numerical variables for "participant" and "pair"
 data_ole$participant_num <- as.numeric(factor(data_ole$Participant))
 data_ole$pair_num <- as.numeric(factor(data_ole$Pair))
-data_ole$nested_num <- as.numeric(factor(data_ole$Nested_Name))
+data_ole$nested_num <- as.numeric(factor(data_ole$Nested))
 
 # Add random intercepts to the new variables
 data_ole$participant_intercept <- participant_intercept[data_ole$participant_num]
@@ -253,7 +260,7 @@ m01  = lmer(Q2a ~ instruction_2 + (1 | Pair/Participant), data = data_ole )
 anova(m00, m01)
 
 
-m00 = lmer(Q2a ~     instruction_2  + Abs_Av + Q4a + Q6a +  (1 |GMSI) + (1 |Participant), data = data_ole)
+m00 = lmer(Q2a ~ instruction_2  + Abs_Av + Q4a + Q6a +  (1 |GMSI) + (1 |Participant), data = data_ole)
 m00  = lmer(Q2a ~  instruction_2 + (1 |Pair/Participant), data = data_ole )
 summary(m00)
 levels(data_ole$instruction_2)
@@ -466,8 +473,11 @@ tab_model(m00, m01,m02,m03, m04,m05,  p.style = "stars", show.aic = TRUE, show.c
 
 m00a = lmer(Q3 ~  1 +  (1 | Pair/Participant), data = data_filtered_Q4a)
 m01a = lmer(Q3 ~  Q4a + Q1b + GDSI +  (1 | Pair/Participant), data = data_filtered_Q4a)
+m02a = lmer(Q3 ~  Q4a + Q1b + GDSI + Abs_Av +  (1 | Pair/Participant), data = data_filtered_Q4a)
 
 anova(m00a, m01a)
+tab_model(m00a, m01a, m02a,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m00","m01"), digits = 5 )
 
 tab_model(m00a, m01a, m02a,  m03a, m04a,m02b,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
           dv.labels=c("m00","m01", "m02", "m03", "m04", "m05", "m06"), digits = 5 )
@@ -480,14 +490,40 @@ summary(m00)
 
 m00a = lmer(Q3 ~  1 +  (1 | Pair/Participant), data = data_filtered_Q4a)
 m01a = lmer(Q3 ~  Q4a + Q1b + GDSI +  (1 | Pair/Participant), data = data_filtered_Q4a)
-m00b = lmer(Q3 ~ 1 + (1 | Participant), data = data_filtered_Q6a )
-m01b = lmer(Q3 ~    Q1b + Q4a + Q6b + Abs_Av + (1 |GMSI) + (1 | Participant), data = data_filtered_Q6a)
+m02a = lmer(Q3 ~  Q4a + Q1b  +  Abs_Av +  (1 | Pair/Participant), data = data_filtered_Q4a)
 
- 
-anova(m00b,m01b)
+anova(m01a, m02a)
+tab_model(m00a, m01a,  m02a, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("Flow","Flow", "Flow"), digits = 5 ,
+          file = "/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_model1_table.html"
+)
+library(webshot)
+webshot("/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_model1_table.html", "/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_model1_table.png")
+
+
+
+m00b = lmer(Q3 ~ 1 + (1 | Participant), data = data_filtered_Q6a )
+
+m00b = lmer(Q3 ~    Q1b + Q4a + Q6b  + GDSI + (1 | Participant), data = data_filtered_Q6a)
+m01b = lmer(Q3 ~    Q1b + Q4a + Q6b + Abs_Av + (1 |GMSI) + (1 | Participant), data = data_filtered_Q6a)
+m02b = lmer(Q3 ~    Q1b + Q4a + Q6b  + GDSI + (1 |GMSI) + (1 | Participant), data = data_filtered_Q6a)
+m03b = lmer(Q3 ~    Q1b + Q4a + Q6b  + Abs_Av + (1 | Participant), data = data_filtered_Q6a) 
+m04b = lmer(Q3 ~    Q1b + Q4a + Q6b  + Abs_Av + GDSI + (1 | Participant), data = data_filtered_Q6a) 
+m05b = lmer(Q3 ~    Q1b + Q4a + Q6b  + Abs_Av + GDSI + (1 | GMSI) + (1 | Participant), data = data_filtered_Q6a) 
+
+anova(m00b,m01b, m02b, m03b)
 summary(m02a)
-tab_model(m00a, m01a, m00b,  m01b,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
-          dv.labels=c("Flow","Flow", "Flow", "Flow"), digits = 5 )
+tab_model(m00b, m01b,  m03b,m02b, m04b, m05b,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("Flow","Flow", "Flow", "Flow", "Flow", "Flow"), digits = 5,
+          file = "/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_model2_table.html"
+)
+library(webshot)
+webshot("/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_model2_table.html", "/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_model2_table.png")
+
+
+m00 = lmer(Abs_Av ~    GMSI + (1 | Participant), data = data_filtered_Q6a) 
+
+
 
 
 library(webshot)
@@ -525,7 +561,12 @@ m11 = lmer(Q3 ~  GMSI +  (1 |Pair/Participant), data = data_ole)
 m12 = lmer(Q3 ~  Fam +  (1 |Pair/Participant), data = data_ole)
 
 tab_model(m00, m01, m02,  m03, m04, m05, m06, m07, m08, m09, m10, m11,m12,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
-          dv.labels=c("Flow","Flow", "Flow", "Flow","Flow","Flow", "Flow", "Flow","Flow","Flow", "Flow", "Flow", "Flow"), digits = 5 )
+          dv.labels=c("Flow","Flow", "Flow", "Flow","Flow","Flow", "Flow", "Flow","Flow","Flow", "Flow", "Flow", "Flow"),
+          digits = 5,
+          file = "/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_model3_table.html"
+)
+library(webshot)
+webshot("/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_model3_table.html", "/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_model3_table.png")
 
 m00 = lmer(Q3 ~  Q1a +  (1 |Participant), data = data_filtered_Q6a)
 m01 = lmer(Q3 ~  Q1b +  (1 |Participant), data = data_filtered_Q6a)
@@ -543,18 +584,21 @@ m12 = lmer(Q3 ~  Fam +  (1 |Participant), data = data_filtered_Q6a)
 anova(m00, m01)
 
 
-
-m02 = lmer(Q3 ~  MIXvsIMP +  (1 |Pair/Participant), data = data_ole)
-m02 = lmer(Q3 ~  MIXvsIMP +  (1 |Pair/Participant), data = data_ole)
-m02 = lmer(Q3 ~  Palo +  (1 |Pair/Participant), data = data_ole)
-m03 = lmer(Q3 ~  Artist +  (1 |Pair/Participant), data = data_ole)
-
+# Second part of models
+m01 = lmer(Q3 ~  MIXvsIMP +  (1 |Pair/Participant), data = data_ole)
+m02 = lmer(Q3 ~  FIXvsOther +  (1 |Pair/Participant), data = data_ole)
+m03 = lmer(Q3 ~  Palo +  (1 |Pair/Participant), data = data_ole)
+m04 = lmer(Q3 ~  Artist +  (1 |Pair/Participant), data = data_ole)
+m04 = lmer(Q3 ~  Artist +  (1 |Pair/Participant), data = data_ole)
 
 anova(m00a,m01a)
 
-tab_model(m00a, m01a, m00b,  m01b,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+tab_model(m01, m02, m03,  m04,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
           dv.labels=c("Flow","Flow", "Flow", "Flow"), digits = 5 )
 
+# Post hoc thoughts and analyses
+m03 = lmer(Q3a ~  Q6b +  (1 |Participant), data = data_ole)
+summary(m03)
 
 
 # m00a = lmer(Q3 ~  1+ (1 | Participant), data = data_ole)
