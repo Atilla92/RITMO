@@ -6,7 +6,7 @@ data <- read.csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/22_Sep_2023_nie
 ##### ATILLA CODE ADJUSTED######
 
 data_ole <- data %>%
-  distinct(Name, Artist, .keep_all = TRUE)
+  distinct(Name, Artist, .keep_all = TRUE) 
 data_ole$GMSI <- ifelse(data_ole$Participant == "G7", 5, data_ole$GMSI)
 data_ole$GDSI <- ifelse(data_ole$Participant == "G7", 3.65, data_ole$GDSI)
 data_ole$Fam <- ifelse(data_ole$Participant %in% c("G4", "P8"), 1, data_ole$Fam)
@@ -190,7 +190,7 @@ m00a = lmer(Q3 ~  1 +  (1 | Pair/Participant), data = data_filtered_Q4a)
 m01a = lmer(Q3 ~  Q4a + Q1b + GDSI +  (1 | Pair/Participant), data = data_filtered_Q4a)
 
 
-sjPlot::plot_model(title = 'LMER - Quality of Improvisation [Q1b] - Conditions',
+p0 <- sjPlot::plot_model(title = 'Model 1 - Flow predictors - Conditions',
                    m01a, show.p = TRUE, show.values = TRUE, digits = 3,show.intercept = TRUE)
 
 
@@ -221,7 +221,7 @@ predicted <- fitted(m01a)
 data_points <- data.frame(observed = observed, predicted = predicted)
 
 # Create a scatter plot of the data points with the fitted model
-ggplot(data = data_points, aes(x = observed, y = predicted)) +
+p1 <- ggplot(data = data_points, aes(x = observed, y = predicted)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
   xlab("Observed") +
@@ -231,26 +231,26 @@ ggplot(data = data_points, aes(x = observed, y = predicted)) +
 
 
 #### Visualize model
-
-effects_m01a <- effects::effect(term= "Q4a", mod= m01a)
-summary(effects_m01a) #output of what the values are
-
-x_Q4a <- as.data.frame(effects_m01a)
-
-
-ggplot() + 
-  #2
-  geom_point(data=data_ole, aes(Q4a, Q3)) + 
-  #3
-  geom_point(data=x_Q4a, aes(x=Q4a, y=fit), color="blue") +
-  #4
-  geom_line(data=x_Q4a, aes(x=Q4a, y=fit), color="blue") +
-  #5
-  geom_ribbon(data= x_Q4a, aes(x=Q4a, ymin=lower, ymax=upper), alpha= 0.3, fill="blue") +
-  #6
-  labs(x="Urchins (centered & scaled)", y="Coral Cover")
-
-
+# 
+# effects_m01a <- effects::effect(term= "Q4a", mod= m01a)
+# summary(effects_m01a) #output of what the values are
+# 
+# x_Q4a <- as.data.frame(effects_m01a)
+# 
+# 
+# ggplot() + 
+#   #2
+#   geom_point(data=data_ole, aes(Q4a, Q3)) + 
+#   #3
+#   geom_point(data=x_Q4a, aes(x=Q4a, y=fit), color="blue") +
+#   #4
+#   geom_line(data=x_Q4a, aes(x=Q4a, y=fit), color="blue") +
+#   #5
+#   geom_ribbon(data= x_Q4a, aes(x=Q4a, ymin=lower, ymax=upper), alpha= 0.3, fill="blue") +
+#   #6
+#   labs(x="Urchins (centered & scaled)", y="Coral Cover")
+# 
+# 
 #Refit code
 
 m01a = lmer(Q3 ~  Q4a + Q1b + GDSI +  (1 | Pair/Participant), data = data_filtered_Q4a)
@@ -332,7 +332,7 @@ ggplot() +
 # Create a scatter plot with a fitted line for all three models
 ggplot() +
   geom_jitter(data = data_filtered_Q4a, aes(x = participant_num, y = Q3, color = "Fixed Effects"), width = 0.2, height = 0.2) +
-  geom_smooth(data = data_filtered_Q4a, aes(x = participant_num, y = Q3, color = "Fixed Effects"), method = "lm", se = FALSE, linetype = "dashed") +
+  geom_smooth(data = data_filtered_Q4a, aes(x = participant_num, y = Q3, color = "Fixed Effects"), method = "lm", se = FALSE) +
   scale_color_manual(values = c("green", "red", "blue", "black")) +
   xlab("Group") +
   ylab("Intercept") +
@@ -341,10 +341,34 @@ ggplot() +
 ggplot() +
   geom_jitter(data = data_filtered_Q4a, aes(x = participant_num, y = participant_intercept, color = "Participant"), width = 0.2, height = 0.2) +
   geom_smooth(data = data_filtered_Q4a, aes(x = participant_num, y = participant_intercept), method = "lm", color = "blue") 
+
+
 geom_smooth(data = data_filtered_Q4a, aes(x = participant_num, y = Perf_Av, color = "Fixed Effects"), method = "lm", se = FALSE, linetype = "dashed") +
   scale_color_manual(values = c("green", "red", "blue", "black")) +
   xlab("Group") +
   ylab("Intercept") +
   ggtitle("Random Intercepts and Fixed Effects")
+
+# Extract the observed values and fitted values from the data
+observed <- data_filtered_Q4a$participant_num
+fitted <- predict(m01a, newdata = data_filtered_Q4a)
+
+# Calculate the confidence intervals
+conf_intervals <- confint(m01a)
+
+# Create a data frame with the observed values, fitted values, lower confidence intervals, and upper confidence intervals
+data_plot <- data.frame(observed = observed, fitted = fitted, 
+                        lower_ci = conf_intervals[, 1], upper_ci = conf_intervals[, 2])
+
+# Create the plot with ribbon
+ggplot(data = data_plot, aes(x = observed, y = fitted)) +
+  geom_point() +
+  geom_ribbon(data = data_plot, aes(x = observed, ymin = lower_ci, ymax = upper_ci), alpha = 0.2) +
+  geom_smooth(method = "lm", se = FALSE, color = "blue") +
+  xlab("Participant Number") +
+  ylab("Fitted Value") +
+  ggtitle("Ribbon Plot for Smooth Line with Confidence Intervals")
+
+
 
 

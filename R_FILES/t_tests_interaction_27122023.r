@@ -5,10 +5,11 @@ library(sjmisc)
 library(dplyr)
 library(tidyr)
 library(emmeans)
+library(gridExtra)
 
 
 data <- read.csv('/Users/atillajv/CODE/RITMO/ENTROPY/output/main/22_Sep_2023_niels/27102023_ELAN_no_CDRS_onset_niels_4s_final.csv')
-data <- data[grepl("P", data$Participant),] #only dancers
+#data <- data[grepl("P", data$Participant),] #only dancers
 
 data_ole <- data %>%
   distinct(Name, Artist, .keep_all = TRUE)
@@ -110,17 +111,7 @@ perform_t_tests <- function(data, artist_col, condition_col, variable_col) {
       t_test_result <- t.test(data_condition1[{{ variable_col }}], data_condition2[{{ variable_col }}])
       print(t_test_result)
       # # Extract mean and standard deviation for each variable
-      # mean_variable1 <- mean(data_condition1[[variable_col]])
-      # sd_variable1 <- sd(data_condition1[[variable_col]])
-      # mean_variable2 <- mean(data_condition2[[variable_col]])
-      # sd_variable2 <- sd(data_condition2[[variable_col]])
-      # 
-      # # Print the mean and standard deviation with variable names
-      # # Print the mean and standard deviation with condition names
-      # cat("Mean", unique_conditions[condition1], ":", mean_variable1, "\n")
-      # cat("Standard Deviation", unique_conditions[condition1], ":", sd_variable1, "\n")
-      # cat("Mean", unique_conditions[condition2], ":", mean_variable2, "\n")
-      # cat("Standard Deviation", unique_conditions[condition2], ":", sd_variable2, "\n")
+
       
       # Store the results in the data frame
       result_row <- data.frame(
@@ -324,31 +315,92 @@ summary_table
 
 
 #### Code Peter Keller to Plot 
-Adapt   = lmer(Q1a ~ Artist * FIXvsOther + (1 | Participant), data = data_ole )
+
+
+data_ole$FIXvsOther <- as.factor(data_ole$FIXvsOther)
+
+common_theme <- theme(
+  axis.text.y = element_text(size = 10),   # Adjust y-axis text size
+  axis.text.x = element_text(size = 10),   # Adjust y-axis text size
+  strip.text = element_text(size = 12)     # Adjust facet titles size
+  #plot.margin = margin(1, 1, 1, 1, "cm")
+) 
+Adapt   = lmer(Q1a ~ Artist * FIXvsOther + (1 | Pair/Participant), data = data_ole )
 summary(Adapt)
 
 Adapt_Alpha.effects <- ggemmeans(Adapt, c("FIXvsOther", "Artist"))
-Adapt_Alpha.effects.plot <- plot(Adapt_Alpha.effects, facet = FALSE, rawdata = TRUE, alpha = .2, dot.alpha = .2, dot.size = 2, limit.range = TRUE, jitter = NULL) +
+Adapt_Alpha.effects.plot <- plot(Adapt_Alpha.effects, facet = FALSE, rawdata = TRUE, alpha = .8, dot.alpha = .5, dot.size = 2, limit.range = TRUE, jitter = TRUE) +
   labs(x= "", y = "Predictor", title = "Q1a - Quanitity of Improvisation") +
   coord_cartesian(ylim = c(0, 7)) +
   scale_colour_manual(values = c("red","darkred")) +
   scale_fill_manual(values= c("red","darkred")) +
-  geom_smooth(method=lm,se=FALSE,fullrange=FALSE) +
-  geom_line(size=1.75) 
+  geom_smooth(method=lm,se=TRUE,fullrange=FALSE) +
+  geom_line(size=1.75)+
+  common_theme
 p0 <- Adapt_Alpha.effects.plot
+p0
 
+
+plot_data <- data.frame(
+  FIXvsOther = c("Fixed", "Other", "Fixed", "Other"),
+  Artist = c("G", "G", "P", "P"),
+  Predicted = c(3.16, 4.58, 2.78, 6.27),
+  CI_low = c(2.64, 4.23, 2.26, 5.92),
+  CI_high = c(3.68, 4.94, 3.30, 6.62)
+)
+
+Adapt_Alpha.effects.plot <- ggplot(plot_data, aes(x = "FIXvsOther", y = "Predicted", fill = "FIXvsOther")) +
+  geom_boxplot() +
+  labs(x = "FIXvsOther", y = "Predicted", title = "Q1a - Quantity of Improvisation") +
+  coord_cartesian(ylim = c(0, 7)) +
+  scale_fill_manual(values = c("red", "darkred")) +
+  geom_errorbar(aes(ymax = CI_high, ymin = CI_low), width = 0.2) +
+  facet_wrap(vars(Artist)) +
+  theme_bw()
+
+print(Adapt_Alpha.effects.plot)
+
+ggplot(Adapt_Alpha.effects, aes(x = x, y = y, color = group, fill = group)) +
+  geom_boxplot(width = 0.5, fill = "transparent", outlier.shape = NA) +
+  geom_point(alpha = 0.8, size = 2) +
+  geom_smooth(method = "lm", se = TRUE, fullrange = FALSE) +
+  labs(x = "", y = "Predictor", title = "Q1a - Quantity of Improvisation") +
+  coord_cartesian(ylim = c(0, 7)) +
+  scale_colour_manual(values = c("red", "darkred")) +
+  scale_fill_manual(values = c("red", "darkred")) +
+  theme_bw()
+
+p0
+# Significance data
+significance_data <- data.frame(
+  x = c(1.2,1.45),  # Replace x1, x2, x3 with the x-coordinates of the points where you want to add significance indicators
+  y = c(4, 4.5),  # Replace y1, y2, y3 with the y-coordinates of the points where you want to add significance indicators
+  significance = c("***", "***"),
+  color = c("red","darkred")   # Replace "***" with your actual significance labels
+)
+
+# Add significance labels to the plot
+ 
+p0 <- Adapt_Alpha.effects.plot + 
+  geom_text(data = significance_data, aes(x = x, y = y, label = significance, fill = color ), size = 8, vjust = -1, inherit.aes = FALSE) +
+  theme(legend.position = "none")  # Optional: If you want to hide the legend
+
+# Print the plot
+p0
 
 
 Adapt_Alpha.effects <- ggemmeans(Adapt, c("Artist", "FIXvsOther"))
-Adapt_Alpha.effects.plot <- plot(Adapt_Alpha.effects, facet = FALSE, rawdata = TRUE, alpha = .2, dot.alpha = .2, dot.size = 2, limit.range = TRUE, jitter = NULL) +
+Adapt_Alpha.effects.plot <- plot(Adapt_Alpha.effects, facet = ~Participant, rawdata = TRUE, alpha = .8, dot.alpha = .5, dot.size = 2, limit.range = TRUE, jitter = TRUE) +
   labs(x= "", y = "Predictor", title = "Q1a - Quanitity of Improvisation") +
   coord_cartesian(ylim = c(0, 7)) +
   scale_colour_manual(values = c("red","darkred")) +
   scale_fill_manual(values= c("red","darkred")) +
   geom_smooth(method=lm,se=FALSE,fullrange=FALSE) +
-  geom_line(size=1.75) 
+  geom_line(size=1.75) +
+  common_theme
 p1 <- Adapt_Alpha.effects.plot
 
+p1
 library(gridExtra)
 grid.arrange(
   # First column with plots p1, p2, and p3

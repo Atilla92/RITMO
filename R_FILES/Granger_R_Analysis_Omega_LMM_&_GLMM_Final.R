@@ -261,7 +261,7 @@ anova(m00, m01)
 
 
 m00 = lmer(Q2a ~ instruction_2  + Abs_Av + Q4a + Q6a +  (1 |GMSI) + (1 |Participant), data = data_ole)
-m00  = lmer(Q2a ~  instruction_2 + (1 |Pair/Participant), data = data_ole )
+m00  = lmer(Q6b ~  instruction_2 + (1 |Participant), data = data_ole )
 summary(m00)
 levels(data_ole$instruction_2)
 # ANOVA with orthogonal planned contrasts: (1) Homophonic vs Polyphonic; (2) Pairing with Melody vs No Melody; (3) Melody-to-Other vs Other-to-Melody
@@ -293,6 +293,11 @@ contrasts <- list(
 FlamencoImp_Comp.output <- contrast(FlamencoImp_Comp, contrasts, adjust="none", names = names_contrasts)
 FlamencoImp_Comp.output
 levels(FlamencoImp_Comp$A_FIXvsOther)
+
+mean_by_group <- data_ole %>%
+  group_by("FIXvsOther") %>%
+  summarize(mean_Q6b = mean(Q6b, na.rm = TRUE))
+
 
 FlamencoImp_Comp.output.ci <- confint(FlamencoImp_Comp.output)
 FlamencoImp_Comp.output.ci
