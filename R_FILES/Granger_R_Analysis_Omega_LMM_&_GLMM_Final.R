@@ -21,6 +21,19 @@ library(reshape2)
 library(Rmisc)
 library(rstatix)
 library(stargazer) 
+
+
+library(ggplot2)
+library(sjPlot)
+library(sjlabelled)
+library(sjmisc)
+library(dplyr)
+library(tidyr)
+
+library(lme4)
+library(lmerTest)
+library(psych)
+
 source("https://gist.githubusercontent.com/benmarwick/2a1bb0133ff568cbe28d/raw/fb53bd97121f7f9ce947837ef1a4c65a73bffb3f/geom_flat_violin.R")
 
 # Read in csv data ---------
@@ -39,9 +52,6 @@ data_ole <- data %>%
 data_ole$GMSI <- ifelse(data_ole$Participant == "G7", 5, data_ole$GMSI)
 data_ole$GDSI <- ifelse(data_ole$Participant == "G7", 3.65, data_ole$GDSI)
 data_ole$Fam <- ifelse(data_ole$Participant %in% c("G4", "P8"), 1, data_ole$Fam)
-data_filtered_Q4a <- data_ole[!is.na(data_ole$GDSI) & !is.na(data_ole$Q4a), ]
-data_filtered_Q6a <- data_ole[!is.na(data_ole$GMSI) & !is.na(data_ole$Q6a), ]
-data_filtered_Q6a <- data_ole[!is.na(data_ole$Q6a), ]
 
 
 # Create a new column with concatenated strings
@@ -89,6 +99,12 @@ data_ole$instruction_2 <-factor(data_ole$instruction_2, levels = c("D5_M6_P_R1",
 # Checking contrasts without including Palos
 # Check levels
 levels(data_ole$instruction)
+
+
+# Subsets of data
+data_filtered_Q4a <- data_ole[!is.na(data_ole$GDSI) & !is.na(data_ole$Q4a), ]
+data_filtered_Q6a <- data_ole[!is.na(data_ole$GMSI) & !is.na(data_ole$Q6a), ]
+data_filtered_Q6a <- data_ole[!is.na(data_ole$Q6a), ]
 
 
 # Models Version 1
@@ -254,10 +270,19 @@ m01  = lmer(Perf_Av ~ 1 +  (1 | Participant), data = data_ole )
 anova(m00, m01)
 
 
+m00 = lmer(Q6b ~  1 + (1 | Participant), data = data_ole )
+m01  = lmer(Q6b ~  1 + (1 | Pair), data = data_ole )
+m02  = lmer(Q6b ~  1 + (1 | Pair/Participant), data = data_ole )
 
-m00  = lmer(Q2a ~  1 + (1 | Pair/Participant), data = data_ole )
-m01  = lmer(Q2a ~ instruction_2 + (1 | Pair/Participant), data = data_ole )
 anova(m00, m01)
+
+tab_model(m00, m01, m02,m03,m04,m05, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m00","m01", "m02", 'm03', 'm04',"m05"), digits = 5 )
+
+
+
+m01  = lmer(Q2a ~ instruction_2 + (1 | Pair/Participant), data = data_ole )
+
 
 
 m00 = lmer(Q2a ~ instruction_2  + Abs_Av + Q4a + Q6a +  (1 |GMSI) + (1 |Participant), data = data_ole)
@@ -481,23 +506,104 @@ m01a = lmer(Q3 ~  Q4a + Q1b + GDSI +  (1 | Pair/Participant), data = data_filter
 m02a = lmer(Q3 ~  Q4a + Q1b + GDSI + Abs_Av +  (1 | Pair/Participant), data = data_filtered_Q4a)
 
 anova(m00a, m01a)
+
+## CHeck for random slopes
+m01a = lmer(Q3 ~  Q4a + Q1b + GDSI +  (1 + GDSI | Pair/Participant), data = data_filtered_Q4a)
+
+m00a = lmer(Q3 ~    Q4a + Q1b + GDSI +   (1 + Q4a | Participant), data = data_filtered_Q4a)
+m01a = lmer(Q3 ~   Q4a + Q1b + GDSI +  (1 | Pair/Participant), data = data_filtered_Q4a)
+m02a = lmer(Q3 ~   Q4a + Q1b + GDSI +  (1  | Participant), data = data_filtered_Q4a)
+
+anova(m00a, m01a)
+
+# Adding Q4a, Q1b, GDSI (each at the time to full model) as random slopes results in singularity issue therefore, accroding the Barr et al. minimum model. 
+# Adding to simple model Q3 ~   X + (1 + X | Pair/Participant) runs into singularity issues for GDSI, Q4a, Q1b
+# Simplifying even more  Q3 ~   X + (1 + X | Participant) rund into singularity issues for Q1b, GDSI
+
+
+anova(m00a, m01a)
+
+
 tab_model(m00a, m01a, m02a,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
-          dv.labels=c("m00","m01"), digits = 5 )
+          dv.labels=c("m00a","m01a", "m02a"), digits = 5 )
 
 tab_model(m00a, m01a, m02a,  m03a, m04a,m02b,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
           dv.labels=c("m00","m01", "m02", "m03", "m04", "m05", "m06"), digits = 5 )
 
-m00 = lmer(Q3 ~  1 +   (1 | Participant), data = data_ole)
+m00 = lmer(Q3 ~  1 + Q1b  (1 | Participant), data = data_ole)
 m01 = lmer(Q3 ~  Q1b  +Q4a + Abs_Av + GDSI +  (1 | Pair/Participant), data = data_ole)
-anova(m00, m01)
-summary(m00)
+m02 = lmer(Q3 ~  Q1b  +Q4a + Abs_Av + GDSI +  (1 | Participant), data = data_ole)
+
+tab_model(m00a, m01a, m02a,  m03a, m04a,m02b,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m00","m01", "m02", "m03", "m04", "m05", "m06"), digits = 5 )
+
+
+anova(m01, m02)
+summary(m01)
 
 
 m00a = lmer(Q3 ~  1 +  (1 | Pair/Participant), data = data_filtered_Q4a)
-m01a = lmer(Q3 ~  Q4a + Q1b + GDSI +  (1 | Pair/Participant), data = data_filtered_Q4a)
-m02a = lmer(Q3 ~  Q4a + Q1b  +  Abs_Av +  (1 | Pair/Participant), data = data_filtered_Q4a)
+m01a = lmer(Q3 ~  Q4a + Q1b +  GDSI + (1 + Q4a | Participant), data = data_filtered_Q4a)
+m02a = lmer(Q3 ~  Q4a + Q1b  +  Abs_Av +  (1 + Q4a | Participant), data = data_filtered_Q4a)
+m03a = lmer(Q3 ~ Q4a + Q1b  +  GDSI + Abs_Av +   (1  + Q4a| Participant), data = data_filtered_Q4a)
+m04a = lmer(Q3 ~  Q1b +  (1  | Participant), data = data_filtered_Q4a) 
+m05a = lmer(Q3 ~  GDSI +  (1 | Participant), data = data_filtered_Q4a)
 
-anova(m01a, m02a)
+anova(m02a, m03a)
+
+# Q1b, GDSI,  none of models possibel by adding random slope. Is a fixed effect punto. 
+# Abs_Av, Q4a can add it as varying slope in simple model 
+
+tab_model(m00a, m01a, m02a,  m03a, m04a,m05a,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m00","m01", "m02", "m03", "m04", "m05", "m06"), digits = 5 )
+
+
+
+m00a = lmer(Q3 ~  1 +  (1 + Q4a | Participant), data = data_filtered_Q4a)
+m01a = lmer(Q3 ~ Q4a + Q1b + Abs_Av + GDSI +  (1 + Q4a | Participant), data = data_filtered_Q4a)
+m02a = lmer(Q3 ~  Perf_Av +   Abs_Av +  (1 + Q4a | Participant), data = data_filtered_Q4a)
+m03a = lmer(Q3 ~ Q2a +    (1  + Q4a| Participant), data = data_filtered_Q4a)
+m04a = lmer(Q3 ~  Q1b +  (1  | Participant), data = data_filtered_Q4a) 
+m05a = lmer(Q3 ~  GDSI +  (1 | Participant), data = data_filtered_Q4a)
+
+anova(m02a, m03a)
+
+# Q1b, GDSI,  none of models possibel by adding random slope. Is a fixed effect punto. 
+# Abs_Av, Q4a can add it as varying slope in simple model 
+
+tab_model(m00a, m01a, m02a,  m03a, m04a,m05a,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m00","m01", "m02", "m03", "m04", "m05", "m06"), digits = 5 )
+
+
+
+
+m01a = lmer(Q3 ~   Q1b+ Q4a  +  Abs_Av + GDSI +  (1 | Participant), data = data_filtered_Q4a)
+m01b = lmer(Q3 ~   Q1b + Q4a + Abs_Av + GDSI +   (1  + Q4a| Participant), data = data_filtered_Q4a)
+m02a = lmer(Q3 ~    Q1b + Q4a +Abs_Av + Q6b  + (1 |GMSI) + (1 | Participant), data = data_filtered_Q6a)
+m02c = lmer(Q3 ~    Q1b + Q4a + Abs_Av + Q6b  + (1 + Q4a | Participant), data = data_filtered_Q6a)
+m02b = lmer(Q3 ~    Q1b + Q4a + Abs_Av + Q6b + GDSI +  (1 + Q4a | Participant), data = data_filtered_Q6a)
+
+sjPlot::tab_model(m01a, 
+                  show.re.var= TRUE, 
+                  pred.labels =c("(Intercept)", "Connection", "Quality Improvisation", "GDSI"),
+                  dv.labels= "Model 1 - Main Predictors of Flow")
+
+table <- tab_model(m01a, m01b, m02a,  m02b,m02c,
+          p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          pred.labels =c("(Intercept)", "Quality Impro.", "Connection", "Dance Exp.","Absorption" ,"Rhythm Complex"),
+          dv.labels=c("model 1a","model 1b", "model 2a", "model 2b", "model 2c"), digits = 5 )
+
+row_index <- grep("Dance Exp.", rownames(table$coefficients))
+column_index <- grep("Pr(>|t|)", colnames(table$coefficients))
+
+# Replace the "*" with a "." for the specific cell
+table$coefficients[row_index, column_index] <- "."
+
+# Print the modified table
+print(table)
+
+
+anova(m02b, m02c)
 tab_model(m00a, m01a,  m02a, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
           dv.labels=c("Flow","Flow", "Flow"), digits = 5 ,
           file = "/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_model1_table.html"
@@ -509,17 +615,23 @@ webshot("/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_model
 
 m00b = lmer(Q3 ~ 1 + (1 | Participant), data = data_filtered_Q6a )
 
-m00b = lmer(Q3 ~    Q1b + Q4a + Q6b  + GDSI + (1 | Participant), data = data_filtered_Q6a)
+m00b = lmer(Q3 ~    Q1b + Q4a + Abs_Av  + GDSI + (1 + Q4a | Participant), data = data_filtered_Q6a)
 m01b = lmer(Q3 ~    Q1b + Q4a + Q6b + Abs_Av + (1 |GMSI) + (1 | Participant), data = data_filtered_Q6a)
 m02b = lmer(Q3 ~    Q1b + Q4a + Q6b  + GDSI + (1 |GMSI) + (1 | Participant), data = data_filtered_Q6a)
 m03b = lmer(Q3 ~    Q1b + Q4a + Q6b  + Abs_Av + (1 | Participant), data = data_filtered_Q6a) 
 m04b = lmer(Q3 ~    Q1b + Q4a + Q6b  + Abs_Av + GDSI + (1 | Participant), data = data_filtered_Q6a) 
 m05b = lmer(Q3 ~    Q1b + Q4a + Q6b  + Abs_Av + GDSI + (1 | GMSI) + (1 | Participant), data = data_filtered_Q6a) 
 
-anova(m00b,m01b, m02b, m03b)
+
+
+m02a = lmer(Q3 ~    Q1b + Q4a + Q6b + Abs_Av + (1 |GMSI) + (1 | Participant), data = data_filtered_Q6a)
+m02b = lmer(Q3 ~    Q1b + Q4a + Q6b + Abs_Av + (1 + Q4a | Participant), data = data_filtered_Q6a)
+m02c = lmer(Q3 ~    Q1b + Q4a + Q6b + Abs_Av + GDSI +  (1 + Q4a | Participant), data = data_filtered_Q6a)
+anova(m00b, m02b)
+anova(m00b,m01b, m02b, m03b, m04b, m05b)
 summary(m02a)
 tab_model(m00b, m01b,  m03b,m02b, m04b, m05b,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
-          dv.labels=c("Flow","Flow", "Flow", "Flow", "Flow", "Flow"), digits = 5,
+          dv.labels=c("Flow","Flow", "Flow", "Flow", "Flow", "Flow"), digits = 5,)
           file = "/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_model2_table.html"
 )
 library(webshot)
@@ -528,8 +640,32 @@ webshot("/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_model
 
 m00 = lmer(Abs_Av ~    GMSI + (1 | Participant), data = data_filtered_Q6a) 
 
+m01b = lmer(Q3 ~    GDSI  + (1 | Participant), data = data_filtered_Q4a)
+# No single effect of GDSI on Q6a data, 
 
+m01b = lmer(Q3 ~    Q1b + Q4a  + Abs_Av +GDSI  + (1 | Participant), data = data_filtered_Q6a)
 
+m01b = lmer(Q3 ~    Q1b + Q4a  + Abs_Av + (1  | GMSI) + (1 + Q6b | Participant), data = data_filtered_Q6a)
+m02b = lmer(Q3 ~    Q1b + Q4a + Abs_Av + Q6b +  (1  + Q6b | Participant) + (1 | GMSI), data = data_filtered_Q6a)
+m03b = lmer(Q3 ~    Q1b + Q4a + Abs_Av + (1  + Abs_Av | Participant) + (1 | GMSI), data = data_filtered_Q6a)
+m04b = lmer(Q3 ~    Q1b + Q4a + Abs_Av  + Q6b +  (1  + Abs_Av | Participant) + (1 | GMSI), data = data_filtered_Q6a)
+anova(m01b, m02b, m03b, m04b)
+
+tab_model(m01b, m02b,m03b, m04b,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m00","m01", "m03", "m04"), digits = 5 )
+
+# Adding to the full model as random slopes to Participant, Q1b singularity issues; Q4a convergence issue, Q6b does not give singularity issues. Q6b then dissapears. 
+m00b = lmer(Q3 ~    Q1b + Q4a + Abs_Av   + (1 + Q4a | Participant), data = data_filtered_Q6a)
+m01b = lmer(Q3 ~    Q1b + Q4a + Q6b + Abs_Av + (1  + Q4a | Participant), data = data_filtered_Q6a)
+m02b = lmer(Q3 ~    Q1b + Q4a + Abs_Av + Q6b +  (1 |GMSI) +  (1 | Participant), data = data_filtered_Q6a)
+m03b = lmer(Q3 ~    Q1b + Q4a + Q6b  + Abs_Av + (1 + Q6b | Participant), data = data_filtered_Q6a) 
+m04b = lmer(Q3 ~    Q1b + Q4a + Q6b  + Abs_Av + GDSI + (1 + Q4a | Participant), data = data_filtered_Q6a) 
+m05b = lmer(Q3 ~    Q1b + Q4a + Q6b  + Abs_Av + GDSI + (1 + Q6b | Participant), data = data_filtered_Q6a) 
+
+anova(m03b, m01b, m02b, m00b, m04b, m05b)
+
+tab_model(m00b, m01b, m02b,m03b, m04b,m05b,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m00","m01", "m03", "m04", "m05", "m06"), digits = 5 )
 
 library(webshot)
 tab_model(

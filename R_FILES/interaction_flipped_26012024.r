@@ -1,0 +1,534 @@
+library(tidyr)
+# Preparing data
+name_palo <- data_ole %>% select(Participant, Palo) %>% distinct()
+data_ole <- data_ole %>%
+  mutate(INDvsGR = case_when(
+    Condition %in% c("D1_M1", "D5_M5") ~ "Group",
+    Condition %in% c("D5_M6", "D1_M6") ~ "Indiv",
+    TRUE ~ NA_character_
+  ))
+
+data_ole <- data_ole %>%
+  mutate(FIXvsOther = ifelse(Condition == "D6_M6", "Fixed", "Other"))
+
+
+data_ole <- data_ole %>%
+  mutate(MIXvsIMP = case_when(
+    Condition %in% c("D1_M1", "D1_M6") ~ "Impro",
+    Condition %in% c("D5_M6", "D5_M5") ~ "Mixed",
+    TRUE ~ NA_character_
+  ))
+
+# Add a new column based on a condition
+data_ole <- data_ole %>%
+  mutate(FIXvsOther = ifelse(Condition == "D6_M6", "Fixed", "Other"))
+
+
+
+#### Communication with partner ExA
+
+data_ole <- data_ole %>%
+  inner_join(name_palo, by = c("Participant", "Palo")) %>%
+  group_by(Participant, Palo, FIXvsOther, Pair) %>%
+  mutate(mean_Q4a = mean(Q4a, na.rm = TRUE))
+
+filtered_data <- data_ole %>%
+  distinct(Participant, Palo, FIXvsOther, mean_Q4a, Pair) %>%
+  filter(!is.na(FIXvsOther))  # Remove rows with missing FIXvsOther values
+
+grouped_data <- filtered_data %>%
+  pivot_wider(names_from = FIXvsOther, values_from = mean_Q4a)
+
+print(grouped_data)
+
+grouped_data <- grouped_data %>% arrange(Pair, Palo)
+
+# Split in two groups
+grouped_R1 <- grouped_data[grepl("R1", grouped_data$Palo),] #only dancers
+print(grouped_R1)
+
+
+grouped_R2 <- grouped_data[grepl("R2", grouped_data$Palo),] #only dancers
+print(grouped_R2)
+
+
+# Subset weight data before treatment
+Fixed_R1 <- grouped_R1$Fixed
+Fixed_R2 <- grouped_R2$Fixed
+# subset weight data after treatment
+Other_R1 <- grouped_R1$Other
+Other_R2 <- grouped_R2$Other
+# Plot paired data
+
+
+
+# Calculate means and standard deviations
+Mean_Fixed_R1 <- mean(na.omit(Fixed_R1))
+SD_Fixed_R1 <- sd(na.omit(Fixed_R1))
+Mean_Fixed_R2 <- mean(na.omit(Fixed_R2))
+SD_Fixed_R2 <- sd(na.omit(Fixed_R2))
+Mean_Other_R1 <- mean(na.omit(Other_R1))
+SD_Other_R1 <- sd(na.omit(Other_R1))
+Mean_Other_R2 <- mean(na.omit(Other_R2))
+SD_Other_R2 <- sd(na.omit(Other_R2))
+
+# Print means and standard deviations for Fixed_R1 and Fixed_R2
+cat("Mean_Fixed_R1:", Mean_Fixed_R1, "\n")
+cat("SD_Fixed_R1:", SD_Fixed_R1, "\n")
+cat("Mean_Fixed_R2:", Mean_Fixed_R2, "\n")
+cat("SD_Fixed_R2:", SD_Fixed_R2, "\n")
+
+# Print means and standard deviations for Other_R1 and Other_R2
+cat("Mean_Other_R1:", Mean_Other_R1, "\n")
+cat("SD_Other_R1:", SD_Other_R1, "\n")
+cat("Mean_Other_R2:", Mean_Other_R2, "\n")
+cat("SD_Other_R2:", SD_Other_R2, "\n")
+
+
+library(PairedData)
+pd_R1 <- paired(Fixed_R1, Fixed_R2)
+p1 <- plot(pd_R1, type = "profile") + theme_bw()
+
+pd_R2 <- paired(Other_R1, Other_R2)
+p2 <- plot(pd_R2, type = "profile") + theme_bw()
+
+t.test(Fixed_R1, Fixed_R2, paired = TRUE, correct = TRUE, alternative = 'two.sided')
+t.test(Other_R1, Other_R2, paired = TRUE, correct = TRUE, alternative = 'two.sided')
+
+
+shapiro.test(Other_R1)
+shapiro.test(Fixed_R1)
+shapiro.test(Other_R2)
+shapiro.test(Fixed_R2)
+
+wilcox.test(Other_R1, Fixed_R1, paired = TRUE)
+wilcox.test(Other_R2, Fixed_R2, paired = TRUE)
+
+library(gridExtra)
+grid.arrange(
+  # First column with plots p1, p2, and p3
+  p1, p2, ncol = 2
+  
+)
+
+
+
+library(tidyverse)
+colors <- c("#8DD3C7", "#FFFFB3", "#BEBADA", "#FB8072", "#80B1D3", "#FDB462", "#B3DE69", "#FCCDE5", "#00008B", "#BC80BD")
+labels_names <- c('Fixed', 'Other','Mixed', 'Free','Individual', 'Group', 'Musician', 'Dancer', 'Tangos', 'Solea')
+color_lines <- c("#55A4A0","#D2BF8E", '#975991')
+label_lines <- c("Fixed","Other", 'Solea')
+common_theme <- theme(
+  axis.text.y = element_text(size = 10),   # Adjust y-axis text size
+  axis.text.x = element_text(size = 10),   # Adjust y-axis text size
+  strip.text = element_text(size = 12),     # Adjust facet titles size
+  panel.grid = element_blank(),
+  plot.title = element_text(hjust = 0.5))  # Center the title
+#plot.margin = margin(1, 1, 1, 1, "cm")
+
+
+textsize_val <- 6
+vjust_val <- 1.8
+
+
+#First plot
+data <- data.frame(
+  Fixed_R1 ,
+  Fixed_R2
+)
+
+data$row <- 1:nrow(data)
+data <- pivot_longer(data, cols = -row, names_to = "Group", values_to = "Value")
+
+head(data)
+ggplot(data, aes(x = Group, y = Value)) +
+  geom_boxplot(width = 0.3, fill = c(colors[9],colors[10]), color = c(colors[9],color_lines[3]), size = 1.4, alpha = alpha_val) +
+  geom_line(aes(group = row), alpha = 0.4, size = 1.1) +
+  geom_jitter(width = 0.05, height = 0, alpha = 0.5) +  # Add jittered scatter points
+  labs(x = "Fixed", y = "Rating", title = "Connection with Partner") +
+  theme_bw()+
+  scale_x_discrete(labels = c("Tangos", "Solea")) +
+  geom_signif(comparisons = list(c("Fixed_R1", "Fixed_R2")), 
+              textsize = textsize_val, 
+              vjust = vjust_val,
+              map_signif_level = TRUE,
+              show.legend = FALSE,
+              annotations = c("*")
+  ) +
+  common_theme
+
+data <- data.frame(
+  Other_R1 ,
+  Other_R2
+)
+
+data$row <- 1:nrow(data)
+data <- pivot_longer(data, cols = -row, names_to = "Group", values_to = "Value")
+
+head(data)
+p1<- ggplot(data, aes(x = Group, y = Value)) +
+  geom_boxplot(width = 0.3, fill = c(colors[9],colors[10]), color = c(colors[9],color_lines[3]), size = 1.4, alpha = alpha_val) +
+  geom_line(aes(group = row), alpha = 0.4, size = 1.1) +
+  geom_jitter(width = 0.05, height = 0, alpha = 0.5) +  # Add jittered scatter points
+  labs(x = "Other", y = "", title = "Connection with Partner") +
+  theme_bw()+
+  scale_x_discrete(labels = c("Tangos", "Solea")) +
+  geom_signif(comparisons = list(c("Other_R1", "Other_R2")), 
+              textsize = textsize_val, 
+              vjust = vjust_val,
+              map_signif_level = TRUE,
+              show.legend = FALSE
+  ) +
+  common_theme +
+  theme(panel.grid = element_blank())
+
+
+
+library(gridExtra)
+grid.arrange(
+  # First column with plots p1, p2, and p3
+  p0, p1, ncol = 2
+  
+)
+
+
+
+##### Quality of Impro the other way around DxC
+
+
+data_ole <- data_ole %>%
+  inner_join(name_palo, by = c("Participant", "Palo")) %>%
+  group_by(Participant, INDvsGR, Pair, Palo) %>%
+  mutate(mean_Q1a = mean(Q1a, na.rm = TRUE))
+
+filtered_data <- data_ole %>%
+  distinct(Participant, Artist, INDvsGR, mean_Q1a, Pair, Palo) %>%
+  filter(!is.na(INDvsGR))  # Remove rows with missing INDvsGR values
+
+grouped_data <- filtered_data %>%
+  pivot_wider(names_from = INDvsGR, values_from = mean_Q1a)
+
+print(grouped_data)
+
+grouped_data <- grouped_data %>% arrange(Pair, Palo, Artist)
+
+# Split in two groups
+grouped_P <- grouped_data[grepl("P", grouped_data$Artist),] #only dancers
+print(grouped_P)
+
+
+grouped_G <- grouped_data[grepl("G", grouped_data$Artist),] #only dancers
+print(grouped_G)
+
+
+# Subset weight data before treatment
+Group_P <- grouped_P$Group
+Group_G <- grouped_G$Group
+# subset weight data after treatment
+Indiv_P <- grouped_P$Indiv
+Indiv_G <- grouped_G$Indiv
+# Plot paired data
+
+
+
+# Calculate means and standard deviations
+Mean_Group_P <- mean(na.omit(Group_P))
+SD_Group_P <- sd(na.omit(Group_P))
+Mean_Group_G <- mean(na.omit(Group_G))
+SD_Group_G <- sd(na.omit(Group_G))
+Mean_Indiv_P <- mean(na.omit(Indiv_P))
+SD_Indiv_P <- sd(na.omit(Indiv_P))
+Mean_Indiv_G <- mean(na.omit(Indiv_G))
+SD_Indiv_G <- sd(na.omit(Indiv_G))
+
+# Print means and standard deviations for Group_P and Group_G
+cat("Mean_Group_P:", Mean_Group_P, "\n")
+cat("SD_Group_P:", SD_Group_P, "\n")
+cat("Mean_Group_G:", Mean_Group_G, "\n")
+cat("SD_Group_G:", SD_Group_G, "\n")
+
+# Print means and standard deviations for Indiv_P and Indiv_G
+cat("Mean_Indiv_P:", Mean_Indiv_P, "\n")
+cat("SD_Indiv_P:", SD_Indiv_P, "\n")
+cat("Mean_Indiv_G:", Mean_Indiv_G, "\n")
+cat("SD_Indiv_G:", SD_Indiv_G, "\n")
+
+
+library(PairedData)
+pd_P <- paired(Group_P, Group_G)
+p1 <- plot(pd_P, type = "profile") + theme_bw()
+
+pd_G <- paired(Indiv_P, Indiv_G)
+p2 <- plot(pd_G, type = "profile") + theme_bw()
+
+t.test(Group_P, Group_G, paired = TRUE, correct = TRUE, alternative = 'two.sided')
+t.test(Indiv_P, Indiv_G, paired = TRUE, correct = TRUE, alternative = 'two.sided')
+
+
+shapiro.test(Indiv_P)
+shapiro.test(Group_P)
+shapiro.test(Indiv_G)
+shapiro.test(Group_G)
+
+wilcox.test(Indiv_P, Group_P, paired = TRUE)
+wilcox.test(Indiv_G, Group_G, paired = TRUE)
+
+library(gridExtra)
+grid.arrange(
+  # First column with plots p1, p2, and p3
+  p1, p2, ncol = 2
+  
+)
+
+
+
+library(tidyverse)
+colors <- c("#8DD3C7", "#FFFFB3", "#BEBADA", "#FB8072", "#80B1D3", "#FDB462", "#B3DE69", "#FCCDE5", "#00008B", "#BC80BD")
+labels_names <- c('Group', 'Indiv','Mixed', 'Free','Individual', 'Group', 'Musician', 'Dancer', 'Tangos', 'Solea')
+color_lines <- c("#55A4A0","#D2BF8E", '#975991')
+label_lines <- c("Group","Indiv", 'Solea')
+common_theme <- theme(
+  axis.text.y = element_text(size = 10),   # Adjust y-axis text size
+  axis.text.x = element_text(size = 10),   # Adjust y-axis text size
+  strip.text = element_text(size = 12),     # Adjust facet titles size
+  panel.grid = element_blank(),
+  plot.title = element_text(hjust = 0.5))  # Center the title
+#plot.margin = margin(1, 1, 1, 1, "cm")
+
+
+textsize_val <- 6
+vjust_val <- 1.8
+
+
+#First plot
+data <- data.frame(
+  Group_P ,
+  Group_G
+)
+
+data$row <- 1:nrow(data)
+data <- pivot_longer(data, cols = -row, names_to = "Group", values_to = "Value")
+
+head(data)
+p0 <- ggplot(data, aes(x = Group, y = Value)) +
+  geom_boxplot(width = 0.3, fill = c(colors[9],colors[10]), color = c(colors[9],color_lines[3]), size = 1.4, alpha = alpha_val) +
+  geom_line(aes(group = row), alpha = 0.4, size = 1.1) +
+  geom_jitter(width = 0.05, height = 0, alpha = 0.5) +  # Add jittered scatter points
+  labs(x = "Group", y = "Rating", title = "Connection with Partner") +
+  theme_bw()+
+  scale_x_discrete(labels = c("Tangos", "Solea")) +
+  geom_signif(comparisons = list(c("Group_P", "Group_G")), 
+              textsize = textsize_val, 
+              vjust = vjust_val,
+              map_signif_level = TRUE,
+              show.legend = FALSE,
+              annotations = c("*")
+  ) +
+  common_theme
+
+data <- data.frame(
+  Indiv_P ,
+  Indiv_G
+)
+
+data$row <- 1:nrow(data)
+data <- pivot_longer(data, cols = -row, names_to = "Group", values_to = "Value")
+
+head(data)
+#THIS ONE IS A KEEPER
+k1 <- ggplot(data, aes(x = Group, y = Value)) +
+  geom_boxplot(width = 0.3, fill = c(colors[9],colors[10]), color = c(colors[9],color_lines[3]), size = 1.4, alpha = alpha_val) +
+  geom_line(aes(group = row), alpha = 0.4, size = 1.1) +
+  geom_jitter(width = 0.05, height = 0, alpha = 0.5) +  # Add jittered scatter points
+  labs(x = "Individual", y = "Rating", title = "Qualitiy of Improvisation") +
+  theme_bw()+
+  scale_x_discrete(labels = c("Musician", "Dancer")) +
+  geom_signif(comparisons = list(c("Indiv_P", "Indiv_G")), 
+              textsize = textsize_val, 
+              vjust = vjust_val,
+              map_signif_level = TRUE,
+              show.legend = FALSE
+  ) +
+  common_theme +
+  theme(panel.grid = element_blank())
+
+
+
+library(gridExtra)
+grid.arrange(
+  # First column with plots p1, p2, and p3
+  p0, p1, ncol = 2
+  
+)
+
+
+
+
+##### Absorption by activity the other way around
+
+
+data_ole <- data_ole %>%
+  inner_join(name_palo, by = c("Participant", "Palo")) %>%
+  group_by(Participant, INDvsGR, Pair, Palo) %>%
+  mutate(mean_Abs_Av = mean(Abs_Av, na.rm = TRUE))
+
+filtered_data <- data_ole %>%
+  distinct(Participant, Artist, MIXvsIMP, mean_Abs_Av, Pair, Palo) %>%
+  filter(!is.na(MIXvsIMP))  # Remove rows with missing INDvsGR values
+
+grouped_data <- filtered_data %>%
+  pivot_wider(names_from = MIXvsIMP, values_from = mean_Abs_Av)
+
+print(grouped_data)
+
+grouped_data <- grouped_data %>% arrange(Pair, Palo, Artist)
+
+# Split in two groups
+grouped_P <- grouped_data[grepl("P", grouped_data$Artist),] #only dancers
+print(grouped_P)
+
+
+grouped_G <- grouped_data[grepl("G", grouped_data$Artist),] #only dancers
+print(grouped_G)
+
+
+# Subset weight data before treatment
+Mixed_P <- grouped_P$Mixed
+Mixed_G <- grouped_G$Mixed
+# subset weight data after treatment
+Impro_P <- grouped_P$Impro
+Impro_G <- grouped_G$Impro
+# Plot paired data
+
+
+
+# Calculate means and standard deviations
+Mean_Mixed_P <- mean(na.omit(Mixed_P))
+SD_Mixed_P <- sd(na.omit(Mixed_P))
+Mean_Mixed_G <- mean(na.omit(Mixed_G))
+SD_Mixed_G <- sd(na.omit(Mixed_G))
+Mean_Impro_P <- mean(na.omit(Impro_P))
+SD_Impro_P <- sd(na.omit(Impro_P))
+Mean_Impro_G <- mean(na.omit(Impro_G))
+SD_Impro_G <- sd(na.omit(Impro_G))
+
+# Print means and standard deviations for Mixed_P and Mixed_G
+cat("Mean_Mixed_P:", Mean_Mixed_P, "\n")
+cat("SD_Mixed_P:", SD_Mixed_P, "\n")
+cat("Mean_Mixed_G:", Mean_Mixed_G, "\n")
+cat("SD_Mixed_G:", SD_Mixed_G, "\n")
+
+# Print means and standard deviations for Impro_P and Impro_G
+cat("Mean_Impro_P:", Mean_Impro_P, "\n")
+cat("SD_Impro_P:", SD_Impro_P, "\n")
+cat("Mean_Impro_G:", Mean_Impro_G, "\n")
+cat("SD_Impro_G:", SD_Impro_G, "\n")
+
+
+library(PairedData)
+pd_P <- paired(Mixed_P, Mixed_G)
+p1 <- plot(pd_P, type = "profile") + theme_bw()
+
+pd_G <- paired(Impro_P, Impro_G)
+p2 <- plot(pd_G, type = "profile") + theme_bw()
+
+t.test(Mixed_P, Mixed_G, paired = TRUE, correct = TRUE, alternative = 'two.sided')
+t.test(Impro_P, Impro_G, paired = TRUE, correct = TRUE, alternative = 'two.sided')
+
+
+shapiro.test(Impro_P)
+shapiro.test(Mixed_P)
+shapiro.test(Impro_G)
+shapiro.test(Mixed_G)
+
+wilcox.test(Impro_P, Mixed_P, paired = TRUE)
+wilcox.test(Impro_G, Mixed_G, paired = TRUE)
+
+library(gridExtra)
+grid.arrange(
+  # First column with plots p1, p2, and p3
+  p1, p2, ncol = 2
+  
+)
+
+
+
+library(tidyverse)
+colors <- c("#8DD3C7", "#FFFFB3", "#BEBADA", "#FB8072", "#80B1D3", "#FDB462", "#B3DE69", "#FCCDE5", "#00008B", "#BC80BD")
+labels_names <- c('Mixed', 'Impro','Mixeded', 'Free','Improidual', 'Mixed', 'Musician', 'Dancer', 'Tangos', 'Solea')
+color_lines <- c("#55A4A0","#D2BF8E", '#975991')
+label_lines <- c("Mixed","Impro", 'Solea')
+common_theme <- theme(
+  axis.text.y = element_text(size = 10),   # Adjust y-axis text size
+  axis.text.x = element_text(size = 10),   # Adjust y-axis text size
+  strip.text = element_text(size = 12),     # Adjust facet titles size
+  panel.grid = element_blank(),
+  plot.title = element_text(hjust = 0.5))  # Center the title
+#plot.margin = margin(1, 1, 1, 1, "cm")
+
+
+textsize_val <- 6
+vjust_val <- 1.8
+
+
+#First plot
+data <- data.frame(
+  Mixed_P ,
+  Mixed_G
+)
+
+data$row <- 1:nrow(data)
+data <- pivot_longer(data, cols = -row, names_to = "Mixed", values_to = "Value")
+
+head(data)
+p0 <- ggplot(data, aes(x = Mixed, y = Value)) +
+  geom_boxplot(width = 0.3, fill = c(colors[9],colors[10]), color = c(colors[9],color_lines[3]), size = 1.4, alpha = alpha_val) +
+  geom_line(aes(Mixed = row), alpha = 0.4, size = 1.1) +
+  geom_jitter(width = 0.05, height = 0, alpha = 0.5) +  # Add jittered scatter points
+  labs(x = "Mixed", y = "Rating", title = "Connection with Partner") +
+  theme_bw()+
+  scale_x_discrete(labels = c("Tangos", "Solea")) +
+  geom_signif(comparisons = list(c("Mixed_P", "Mixed_G")), 
+              textsize = textsize_val, 
+              vjust = vjust_val,
+              map_signif_level = TRUE,
+              show.legend = FALSE,
+              annotations = c("*")
+  ) +
+  common_theme
+
+data <- data.frame(
+  Impro_P ,
+  Impro_G
+)
+
+data$row <- 1:nrow(data)
+data <- pivot_longer(data, cols = -row, names_to = "Mixed", values_to = "Value")
+
+head(data)
+#THIS ONE IS A KEEPER
+k1 <- ggplot(data, aes(x = Mixed, y = Value)) +
+  geom_boxplot(width = 0.3, fill = c(colors[9],colors[10]), color = c(colors[9],color_lines[3]), size = 1.4, alpha = alpha_val) +
+  geom_line(aes(Mixed = row), alpha = 0.4, size = 1.1) +
+  geom_jitter(width = 0.05, height = 0, alpha = 0.5) +  # Add jittered scatter points
+  labs(x = "Improidual", y = "Rating", title = "Qualitiy of Improvisation") +
+  theme_bw()+
+  scale_x_discrete(labels = c("Musician", "Dancer")) +
+  geom_signif(comparisons = list(c("Impro_P", "Impro_G")), 
+              textsize = textsize_val, 
+              vjust = vjust_val,
+              map_signif_level = TRUE,
+              show.legend = FALSE
+  ) +
+  common_theme +
+  theme(panel.grid = element_blank())
+
+
+
+library(gridExtra)
+grid.arrange(
+  # First column with plots p1, p2, and p3
+  p0, p1, ncol = 2
+  
+)
+

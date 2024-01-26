@@ -74,6 +74,13 @@ model_participant <- lmer(Perf_Av ~ instruction_2 + (1 | Participant), data = da
 model_pair <- lmer(Perf_Av ~ instruction_2 + (1 | Pair), data = data_ole)
 model_nested <- lmer(Perf_Av ~ instruction_2 + (1 | Pair/Participant), data = data_ole)
 
+
+model_participant = lmer(Q3 ~    Q4a + Q1b + GDSI +   (1 + Q4a | Participant), data = data_filtered_Q4a)
+model_nested = lmer(Q3 ~   Q4a + Q1b + GDSI +  (1  | Pair/Participant), data = data_filtered_Q4a)
+model_pair = lmer(Q3 ~   Q4a + Q1b + GDSI +  (1  | Pair), data = data_filtered_Q4a)
+
+
+
 # Extract random intercepts for each group
 participant_intercept <- ranef(model_participant)$Participant[, 1]
 pair_intercept <- ranef(model_pair)$Pair[, 1]
@@ -156,6 +163,23 @@ ggplot() +
   xlab("Group") +
   ylab("Intercept") +
   ggtitle("Random Intercepts and Fixed Effects")
+  
+
+ggplot() +
+    geom_jitter(data = data_ole, aes(x = row_number(Q3) , y = Q3, color = "Fixed Effects", group = "Participant"), width = 0.2, height = 0.2) +
+    geom_smooth(data = data_ole, aes(x = row_number(Q3), y = Q3, color = "Fixed Effects"), method = "lm", se = FALSE,  group = "Participant") +
+    xlab("Group") +
+    ylab("Intercept") +
+    ggtitle("Random Intercepts and Fixed Effects") + facet_wrap(~Participant) 
+  
+
+ggplot() +
+  geom_jitter(data = data_ole, aes(x = row_number(participant_intercept) , y = participant_intercept, color = Participant, group = "Participant"), width = 0.2, height = 0.2) +
+  geom_smooth(data = data_ole, aes(x = row_number(participant_intercept), y = participant_intercept), method = "lm", se = FALSE,  group = "Participant") +
+  xlab("Group") +
+  ylab("Intercept") +
+  ggtitle("Random Intercepts and Fixed Effects")
+
 
 ggplot() +
   geom_jitter(data = data_ole, aes(x = participant_num, y = participant_intercept, color = "Participant"), width = 0.2, height = 0.2) +
@@ -183,7 +207,43 @@ ggplot() +
   ggtitle("Random Intercepts for Participant, Pair, and Nested Models")
 
 
+
+
+
+
+
 plot.new()
+
+ggplot(data_ole, aes(x = Q6a, y = Q3))+ geom_point() + scale_x_continuous(1:8) + facet_wrap(~Participant)
+
+
+m00a = lmer(Q3 ~    Q4a + Q1b + GDSI +   (1 + Q4a | Participant), data = data_filtered_Q4a)
+m01a = lmer(Q3 ~   Q4a + Q1b + GDSI +  (1  | Pair/Participant), data = data_filtered_Q4a)
+m02a = lmer(Q3 ~   Q4a + Q1b + GDSI +  (1  | Participant), data = data_filtered_Q4a)
+
+# __________ Model 7 __________
+ggplot(filtered d, aes(Q6a, Q3, group=Participant))+ geom_point(aes(color=Participant))
+
+summary(m7_1p<-lmer(dep_m7~months+(months|id), data=dt))
+summary(m7_2p<-lmer(dep_m7~months+I(months^2)+(months+I(months^2)|id), data=dt))
+summary(m7_3p<-lmer(dep_m7~months+I(months^2)+I(months^3)+(months+I(months^2)+I(months^3)|id), data=dt))
+
+
+dat <- tibble("months" = seq(0,10,by=0.1))
+dat$pred_p1<-predict(m7_1p, dat,re.form=NA)
+dat$pred_p2<-predict(m7_2p, dat,re.form=NA)
+dat$pred_p3<-predict(m7_3p, dat,re.form=NA)
+
+
+ggplot(dt)+geom_line(aes(months, dep_m7, group=id, color=id), alpha=0.4)+guides(color="none")+
+  geom_line(data=dat, aes(x=months, y=pred_p1), color="black", size=1.5)+
+  geom_line(data=dat, aes(x=months, y=pred_p2), color="red",size=1.5)+
+  geom_line(data=dat, aes(x=months, y=pred_p3), color="green",size=1.5)
+
+
+
+
+
 
 
 m00a = lmer(Q3 ~  1 +  (1 | Pair/Participant), data = data_filtered_Q4a)
@@ -195,7 +255,7 @@ p0 <- sjPlot::plot_model(title = 'Model 1 - Flow predictors - Conditions',
 
 
 
-
+p0
 library(ggplot2)
 
 # Extract the fixed effects coefficients from the model
@@ -229,7 +289,7 @@ p1 <- ggplot(data = data_points, aes(x = observed, y = predicted)) +
   ggtitle("Scatter Plot of Data Points and Fitted Model")
 
 
-
+p1
 #### Visualize model
 # 
 # effects_m01a <- effects::effect(term= "Q4a", mod= m01a)
@@ -368,6 +428,282 @@ ggplot(data = data_plot, aes(x = observed, y = fitted)) +
   xlab("Participant Number") +
   ylab("Fitted Value") +
   ggtitle("Ribbon Plot for Smooth Line with Confidence Intervals")
+
+
+#####
+
+model_participant = lmer(Q3 ~    Q4a + Q1b + GDSI +   (1 + Q4a | Participant), data = data_filtered_Q4a)
+model_nested = lmer(Q3 ~   Q4a + Q1b + GDSI +  (1  | Pair/Participant), data = data_filtered_Q4a)
+model_pair = lmer(Q3 ~   Q4a + Q1b + GDSI +  (1  | Participant), data = data_filtered_Q4a)
+
+
+
+# Extract random intercepts for each group
+participant_intercept <- ranef(model_participant)$Participant[, 1]
+pair_intercept <- ranef(model_pair)$Pair[, 1]
+nested_intercept <- ranef(model_nested)$`Participant:Pair`[, 1]
+
+
+# Get the random intercepts for the Participant:Pair level
+random_intercepts <- ranef(model_nested)$`Participant:Pair`
+# Get the level names for the random intercepts
+level_names <- rownames(random_intercepts)
+data_filtered_Q4a <- data_filtered_Q4a %>%
+  mutate(Nested = paste(Participant, Pair, sep = ":"))
+
+
+## ONLY RUN ONCE
+# Extract the pair and participant numbers from the level names
+level_names_split <- strsplit(level_names, split = ":|_")
+pairs <- sapply(level_names_split, function(x) paste(x[2], x[3], sep = "_"))
+participants <- sapply(level_names_split, function(x) x[1])
+mapping_df <- data.frame(Pair = pairs, Participant = participants, Nested_Name = level_names)
+#data_filtered_Q4a <- merge(data_filtered_Q4a, mapping_df, by = c("participant_num", "Pair"))
+
+
+# Convert the level_names to a data frame
+library(tidyr)
+
+# Only run ONCE
+# Create a data frame to map each pair+participant to its nested name
+#mapping_df <- data.frame(Pair = pairs, Participant = participants, Nested_Name = level_names)
+
+# Merge the mappings into the original data frame
+#data_filtered_Q4a <- merge(data_filtered_Q4a, mapping_df, by = c("Participant", "Pair"))
+
+# Create new numerical variables for "participant" and "pair"
+data_filtered_Q4a$participant_num <- as.numeric(factor(data_filtered_Q4a$Participant))
+data_filtered_Q4a$pair_num <- as.numeric(factor(data_filtered_Q4a$Pair))
+data_filtered_Q4a$nested_num <- as.numeric(factor(data_filtered_Q4a$Nested))
+
+# Add random intercepts to the new variables
+data_filtered_Q4a$participant_intercept <- participant_intercept[data_filtered_Q4a$participant_num]
+data_filtered_Q4a$pair_intercept <- pair_intercept[data_filtered_Q4a$pair_num]
+data_filtered_Q4a$nested_intercept <- nested_intercept[data_filtered_Q4a$nested_num]
+
+# Check for collinearity between random intercepts
+cor(data_filtered_Q4a$participant_intercept, data_filtered_Q4a$pair_intercept)
+cor(data_filtered_Q4a$participant_intercept, data_filtered_Q4a$nested_intercept)
+cor(data_filtered_Q4a$pair_intercept, data_filtered_Q4a$nested_intercept)
+
+
+# Create a scatter plot with a fitted line for all three models
+ggplot() +
+  geom_jitter(data = data_filtered_Q4a, aes(x = participant_num, y = participant_intercept, color = "Participant"), width = 0.2, height = 0.2) +
+  geom_smooth(data = data_filtered_Q4a, aes(x = participant_num, y = participant_intercept), method = "lm", color = "blue") +
+  geom_jitter(data = data_filtered_Q4a, aes(x = participant_num, y = pair_intercept, color = "Pair"), width = 0.2, height = 0.2) +
+  geom_smooth(data = data_filtered_Q4a, aes(x = participant_num, y = pair_intercept), method = "lm", color = "red") +
+  geom_jitter(data = data_filtered_Q4a, aes(x = participant_num, y = nested_intercept, color = "Nested"), width = 0.2, height = 0.2) +
+  geom_smooth(data = data_filtered_Q4a, aes(x = participant_num, y = nested_intercept), method = "lm", color = "green") +
+  scale_color_manual(values = c("green","red", "blue")) +
+  xlab("Group") +
+  ylab("Random Intercept") +
+  ggtitle("Random Intercepts for Participant, Pair, and Nested Models")
+
+
+
+
+# Create a scatter plot with a fitted line for all three models
+ggplot() +
+  geom_jitter(data = data_filtered_Q4a, aes(x = row_number(participant_num), y = participant_intercept, color = Pair:Participant), width = 0.2, height = 0.2) +
+  geom_smooth(data = data_filtered_Q4a, aes(x = row_number(participant_num), y = participant_intercept, color = "Fixed Effects"), method = "lm", se = FALSE, linetype = "dashed" ) +
+  xlab("Group") +
+  ylab("Intercept") +
+  ggtitle("Random Intercepts and Fixed Effects")
+
+ggplot() +
+  geom_jitter(data = data_filtered_Q4a, aes(x = participant_num, y = participant_intercept, color = "Participant"), width = 0.2, height = 0.2) +
+  geom_smooth(data = data_filtered_Q4a, aes(x = participant_num, y = participant_intercept), method = "lm", color = "blue") 
+
+geom_smooth(data = data_filtered_Q4a, aes(x = participant_num, y = Perf_Av, color = "Fixed Effects"), method = "lm", se = FALSE, linetype = "dashed") +
+  scale_color_manual(values = c("green", "red", "blue", "black")) +
+  xlab("Group") +
+  ylab("Intercept") +
+  ggtitle("Random Intercepts and Fixed Effects")
+
+
+ggplot() +
+  geom_jitter(data = data_filtered_Q4a, aes(x = row_number(Q3) , y = Q3, color = "Fixed Effects", group = "Participant"), width = 0.2, height = 0.2) +
+  geom_smooth(data = data_filtered_Q4a, aes(x = row_number(Q3), y = Q3, color = "Fixed Effects"), method = "lm", se = FALSE,  group = "Participant") +
+  xlab("Group") +
+  ylab("Intercept") +
+  ggtitle("Random Intercepts and Fixed Effects") + facet_wrap(~Participant) 
+
+
+ggplot() +
+  geom_jitter(data = data_filtered_Q4a, aes(x = row_number(participant_intercept) , y = participant_intercept, color = Participant, group = "Participant"), width = 0.2, height = 0.2) +
+  geom_smooth(data = data_filtered_Q4a, aes(x = row_number(participant_intercept), y = participant_intercept), method = "lm", se = FALSE,  group = "Participant") +
+  xlab("Group") +
+  ylab("Intercept") +
+  ggtitle("Random Intercepts and Fixed Effects")
+
+
+ggplot() +
+  geom_jitter(data = data_filtered_Q4a, aes(x = participant_num, y = participant_intercept, color = "Participant"), width = 0.2, height = 0.2) +
+  geom_smooth(data = data_filtered_Q4a, aes(x = participant_num, y = participant_intercept), method = "lm", color = "blue") +
+  geom_jitter(data = data_filtered_Q4a, aes(x = participant_num, y = pair_intercept, color = "Pair"), width = 0.2, height = 0.2) +
+  geom_smooth(data = data_filtered_Q4a, aes(x = pair_num, y = pair_intercept), method = "lm", color = "red") +
+  geom_jitter(data = data_filtered_Q4a, aes(x = participant_num, y = nested_intercept, color = "Nested"), width = 0.2, height = 0.2) +
+  geom_smooth(data = data_filtered_Q4a, aes(x = nested_num, y = nested_intercept), method = "lm", color = "green") +
+  scale_color_manual(values = c("green","red", "blue")) +
+  xlab("Group") +
+  ylab("Random Intercept") +
+  ggtitle("Random Intercepts for Participant, Pair, and Nested Models")
+
+
+ggplot() +
+  geom_jitter(data = data_filtered_Q4a, aes(x = pair_num, y = participant_intercept, color = "Participant"), width = 0.2, height = 0.2) +
+  geom_smooth(data = data_filtered_Q4a, aes(x = pair_num, y = participant_intercept), method = "lm", color = "blue") +
+  geom_jitter(data = data_filtered_Q4a, aes(x = pair_num, y = pair_intercept, color = "Pair"), width = 0.2, height = 0.2) +
+  geom_smooth(data = data_filtered_Q4a, aes(x = pair_num, y = pair_intercept), method = "lm", color = "red") +
+  geom_jitter(data = data_filtered_Q4a, aes(x = pair_num, y = nested_intercept, color = "Nested"), width = 0.2, height = 0.2) +
+  geom_smooth(data = data_filtered_Q4a, aes(x = pair_num, y = nested_intercept), method = "lm", color = "green") +
+  scale_color_manual(values = c("green","red", "blue")) +
+  xlab("Group") +
+  ylab("Random Intercept") +
+  ggtitle("Random Intercepts for Participant, Pair, and Nested Models")
+
+
+##### MODEL 2
+plot(model_pair)
+
+model_participant = lmer(Q3 ~    Q4a + Q1b + GDSI +   (1 + Q4a | Participant), data = data_filtered_Q4a)
+model_nested = lmer(Q3 ~   Q4a + Q1b + GDSI +  (1  | Pair/Participant), data = data_filtered_Q4a)
+model_pair = lmer(Q3 ~   Q4a + Q1b + GDSI +  (1  | Participant), data = data_filtered_Q4a)
+
+
+model_participant  = lmer(Q3 ~    Q1b + Q4a  + Abs_Av + (1  | GMSI) + (1 + Q6b | Participant), data = data_filtered_Q6a)
+model_nested = lmer(Q3 ~    Q1b + Q4a + Abs_Av + Q6b +  (1  + Q6b | Participant) + (1 | GMSI), data = data_filtered_Q6a)
+model_pair = lmer(Q3 ~    Q1b + Q4a + Abs_Av + (1  + Abs_Av | Participant) + (1 | GMSI), data = data_filtered_Q6a)
+# Extract random intercepts for each group
+participant_intercept <- ranef(model_participant)$Participant[, 1]
+pair_intercept <- ranef(model_pair)$Participant[, 1]
+nested_intercept <- ranef(model_nested)$Participant[, 1]
+
+
+# Get the random intercepts for the Participant:Pair level
+random_intercepts <- ranef(model_nested)$`Participant:Pair`
+# Get the level names for the random intercepts
+level_names <- rownames(random_intercepts)
+data_filtered_Q6a <- data_filtered_Q6a %>%
+  mutate(Nested = paste(Participant, Pair, sep = ":"))
+
+
+## ONLY RUN ONCE
+# Extract the pair and participant numbers from the level names
+level_names_split <- strsplit(level_names, split = ":|_")
+pairs <- sapply(level_names_split, function(x) paste(x[2], x[3], sep = "_"))
+participants <- sapply(level_names_split, function(x) x[1])
+mapping_df <- data.frame(Pair = pairs, Participant = participants, Nested_Name = level_names)
+#data_filtered_Q6a <- merge(data_filtered_Q6a, mapping_df, by = c("participant_num", "Pair"))
+
+
+# Convert the level_names to a data frame
+library(tidyr)
+
+# Only run ONCE
+# Create a data frame to map each pair+participant to its nested name
+#mapping_df <- data.frame(Pair = pairs, Participant = participants, Nested_Name = level_names)
+
+# Merge the mappings into the original data frame
+#data_filtered_Q6a <- merge(data_filtered_Q6a, mapping_df, by = c("Participant", "Pair"))
+
+# Create new numerical variables for "participant" and "pair"
+data_filtered_Q6a$participant_num <- as.numeric(factor(data_filtered_Q6a$Participant))
+data_filtered_Q6a$pair_num <- as.numeric(factor(data_filtered_Q6a$Pair))
+data_filtered_Q6a$nested_num <- as.numeric(factor(data_filtered_Q6a$Nested))
+
+# Add random intercepts to the new variables
+data_filtered_Q6a$participant_intercept <- participant_intercept[data_filtered_Q6a$participant_num]
+data_filtered_Q6a$pair_intercept <- pair_intercept[data_filtered_Q6a$pair_num]
+data_filtered_Q6a$nested_intercept <- nested_intercept[data_filtered_Q6a$nested_num]
+
+# Check for collinearity between random intercepts
+cor(data_filtered_Q6a$participant_intercept, data_filtered_Q6a$pair_intercept)
+cor(data_filtered_Q6a$participant_intercept, data_filtered_Q6a$nested_intercept)
+cor(data_filtered_Q6a$pair_intercept, data_filtered_Q6a$nested_intercept)
+
+
+# Create a scatter plot with a fitted line for all three models
+ggplot() +
+  geom_jitter(data = data_filtered_Q6a, aes(x = participant_num, y = participant_intercept, color = "Participant"), width = 0.2, height = 0.2) +
+  geom_smooth(data = data_filtered_Q6a, aes(x = participant_num, y = participant_intercept), method = "lm", color = "blue") +
+  geom_jitter(data = data_filtered_Q6a, aes(x = participant_num, y = pair_intercept, color = "Pair"), width = 0.2, height = 0.2) +
+  geom_smooth(data = data_filtered_Q6a, aes(x = participant_num, y = pair_intercept), method = "lm", color = "red") +
+  geom_jitter(data = data_filtered_Q6a, aes(x = participant_num, y = nested_intercept, color = "Nested"), width = 0.2, height = 0.2) +
+  geom_smooth(data = data_filtered_Q6a, aes(x = participant_num, y = nested_intercept), method = "lm", color = "green") +
+  scale_color_manual(values = c("green","red", "blue")) +
+  xlab("Group") +
+  ylab("Random Intercept") +
+  ggtitle("Random Intercepts for Participant, Pair, and Nested Models")
+
+
+
+
+# Create a scatter plot with a fitted line for all three models
+ggplot() +
+  geom_jitter(data = data_filtered_Q6a, aes(x = row_number(participant_num), y = participant_intercept, color = Pair:Participant), width = 0.2, height = 0.2) +
+  geom_smooth(data = data_filtered_Q6a, aes(x = row_number(participant_num), y = participant_intercept, color = "Fixed Effects"), method = "lm", se = FALSE, linetype = "dashed" ) +
+  xlab("Group") +
+  ylab("Intercept") +
+  ggtitle("Random Intercepts and Fixed Effects")
+
+ggplot() +
+  geom_jitter(data = data_filtered_Q6a, aes(x = participant_num, y = participant_intercept, color = "Participant"), width = 0.2, height = 0.2) +
+  geom_smooth(data = data_filtered_Q6a, aes(x = participant_num, y = participant_intercept), method = "lm", color = "blue") 
+
+geom_smooth(data = data_filtered_Q6a, aes(x = participant_num, y = Perf_Av, color = "Fixed Effects"), method = "lm", se = FALSE, linetype = "dashed") +
+  scale_color_manual(values = c("green", "red", "blue", "black")) +
+  xlab("Group") +
+  ylab("Intercept") +
+  ggtitle("Random Intercepts and Fixed Effects")
+
+
+ggplot() +
+  geom_jitter(data = data_filtered_Q6a, aes(x = row_number(Q3) , y = Q3, color = "Fixed Effects", group = "Participant"), width = 0.2, height = 0.2) +
+  geom_smooth(data = data_filtered_Q6a, aes(x = row_number(Q3), y = Q3, color = "Fixed Effects"), method = "lm", se = FALSE,  group = "Participant") +
+  xlab("Group") +
+  ylab("Intercept") +
+  ggtitle("Random Intercepts and Fixed Effects") + facet_wrap(~Participant) 
+
+
+ggplot() +
+  geom_jitter(data = data_filtered_Q6a, aes(x = row_number(participant_intercept) , y = participant_intercept, color = Participant, group = "Participant"), width = 0.2, height = 0.2) +
+  geom_smooth(data = data_filtered_Q6a, aes(x = row_number(participant_intercept), y = participant_intercept), method = "lm", se = FALSE,  group = "Participant") +
+  xlab("Group") +
+  ylab("Intercept") +
+  ggtitle("Random Intercepts and Fixed Effects")
+
+
+ggplot() +
+  geom_jitter(data = data_filtered_Q6a, aes(x = participant_num, y = participant_intercept, color = "Participant"), width = 0.2, height = 0.2) +
+  geom_smooth(data = data_filtered_Q6a, aes(x = participant_num, y = participant_intercept), method = "lm", color = "blue") +
+  geom_jitter(data = data_filtered_Q6a, aes(x = participant_num, y = pair_intercept, color = "Pair"), width = 0.2, height = 0.2) +
+  geom_smooth(data = data_filtered_Q6a, aes(x = pair_num, y = pair_intercept), method = "lm", color = "red") +
+  geom_jitter(data = data_filtered_Q6a, aes(x = participant_num, y = nested_intercept, color = "Nested"), width = 0.2, height = 0.2) +
+  geom_smooth(data = data_filtered_Q6a, aes(x = nested_num, y = nested_intercept), method = "lm", color = "green") +
+  scale_color_manual(values = c("green","red", "blue")) +
+  xlab("Group") +
+  ylab("Random Intercept") +
+  ggtitle("Random Intercepts for Participant, Pair, and Nested Models")
+
+
+ggplot() +
+  geom_jitter(data = data_filtered_Q6a, aes(x = pair_num, y = participant_intercept, color = "Participant"), width = 0.2, height = 0.2) +
+  geom_smooth(data = data_filtered_Q6a, aes(x = pair_num, y = participant_intercept), method = "lm", color = "blue") +
+  geom_jitter(data = data_filtered_Q6a, aes(x = pair_num, y = pair_intercept, color = "Pair"), width = 0.2, height = 0.2) +
+  geom_smooth(data = data_filtered_Q6a, aes(x = pair_num, y = pair_intercept), method = "lm", color = "red") +
+  geom_jitter(data = data_filtered_Q6a, aes(x = pair_num, y = nested_intercept, color = "Nested"), width = 0.2, height = 0.2) +
+  geom_smooth(data = data_filtered_Q6a, aes(x = pair_num, y = nested_intercept), method = "lm", color = "green") +
+  scale_color_manual(values = c("green","red", "blue")) +
+  xlab("Group") +
+  ylab("Random Intercept") +
+  ggtitle("Random Intercepts for Participant, Pair, and Nested Models")
+
+
+
+
+
 
 
 

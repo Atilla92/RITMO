@@ -28,6 +28,13 @@ data_ole$instruction_2 <-factor(data_ole$instruction_2, levels = c("D5_M6_P_R1",
                                                                    "D5_M6_P_R2", "D5_M6_G_R2",  "D1_M6_P_R2", "D1_M6_G_R2","D6_M6_P_R2", "D6_M6_G_R2",  "D5_M5_P_R2", "D5_M5_G_R2","D1_M1_P_R2", "D1_M1_G_R2"
 ))
 
+# MACRO Check
+data_ole$Q1 <- (data_ole$Q1a + data_ole$Q1b) / 2
+data_ole$Q3 <- (data_ole$Q3a + data_ole$Q3b) / 2
+data_ole$Q6 <- (data_ole$Q6a + data_ole$Q6b) /2
+data_ole$Q5 <-  (data_ole$Q5a + data_ole$Q5b) /2
+data_ole$Q4 <- (data_ole$Q4a + data_ole$Q4b) /3
+
 
 #####  Create violinplots
 
@@ -483,7 +490,7 @@ p103 <- ggplot(data_test[data_test$C != "Neutral", ], aes(x = C, y = Q2a, fill =
               textsize = textsize_val, 
               vjust = vjust_val,
               map_signif_level = TRUE,
-              show.legend = FALSE,,
+              show.legend = FALSE,
               annotations = c("**")) +
   common_theme
 
@@ -610,7 +617,7 @@ p24 <- ggplot(data_test[data_test$C != "Neutral", ], aes(x = D, y = Q1b, fill = 
   facet_wrap(~ C, ncol = 2)
 
 
-
+p24
 
 
 grid.arrange(
