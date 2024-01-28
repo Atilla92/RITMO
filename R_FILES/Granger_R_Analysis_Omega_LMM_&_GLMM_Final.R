@@ -285,9 +285,17 @@ m01  = lmer(Q2a ~ instruction_2 + (1 | Pair/Participant), data = data_ole )
 
 
 
-m00 = lmer(Q2a ~ instruction_2  + Abs_Av + Q4a + Q6a +  (1 |GMSI) + (1 |Participant), data = data_ole)
-m00  = lmer(Q6b ~  instruction_2 + (1 |Participant), data = data_ole )
+m00 = lmer(Q1b ~ instruction_2 + (1 |Pair), data = data_ole)
+m01  = lmer(Q1b ~  instruction_2 + (1 |Participant), data = data_ole )
+
+tab_model(m00, m01, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m00","m01"), digits = 5 )
+
+
+anova(m0,m00)
 summary(m00)
+
+
 levels(data_ole$instruction_2)
 # ANOVA with orthogonal planned contrasts: (1) Homophonic vs Polyphonic; (2) Pairing with Melody vs No Melody; (3) Melody-to-Other vs Other-to-Melody
 # Check order of conditions (important for specifying contrast coefficients)

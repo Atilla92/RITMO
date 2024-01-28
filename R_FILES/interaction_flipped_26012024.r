@@ -127,8 +127,8 @@ common_theme <- theme(
 #plot.margin = margin(1, 1, 1, 1, "cm")
 
 
-textsize_val <- 6
-vjust_val <- 1.8
+textsize_val <- 10
+vjust_val <- 0.8
 
 
 #First plot
@@ -141,21 +141,22 @@ data$row <- 1:nrow(data)
 data <- pivot_longer(data, cols = -row, names_to = "Group", values_to = "Value")
 
 head(data)
-ggplot(data, aes(x = Group, y = Value)) +
-  geom_boxplot(width = 0.3, fill = c(colors[9],colors[10]), color = c(colors[9],color_lines[3]), size = 1.4, alpha = alpha_val) +
-  geom_line(aes(group = row), alpha = 0.4, size = 1.1) +
+k3 <- ggplot(data, aes(x = Group, y = Value)) +
+  geom_boxplot(width = 0.3, fill = c(colors[9],colors[10]), color = c(colors[9],color_lines[3]), size = 1.2, alpha = alpha_val) +
+  geom_line(aes(group = row), alpha = 0.4, size = 1) +
   geom_jitter(width = 0.05, height = 0, alpha = 0.5) +  # Add jittered scatter points
-  labs(x = "Fixed", y = "Rating", title = "Connection with Partner") +
+  labs(x = "Fixed", y = "", title = "Connection with Partner") +
   theme_bw()+
   scale_x_discrete(labels = c("Tangos", "Solea")) +
   geom_signif(comparisons = list(c("Fixed_R1", "Fixed_R2")), 
-              textsize = textsize_val, 
-              vjust = vjust_val,
+              textsize = 10, 
+              vjust = 0.6,
               map_signif_level = TRUE,
               show.legend = FALSE,
-              annotations = c("*")
+              annotations = c(".")
   ) +
-  common_theme
+  common_theme  + scale_y_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1))
+
 
 data <- data.frame(
   Other_R1 ,
@@ -285,8 +286,8 @@ grid.arrange(
 library(tidyverse)
 colors <- c("#8DD3C7", "#FFFFB3", "#BEBADA", "#FB8072", "#80B1D3", "#FDB462", "#B3DE69", "#FCCDE5", "#00008B", "#BC80BD")
 labels_names <- c('Group', 'Indiv','Mixed', 'Free','Individual', 'Group', 'Musician', 'Dancer', 'Tangos', 'Solea')
-color_lines <- c("#55A4A0","#D2BF8E", '#975991')
-label_lines <- c("Group","Indiv", 'Solea')
+color_lines <- c("#55A4A0","#D2BF8E", '#975991', "#e67d08",'#74aa16' )
+label_lines <- c("Group","Indiv", 'Solea','Musician', 'Dancer' )
 common_theme <- theme(
   axis.text.y = element_text(size = 10),   # Adjust y-axis text size
   axis.text.x = element_text(size = 10),   # Adjust y-axis text size
@@ -310,13 +311,13 @@ data$row <- 1:nrow(data)
 data <- pivot_longer(data, cols = -row, names_to = "Group", values_to = "Value")
 
 head(data)
-p0 <- ggplot(data, aes(x = Group, y = Value)) +
-  geom_boxplot(width = 0.3, fill = c(colors[9],colors[10]), color = c(colors[9],color_lines[3]), size = 1.4, alpha = alpha_val) +
+ ggplot(data, aes(x = Group, y = Value)) +
+  geom_boxplot(width = 0.3, fill = c(colors[6],colors[7]), color = c(colors[6],colors[7]), size = 1.4, alpha = alpha_val) +
   geom_line(aes(group = row), alpha = 0.4, size = 1.1) +
   geom_jitter(width = 0.05, height = 0, alpha = 0.5) +  # Add jittered scatter points
-  labs(x = "Group", y = "Rating", title = "Connection with Partner") +
+  labs(x = "Group", y = "", title = "Quality of Improvisation") +
   theme_bw()+
-  scale_x_discrete(labels = c("Tangos", "Solea")) +
+  scale_x_discrete(labels = c("Musician", "Dancer")) +
   geom_signif(comparisons = list(c("Group_P", "Group_G")), 
               textsize = textsize_val, 
               vjust = vjust_val,
@@ -324,7 +325,7 @@ p0 <- ggplot(data, aes(x = Group, y = Value)) +
               show.legend = FALSE,
               annotations = c("*")
   ) +
-  common_theme
+  common_theme  + scale_y_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1))
 
 data <- data.frame(
   Indiv_P ,
@@ -336,11 +337,11 @@ data <- pivot_longer(data, cols = -row, names_to = "Group", values_to = "Value")
 
 head(data)
 #THIS ONE IS A KEEPER
-k1 <- ggplot(data, aes(x = Group, y = Value)) +
-  geom_boxplot(width = 0.3, fill = c(colors[9],colors[10]), color = c(colors[9],color_lines[3]), size = 1.4, alpha = alpha_val) +
-  geom_line(aes(group = row), alpha = 0.4, size = 1.1) +
+k2 <- ggplot(data, aes(x = Group, y = Value)) +
+  geom_boxplot(width = 0.3, fill = c(colors[6],colors[7]), color = c(color_lines[4],color_lines[5]), size = 1.4, alpha = alpha_val) +
+  geom_line(aes(group = row), alpha = 0.4, size = 1) +
   geom_jitter(width = 0.05, height = 0, alpha = 0.5) +  # Add jittered scatter points
-  labs(x = "Individual", y = "Rating", title = "Qualitiy of Improvisation") +
+  labs(x = "Individual", y = "", title = "Qualitiy of Improvisation") +
   theme_bw()+
   scale_x_discrete(labels = c("Musician", "Dancer")) +
   geom_signif(comparisons = list(c("Indiv_P", "Indiv_G")), 
@@ -350,14 +351,15 @@ k1 <- ggplot(data, aes(x = Group, y = Value)) +
               show.legend = FALSE
   ) +
   common_theme +
-  theme(panel.grid = element_blank())
+  theme(panel.grid = element_blank()) + 
+  scale_y_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1))
 
 
 
 library(gridExtra)
 grid.arrange(
   # First column with plots p1, p2, and p3
-  p0, p1, ncol = 2
+  k0, k2, k3, ncol = 3
   
 )
 
