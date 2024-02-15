@@ -168,8 +168,8 @@ data <- pivot_longer(data, cols = -row, names_to = "Group", values_to = "Value")
 head(data)
 library(ggsignif)
 k0 <- ggplot(data, aes(x = Group, y = Value)) +
-  geom_boxplot(width = 0.3, fill = c(colors[1],colors[2]), color = c(color_lines[1],color_lines[2]), size = 1.4, alpha = alpha_val) +
-  geom_line(aes(group = row), alpha = 0.4, size = 1.1) +
+  geom_boxplot(width = 0.3, fill = c(colors[1],colors[2]), color = c(color_lines[1],color_lines[2]), size = 1.2, alpha = alpha_val) +
+  geom_line(aes(group = row), alpha = 0.4, size = 1) +
   geom_jitter(width = 0.05, height = 0, alpha = 0.5) +  # Add jittered scatter points
   labs(x = "Musician", y = "Rating", title = "Quality of Improvisation") +
   theme_bw()+
@@ -180,7 +180,7 @@ k0 <- ggplot(data, aes(x = Group, y = Value)) +
               map_signif_level = TRUE,
               show.legend = FALSE
   ) +
-  common_theme
+  common_theme  + scale_y_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1))
 
 data <- data.frame(
   Group_P ,

@@ -71,6 +71,8 @@ data_ole$Q6 <- (data_ole$Q6a + data_ole$Q6b) /2
 data_ole$Q5 <-  (data_ole$Q5a + data_ole$Q5b) /2
 data_ole$Q4 <- (data_ole$Q4a + data_ole$Q4b) /3
 
+data_ole$Q37 <- (data_ole$Q3a * data_ole$Q3b) / 7
+
 
 # Factorize
 # ALl analysis
@@ -88,6 +90,7 @@ data_ole$Pair <- as.factor(data_ole$Pair)
 #data_ole$Artist <- ifelse(data_ole$Artist == "G", 0, ifelse(data_ole$Artist == "P", 1, data_ole$Artist))
 data_ole$Artist <- as.factor(data_ole$Artist)
 data_ole$Fam <- as.factor(data_ole$Fam)
+
 # Instructions
 data_ole$instruction <- as.factor(data_ole$instruction)
 data_ole$instruction <-factor(data_ole$instruction, levels = c("D5_M6_P", "D5_M6_G",  "D1_M6_P", "D1_M6_G","D6_M6_P", "D6_M6_G",  "D5_M5_P", "D5_M5_G","D1_M1_P", "D1_M1_G"))
@@ -98,6 +101,7 @@ data_ole$instruction_2 <-factor(data_ole$instruction_2, levels = c("D5_M6_P_R1",
 
 # Checking contrasts without including Palos
 # Check levels
+
 levels(data_ole$instruction)
 
 
@@ -106,7 +110,8 @@ data_filtered_Q4a <- data_ole[!is.na(data_ole$GDSI) & !is.na(data_ole$Q4a), ]
 data_filtered_Q6a <- data_ole[!is.na(data_ole$GMSI) & !is.na(data_ole$Q6a), ]
 data_filtered_Q6a <- data_ole[!is.na(data_ole$Q6a), ]
 
-
+data_ole$INDvsGR <- as.factor(data_ole$INDvsGR)
+data_ole$FIXvsOther <- as.factor(data_ole$FIXvsOther)
 # Models Version 1
 
 m00  = lmer(Q3 ~   instruction + (1 | Participant), data = data_ole )
@@ -284,43 +289,66 @@ tab_model(m00, m01, m02,m03,m04,m05, p.style = "stars", show.aic = TRUE, show.ci
 m01  = lmer(Q2a ~ instruction_2 + (1 | Pair/Participant), data = data_ole )
 
 
+m00 = lmer(Abs_Av ~ 1 + (1 |Pair) , data = data_ole)
+m01  = lmer(Abs_Av ~  instruction_2+ (1 |Pair), data = data_ole )
+anova(m00,m01)
 
-m00 = lmer(Q1b ~ instruction_2 + (1 |Pair), data = data_ole)
-m01  = lmer(Q1b ~  instruction_2 + (1 |Participant), data = data_ole )
+
+m00 = lmer(Q6b ~ 1 + (1 |Pair) + (1 | Participant), data = data_filtered_Q6a)
+m01  = lmer(Q6b ~  instruction_2+ (1 |Pair) + (1 | Participant), data = data_filtered_Q6a )
+anova(m00,m01)
+
+m00 = lmer(Q4a ~ 1 + (1 |Pair) + (1 | Participant), data = data_ole)
+m01  = lmer(Q4a ~  instruction_2 + (1 |Pair) + (1 | Participant), data = data_ole )
 
 tab_model(m00, m01, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
           dv.labels=c("m00","m01"), digits = 5 )
 
-
-anova(m0,m00)
+anova(m00,m01)
 summary(m00)
+
+data_ole$Q6b_c <- scale(data_ole$Q6b)
 
 
 levels(data_ole$instruction_2)
 # ANOVA with orthogonal planned contrasts: (1) Homophonic vs Polyphonic; (2) Pairing with Melody vs No Melody; (3) Melody-to-Other vs Other-to-Melody
 # Check order of conditions (important for specifying contrast coefficients)
-FlamencoImp_Comp <- lsmeans(m00, "instruction_2")
+FlamencoImp_Comp <- lsmeans(m01, "instruction_2")
 
 
 # Define names for contrast coefficients
-names_contrasts <- c("A_FIXvsOther", "B_MIXvsIMP", "C_INDvsGR", "D_DANvsMUS", "E_R1vsR2", "DxA", "DxB", "DxC")
+names_contrasts <- c("A_FIXvsOther", "B_MIXvsIMP", "C_INDvsGR", "D_DANvsMUS", "E_R1vsR2","F_FIXvsMIX","G_FIXvsIMP", "DxA", "DxB", "DxC", "DxF", "DxG")
 contrasts <- list(
   A_FIXvsOther = c(1,1,1,1,-4,-4,1,1,1,1,1,1,1,1,-4,-4,1,1,1,1),
   B_MIXvsIMP = c(-1,-1,1,1,0,0,-1,-1,1,1,-1,-1,1,1,0,0,-1,-1,1,1),
   C_INDvsGR = c(-1,-1,-1,-1,0,0,1,1,1,1,-1,-1,-1,-1,0,0,1,1,1,1),
   D_DANvsMUS = c(1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1),
   E_R1vsR2 = c(1,1,1,1,1,1,1,1,1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1),
-  DxA = c(1,-1,1,-1,-4,4,1,-1,1,-1,1,-1,1,-1,-4,4,1,-1,1,-1),
-  DxB = c(-1,1,1,-1,0,0,-1,1,1,-1,-1,1,1,-1,0,0,-1,1,1,-1),
-  DxC = c(-1,1,-1,1,0,0,1,-1,1,-1,-1,1,-1,1,0,0,1,-1,1,-1),
-  ExA = c(1,1,1,1,-4,-4,1,1,1,1,-1,-1,-1,-1,4,4,-1,-1,-1,-1),
-  ExB = c(-1,-1,1,1,0,0,-1,-1,1,1,1,1,-1,-1,0,0,1,1,-1,-1),
-  ExC = c(-1,-1,-1,-1,0,0,1,1,1,1,1,1,1,1,0,0,-1,-1,-1,-1),
-  ExD = c(1,-1,1,-1,1,-1,1,-1,1,-1,-1,1,-1,1,-1,1,-1,1,-1,1),
-  DxAxE = c(1,-1,1,-1,-4,4,1,-1,1,-1,-1,1,-1,1,4,-4,-1,1,-1,1),
-  DxBxE = c(-1,1,1,-1,0,0,-1,1,1,-1,1,-1,-1,1,0,0,1,-1,-1,1),
-  DxCxE = c(-1,1,-1,1,0,0,1,-1,1,-1,1,-1,1,-1,0,0,-1,1,-1,1)
+  F_FIXvsMIX = c(1,1,0,0,-1,-1,1,1,0,0,1,1,0,0,-1,-1,1,1,0,0),
+  G_FIXvsIMP = c ( 0,0,1,1,-1,-1,0,0,1,1,0,0,1,1,-1,-1,0,0,1,1),
+  DxA =  c(1,-1,1,-1,-4,4,1,-1,1,-1,1,-1,1,-1,-4,4,1,-1,1,-1),
+  DxB =  c(1,-1,-1,1,0,0,1,-1,-1,1,1,-1,-1,1,0,0,1,-1,-1,1),
+  DxC =  c(1,-1,1,-1,0,0,-1,1,-1,1,1,-1,1,-1,0,0,-1,1,-1,1),
+  DxF =  c(-1,1,0,0,1,-1,-1,1,0,0,-1,1,0,0,1,-1,-1,1,0,0),
+  DxG =  c(0,0,-1,1,1,-1,0,0,-1,1,0,0,-1,1,1,-1,-1,1,0,0),
+  ExA =  c(-1,-1,-1,-1,4,4,-1,-1,-1,-1,1,1,1,1,-4,-4,1,1,1,1),
+  ExB =  c(-1,-1,1,1,0,0,-1,-1,1,1,1,1,-1,-1,0,0,1,1,-1,-1),
+  ExC =  c(-1,-1,-1,-1,0,0,1,1,1,1,1,1,1,1,0,0,-1,-1,-1,-1),
+  ExD =  c(-1,1,-1,1,-1,1,-1,1,-1,1,1,-1,1,-1,1,-1,1,-1,1,-1),
+  ExF =  c(1,1,0,0,-1,-1,1,1,0,0,-1,-1,0,0,1,1,-1,-1,0,0),
+  ExG =  c(0,0,1,1,-1,-1,0,0,1,1,0,0,-1,-1,1,1,-1,-1,0,0),
+  DxCxA =  c(-1,1,-1,1,0,0,1,-1,1,-1,-1,1,-1,1,0,0,1,-1,1,-1),
+  DxCxB =  c(-1,1,1,-1,0,0,1,-1,-1,1,-1,1,1,-1,0,0,1,-1,-1,1),
+  DxCxE =  c(1,-1,1,-1,0,0,-1,1,-1,1,-1,1,-1,1,0,0,1,-1,1,-1),
+  DxCxF =  c(1,-1,0,0,0,0,-1,1,0,0,1,-1,0,0,0,0,-1,1,0,0),
+  DxCxG =  c(0,0,1,-1,0,0,0,0,-1,1,0,0,1,-1,0,0,-1,1,0,0),
+  DxExA =  c(1,-1,1,-1,-4,4,1,-1,1,-1,-1,1,-1,1,4,-4,-1,1,-1,1),
+  DxExB =  c(1,-1,-1,1,0,0,1,-1,-1,1,-1,1,1,-1,0,0,-1,1,1,-1),
+  DxExF =  c(-1,1,0,0,1,-1,-1,1,0,0,1,-1,0,0,-1,1,1,-1,0,0),
+  DxExG =  c(0,0,-1,1,1,-1,0,0,-1,1,0,0,1,-1,-1,1,1,-1,0,0)
+  
 )
+
 
 # Run contrasts and assign names to output table
 FlamencoImp_Comp.output <- contrast(FlamencoImp_Comp, contrasts, adjust="none", names = names_contrasts)
@@ -485,13 +513,13 @@ tab_model(m00, m01, m02,m03,m04, p.style = "stars", show.aic = TRUE, show.ci=FAL
 
 #BEST FITTING MODELS
 #m00 = lmer(Q3b ~ 1 +  (1 | Participant),  data = data_ole )
-m00 = lmer(Q3b ~  Q4a * Palo + Q1b + Abs_Av + GDSI +  (1 | Participant),  data = data_ole )
-m01 = lmer(Q3b ~  Q4a * Palo + Q1b + Abs_Av + GDSI +  (1 | Participant),  data = data_ole )
-m02 = lmer(Q3b ~  Q4a + Q1b + Abs_Av + GDSI +  (1 | Participant),  data = data_ole )
+m00 = lmer(Q3b ~  Q4a * Palo + Q1b + Abs_Av + GDSI +  (1 | Pair/Participant),  data = data_ole )
+m01 = lmer(Q3b ~  Q4a * Palo + Q1b + Abs_Av + GDSI +  (1 | Pair/Participant),  data = data_ole )
+m02 = lmer(Q3b ~  Q4a + Q1b + Abs_Av + GDSI +  (1 | Pair/Participant),  data = data_ole )
 
-m03  = lmer(Q3b ~  Q4a  +Q1b + Abs_Av +  Q6a *GDSI +  (1 | Participant), data = data_ole )
-m04  = lmer(Q3b ~  Q4a  +Q1b + Abs_Av +  Q6 *GDSI +  (1 | Participant), data = data_ole )
-m05  = lmer(Q3b ~  Q4a*Palo  +Q1b + Abs_Av +  Q6 *GDSI +  (1 | Participant), data = data_ole )
+m03  = lmer(Q3b ~  Q4a  +Q1b + Abs_Av +  Q6a *GDSI +  (1 | Pair/Participant), data = data_ole )
+m04  = lmer(Q3b ~  Q4a  +Q1b + Abs_Av +  Q6 *GDSI +  (1 | Pair/Participant), data = data_ole )
+m05  = lmer(Q3b ~  Q4a*Palo  +Q1b + Abs_Av +  Q6 *GDSI +  (1 | Pair/Participant), data = data_ole )
 anova(m04, m05)
 
 tab_model(m00, m01,m02,m03, m04,m05,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
@@ -513,7 +541,22 @@ m00a = lmer(Q3 ~  1 +  (1 | Pair/Participant), data = data_filtered_Q4a)
 m01a = lmer(Q3 ~  Q4a + Q1b + GDSI +  (1 | Pair/Participant), data = data_filtered_Q4a)
 m02a = lmer(Q3 ~  Q4a + Q1b + GDSI + Abs_Av +  (1 | Pair/Participant), data = data_filtered_Q4a)
 
-anova(m00a, m01a)
+m02a = lmer(Q3 ~  Q4a + Q1b + GDSI + Abs_Av +  (1 | Pair/Participant) , data = data_filtered_Q4a)
+m02a = lmer(Q3 ~  Q4a + Q1b + GDSI + Abs_Av +  (1 | Pair:Participant)+  (1 + Q4a | Participant) , data = data_filtered_Q4a)
+
+m02a = lmer(Q3 ~  Q4a + Q1b + GDSI + Abs_Av +  (1  | Pair:Participant)+  (1 | Pair) , data = data_filtered_Q4a) 
+m02b = lmer(Q3 ~  Q4a + Q1b + GDSI + Abs_Av +  (1 | Pair/Participant) , data = data_filtered_Q4a)
+
+
+tab_model(m02a, m02b, m02a,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m02a","m02b", "m02a"), digits = 5 )
+
+
+m02a = lmer(Q3 ~  Q4a + Q1b + GDSI + Abs_Av +  (1 | Pair) + (1 + Q4a| Participant), data = data_filtered_Q4a)
+
+
+summary(m02a)
+anova( m01a,m02b)
 
 ## CHeck for random slopes
 m01a = lmer(Q3 ~  Q4a + Q1b + GDSI +  (1 + GDSI | Pair/Participant), data = data_filtered_Q4a)
@@ -582,24 +625,63 @@ anova(m02a, m03a)
 tab_model(m00a, m01a, m02a,  m03a, m04a,m05a,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
           dv.labels=c("m00","m01", "m02", "m03", "m04", "m05", "m06"), digits = 5 )
 
+m01a = lmer(Q3 ~   Q1b+ Q4a  +  Abs_Av + GDSI +  (1 + Q4a | Pair) + (1 |Participant), data = data_filtered_Q4a)
+m01b = lmer(Q3 ~   Q1b + Q4a + Abs_Av + GDSI +   (1  | Pair) + (1 + Q4a |Participant), data = data_filtered_Q4a)
+m02a = lmer(Q3 ~    Q1b + Q4a +Abs_Av + Q6b  + (1 |GMSI) + (1 | Pair) + (1 |Participant), data = data_filtered_Q6a)
+m02b = lmer(Q3 ~    Q1b + Q4a + Abs_Av + Q6b  + (1 | Pair)  + (1 + Q4a|Participant), data = data_filtered_Q6a)
+m02c = lmer(Q3 ~    Q1b + Q4a + Abs_Av + Q6b + GDSI +  (1  | Pair)  + (1 + Q4a |Participant), data = data_filtered_Q6a)
+tab_model(m01a, m01b, m02a,  m02b,m02c,
+          p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          pred.labels =c("(Intercept)", "Quality of improvisation", "Connection with partner","Absorption by activity"  ,"Dance Expertise" ,"Rhythmic Complexity"),
+          dv.labels=c("model 1a","model 1b", "model 2a", "model 2b", "model 2c"), digits = 5)
+
+
+m01a = lmer(Q3 ~   Q1b+  (1 + Q1b | Pair/Participant), data = data_filtered_Q4a)
+m01a = lmer(Q3 ~   Q4a+  (1 + Q4 | Pair/Participant), data = data_filtered_Q4a)
+
+
+m01a = lmer(Q3 ~   Q1b+ Q4a  +  Abs_Av + GDSI +  (1 | Pair), data = data_filtered_Q4a)
+m01b = lmer(Q3 ~   Q1b + Q4a + Abs_Av + GDSI +   (1  + Q4a| Pair), data = data_filtered_Q4a)
+m02a = lmer(Q3 ~    Q1b + Q4a +Abs_Av + Q6b  + (1 |GMSI) + (1 | Pair), data = data_filtered_Q6a)
+m02b = lmer(Q3 ~    Q1b + Q4a + Abs_Av + Q6b  + (1 + Q4a | Pair), data = data_filtered_Q6a)
+m02c = lmer(Q3 ~    Q1b + Q4a + Abs_Av + Q6b + GDSI +  (1 + Q4a | Pair), data = data_filtered_Q6a)
+ tab_model(m01a, m01b, m02a,  m02b,m02c,
+          p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          pred.labels =c("(Intercept)", "Quality of improvisation", "Connection with partner","Absorption by activity"  ,"Dance Expertise" ,"Rhythmic Complexity"),
+          dv.labels=c("model 1a","model 1b", "model 2a", "model 2b", "model 2c"), digits = 5)
 
 
 
-m01a = lmer(Q3 ~   Q1b+ Q4a  +  Abs_Av + GDSI +  (1 | Participant), data = data_filtered_Q4a)
-m01b = lmer(Q3 ~   Q1b + Q4a + Abs_Av + GDSI +   (1  + Q4a| Participant), data = data_filtered_Q4a)
-m02a = lmer(Q3 ~    Q1b + Q4a +Abs_Av + Q6b  + (1 |GMSI) + (1 | Participant), data = data_filtered_Q6a)
-m02c = lmer(Q3 ~    Q1b + Q4a + Abs_Av + Q6b  + (1 + Q4a | Participant), data = data_filtered_Q6a)
-m02b = lmer(Q3 ~    Q1b + Q4a + Abs_Av + Q6b + GDSI +  (1 + Q4a | Participant), data = data_filtered_Q6a)
+m01a = lmer(Q3 ~   Q1b+ Q4a  +  Abs_Av + GDSI +  (1 | Pair/Participant), data = data_filtered_Q4a)
+m01b = lmer(Q3 ~   Q1b + Q4a + Abs_Av + GDSI +   (1  + | Pair/Participant), data = data_filtered_Q4a)
+
+
+m02a = lmer(Q3 ~    Q1b + Q4a +Abs_Av + Q6b  + (1 |GMSI) + (1 | Pair/Participant), data = data_filtered_Q6a)
+m02b = lmer(Q3 ~    Q1b + Q4a + Abs_Av + Q6b  + (1 + Q4a | Pair/Participant), data = data_filtered_Q6a)
+m02c = lmer(Q3 ~    Q1b + Q4a + Abs_Av + Q6b + GDSI +  (1 + Q4a | Pair/Participant), data = data_filtered_Q6a)
 
 sjPlot::tab_model(m01a, 
                   show.re.var= TRUE, 
                   pred.labels =c("(Intercept)", "Connection", "Quality Improvisation", "GDSI"),
                   dv.labels= "Model 1 - Main Predictors of Flow")
 
-table <- tab_model(m01a, m01b, m02a,  m02b,m02c,
+tab_model(m01a, m01b, m02a,  m02b,m02c,
           p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
-          pred.labels =c("(Intercept)", "Quality Impro.", "Connection", "Dance Exp.","Absorption" ,"Rhythm Complex"),
-          dv.labels=c("model 1a","model 1b", "model 2a", "model 2b", "model 2c"), digits = 5 )
+          pred.labels =c("(Intercept)", "Quality of improvisation", "Connection with partner","Absorption by activity"  ,"Dance Expertise" ,"Rhythmic Complexity"),
+          dv.labels=c("model 1a","model 1b", "model 2a", "model 2b", "model 2c"), digits = 5)
+
+        file = "/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_models_table_draft2_2.html")
+
+
+anova(m02b,m02c)
+
+
+library(webshot)
+webshot("/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_models_table_draft2_2.html", 
+        "/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_models_table_draft2_2.png")
+
+
+anova(m02b,m02c)
 
 row_index <- grep("Dance Exp.", rownames(table$coefficients))
 column_index <- grep("Pr(>|t|)", colnames(table$coefficients))
@@ -784,6 +866,84 @@ tab_model(m00a, m01a, m02a,  m00b, m01b,m02b,  p.style = "stars", show.aic = TRU
 
 
 
+
+###### New model Jonna 01.02.2024 ######
+
+m00 = lmer(Q3 ~    Q1b + (1 | Pair/Participant), data = data_ole)
+m01 = lmer(Q3 ~    Q1b + (0 + Q1b | Pair/Participant), data = data_ole)
+m02 = lmer(Q3 ~    Q1b + (0 + Q1b | Pair:Participant) + (1 | Pair), data = data_ole)
+m03 = lmer(Q3 ~    Q1b + (0 + Q1b | Participant) + (1 | Pair), data = data_ole)
+
+anova(m00,m01,m02, m03)
+tab_model(m00, m01, m02,m03,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m00","m01", "m02", "m03"), digits = 5 )
+
+
+
+m00 = lmer(Q3 ~    Q4a + (1 | Pair), data = data_ole)
+m01 = lmer(Q3 ~    Q4a + (0 + Q4a | Pair), data = data_ole)
+m02 = lmer(Q3 ~    Q4a + (0 + Q4a| Participant) + (1  | Pair), data = data_ole)
+
+anova(m00,m01,m02)
+tab_model(m00, m01, m02,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m00","m01", "m02"), digits = 5 )
+
+m00 = lmer(Q3 ~    Q6b + ( 0 + Q6a | Pair:Participant) + (1 | Pair), data = data_ole)
+m01 = lmer(Q3 ~    Q6b + (0 + Q6b| Participant) + (1  | Pair), data = data_ole)
+
+anova(m00,m01)
+tab_model(m00, m01, m02,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m00","m01", "m02"), digits = 5 )
+
+
+m00 = lmer(Q3 ~    Abs_Av +  (1 | Pair/Participant), data = data_ole)
+m01 = lmer(Q3 ~    Abs_Av +  (0 + Abs_Av | Pair/Participant), data = data_ole)
+m02 = lmer(Q3 ~    Abs_Av + ( 0 + Abs_Av | Pair:Participant) + (1 | Pair), data = data_ole)
+m03 = lmer(Q3 ~    Abs_Av + (1| Pair:Participant) + (1 + Abs_Av  | Pair), data = data_ole)
+m04 = lmer(Q3 ~    Abs_Av + (1| Participant) + (1 + Abs_Av  | Pair), data = data_ole)
+
+anova(m00,m01, m02, m03, m04)
+tab_model(m00, m01, m02, m03,m04,   p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m00","m01", "m02", "m03", "m04"), digits = 5 )
+
+m00 = lmer(Q3 ~   Q1b + Abs_Av + Q4a + Q6b +  (0 + Q1b | Participant) + (1 | Pair), data = data_filtered_Q6a)
+m01 = lmer(Q3 ~   Q1b + Abs_Av + Q4a + Q6b + (1 + Q4a | Participant) + (1 | Pair), data = data_filtered_Q6a)
+m02 = lmer(Q3 ~   Q1b + Abs_Av + Q4a + Q6b +  (0 + Q4a | Participant) + (1 | Pair), data = data_filtered_Q6a)
+m03 = lmer(Q3 ~   Q1b + Abs_Av + Q4a + Q6b +  (0 + Q6b | Participant) + (1 | Pair), data = data_filtered_Q6a)
+m04 = lmer(Q3 ~   Q1b   + Abs_Av  + Q4a + Artist + Q6b +  (1  + Q4a | Participant) + (1 | Pair), data = data_filtered_Q6a)
+m05 = lmer(Q3 ~   Q1b   + Q4a + Artist + Q6b  + (1  + Q4a | Participant) + (1 | Pair), data = data_filtered_Q6a)
+
+anova(m01,m04)
+anova(m00,m01,m02,m03, m04, m05)
+summary(m00)
+
+tab_model(m00, m01, m02, m03,m04,m05,   p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m00","m01", "m02", "m03", "m04", "m05"), digits = 5 )
+
+m00 = lmer(Q3 ~   Q1b + Abs_Av + Q4a +   (0 + Q4a  | Participant) + (1 | Pair), data = data_ole)
+m01 = lmer(Q3 ~   Q1b + Abs_Av + Q4a +   (0 + Q1b   | Participant) + (1 | Pair), data = data_ole)
+m02 = lmer(Q3 ~   Q1b + Abs_Av + Q4a +   (0 + Abs_Av  | Participant) + (1 | Pair), data = data_ole)
+m03 = lmer(Q3 ~   Q1b + Abs_Av + Q4a +   (1 + Abs_Av  | Participant) + (1 | Pair), data = data_ole)
+anova(m00,m01,m02,m03)
+tab_model(m00, m01, m02, m03,   p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m00","m01", "m02", "m03", "m04"), digits = 5 )
+
+## Play with interaction found in results
+
+m00 = lmer(Q3 ~   Q1b   + Q4a + Artist +  (0 + Q4a  | Participant) + (1 | Pair), data = data_ole)
+m01 = lmer(Q3 ~    Abs_Av  + Q4a + Artist + Q1b +  (1 + Abs_Av  | Participant) + (1 | Pair), data = data_ole)
+m02 = lmer(Q3 ~    Q1b  + Q4a + Artist +  (0 + Q1b  | Participant) + (1 | Pair), data = data_ole)
+m03 = lmer(Q3 ~   Q1b   + Q4a + Artist +  (1 + Abs_Av  | Participant) + (1 | Pair), data = data_ole)
+m04 = lmer(Q3 ~   Q1b    + Q4a  + Artist  +  (0 + Abs_Av  | Participant) + (1 | Pair), data = data_ole)
+
+tab_model(m00, m01, m02, m03,m04,   p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m00","m01", "m02", "m03", "m04"), digits = 5 )
+
+anova(m00,m01,m02,m03, m04)
+anova(m00, m03)
+
+
+summary(m00)
 ######PETER CODE ######################
 ## Select 'concert' data to process
 data_brms <- data_brahms

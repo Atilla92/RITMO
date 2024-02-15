@@ -114,7 +114,57 @@ labels_names <- c('Fixed', 'Other','Mixed', 'Free','Individual', 'Group', 'Music
 alpha_val <- 0.6
 
 
-####
+#### New plots Peter Keller 30.01.2024
+
+data_fixed <- data_test[grepl("Fixed", data_test$B),] #only dancers
+data_mixed <- data_test[grepl("Mixed", data_test$B),]
+data_impro <- data_test[grepl("Free", data_test$B),]
+
+ggplot(data_fixed, aes(x = D, y = Q1b, fill = D)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE) +
+  geom_boxplot(outlier.shape = NA, alpha = alpha_val, width = 0.12, show.legend = FALSE) +
+  scale_fill_manual(values = c("Musician" = colors[5], "Dancer" = colors[6])) +
+  labs(x = "", y = "Rating", fill = "A")+
+  facet_grid(. ~ title2) +
+  geom_signif(comparisons = list(c("Musician", "Dancer")), 
+              textsize = textsize_val, 
+              vjust = vjust_val,
+              map_signif_level = TRUE,
+              show.legend = FALSE
+  ) +
+  common_theme 
+
+
+
+ggplot(data_mixed[data_mixed$C != "Neutral", ], aes(x = D, y = Q1b, fill = D)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE, position = position_dodge(width = 0.9)) +
+  geom_boxplot(aes(fill = D), width = 0.12, outlier.shape = NA, alpha = alpha_val, position = position_dodge(width = 0.9), show.legend = FALSE) +
+  scale_fill_manual(values = c("Musician" = colors[5], "Dancer" = colors[6])) +
+  labs(x = "Mixed", y = "Quality of Improvisation", fill = "C") +
+  facet_wrap(~ C, ncol = 2) +
+  geom_signif(comparisons = list(c("Musician", "Dancer")), 
+              textsize = textsize_val, 
+              vjust = vjust_val,
+              map_signif_level = TRUE,
+              show.legend = FALSE) +
+  common_theme  + scale_y_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1)) 
+
+  
+
+
+ggplot(data_test, aes(x = E, y = Q4a, fill = E)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE, position = position_dodge(width = 0.9)) +
+  geom_boxplot(aes(fill = E), width = 0.12, outlier.shape = NA, alpha = alpha_val, position = position_dodge(width = 0.9), show.legend = FALSE) +
+  scale_fill_manual(values = c("Tangos" = colors[9], "Solea" = colors[10])) +
+  labs(x = "A x E", y = "Q4a - Communication with partner", fill = "E") +
+  facet_wrap(~ A, ncol = 2) +
+  geom_signif(comparisons = list(c("Tangos", "Solea")), 
+              textsize = textsize_val, 
+              vjust = vjust_val,
+              map_signif_level = TRUE,
+              show.legend = FALSE) +
+  common_theme
+
 ### Plots for paper 3x3 
 common_theme <- theme(
   axis.text.y = element_text(size = 10),   # Adjust y-axis text size
@@ -135,7 +185,7 @@ p21 <- ggplot(data_test, aes(x = A, y = Q1b, fill = A)) +
   scale_fill_manual(values = c("Fixed" = colors[1], "Other" = colors[2])) +
   labs(x = "", y = "Rating", fill = "A")+
   facet_grid(. ~ title2) +
-  geom_signif(comparisons = list(c("Fixed", "Other")), 
+  geom_signif(comparisons = list(c("Fixed", "Mixed/Improv")), 
                                           textsize = textsize_val, 
                                           vjust = vjust_val,
                                           map_signif_level = TRUE,
