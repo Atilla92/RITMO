@@ -138,15 +138,17 @@ library(ggplot2)
 
 
 data_test$A <- factor(data_test$A, labels = c("Fixed", "Other"))
-levels(data_test$B)
+
 data_test$B <- factor(data_test$B)
-data_test$B <- factor(data_test$B, labels = c("Fixed", "Mixed", "Impro"))
+levels(data_test$B)
+data_test$B <- factor(data_test$B, labels = c("Mixed", "Fixed", "Impro"))
+data_test$B <- factor(data_test$B, levels = c("Fixed", "Mixed", "Impro"))
 data_test$C <- factor(data_test$C)
 data_test$C <- factor(data_test$C, labels = c("Individual",'Neutral', 'Group'))
 
 data_test$D <- factor(data_test$D)
 data_test$D <- factor(data_test$D, labels = c("Musician",'Dancer'))
-
+data_test$D <- factor(data_test$D, levels = c("Dancer", "Musician"))
 
 data_test$E <- factor(data_test$E)
 data_test$E <- factor(data_test$E, labels = c("Solea",'Tangos'))
@@ -233,12 +235,44 @@ cat("Mean_Indiv_G:", Mean_Indiv_G, "\n")
 cat("SD_Indiv_G:", SD_Indiv_G, "\n")
 
 
+### Medians
+
+# Calculate medians and standard deviations
+Median_Group_P <- median(na.omit(Group_P))
+SD_Group_P <- sd(na.omit(Group_P))
+Median_Group_G <- median(na.omit(Group_G))
+SD_Group_G <- sd(na.omit(Group_G))
+Median_Indiv_P <- median(na.omit(Indiv_P))
+SD_Indiv_P <- sd(na.omit(Indiv_P))
+Median_Indiv_G <- median(na.omit(Indiv_G))
+SD_Indiv_G <- sd(na.omit(Indiv_G))
+
+# Print medians and standard deviations for Group_P and Group_G
+cat("Median_Group_P:", Median_Group_P, "\n")
+cat("SD_Group_P:", SD_Group_P, "\n")
+cat("Median_Group_G:", Median_Group_G, "\n")
+cat("SD_Group_G:", SD_Group_G, "\n")
+
+# Print medians and standard deviations for Indiv_P and Indiv_G
+cat("Median_Indiv_P:", Median_Indiv_P, "\n")
+cat("SD_Indiv_P:", SD_Indiv_P, "\n")
+cat("Median_Indiv_G:", Median_Indiv_G, "\n")
+cat("SD_Indiv_G:", SD_Indiv_G, "\n")
+
+
 library(PairedData)
 pd_P <- paired(Group_P, Group_G)
 p1 <- plot(pd_P, type = "profile") + theme_bw()
 
 pd_G <- paired(Indiv_P, Indiv_G)
 p2 <- plot(pd_G, type = "profile") + theme_bw()
+
+pd_G <- paired(Group_G, Indiv_G)
+p1 <- plot(pd_G, type = "profile") + theme_bw()
+
+pd_G <- paired(Indiv_P, Group_P)
+p2 <- plot(pd_G, type = "profile") + theme_bw()
+
 
 t.test(Group_P, Group_G, paired = TRUE, correct = TRUE, alternative = 'two.sided')
 t.test(Indiv_P, Indiv_G, paired = TRUE, correct = TRUE, alternative = 'two.sided')
@@ -416,6 +450,18 @@ grid.arrange(
   
 )
 
+##### Correction ####
+#  p-values
+p_values <- c(0.2114,	1.40E-06, 0.119,	2.05E-03)
+
+# FDR correction using Benjamini-Hochberg method
+fdr_corrected_p_values <- p.adjust(p_values, method = "fdr")
+
+# Print the original p-values and the FDR-corrected p-values
+data.frame(p_values = p_values, fdr_corrected_p_values = fdr_corrected_p_values)
+
+
+
 ###### Violinplots ##############
 
 
@@ -428,6 +474,8 @@ common_theme <- theme(
   axis.text.y = element_text(size = 10),   # Adjust y-axis text size
   axis.text.x = element_text(size = 10),   # Adjust y-axis text size
   strip.text = element_text(size = 12),     # Adjust facet titles size
+  axis.title.x = element_text(size = 12),
+  axis.title.y = element_text(size = 12),
   panel.grid = element_blank(),
   plot.title = element_text(hjust = 0.5),
   panel.background = element_rect(fill = "white", color = "grey70", size = 1)
@@ -443,51 +491,91 @@ pQ1bI <- ggplot(data_impro, aes(x = C, y = Q1b, fill = C)) +
   geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE, position = position_dodge(width = 0.9)) +
   geom_boxplot(aes(fill = C), width = 0.12, outlier.shape = NA, alpha = alpha_val, position = position_dodge(width = 0.9), show.legend = FALSE) +
   scale_fill_manual(values = c("Individual" = colors[9], "Group" = colors[10])) +
-  labs(x = "Improvised", y = "", fill = "C") +
+  labs(x = " (c) Improvised ", y = "", fill = "C") +
   facet_wrap(~ D, ncol = 2) +
   geom_signif(
               comparisons = list(c("Individual", "Group")), 
               textsize = textsize_val, 
               vjust = vjust_val,
+              annotations = '',
               map_signif_level = TRUE,
               show.legend = FALSE) +
   common_theme + 
   scale_y_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1))
 
+ann_text <- data.frame(D = "Dancer",Q3 = 7.0,lab = "Text",
+                       C = factor("Individual",levels = c("Individual", "Group")))
+pQ1bI <- pQ1bI + geom_text(x = 1.5, y = 7.1, data = ann_text,label = "", size = 5)
+
+ann_text <- data.frame(D = "Musician",Q3 = 7.0,lab = "Text",
+                       C = factor("Group",levels = c("Individual", "Group")))
+pQ1bI <- pQ1bI + geom_text(x = 1.5, y = 7.1, data = ann_text,label = "***", size = 6.5)
+
+pQ1bI
 
 pQ1bM <- ggplot(data_mixed, aes(x = C, y = Q1b, fill = C)) +
   geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE, position = position_dodge(width = 0.9)) +
   geom_boxplot(aes(fill = C), width = 0.12, outlier.shape = NA, alpha = alpha_val, position = position_dodge(width = 0.9), show.legend = FALSE) +
   scale_fill_manual(values = c("Individual" = colors[9], "Group" = colors[10])) +
-  labs(x = "Mixed", y = "", fill = "C") +
+  labs(x = "(b) Mixed", y = "", fill = "C") +
   facet_wrap(~ D, ncol = 2) +
   geom_signif(
     comparisons = list(c("Individual", "Group")), 
     textsize = textsize_val, 
     vjust = vjust_val,
     map_signif_level = TRUE,
+    annotations = '',
     show.legend = FALSE) +
   common_theme + 
   scale_y_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1))
 
 
-data_fixed$title1 <- "Quality of Improvisation"
-pQ1bF <- ggplot(data_fixed, aes(x = D, y = Q1b, fill = D)) +
-  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE) +
-  geom_boxplot(outlier.shape = NA, alpha = alpha_val, width = 0.12, show.legend = FALSE) +
-  scale_fill_manual(values = c("Musician" = colors[5], "Dancer" = colors[6])) +
-  labs(x = "Fixed", y = "Rating", fill = "A")+
-  facet_grid(. ~ title1) +
-  geom_signif(comparisons = list(c("Musician", "Dancer")), 
-              textsize = textsize_val, 
-              vjust = vjust_val,
-              map_signif_level = TRUE,
-              show.legend = FALSE
-  ) +
+
+ann_text <- data.frame(D = "Dancer",Q3 = 7.0,lab = "Text",
+                       C = factor("Individual",levels = c("Individual", "Group")))
+pQ1bM <- pQ1bM + geom_text(x = 1.5, y = 7.1, data = ann_text,label = "", size = 5)
+
+ann_text <- data.frame(D = "Musician",Q3 = 7.0,lab = "Text",
+                       C = factor("Group",levels = c("Individual", "Group")))
+pQ1bM <- pQ1bM + geom_text(x = 1.5, y = 7.1, data = ann_text,label = "**", size = 6.5)
+
+pQ1bM
+
+
+# data_fixed$title1 <- "Group"
+# pQ1bF  <- ggplot(data_fixed, aes(x = D, y = Q1b, fill = D)) +
+#   geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE) +
+#   geom_boxplot(outlier.shape = NA, alpha = alpha_val, width = 0.12, show.legend = FALSE) +
+#   scale_fill_manual(values = c("Musician" = colors[10], "Dancer" = colors[10])) +
+#   labs(x = "(a) Fixed", y = "Quality of improvisation", fill = "A")+
+#   facet_grid(. ~ title1) +
+#   # geom_signif(comparisons = list(c("Musician", "Dancer")), 
+#   #             textsize = textsize_val, 
+#   #             vjust = vjust_val,
+#   #             map_signif_level = FALSE,
+#   #             show.legend = FALSE,
+#   #             annotations =  ''
+#   # ) +
+#   common_theme + 
+#   scale_y_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1))
+
+
+pQ1bF  <-ggplot(data_fixed, aes(x = C, y = Q1b, fill = C)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE, position = position_dodge(width = 0.9)) +
+  geom_boxplot(aes(fill = C), width = 0.12, outlier.shape = NA, alpha = alpha_val, position = position_dodge(width = 0.9), show.legend = FALSE) +
+  scale_fill_manual(values = c("Neutral" = colors[10])) +
+  labs(x = "(a) Fixed", y = "Quality of improvisation", fill = "C") +
+  scale_x_discrete(labels = c("Neutral" = "Group")) +
+  facet_wrap(~ D, ncol = 2) +
+  geom_signif(
+    comparisons = list(c("Dancer", "Musician")), 
+    textsize = textsize_val, 
+    vjust = vjust_val,
+    map_signif_level = TRUE,
+    annotations = '',
+    show.legend = FALSE) +
   common_theme + 
   scale_y_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1))
-
-
 
 
 
@@ -559,6 +647,29 @@ cat("Mean_Indiv_G:", Mean_Indiv_G, "\n")
 cat("SD_Indiv_G:", SD_Indiv_G, "\n")
 
 
+# Calculate medians and standard deviations
+median_Group_P <- median(na.omit(Group_P))
+SD_Group_P <- sd(na.omit(Group_P))
+median_Group_G <- median(na.omit(Group_G))
+SD_Group_G <- sd(na.omit(Group_G))
+median_Indiv_P <- median(na.omit(Indiv_P))
+SD_Indiv_P <- sd(na.omit(Indiv_P))
+median_Indiv_G <- median(na.omit(Indiv_G))
+SD_Indiv_G <- sd(na.omit(Indiv_G))
+
+# Print medians and standard deviations for Group_P and Group_G
+cat("median_Group_P:", median_Group_P, "\n")
+cat("SD_Group_P:", SD_Group_P, "\n")
+cat("median_Group_G:", median_Group_G, "\n")
+cat("SD_Group_G:", SD_Group_G, "\n")
+
+# Print medians and standard deviations for Indiv_P and Indiv_G
+cat("median_Indiv_P:", median_Indiv_P, "\n")
+cat("SD_Indiv_P:", SD_Indiv_P, "\n")
+cat("median_Indiv_G:", median_Indiv_G, "\n")
+cat("SD_Indiv_G:", SD_Indiv_G, "\n")
+
+
 library(PairedData)
 pd_P <- paired(Group_P, Group_G)
 p1 <- plot(pd_P, type = "profile") + theme_bw()
@@ -743,6 +854,18 @@ grid.arrange(
   p1, p2, ncol = 2
   
 )
+
+
+####Corrected #####
+p_values <- c(0.4722,	7.57E-04, 0.3306,	1.09E-01)
+p_values <- c(0.488,	0.003423, 0.2599,	0.06842)
+# FDR correction using Benjamini-Hochberg method
+fdr_corrected_p_values <- p.adjust(p_values, method = "fdr")
+
+# Print the original p-values and the FDR-corrected p-values
+data.frame(p_values = p_values, fdr_corrected_p_values = fdr_corrected_p_values)
+
+
 
 ###### Violinplots ##############
 
@@ -1101,6 +1224,20 @@ grid.arrange(
   
 )
 
+
+##### Correction######
+#  p-values
+p_values <- c(0.05316, 1, 0.02674, 0.4495)
+
+# FDR correction using Benjamini-Hochberg method
+fdr_corrected_p_values <- p.adjust(p_values, method = "fdr")
+
+# Print the original p-values and the FDR-corrected p-values
+data.frame(p_values = p_values, fdr_corrected_p_values = fdr_corrected_p_values)
+
+
+
+
 ###### Violinplots ##############
 
 
@@ -1371,6 +1508,33 @@ grouped_fixed_G <- grouped_G$Fixed
 print(grouped_fixed_P)
 
 
+
+### Medians
+
+# Calculate medians and standard deviations
+Median_grouped_mixed_P <- median(na.omit(grouped_mixed_P))
+SD_grouped_mixed_P <- sd(na.omit(grouped_mixed_P))
+Median_grouped_mixed_G <- median(na.omit(grouped_mixed_G))
+SD_grouped_mixed_G <- sd(na.omit(grouped_mixed_G))
+Median_grouped_fixed_P <- median(na.omit(grouped_fixed_P))
+SD_grouped_fixed_P <- sd(na.omit(grouped_fixed_P))
+Median_grouped_fixed_G <- median(na.omit(grouped_fixed_G))
+SD_grouped_fixed_G <- sd(na.omit(grouped_fixed_G))
+
+# Print medians and standard deviations for grouped_mixed_P and grouped_mixed_G
+cat("Median_grouped_mixed_P:", Median_grouped_mixed_P, "\n")
+cat("SD_grouped_mixed_P:", SD_grouped_mixed_P, "\n")
+cat("Median_grouped_mixed_G:", Median_grouped_mixed_G, "\n")
+cat("SD_grouped_mixed_G:", SD_grouped_mixed_G, "\n")
+
+# Print medians and standard deviations for grouped_fixed_P and grouped_fixed_G
+cat("Median_grouped_fixed_P:", Median_grouped_fixed_P, "\n")
+cat("SD_grouped_fixed_P:", SD_grouped_fixed_P, "\n")
+cat("Median_grouped_fixed_G:", Median_grouped_fixed_G, "\n")
+cat("SD_grouped_fixed_G:", SD_grouped_fixed_G, "\n")
+
+
+
 library(PairedData)
 
 pd_mixed_Group <- paired(grouped_mixed_P, grouped_mixed_G)
@@ -1429,7 +1593,7 @@ data_test$B <- factor(data_test$B, levels = c("Fixed", "Mixed", "Impro"))
 p1 <- ggplot(data_test, aes(x = B, y = Abs_Av, fill = B)) +
   geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE, position = position_dodge(width = 0.9)) +
   geom_boxplot(aes(fill = B), width = 0.12, outlier.shape = NA, alpha = alpha_val, position = position_dodge(width = 0.9), show.legend = FALSE) +
-  scale_fill_manual(values = c("Fixed" = colors[1], "Mixed" = colors[2],"Impro" = colors[3])) +
+  scale_fill_manual(values = c("Fixed" = colors[1], "Mixed" = colors[7],"Impro" = colors[5])) +
   labs(x = "", y = "Absorption by Activity", fill = "B") +
   facet_wrap(~ D, ncol = 2) +
   geom_signif(
@@ -1686,6 +1850,7 @@ p_values <- c(0.1006, 0.02029)
 p_values <- c(0.006522, 0.8543, 0.546)
 p_values <- c(0.006522, 0.8543)
 
+
 # FDR correction using Benjamini-Hochberg method
 fdr_corrected_p_values <- p.adjust(p_values, method = "fdr")
 
@@ -1738,8 +1903,9 @@ p1 <- ggplot(data_test, aes(x = E, y = Abs_Av, fill = E)) +
 
 ann_text <- data.frame(E = "Solea",Abs_Av = 7.0,lab = "Text",
                        B = factor("Fixed",levels = c("Fixed", "Mixed", "Impro")))
-pAbsEF <- p1 + geom_text(x = 1.5, y = 7.1, data = ann_text,label = "*", size = 5)
+pAbsEF <- p1 + geom_text(x = 1.5, y = 7.1, data = ann_text,label = "*", size = 7)
 
+pAbsEF 
 
 
 #### RHYTHMIC COMPLEXITY #####

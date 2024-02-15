@@ -298,8 +298,8 @@ m00 = lmer(Q6b ~ 1 + (1 |Pair) + (1 | Participant), data = data_filtered_Q6a)
 m01  = lmer(Q6b ~  instruction_2+ (1 |Pair) + (1 | Participant), data = data_filtered_Q6a )
 anova(m00,m01)
 
-m00 = lmer(Q4a ~ 1 + (1 |Pair) + (1 | Participant), data = data_ole)
-m01  = lmer(Q4a ~  instruction_2 + (1 |Pair) + (1 | Participant), data = data_ole )
+m00 = lmer(Abs_Av ~ 1 + (1 |Pair) + (1 | Participant), data = data_ole)
+m01  = lmer(Abs_Av ~  instruction_2 + (1 |Pair) + (1 | Participant), data = data_ole )
 
 tab_model(m00, m01, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
           dv.labels=c("m00","m01"), digits = 5 )
@@ -922,7 +922,7 @@ tab_model(m00, m01, m02, m03,m04,m05,   p.style = "stars", show.aic = TRUE, show
 
 m00 = lmer(Q3 ~   Q1b + Abs_Av + Q4a +   (0 + Q4a  | Participant) + (1 | Pair), data = data_ole)
 m01 = lmer(Q3 ~   Q1b + Abs_Av + Q4a +   (0 + Q1b   | Participant) + (1 | Pair), data = data_ole)
-m02 = lmer(Q3 ~   Q1b + Abs_Av + Q4a +   (0 + Abs_Av  | Participant) + (1 | Pair), data = data_ole)
+m02 = lmer(Q3 ~   Q1b + Abs_Av + Q4a +   (1 + Q4a  | Participant) + (1 | Pair), data = data_ole)
 m03 = lmer(Q3 ~   Q1b + Abs_Av + Q4a +   (1 + Abs_Av  | Participant) + (1 | Pair), data = data_ole)
 anova(m00,m01,m02,m03)
 tab_model(m00, m01, m02, m03,   p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
@@ -941,6 +941,21 @@ tab_model(m00, m01, m02, m03,m04,   p.style = "stars", show.aic = TRUE, show.ci=
 
 anova(m00,m01,m02,m03, m04)
 anova(m00, m03)
+
+
+###Final models
+m00 = lmer(Q3 ~   Q1b + Abs_Av + Q4a +   (1 + Abs_Av  | Participant) + (1 | Pair), data = data_ole)
+m01 = lmer(Q3 ~   Q1b   + Abs_Av  + Q4a + Q6b +  (1  + Q4a | Participant) + (1 | Pair), data = data_filtered_Q6a)
+
+tab_model(m00, m01,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          pred.labels =c("(Intercept)", "Quality of improvisation","Absorption by activity", "Connection with partner","Rhythmic complexity"),
+          dv.labels=c("model 1","model 2"), digits = 5 ,
+          file = "/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_models_draft2.html"
+          )
+library(webshot)
+webshot("/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_models_draft2.html", "/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_model3_table.png")
+
+
 
 
 summary(m00)
