@@ -33,6 +33,7 @@ library(tidyr)
 library(lme4)
 library(lmerTest)
 library(psych)
+library(jtools)
 
 source("https://gist.githubusercontent.com/benmarwick/2a1bb0133ff568cbe28d/raw/fb53bd97121f7f9ce947837ef1a4c65a73bffb3f/geom_flat_violin.R")
 
@@ -298,8 +299,11 @@ m00 = lmer(Q6b ~ 1 + (1 |Pair) + (1 | Participant), data = data_filtered_Q6a)
 m01  = lmer(Q6b ~  instruction_2+ (1 |Pair) + (1 | Participant), data = data_filtered_Q6a )
 anova(m00,m01)
 
-m00 = lmer(Abs_Av ~ 1 + (1 |Pair) + (1 | Participant), data = data_ole)
-m01  = lmer(Abs_Av ~  instruction_2 + (1 |Pair) + (1 | Participant), data = data_ole )
+# m00 = lmer(Q3 ~ Q1b * Condition + (1 |Pair) + (1 | Participant), data = data_ole)
+# m01 = lmer(Q3 ~ Q4a * Condition +  (1 |Pair) + (1 | Participant), data = data_ole)
+
+m00 = lmer(Q2a ~ 1 + (1 |Pair) + (1 | Participant), data = data_ole)
+m01  = lmer(Q2a ~  instruction_2 + (1 |Pair) + (1 | Participant), data = data_ole )
 
 tab_model(m00, m01, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
           dv.labels=c("m00","m01"), digits = 5 )
@@ -324,28 +328,28 @@ contrasts <- list(
   C_INDvsGR = c(-1,-1,-1,-1,0,0,1,1,1,1,-1,-1,-1,-1,0,0,1,1,1,1),
   D_DANvsMUS = c(1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1),
   E_R1vsR2 = c(1,1,1,1,1,1,1,1,1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1),
-  F_FIXvsMIX = c(1,1,0,0,-1,-1,1,1,0,0,1,1,0,0,-1,-1,1,1,0,0),
-  G_FIXvsIMP = c ( 0,0,1,1,-1,-1,0,0,1,1,0,0,1,1,-1,-1,0,0,1,1),
+  # F_FIXvsMIX = c(1,1,0,0,-1,-1,1,1,0,0,1,1,0,0,-1,-1,1,1,0,0),
+  # G_FIXvsIMP = c ( 0,0,1,1,-1,-1,0,0,1,1,0,0,1,1,-1,-1,0,0,1,1),
   DxA =  c(1,-1,1,-1,-4,4,1,-1,1,-1,1,-1,1,-1,-4,4,1,-1,1,-1),
   DxB =  c(1,-1,-1,1,0,0,1,-1,-1,1,1,-1,-1,1,0,0,1,-1,-1,1),
   DxC =  c(1,-1,1,-1,0,0,-1,1,-1,1,1,-1,1,-1,0,0,-1,1,-1,1),
-  DxF =  c(-1,1,0,0,1,-1,-1,1,0,0,-1,1,0,0,1,-1,-1,1,0,0),
-  DxG =  c(0,0,-1,1,1,-1,0,0,-1,1,0,0,-1,1,1,-1,-1,1,0,0),
+  # DxF =  c(-1,1,0,0,1,-1,-1,1,0,0,-1,1,0,0,1,-1,-1,1,0,0),
+  # DxG =  c(0,0,-1,1,1,-1,0,0,-1,1,0,0,-1,1,1,-1,-1,1,0,0),
   ExA =  c(-1,-1,-1,-1,4,4,-1,-1,-1,-1,1,1,1,1,-4,-4,1,1,1,1),
   ExB =  c(-1,-1,1,1,0,0,-1,-1,1,1,1,1,-1,-1,0,0,1,1,-1,-1),
   ExC =  c(-1,-1,-1,-1,0,0,1,1,1,1,1,1,1,1,0,0,-1,-1,-1,-1),
   ExD =  c(-1,1,-1,1,-1,1,-1,1,-1,1,1,-1,1,-1,1,-1,1,-1,1,-1),
-  ExF =  c(1,1,0,0,-1,-1,1,1,0,0,-1,-1,0,0,1,1,-1,-1,0,0),
-  ExG =  c(0,0,1,1,-1,-1,0,0,1,1,0,0,-1,-1,1,1,-1,-1,0,0),
+  # ExF =  c(1,1,0,0,-1,-1,1,1,0,0,-1,-1,0,0,1,1,-1,-1,0,0),
+  # ExG =  c(0,0,1,1,-1,-1,0,0,1,1,0,0,-1,-1,1,1,-1,-1,0,0),
   DxCxA =  c(-1,1,-1,1,0,0,1,-1,1,-1,-1,1,-1,1,0,0,1,-1,1,-1),
   DxCxB =  c(-1,1,1,-1,0,0,1,-1,-1,1,-1,1,1,-1,0,0,1,-1,-1,1),
   DxCxE =  c(1,-1,1,-1,0,0,-1,1,-1,1,-1,1,-1,1,0,0,1,-1,1,-1),
-  DxCxF =  c(1,-1,0,0,0,0,-1,1,0,0,1,-1,0,0,0,0,-1,1,0,0),
-  DxCxG =  c(0,0,1,-1,0,0,0,0,-1,1,0,0,1,-1,0,0,-1,1,0,0),
+  # DxCxF =  c(1,-1,0,0,0,0,-1,1,0,0,1,-1,0,0,0,0,-1,1,0,0),
+  # DxCxG =  c(0,0,1,-1,0,0,0,0,-1,1,0,0,1,-1,0,0,-1,1,0,0),
   DxExA =  c(1,-1,1,-1,-4,4,1,-1,1,-1,-1,1,-1,1,4,-4,-1,1,-1,1),
-  DxExB =  c(1,-1,-1,1,0,0,1,-1,-1,1,-1,1,1,-1,0,0,-1,1,1,-1),
-  DxExF =  c(-1,1,0,0,1,-1,-1,1,0,0,1,-1,0,0,-1,1,1,-1,0,0),
-  DxExG =  c(0,0,-1,1,1,-1,0,0,-1,1,0,0,1,-1,-1,1,1,-1,0,0)
+  DxExB =  c(1,-1,-1,1,0,0,1,-1,-1,1,-1,1,1,-1,0,0,-1,1,1,-1)
+  # DxExF =  c(-1,1,0,0,1,-1,-1,1,0,0,1,-1,0,0,-1,1,1,-1,0,0),
+  # DxExG =  c(0,0,-1,1,1,-1,0,0,-1,1,0,0,1,-1,-1,1,1,-1,0,0)
   
 )
 
@@ -949,12 +953,176 @@ m01 = lmer(Q3 ~   Q1b   + Abs_Av  + Q4a + Q6b +  (1  + Q4a | Participant) + (1 |
 
 tab_model(m00, m01,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
           pred.labels =c("(Intercept)", "Quality of improvisation","Absorption by activity", "Connection with partner","Rhythmic complexity"),
-          dv.labels=c("model 1","model 2"), digits = 5 ,
-          file = "/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_models_draft2.html"
+          dv.labels=c("model 1","model 2"), digits = 5,
+        file = "/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_models_draft2.html"
           )
 library(webshot)
 webshot("/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_models_draft2.html", "/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_model3_table.png")
 
+
+
+
+m00 = lmer(Q3 ~   GDSI +   (1 | Participant) + (1 | Pair), data = data_ole)
+m01 = lmer(Q3 ~   GMSI +  (1 | Participant) + (1 | Pair), data = data_ole)
+m02 = lmer(Q3 ~   Artist +  (1 | Participant) + (1 | Pair), data = data_ole)
+m03 = lmer(Q3 ~   Palo +  (1 | Participant) + (1 | Pair), data = data_ole)
+
+tab_model(m00, m01,m02, m03 , p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+         # pred.labels =c("(Intercept)", "Quality of improvisation","Absorption by activity", "Connection with partner","Rhythmic complexity"),
+          dv.labels=c("model 1","model 2"), digits = 5)
+
+
+m00 = lmer(Q3 ~   GDSI * Condition +   (1 | Participant) + (1 | Pair), data = data_ole)
+m01 = lmer(Q3 ~   GMSI* Condition +  (1 | Participant) + (1 | Pair), data = data_ole)
+m02 = lmer(Q3 ~   Artist* Condition +  (1 | Participant) + (1 | Pair), data = data_ole)
+m03 = lmer(Q3 ~   Palo * Condition+  (1 | Participant) + (1 | Pair), data = data_ole)
+
+tab_model(m00, m01,m02, m03 , p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          # pred.labels =c("(Intercept)", "Quality of improvisation","Absorption by activity", "Connection with partner","Rhythmic complexity"),
+          dv.labels=c("model 1","model 2"), digits = 5)
+
+
+          file = "/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_models_draft2.html"
+)
+library(webshot)
+webshot("/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_models_draft2.html", "/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_model3_table.png")
+
+
+
+
+####################################
+# PLOTTING CODE PK #####
+colors <- c("#8DD3C7", "#FFFFB3", "#BEBADA", "#FB8072", "#80B1D3", "#FDB462", "#B3DE69", "#FCCDE5", "#00008B", "#BC80BD")
+new_colors <- c("#5BB8A0", "#8C8AFF", "#FFA500", "#E30B5C")
+darker_colors <- c("#348770", "#4F4D9E", "#f19e07ff", "#A50741")
+
+common_theme <- theme(
+  axis.text.y = element_text(size = 14),   # Adjust y-axis text size
+  axis.text.x = element_text(size = 14),   # Adjust y-axis text size
+  strip.text = element_text(size = 16),     # Adjust facet titles size
+  axis.title.x = element_text(size = 16),
+  axis.title.y = element_text(size = 16),
+  panel.grid = element_blank(),
+  plot.title = element_text(hjust = 0.5),
+  panel.background = element_rect(fill = "white", color = "grey70", size = 1)
+)  # Center the title
+#plot.margin = margin(1, 1, 1, 1, "cm")
+
+Flamenco_model.lm <- lmer(Q3 ~   Q1b + Abs_Av + Q4a +   (1 + Abs_Av  | Participant) + (1 | Pair), data = data_ole)
+
+Plot_fe_Q4a <- effect_plot(Flamenco_model.lm, pred = Q4a, interval = TRUE, partial.residuals = TRUE, plot.points = TRUE, 
+                                  jitter = 0.00, point.size = 1.2, colors = new_colors[1]) +
+  labs(x= "Connection", y = "Flow", title = "") + 
+  scale_y_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1)) +
+  scale_x_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1)) + 
+  common_theme
+
+Plot_fe_Q4a
+
+Plot_fe_Q1b <- effect_plot(Flamenco_model.lm, pred = Q1b, interval = TRUE, partial.residuals = TRUE, plot.points = TRUE, 
+                           jitter = 0.00, point.size = 1.2, colors = new_colors[2], cat.geom = 'line') +
+  labs(x= "Creativity", y = "", title = "") + 
+  scale_y_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1)) +
+  scale_x_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1))+ 
+  common_theme
+
+Plot_fe_Q1b
+
+x_values <- data.frame(Abs_Av = seq(1, 7, 0.1))
+predicted_line <- predict(Flamenco_model.lm, newdata = x_values)
+
+Plot_fe_Abs_Av <- effect_plot(Flamenco_model.lm, pred = Abs_Av, interval = TRUE, partial.residuals = TRUE, plot.points = TRUE, 
+                           jitter = 0.00, point.size = 1.2, colors = new_colors[3]) +
+  labs(x= "Absorption", y = "", title = "") + 
+  geom_line(color = darker_colors[3], size =1.2) +  # Set color for the predicted line
+  scale_y_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1)) +
+  scale_x_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1))+ 
+  common_theme
+
+Plot_fe_Abs_Av
+
+
+library(gridExtra)
+grid.arrange(
+  # First column with plots p1, p2, and p3
+  Plot_fe_Q4a, Plot_fe_Q1b, Plot_fe_Abs_Av, ncol = 4
+  
+)
+
+#### Model 2 Plots Fixed Effects ######
+
+Flamenco_model.lm <- lmer(Q3 ~   Q1b   + Abs_Av  + Q4a + Q6b +  (1  + Q4a | Participant) + (1 | Pair), data = data_filtered_Q6a)
+
+Plot_fe_Q4a <- effect_plot(Flamenco_model.lm, pred = Q4a, interval = TRUE, partial.residuals = TRUE, plot.points = TRUE, 
+                           jitter = 0.00, point.size = 1.2, colors = new_colors[1]) +
+  labs(x= "Connection", y = "Flow", title = "") + 
+  scale_y_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1)) +
+  scale_x_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1)) + 
+  common_theme
+
+Plot_fe_Q4a
+
+Plot_fe_Q1b <- effect_plot(Flamenco_model.lm, pred = Q1b, interval = TRUE, partial.residuals = TRUE, plot.points = TRUE, 
+                           jitter = 0.00, point.size = 1.2, colors = new_colors[2], cat.geom = 'line') +
+  labs(x= "Creavity", y = "", title = "") + 
+  scale_y_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1)) +
+  scale_x_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1))+ 
+  common_theme
+
+Plot_fe_Q1b
+
+x_values <- data.frame(Abs_Av = seq(1, 7, 0.1))
+predicted_line <- predict(Flamenco_model.lm, newdata = x_values)
+
+Plot_fe_Abs_Av <- effect_plot(Flamenco_model.lm, pred = Abs_Av, interval = TRUE, partial.residuals = TRUE, plot.points = TRUE, 
+                              jitter = 0.00, point.size = 1.2, colors = new_colors[3]) +
+  labs(x= "Absorption", y = "", title = "") + 
+  geom_line(color = darker_colors[3], size =1.2) +  # Set color for the predicted line
+  scale_y_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1)) +
+  scale_x_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1))+ 
+  common_theme
+
+Plot_fe_Abs_Av
+
+
+
+Plot_fe_Q6b <- effect_plot(Flamenco_model.lm, pred = Q6b, interval = TRUE, partial.residuals = TRUE, plot.points = TRUE, 
+                              jitter = 0.00, point.size = 1.2, colors = new_colors[4]) +
+  labs(x= "Complexity", y = "", title = "") + 
+  scale_y_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1)) +
+  scale_x_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1))+ 
+  common_theme
+
+Plot_fe_Q6b
+
+
+
+library(gridExtra)
+grid.arrange(
+  # First column with plots p1, p2, and p3
+  Plot_fe_Q4a, Plot_fe_Q1b, Plot_fe_Abs_Av, Plot_fe_Q6b, ncol = 4
+  
+)
+
+
+
+
+##### Plots draft 2, 20.02.2024
+model1 <-  lmer(Q3 ~   Q1b + Abs_Av + Q4a +   (1 + Abs_Av  | Participant) + (1 | Pair), data = data_ole)
+
+# Extract participant-level predictions from the model
+predicted_participant <- data.frame(PredictValue = predict(model1, re.form = ~1 | Participant))
+
+# Merge participant-level predictions with original data
+data_with_predictions_participant <- merge(data_ole, predicted_participant, by = "Participant")
+
+# Plot line for each participant
+ggplot(data_with_predictions_participant, aes(x = Q3, y = predict)) +
+  geom_line(aes(group = Participant, color = as.factor(Participant))) +
+  geom_point(aes(color = as.factor(Participant))) +
+  labs(x = "Q3", y = "Predicted Values") +
+  ggtitle("Line Plot of Predicted Values by Participant") +
+  theme_minimal()
 
 
 

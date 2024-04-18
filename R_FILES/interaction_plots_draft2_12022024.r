@@ -13,7 +13,17 @@ library(Rmisc)
 library(rstatix)
 library(stargazer) 
 library(tidyr)
+library(grid)
 
+
+ggplot(data_test, aes(x = Q1b, y = Q3)) +
+  geom_smooth(method = "lm", se = TRUE) 
+
+
+ggplot(data_test, aes(x = Q1b, y = Q3)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = TRUE) +
+  facet_wrap(~B)
 
 
 
@@ -624,6 +634,9 @@ Indiv_P <- grouped_P$Indiv
 Indiv_G <- grouped_G$Indiv
 # Plot paired data
 
+Group_impro <- grouped_data$Group
+Indiv_impro <- grouped_data$Indiv
+
 # Calculate means and standard deviations
 Mean_Group_P <- mean(na.omit(Group_P))
 SD_Group_P <- sd(na.omit(Group_P))
@@ -685,6 +698,7 @@ t.test(Group_G, Indiv_G, paired = TRUE, correct = TRUE, alternative = 'two.sided
 t.test(Indiv_P, Group_P, paired = TRUE, correct = TRUE, alternative = 'two.sided')
 
 
+t.test(Group_impro, Indiv_impro, paired = TRUE, correct = TRUE, alternative = 'two.sided')
 
 
 shapiro.test(Indiv_P)
@@ -761,6 +775,13 @@ cat("Mean_Indiv_G:", Mean_Indiv_G, "\n")
 cat("SD_Indiv_G:", SD_Indiv_G, "\n")
 
 
+Group_impro <- grouped_data$Group
+Indiv_impro <- grouped_data$Indiv
+t.test(Group_impro, Indiv_impro, paired = TRUE, correct = TRUE, alternative = 'two.sided')
+
+
+
+
 library(PairedData)
 pd_P <- paired(Group_P, Group_G)
 p1 <- plot(pd_P, type = "profile") + theme_bw()
@@ -819,7 +840,6 @@ print(grouped_G)
 Group_P <- grouped_P$mean_Q1b
 Group_G <- grouped_G$mean_Q1b
 # subset weight data after treatment
-
 
 # Calculate medians and standard deviations
 Median_Group_P <- median(na.omit(Group_P))
@@ -896,15 +916,32 @@ ggplot(data_impro, aes(x = D, y = Q3, fill = D)) +
   scale_fill_manual(values = c("Musician" = colors[5], "Dancer" = colors[6])) +
   labs(x = "Improvised", y = "", fill = "C") +
   facet_wrap(~ C, ncol = 2) +
+  # geom_signif(
+  #   comparisons = list(c("Musician", "Dancer")), 
+  #   textsize = textsize_val, 
+  #   vjust = vjust_val,
+  #   annotations = c(" "), 
+  #   map_signif_level = TRUE,
+  #   show.legend = FALSE) +
+  common_theme + 
+  scale_y_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1)) 
+
+ggplot(data_impro, aes(x = C, y = Q3, fill = C)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE, position = position_dodge(width = 0.9)) +
+  geom_boxplot(aes(fill = C), width = 0.12, outlier.shape = NA, alpha = alpha_val, position = position_dodge(width = 0.9), show.legend = FALSE) +
+  scale_fill_manual(values = c("Individual" = colors[5], "Group" = colors[6])) +
+  labs(x = "(c) Improvised", y = "", fill = "C") +
+  #facet_wrap(~ D, ncol = 2) +
   geom_signif(
-    comparisons = list(c("Musician", "Dancer")), 
-    textsize = textsize_val, 
+    comparisons = list(c("Individual", "Group")),
+    textsize = textsize_val,
     vjust = vjust_val,
-    annotations = c(" "), 
     map_signif_level = TRUE,
     show.legend = FALSE) +
   common_theme + 
   scale_y_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1)) 
+
+
 
 p + 
   annotate(
@@ -2183,8 +2220,692 @@ p1
 
 
 
+###### Feeling rightly challenged #####
+
+##### Paired t-tests #######
+##### IMPRO######
+data_impro <- data_impro %>%
+  inner_join(name_palo, by = c("Participant", "Palo")) %>%
+  group_by(Participant, Palo, INDvsGR) %>%
+  mutate(mean_Q1b = mean(Q2a, na.rm = TRUE))
+
+filtered_data <- data_impro %>%
+  distinct(Participant, Palo, INDvsGR, mean_Q1b, Pair, Artist) %>%
+  filter(!is.na(INDvsGR))  # Remove rows with missing FIXvsOther values
+
+grouped_data <- filtered_data %>%
+  pivot_wider(names_from = INDvsGR, values_from = mean_Q1b)
+
+print(grouped_data)
+
+grouped_data <- grouped_data %>% arrange(Pair, Palo, Artist)
+
+# Split in two groups
+grouped_P <- grouped_data[grepl("P", grouped_data$Artist),] #only dancers
+print(grouped_P)
 
 
+grouped_G <- grouped_data[grepl("G", grouped_data$Artist),] #only dancers
+print(grouped_G)
+
+
+# Subset weight data before treatment
+Group_P <- grouped_P$Group
+Group_G <- grouped_G$Group
+# subset weight data after treatment
+Indiv_P <- grouped_P$Indiv
+Indiv_G <- grouped_G$Indiv
+# Plot paired data
+
+# Calculate means and standard deviations
+Mean_Group_P <- mean(na.omit(Group_P))
+SD_Group_P <- sd(na.omit(Group_P))
+Mean_Group_G <- mean(na.omit(Group_G))
+SD_Group_G <- sd(na.omit(Group_G))
+Mean_Indiv_P <- mean(na.omit(Indiv_P))
+SD_Indiv_P <- sd(na.omit(Indiv_P))
+Mean_Indiv_G <- mean(na.omit(Indiv_G))
+SD_Indiv_G <- sd(na.omit(Indiv_G))
+
+# Print means and standard deviations for Group_P and Group_G
+cat("Mean_Group_P:", Mean_Group_P, "\n")
+cat("SD_Group_P:", SD_Group_P, "\n")
+cat("Mean_Group_G:", Mean_Group_G, "\n")
+cat("SD_Group_G:", SD_Group_G, "\n")
+
+# Print means and standard deviations for Indiv_P and Indiv_G
+cat("Mean_Indiv_P:", Mean_Indiv_P, "\n")
+cat("SD_Indiv_P:", SD_Indiv_P, "\n")
+cat("Mean_Indiv_G:", Mean_Indiv_G, "\n")
+cat("SD_Indiv_G:", SD_Indiv_G, "\n")
+
+
+### Medians
+
+# Calculate medians and standard deviations
+Median_Group_P <- median(na.omit(Group_P))
+SD_Group_P <- sd(na.omit(Group_P))
+Median_Group_G <- median(na.omit(Group_G))
+SD_Group_G <- sd(na.omit(Group_G))
+Median_Indiv_P <- median(na.omit(Indiv_P))
+SD_Indiv_P <- sd(na.omit(Indiv_P))
+Median_Indiv_G <- median(na.omit(Indiv_G))
+SD_Indiv_G <- sd(na.omit(Indiv_G))
+
+# Print medians and standard deviations for Group_P and Group_G
+cat("Median_Group_P:", Median_Group_P, "\n")
+cat("SD_Group_P:", SD_Group_P, "\n")
+cat("Median_Group_G:", Median_Group_G, "\n")
+cat("SD_Group_G:", SD_Group_G, "\n")
+
+# Print medians and standard deviations for Indiv_P and Indiv_G
+cat("Median_Indiv_P:", Median_Indiv_P, "\n")
+cat("SD_Indiv_P:", SD_Indiv_P, "\n")
+cat("Median_Indiv_G:", Median_Indiv_G, "\n")
+cat("SD_Indiv_G:", SD_Indiv_G, "\n")
+
+
+library(PairedData)
+pd_P <- paired(Group_P, Group_G)
+p1 <- plot(pd_P, type = "profile") + theme_bw()
+
+pd_G <- paired(Indiv_P, Indiv_G)
+p2 <- plot(pd_G, type = "profile") + theme_bw()
+
+pd_G <- paired(Group_G, Indiv_G)
+p1 <- plot(pd_G, type = "profile") + theme_bw()
+
+pd_G <- paired(Indiv_P, Group_P)
+p2 <- plot(pd_G, type = "profile") + theme_bw()
+
+
+t.test(Group_P, Group_G, paired = TRUE, correct = TRUE, alternative = 'two.sided')
+t.test(Indiv_P, Indiv_G, paired = TRUE, correct = TRUE, alternative = 'two.sided')
+
+
+t.test(Group_G, Indiv_G, paired = TRUE, correct = TRUE, alternative = 'two.sided')
+t.test(Indiv_P, Group_P, paired = TRUE, correct = TRUE, alternative = 'two.sided')
+
+
+shapiro.test(Indiv_P)
+shapiro.test(Group_P)
+shapiro.test(Indiv_G)
+shapiro.test(Group_G)
+
+wilcox.test(Indiv_P, Indiv_G, paired = TRUE)
+wilcox.test(Group_P, Group_G, paired = TRUE)
+
+library(gridExtra)
+grid.arrange(
+  # First column with plots p1, p2, and p3
+  p1, p2, ncol = 2
+  
+)
+
+
+
+##### MIXED ######
+data_mixed <- data_mixed %>%
+  inner_join(name_palo, by = c("Participant", "Palo")) %>%
+  group_by(Participant, Palo, INDvsGR) %>%
+  mutate(mean_Q1b = mean(Q2a, na.rm = TRUE))
+
+filtered_data <- data_mixed %>%
+  distinct(Participant, Palo, INDvsGR, mean_Q1b, Pair, Artist) %>%
+  filter(!is.na(INDvsGR))  # Remove rows with missing FIXvsOther values
+
+grouped_data <- filtered_data %>%
+  pivot_wider(names_from = INDvsGR, values_from = mean_Q1b)
+
+print(grouped_data)
+
+grouped_data <- grouped_data %>% arrange(Pair, Palo, Artist)
+
+# Split in two groups
+grouped_P <- grouped_data[grepl("P", grouped_data$Artist),] #only dancers
+print(grouped_P)
+
+
+grouped_G <- grouped_data[grepl("G", grouped_data$Artist),] #only dancers
+print(grouped_G)
+
+
+# Subset weight data before treatment
+Group_P <- grouped_P$Group
+Group_G <- grouped_G$Group
+# subset weight data after treatment
+Indiv_P <- grouped_P$Indiv
+Indiv_G <- grouped_G$Indiv
+# Plot paired data
+
+# Calculate means and standard deviations
+Mean_Group_P <- mean(na.omit(Group_P))
+SD_Group_P <- sd(na.omit(Group_P))
+Mean_Group_G <- mean(na.omit(Group_G))
+SD_Group_G <- sd(na.omit(Group_G))
+Mean_Indiv_P <- mean(na.omit(Indiv_P))
+SD_Indiv_P <- sd(na.omit(Indiv_P))
+Mean_Indiv_G <- mean(na.omit(Indiv_G))
+SD_Indiv_G <- sd(na.omit(Indiv_G))
+
+# Print means and standard deviations for Group_P and Group_G
+cat("Mean_Group_P:", Mean_Group_P, "\n")
+cat("SD_Group_P:", SD_Group_P, "\n")
+cat("Mean_Group_G:", Mean_Group_G, "\n")
+cat("SD_Group_G:", SD_Group_G, "\n")
+
+# Print means and standard deviations for Indiv_P and Indiv_G
+cat("Mean_Indiv_P:", Mean_Indiv_P, "\n")
+cat("SD_Indiv_P:", SD_Indiv_P, "\n")
+cat("Mean_Indiv_G:", Mean_Indiv_G, "\n")
+cat("SD_Indiv_G:", SD_Indiv_G, "\n")
+
+
+library(PairedData)
+pd_P <- paired(Group_P, Group_G)
+p1 <- plot(pd_P, type = "profile") + theme_bw()
+
+pd_G <- paired(Indiv_P, Indiv_G)
+p2 <- plot(pd_G, type = "profile") + theme_bw()
+
+t.test(Group_P, Group_G, paired = TRUE, correct = TRUE, alternative = 'two.sided')
+t.test(Indiv_P, Indiv_G, paired = TRUE, correct = TRUE, alternative = 'two.sided')
+
+
+t.test(Group_G, Indiv_G, paired = TRUE, correct = TRUE, alternative = 'two.sided')
+t.test(Indiv_P, Group_P, paired = TRUE, correct = TRUE, alternative = 'two.sided')
+
+
+shapiro.test(Indiv_P)
+shapiro.test(Group_P)
+shapiro.test(Indiv_G)
+shapiro.test(Group_G)
+
+wilcox.test(Indiv_P, Indiv_G, paired = TRUE)
+wilcox.test(Group_P, Group_G, paired = TRUE)
+
+library(gridExtra)
+grid.arrange(
+  # First column with plots p1, p2, and p3
+  p1, p2, ncol = 2
+  
+)
+
+
+##### FIXED######
+data_fixed <- data_fixed %>%
+  inner_join(name_palo, by = c("Participant", "Palo")) %>%
+  group_by(Participant, Palo) %>%
+  mutate(mean_Q1b = mean(Q2a, na.rm = TRUE))
+
+filtered_data <- data_fixed %>%
+  distinct(Participant, Palo, mean_Q1b, Pair, Artist) 
+
+filtered_data 
+
+
+grouped_data <- filtered_data %>% arrange(Pair, Palo, Artist)
+print(grouped_data)
+
+# Split in two groups
+grouped_P <- grouped_data[grepl("P", grouped_data$Artist),] #only dancers
+print(grouped_P)
+
+
+grouped_G <- grouped_data[grepl("G", grouped_data$Artist),] #only dancers
+print(grouped_G)
+
+# Subset weight data before treatment
+Group_P <- grouped_P$mean_Q1b
+Group_G <- grouped_G$mean_Q1b
+# subset weight data after treatment
+
+
+# Calculate medians and standard deviations
+Median_Group_P <- median(na.omit(Group_P))
+SD_Group_P <- sd(na.omit(Group_P))
+Median_Group_G <- median(na.omit(Group_G))
+SD_Group_G <- sd(na.omit(Group_G))
+
+# Print medians and standard deviations for Group_P and Group_G
+cat("Median_Group_P:", Median_Group_P, "\n")
+cat("SD_Group_P:", SD_Group_P, "\n")
+cat("Median_Group_G:", Median_Group_G, "\n")
+cat("SD_Group_G:", SD_Group_G, "\n")
+
+library(PairedData)
+pd_P <- paired(Group_P, Group_G)
+p1 <- plot(pd_P, type = "profile") + theme_bw()
+
+
+t.test(Group_P, Group_G, paired = TRUE, correct = TRUE, alternative = 'two.sided')
+
+
+
+Fixshapiro.test(Group_P)
+shapiro.test(Group_G)
+
+wilcox.test(Indiv_P, Indiv_G, paired = TRUE)
+wilcox.test(Group_P, Group_G, paired = TRUE)
+
+library(gridExtra)
+grid.arrange(
+  # First column with plots p1, p2, and p3
+  p1, p2, ncol = 2
+  
+)
+
+##### Correction ####
+#  p-values
+p_values <- c(0.885,	5.22E-05, 0.5725,	0.04096)
+
+# FDR correction using Benjamini-Hochberg method
+fdr_corrected_p_values <- p.adjust(p_values, method = "fdr")
+
+# Print the original p-values and the FDR-corrected p-values
+data.frame(p_values = p_values, fdr_corrected_p_values = fdr_corrected_p_values)
+
+
+
+###### Violinplots ##############
+
+
+library(tidyverse)
+colors <- c("#8DD3C7", "#FFFFB3", "#BEBADA", "#FB8072", "#80B1D3", "#FDB462", "#B3DE69", "#FCCDE5", "#00008B", "#BC80BD")
+labels_names <- c('Mixed', 'Impro','Mixeded', 'Free','Improidual', 'Mixed', 'Musician', 'Dancer', 'Tangos', 'Solea')
+color_lines <- c("#55A4A0","#D2BF8E", '#975991')
+label_lines <- c("Mixed","Impro", 'Solea')
+common_theme <- theme(
+  axis.text.y = element_text(size = 12),   # Adjust y-axis text size
+  axis.text.x = element_text(size = 10),   # Adjust y-axis text size
+  strip.text = element_text(size = 12),     # Adjust facet titles size
+  axis.title.x = element_text(size = 12),
+  axis.title.y = element_text(size = 14),
+  panel.grid = element_blank(),
+  plot.title = element_text(hjust = 0.5),
+  plot.margin = margin(t = 1, r = 0, b = 2, l = 0.5, unit = "cm"),
+  panel.background = element_rect(fill = "white", color = "grey70", size = 1)
+)  # Center the title
+#plot.margin = margin(1, 1, 1, 1, "cm")
+
+textsize_val <- 6
+vjust_val <- 1.7
+
+
+##### Q2a #######
+title1 <- "Feeling rightly challenged"
+pQ1bI <- ggplot(data_impro, aes(x = C, y = Q2a, fill = C)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE, position = position_dodge(width = 0.9)) +
+  geom_boxplot(aes(fill = C), width = 0.12, outlier.shape = NA, alpha = alpha_val, position = position_dodge(width = 0.9), show.legend = FALSE) +
+  scale_fill_manual(values = c("Individual" = colors[9], "Group" = colors[10])) +
+  scale_x_discrete(labels = c("Group" = "Gr", "Individual" = "Ind")) +
+  labs(x = " (c) Improvised ", y = "", fill = "C") +
+  facet_wrap(~ D, ncol = 2) +
+  # geom_signif(
+  #   comparisons = list(c("Individual", "Group")), 
+  #   textsize = textsize_val, 
+  #   vjust = vjust_val,
+  #   annotations = '',
+  #   map_signif_level = TRUE,
+  #   show.legend = FALSE) +
+  common_theme + 
+  scale_y_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1))
+
+ann_text <- data.frame(D = "Dancer",Q2a = 7.0,lab = "Text",
+                       C = factor("Individual",levels = c("Individual", "Group")))
+pQ1bI <- pQ1bI + geom_text(x = 1.5, y = 7.1, data = ann_text,label = "", size = 5)
+
+ann_text <- data.frame(D = "Musician",Q2a = 7.0,lab = "Text",
+                       C = factor("Group",levels = c("Individual", "Group")))
+pQ1bI <- pQ1bI + geom_text(x = 1.5, y = 7.2, data = ann_text,label = "***", size = 6.5)
+
+pQ1bI
+
+pQ1bM <- ggplot(data_mixed, aes(x = C, y = Q2a, fill = C)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE, position = position_dodge(width = 0.9)) +
+  geom_boxplot(aes(fill = C), width = 0.12, outlier.shape = NA, alpha = alpha_val, position = position_dodge(width = 0.9), show.legend = FALSE) +
+  scale_fill_manual(values = c("Individual" = colors[9], "Group" = colors[10])) +
+  labs(x = "(b) Mixed", y = "", fill = "C") +
+  scale_x_discrete(labels = c("Group" = "Gr", "Individual" = "Ind")) +
+  facet_wrap(~ D, ncol = 2) +
+  common_theme + 
+  scale_y_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1))
+
+pQ1bM
+
+pQ1bF <-ggplot(data_fixed, aes(x = D, y = Q2a, fill = D)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE, position = position_dodge(width = 0.9)) +
+  geom_boxplot(aes(fill = D), width = 0.12, outlier.shape = NA, alpha = alpha_val, position = position_dodge(width = 0.9), show.legend = FALSE) +
+  scale_fill_manual(values = c("Dancer" = colors[10],"Musician" = colors[10])) +
+  labs(x = "(a) Fixed", y = title1, fill = "D") +
+  scale_x_discrete(labels = c("Neutral" = "Group")) +
+  facet_wrap(~ C, labeller = labeller(C = c(Neutral = "Group")), ncol = 2) +
+  common_theme + 
+  scale_y_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1))
+
+library(gridExtra)
+grid_arrange <-grid.arrange(
+  # First column with plots p1, p2, and p3
+  pQ1bF, pQ1bM, pQ1bI, ncol = 3
+  
+)
+
+
+
+pushViewport(viewport(layout = grid.layout(1, 3)))
+
+# Specify the coordinates for the line above graphs
+x1 <- unit(0.9, "npc")
+x2 <- unit(0.95, "npc")
+y <- unit(0.79, "npc")
+
+# Draw the line between plot 1 and plot 2
+grid.lines(x = c(x1, x2), y = c(y, y), gp = gpar(col = "black", lwd = 2) )
+y2 <- y - unit( 0.011, "npc")
+
+# Draw the line between plot 1 and plot 2
+grid.lines(x = c(x1, x1), y = c(y, y2), gp = gpar(col = "black", lwd = 2) )
+grid.lines(x = c(x2, x2), y = c(y, y2), gp = gpar(col = "black", lwd = 2) )
+
+
+### under graph 
+x1 <- unit(0.2, "npc")
+x2 <- unit(0.85, "npc")
+y <- unit(0.08, "npc")
+
+# Draw the line between plot 1 and plot 2
+grid.lines(x = c(x1, x2), y = c(y, y), gp = gpar(col = "black", lwd = 2) )
+
+y2 <- y + unit( 0.015, "npc")
+
+# Draw the line between plot 1 and plot 2
+grid.lines(x = c(x1, x1), y = c(y, y2), gp = gpar(col = "black", lwd = 2) )
+grid.lines(x = c(x2, x2), y = c(y, y2), gp = gpar(col = "black", lwd = 2) )
+
+# Draw the p-value annotation
+text <- "***"
+grid.text(label = text, x = unit(0.5, "npc"), y = unit(0.06, "npc"), gp = gpar(fontsize = 18))
+
+
+### Add title
+# title2 = "Feeling rightly challenged"
+# grid.text(title2, x = 0.3, y = 0.97, gp = gpar(fontsize = 16, fontface = "bold"))
+
+
+##### Connection wit partner ##### 
+###################################
+common_theme <- theme(
+  axis.text.y = element_text(size = 12),   # Adjust y-axis text size
+  axis.text.x = element_text(size = 10),   # Adjust y-axis text size
+  strip.text = element_text(size = 12),     # Adjust facet titles size
+  axis.title.x = element_text(size = 12),
+  axis.title.y = element_text(size = 14),
+  panel.grid = element_blank(),
+  plot.title = element_text(hjust = 0.5),
+  plot.margin = margin(t = 1, r = 0, b = 2, l = 0.5, unit = "cm"),
+  panel.background = element_rect(fill = "white", color = "grey70", size = 1)
+)
+
+title1 <- "Connection with partner"
+pQ1bI <- ggplot(data_impro, aes(x = C, y = Q4a, fill = C)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE, position = position_dodge(width = 0.9)) +
+  geom_boxplot(aes(fill = C), width = 0.12, outlier.shape = NA, alpha = alpha_val, position = position_dodge(width = 0.9), show.legend = FALSE) +
+  scale_fill_manual(values = c("Individual" = colors[9], "Group" = colors[10])) +
+  labs(x = " (c) Improvised ", y = "", fill = "C") +
+  facet_wrap(~ D, ncol = 2) +
+  # geom_signif(
+  #   comparisons = list(c("Individual", "Group")), 
+  #   textsize = textsize_val, 
+  #   vjust = vjust_val,
+  #   annotations = '',
+  #   map_signif_level = TRUE,
+  #   show.legend = FALSE) +
+  common_theme + 
+  scale_y_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1))
+
+pQ1bI
+
+pQ1bM <- ggplot(data_mixed, aes(x = C, y = Q2a, fill = C)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE, position = position_dodge(width = 0.9)) +
+  geom_boxplot(aes(fill = C), width = 0.12, outlier.shape = NA, alpha = alpha_val, position = position_dodge(width = 0.9), show.legend = FALSE) +
+  scale_fill_manual(values = c("Individual" = colors[9], "Group" = colors[10])) +
+  labs(x = "(b) Mixed", y = "", fill = "C") +
+  facet_wrap(~ D, ncol = 2) +
+  common_theme + 
+  scale_y_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1))
+
+
+
+pQ1bF <-ggplot(data_fixed, aes(x = D, y = Q2a, fill = D)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE, position = position_dodge(width = 0.9)) +
+  geom_boxplot(aes(fill = D), width = 0.12, outlier.shape = NA, alpha = alpha_val, position = position_dodge(width = 0.9), show.legend = FALSE) +
+  scale_fill_manual(values = c("Dancer" = colors[10],"Musician" = colors[10])) +
+  labs(x = "(a) Fixed", y = title1, fill = "D") +
+  scale_x_discrete(labels = c("Neutral" = "Group")) +
+  facet_wrap(~ C, labeller = labeller(C = c(Neutral = "Group")), ncol = 2) +
+  common_theme + 
+  scale_y_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1))
+pQ1bF
+library(gridExtra)
+grid_arrange <-grid.arrange(
+  # First column with plots p1, p2, and p3
+  pQ1bF, pQ1bM, pQ1bI, ncol = 3
+  
+)
+
+pushViewport(viewport(layout = grid.layout(1, 3)))
+
+
+
+### under graph 
+x1 <- unit(0.2, "npc")
+x2 <- unit(0.85, "npc")
+y <- unit(0.08, "npc")
+
+# Draw the line between plot 1 and plot 2
+grid.lines(x = c(x1, x2), y = c(y, y), gp = gpar(col = "black", lwd = 2) )
+
+y2 <- y + unit( 0.015, "npc")
+
+# Draw the line between plot 1 and plot 2
+grid.lines(x = c(x1, x1), y = c(y, y2), gp = gpar(col = "black", lwd = 2) )
+grid.lines(x = c(x2, x2), y = c(y, y2), gp = gpar(col = "black", lwd = 2) )
+
+# Draw the p-value annotation
+y3= y- unit( 0.02, "npc")
+x3 = (x1 + x2)/2 
+text <- "***"
+grid.text(label = text, x = unit(x3, "npc"), y = unit(y3, "npc"), gp = gpar(fontsize = 18))
+
+
+### Under graph 2 ####
+
+x1 <- unit(0.2, "npc")
+x2 <- unit(0.55, "npc")
+y <- unit(0.04, "npc")
+
+# Draw the line between plot 1 and plot 2
+grid.lines(x = c(x1, x2), y = c(y, y), gp = gpar(col = "black", lwd = 2) )
+
+y2 <- y + unit( 0.015, "npc")
+
+# Draw the line between plot 1 and plot 2
+grid.lines(x = c(x1, x1), y = c(y, y2), gp = gpar(col = "black", lwd = 2) )
+grid.lines(x = c(x2, x2), y = c(y, y2), gp = gpar(col = "black", lwd = 2) )
+
+# Draw the p-value annotation
+y3= y- unit( 0.02, "npc")
+x3 = (x1 + x2)/2 
+
+text <- "***"
+
+grid.text(label = text, x = unit(x3, "npc"), y = unit(y3, "npc"), gp = gpar(fontsize = 18))
+
+
+
+#### Version 07.03.2024
+
+
+common_theme <- theme(
+  axis.text.y = element_text(size = 12),   # Adjust y-axis text size
+  axis.text.x = element_text(size = 10),   # Adjust y-axis text size
+  strip.text = element_text(size = 12),     # Adjust facet titles size
+  axis.title.x = element_text(size = 12),
+  axis.title.y = element_text(size = 14),
+  panel.grid = element_blank(),
+  plot.title = element_text(hjust = 0.5),
+  plot.margin = margin(t = 1, r = 0, b = 2, l = 0.5, unit = "cm"),
+  panel.background = element_rect(fill = "white", color = "grey70", size = 1)
+)
+# 
+# new_colors <- c("#5BB8A0", "#8C8AFF", "#FFA500", "#E30B5C")
+# 
+# darker_colors <- c("#348770", "#4F4D9E", "#BF7F00", "#A50741")
+
+colors <- c("#5BB8A0", "#8C8AFF", "#FFA500", "#E30B5C", "#f15a2eff")
+darker_colors <- c("#348770", "#4F4D9E", "#f19e07ff", "#A50741")
+colors = c( "#136e60ff", "#3906f6ff")
+colors <- c("#8DD3C7", "#FFFFB3", "#BEBADA", "#FB8072", "#80B1D3", "#FDB462", "#B3DE69", "#FCCDE5", "#00008B", "#BC80BD")
+
+#### Quality of improvisation ##### 
+data_fixed$title1 <- "Subjective rating"
+pQ1bI <- ggplot(data_impro, aes(x = C, y = Q1b, fill = C)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE, position = position_dodge(width = 0.9)) +
+  #geom_boxplot(aes(fill = C), width = 0.12, outlier.shape = NA, alpha = alpha_val, position = position_dodge(width = 0.9), show.legend = FALSE) +
+  geom_boxplot(aes(fill = "white"), width = 0.15, outlier.shape = NA, alpha = alpha_val, position = position_dodge(width = 0.9), show.legend = FALSE, fill = "white") +
+  scale_fill_manual(values = c("Individual" = colors[5], "Group" = colors[9])) +
+  scale_x_discrete(labels = c("Group" = "Gr", "Individual" = "Ind")) +
+  labs(x = " (c) Improvised ", y = "", fill = "C") +
+  facet_wrap(~ D, ncol = 2) +
+  common_theme + 
+  scale_y_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1))
+
+pQ1bI
+
+pQ1bM <- ggplot(data_mixed, aes(x = C, y = Q1b, fill = C)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE, position = position_dodge(width = 0.9)) +
+  #geom_boxplot(aes(fill = C), width = 0.12, outlier.shape = NA, alpha = alpha_val, position = position_dodge(width = 0.9), show.legend = FALSE) +
+  geom_boxplot(aes(fill = "white"), width = 0.15, outlier.shape = NA, alpha = alpha_val, position = position_dodge(width = 0.9), show.legend = FALSE, fill = "white") +
+  scale_fill_manual(values = c("Individual" = colors[5], "Group" = colors[9])) +
+  scale_x_discrete(labels = c("Group" = "Gr", "Individual" = "Ind")) +
+  labs(x = "(b) Mixed", y = "", fill = "C") +
+  facet_wrap(~ D, ncol = 2) +
+  common_theme + 
+  scale_y_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1))
+
+# pQ1bF  <-ggplot(data_fixed, aes(x = C, y = Q1b, fill = C)) +
+#   geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE, position = position_dodge(width = 0.9)) +
+#   #geom_boxplot(aes(fill = C), width = 0.12, outlier.shape = NA, alpha = alpha_val, position = position_dodge(width = 0.9), show.legend = FALSE) +
+#   geom_boxplot(aes(fill = "white"), width = 0.15, outlier.shape = NA, alpha = alpha_val, position = position_dodge(width = 0.9), show.legend = FALSE, fill = "white") +
+#   scale_x_discrete(labels = c("Group" = "Gr", "Individual" = "Ind")) +
+#   scale_fill_manual(values = c("Neutral" = colors[10])) +
+#   labs(x = "(a) Fixed", y = "Subjective rating", fill = "C") +
+#   scale_x_discrete(labels = c("Neutral" = "Group")) +
+#   facet_wrap(~ D, ncol = 2) +
+#   common_theme + 
+#   scale_y_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1))
+title1 <- "Subjective rating"
+pQ1bF <-ggplot(data_fixed, aes(x = D, y = Q1b, fill = D)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE, position = position_dodge(width = 0.9)) +
+  geom_boxplot(aes(fill = "white"), width = 0.15, outlier.shape = NA, alpha = alpha_val, position = position_dodge(width = 0.9), show.legend = FALSE, fill = "white") +
+  scale_fill_manual(values = c("Dancer" = colors[9],"Musician" = colors[9])) +
+  labs(x = "(a) Fixed", y = title1, fill = "D") +
+  scale_x_discrete(labels = c("Neutral" = "Group")) +
+  facet_wrap(~ C, labeller = labeller(C = c(Neutral = "Group")), ncol = 2) +
+  common_theme + 
+  scale_y_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1))
+
+
+grid.arrange(
+  # First column with plots p1, p2, and p3
+  pQ1bF, pQ1bM, pQ1bI, ncol = 3
+  
+)
+
+#### Flow ##### 
+
+pQ3I <- ggplot(data_impro, aes(x = C, y = Q3, fill = C)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE, position = position_dodge(width = 0.9)) +
+  #geom_boxplot(aes(fill = C), width = 0.12, outlier.shape = NA, alpha = alpha_val, position = position_dodge(width = 0.9), show.legend = FALSE) +
+  geom_boxplot(aes(fill = "white"), width = 0.15, outlier.shape = NA, alpha = alpha_val, position = position_dodge(width = 0.9), show.legend = FALSE, fill = "white") +
+  scale_fill_manual(values = c("Individual" = colors[5], "Group" = colors[9])) +
+  scale_x_discrete(labels = c("Group" = "Gr", "Individual" = "Ind")) +
+  labs(x = " (c) Improvised ", y = "", fill = "C") +
+  facet_wrap(~ D, ncol = 2) +
+  common_theme + 
+  scale_y_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1))
+
+
+pQ3M <- ggplot(data_mixed, aes(x = C, y = Q3, fill = C)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE, position = position_dodge(width = 0.9)) +
+  #geom_boxplot(aes(fill = C), width = 0.12, outlier.shape = NA, alpha = alpha_val, position = position_dodge(width = 0.9), show.legend = FALSE) +
+  geom_boxplot(aes(fill = "white"), width = 0.15, outlier.shape = NA, alpha = alpha_val, position = position_dodge(width = 0.9), show.legend = FALSE, fill = "white") +
+  scale_fill_manual(values = c("Individual" = colors[5], "Group" = colors[9])) +
+  scale_x_discrete(labels = c("Group" = "Gr", "Individual" = "Ind")) +
+  labs(x = "(b) Mixed", y = "", fill = "C") +
+  facet_wrap(~ D, ncol = 2) +
+  common_theme + 
+  scale_y_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1))
+
+pQ3F <-ggplot(data_fixed, aes(x = D, y = Q3, fill = D)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE, position = position_dodge(width = 0.9)) +
+  geom_boxplot(aes(fill = "white"), width = 0.15, outlier.shape = NA, alpha = alpha_val, position = position_dodge(width = 0.9), show.legend = FALSE, fill = "white") +
+  scale_fill_manual(values = c("Dancer" = colors[9],"Musician" = colors[9])) +
+  labs(x = "(a) Fixed", y = title1, fill = "D") +
+  scale_x_discrete(labels = c("Neutral" = "Group")) +
+  facet_wrap(~ C, labeller = labeller(C = c(Neutral = "Group")), ncol = 2) +
+  common_theme + 
+  scale_y_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1))
+
+
+grid.arrange(
+  # First column with plots p1, p2, and p3
+  pQ3F, pQ3M, pQ3I, ncol = 3
+  
+)
+
+
+#### Feeling rightly challenged ##### 
+title1 = "Subjective rating"
+pQ2aI <- ggplot(data_impro, aes(x = C, y = Q2a, fill = C)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE, position = position_dodge(width = 0.9)) +
+  #geom_boxplot(aes(fill = C), width = 0.12, outlier.shape = NA, alpha = alpha_val, position = position_dodge(width = 0.9), show.legend = FALSE) +
+  geom_boxplot(aes(fill = "white"), width = 0.15, outlier.shape = NA, alpha = alpha_val, position = position_dodge(width = 0.9), show.legend = FALSE, fill = "white") +
+  scale_fill_manual(values = c("Individual" = colors[5], "Group" = colors[9])) +
+  scale_x_discrete(labels = c("Group" = "Gr", "Individual" = "Ind")) +
+  labs(x = " (c) Improvised ", y = "", fill = "C") +
+  facet_wrap(~ D, ncol = 2) +
+  common_theme + 
+  scale_y_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1))
+
+
+pQ2aM <- ggplot(data_mixed, aes(x = C, y = Q2a, fill = C)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE, position = position_dodge(width = 0.9)) +
+  #geom_boxplot(aes(fill = C), width = 0.12, outlier.shape = NA, alpha = alpha_val, position = position_dodge(width = 0.9), show.legend = FALSE) +
+  geom_boxplot(aes(fill = "white"), width = 0.15, outlier.shape = NA, alpha = alpha_val, position = position_dodge(width = 0.9), show.legend = FALSE, fill = "white") +
+  scale_fill_manual(values = c("Individual" = colors[5], "Group" = colors[9])) +
+  scale_x_discrete(labels = c("Group" = "Gr", "Individual" = "Ind")) +
+  labs(x = "(b) Mixed", y = "", fill = "C") +
+  facet_wrap(~ D, ncol = 2) +
+  common_theme + 
+  scale_y_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1))
+
+pQ2aF <-ggplot(data_fixed, aes(x = D, y = Q2a, fill = D)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE, position = position_dodge(width = 0.9)) +
+  geom_boxplot(aes(fill = "white"), width = 0.15, outlier.shape = NA, alpha = alpha_val, position = position_dodge(width = 0.9), show.legend = FALSE, fill = "white") +
+  scale_fill_manual(values = c("Dancer" = colors[9],"Musician" = colors[9])) +
+  labs(x = "(a) Fixed", y = title1, fill = "D") +
+  scale_x_discrete(labels = c("Neutral" = "Group")) +
+  facet_wrap(~ C, labeller = labeller(C = c(Neutral = "Group")), ncol = 2) +
+  common_theme + 
+  scale_y_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1))
+
+
+grid.arrange(
+  # First column with plots p1, p2, and p3
+  pQ2aF, pQ2aM, pQ2aI, ncol = 3
+  
+)
 
 
 
