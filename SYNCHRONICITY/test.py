@@ -1,11 +1,13 @@
 # Testing multiSync.py package. 
-
+# Description can be found in https://link.springer.com/article/10.3758/s13428-022-01855-y article.
+# Packages installed mostly on python 3.10
 import numpy as np
 import scipy
 from multiSyncPy import data_generation as dg
 from multiSyncPy import synchrony_metrics as sm
 import scipy.signal
-
+import pandas as pd
+import matplotlib.pyplot as plt
 
 # Creating some sampling data to work with
 
@@ -18,6 +20,18 @@ alpha = 0.5,
 d_t = 0.01,
 length = 1000
 )
+
+
+
+# fig, axs = plt.subplots(5, 1, figsize=(8, 10))
+
+# for i in range(5):
+#     axs[i].plot(kuramoto_test_data[:, i])
+#     axs[i].set_xlabel('Time')
+#     axs[i].set_ylabel(f'Variable {i+1}')
+
+# plt.tight_layout()
+# plt.show()
 
 print(kuramoto_test_data.shape)
 
@@ -40,6 +54,14 @@ recurrence_matrix = sm.recurrence_matrix(kuramoto_test_data, radius= 0.1)
 rqa_metrics = sm.rqa_metrics(recurrence_matrix)
 
 print(recurrence_matrix.shape, ' metrics: ', rqa_metrics)
+
+dense_matrix = np.array(recurrence_matrix)
+
+# Display the dense matrix as a black and white image
+plt.matshow(dense_matrix, cmap='binary')
+plt.show()
+
+
 
 
 cohorence_k = sm.coherence_team(kuramoto_test_data)
@@ -94,3 +116,5 @@ kuramoto_test_data_sample_phases = [np.angle(scipy.signal.hilbert(
 test_results = sm.kuramoto_weak_null(kuramoto_test_data_sample)
 
 print(test_results)
+
+

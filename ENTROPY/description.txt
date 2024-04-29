@@ -10,7 +10,7 @@ Protocol for getting all the data
 
 Script for source separation:
     0. Go to folder where all tracks are
-    1. Run demucs command: demucs -n htdemucs_6s  *.wav
+    1. Run O command: demucs -n htdemucs_6s  *.wav
     2. Run renameDemucs.py to rename files with respective track name. 
 
 Scripts for getting MIR features:

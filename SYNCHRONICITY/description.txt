@@ -1,0 +1,69 @@
+# Description and purpose 
+
+This folder contains quite a lot of experimental files on Recurrence Quantification Analysis methods.  
+The aim is to create an appropriate pipeline for construction recurrence quantification analysis of audio and video data. 
+Preferably video and audio time-series will be fed simultaneously to the recurrence analysis, there the multiSyncPy package is of interest. 
+
+
+
+# Packages and installation location
+
+Most of the packages have been installed on python 3.10, given there was a C++ library and python conflict on later python version. 
+Activate the environment in /Ritmo/Rebecca/projectA/projectA/ "source env/bin/activate"
+
+
+# Scripts
+
+The scripts will be presented in chronological order. Two most important scripts are main.py and takensEmbedding.py
+
+## test.py
+
+Script based on instructions from https://link.springer.com/article/10.3758/s13428-022-01855-y
+
+1. Create a kuramoto dataset (5, 1000) 
+2. Create autoregressive dataset (1000, ) 
+3. Estimates on kuramoto_data:
+3.1. Symbolic entropy, fed raw. 
+3.2.  recurrence analysis, input needs radius 
+4. coherence (normalised), 
+3. Create phase time-series through Hilbert transformation (including refinement to normalize data to have a mean of value of zero)
+3. Plotting was done with a simplified function. 
+
+
+
+## main.py
+
+Probably the most important script in which all knowledge from test scripts will be merged.
+
+1. Import audio data:
+    data_array = raw data
+    data_array_onset = onsets binarised time- series (from NielsOnset), data_array_intensity = intensity of onsets (from NielsOnset).
+    Note: Need to check whether the intensity values had to be adjusted or not. 
+    t_start = 0
+    t_end = onset[-1], last onset has been taken as end of audio.  
+    t_step = 0.01, samplerate of raw data has been adjusted to t_step using scipy.signal.decimate
+2. Import video_data
+    sample data from fourMS package. 
+    Is sampled at 0.017 seconds which is a bit tedious. 
+    Sample rate adjusted (resampled) and interpolated to 0.01. 
+    Length of array same as audio data. 
+
+3. Finding optimal tau, delay for source. 
+
+
+## takensEmbeddin.py
+
+Contains subfunctions for main.py
+
+
+## exampleLorenz.py
+Example of recurrence of Lorenz system. Not completed.
+
+## exampleSine.opy
+Example of recurrence analysis on sine function, also using PyRQA
+
+
+## synchronyDrums.py
+trying out getting same time_length of video and audio data. Simple time-delay function to create a multi-dimensional time series. 
+
+
