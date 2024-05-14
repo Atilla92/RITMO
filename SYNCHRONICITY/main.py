@@ -6,6 +6,7 @@ from scipy.io.wavfile import read
 
 from takensEmbedding import find_optimal_delay, find_optional_dimension
 from multiSyncPy import synchrony_metrics as sm
+import musicalgestures
 
 # import plotly.express as px
 # import plotly.graph_objects as go
@@ -13,6 +14,7 @@ from multiSyncPy import synchrony_metrics as sm
 
 
 input_path = '/Users/atillajv/CODE/RITMO/ONSET/output_drums/'
+#input_audio = '/Volumes/WHITE LOTUS/AUDIO/DRUMS_DEMUCS/'
 input_audio = '/Volumes/Seagate/AUDIO/DRUMS_DEMUCS/'
 input_video = '/Users/atillajv/CODE/RITMO/PILOT_SEV_APRIL_2022/output/videoAnalysis/motionData_'
 file_name = 'P3_D1_G1_M1_R1_T1'
@@ -64,6 +66,7 @@ def import_video_file(input_video, file_name, t_end, length_array):
     video_array = df_resampled['ComX'][:length_array]
 
     return video_array
+
 
 
 

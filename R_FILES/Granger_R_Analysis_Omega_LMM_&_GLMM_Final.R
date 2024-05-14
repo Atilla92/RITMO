@@ -1421,8 +1421,25 @@ library(corrplot)
 library(symnum)
 library(psych)
 
+
+
 # Select columns of interest
 plot.new()
+
+library(nortest)
+ad.test(data_ole$Q1a)
+ad.test(data_ole$Q1b)
+ad.test(data_ole$Q3a)
+ad.test(data_ole$Q3b)
+ad.test(data_ole$Q4a)
+ad.test(data_ole$Q4b)
+ad.test(data_ole$Q5a)
+ad.test(data_ole$Q5b)
+ad.test(data_ole$Q6a)
+ad.test(data_ole$Q6b)
+ad.test(data_ole$Perf_Av)
+ad.test(data_ole$Abs_Av)
+
 
 corr_mat <- data_ole[, c("Q1a", "Q1b", "Q3a", "Q3b", "Q4a", "Q4b", "Q5a", "Q5b", "Q6a", "Q6b", "Perf_Av", "Abs_Av")]
 corr_mat <- data_ole[, c( "Q1b", "Q3b", "Q4a", "Q6a")]

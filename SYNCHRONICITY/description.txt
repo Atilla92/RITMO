@@ -51,7 +51,7 @@ Probably the most important script in which all knowledge from test scripts will
 3. Finding optimal tau, delay for source. 
 
 
-## takensEmbeddin.py
+## takensEmbedding.py
 
 Contains subfunctions for main.py
 
@@ -65,5 +65,7 @@ Example of recurrence analysis on sine function, also using PyRQA
 
 ## synchronyDrums.py
 trying out getting same time_length of video and audio data. Simple time-delay function to create a multi-dimensional time series. 
+
+
 
 

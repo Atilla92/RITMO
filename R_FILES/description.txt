@@ -1,0 +1,16 @@
+# R is mostly used for statistical analysis, sanity check etc. 
+# Scripts relevant as of April 2024
+
+
+
+## data
+Latest version is probably:
+Uses '/Users/atillajv/CODE/RITMO/FILES/Subjective/DuringExperiments_Andalucia_05092023_DropW_Expertise.csv'
+
+
+## sanityChecks.R
+1. Checks amount of answers per participant
+2. Distribution plots of questions
+3. Estimation of chronback alpha (not used for paper)
+4. Different GG plots between two questions, to see what should be expected from lmer. 
+
