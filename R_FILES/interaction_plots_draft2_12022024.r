@@ -2767,6 +2767,10 @@ darker_colors <- c("#348770", "#4F4D9E", "#f19e07ff", "#A50741")
 colors = c( "#136e60ff", "#3906f6ff")
 colors <- c("#8DD3C7", "#FFFFB3", "#BEBADA", "#FB8072", "#80B1D3", "#FDB462", "#B3DE69", "#FCCDE5", "#00008B", "#BC80BD")
 
+#Colors for poster
+
+
+
 #### Quality of improvisation ##### 
 data_fixed$title1 <- "Subjective rating"
 pQ1bI <- ggplot(data_impro, aes(x = C, y = Q1b, fill = C)) +
@@ -2907,5 +2911,135 @@ grid.arrange(
   
 )
 
+
+
+
+
+#### Version 03.06.2024
+#### Colors for poster
+
+
+
+common_theme <- theme(
+  axis.text.y = element_text(size = 18),   # Adjust y-axis text size
+  axis.text.x = element_text(size = 12),   # Adjust y-axis text size
+  strip.text = element_text(size = 16),     # Adjust facet titles size
+  axis.title.x = element_text(size = 16),
+  axis.title.y = element_text(size = 18),
+  panel.grid = element_blank(),
+  plot.title = element_text(hjust = 0.5),
+  plot.margin = margin(t = 1, r = 0, b = 2, l = 0.5, unit = "cm"),
+  panel.background = element_rect(fill = "white", color = "grey70", size = 1)
+)
+# 
+# new_colors <- c("#5BB8A0", "#8C8AFF", "#FFA500", "#E30B5C")
+# 
+# darker_colors <- c("#348770", "#4F4D9E", "#BF7F00", "#A50741")
+
+colors <- c("#5BB8A0", "#8C8AFF", "#FFA500", "#E30B5C", "#f15a2eff")
+darker_colors <- c("#348770", "#4F4D9E", "#f19e07ff", "#A50741")
+colors = c( "#136e60ff", "#3906f6ff")
+colors <- c("#8DD3C7", "#FFFFB3", "#BEBADA", "#FB8072", "#80B1D3", "#FDB462", "#B3DE69", "#FCCDE5", "#00008B", "#BC80BD")
+colors <- c("#5acfdbff", '#ff5130ff')
+#Colors for poster
+
+
+
+#### Quality of improvisation ##### 
+data_fixed$title1 <- "Subjective rating"
+pQ1bI <- ggplot(data_impro, aes(x = C, y = Q1b, fill = C)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE, position = position_dodge(width = 0.9)) +
+  #geom_boxplot(aes(fill = C), width = 0.12, outlier.shape = NA, alpha = alpha_val, position = position_dodge(width = 0.9), show.legend = FALSE) +
+  geom_boxplot(aes(fill = "white"), width = 0.15, outlier.shape = NA, alpha = alpha_val, position = position_dodge(width = 0.9), show.legend = FALSE, fill = "white") +
+  scale_fill_manual(values = c("Individual" = colors[2], "Group" = colors[1])) +
+  scale_x_discrete(labels = c("Group" = "Matched", "Individual" = "Unmatched")) +
+  labs(x = " (c) Improvised ", y = "", fill = "C") +
+  facet_wrap(~ D, ncol = 2) +
+  common_theme + 
+  scale_y_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1))
+
+pQ1bI
+
+pQ1bM <- ggplot(data_mixed, aes(x = C, y = Q1b, fill = C)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE, position = position_dodge(width = 0.9)) +
+  #geom_boxplot(aes(fill = C), width = 0.12, outlier.shape = NA, alpha = alpha_val, position = position_dodge(width = 0.9), show.legend = FALSE) +
+  geom_boxplot(aes(fill = "white"), width = 0.15, outlier.shape = NA, alpha = alpha_val, position = position_dodge(width = 0.9), show.legend = FALSE, fill = "white") +
+  scale_fill_manual(values = c("Individual" = colors[2], "Group" = colors[1])) +
+  scale_x_discrete(labels = c("Group" = "Matched", "Individual" = "Unmatched")) +
+  labs(x = "(b) Mixed", y = "", fill = "C") +
+  facet_wrap(~ D, ncol = 2) +
+  common_theme + 
+  scale_y_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1))
+pQ1bM
+# pQ1bF  <-ggplot(data_fixed, aes(x = C, y = Q1b, fill = C)) +
+#   geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE, position = position_dodge(width = 0.9)) +
+#   #geom_boxplot(aes(fill = C), width = 0.12, outlier.shape = NA, alpha = alpha_val, position = position_dodge(width = 0.9), show.legend = FALSE) +
+#   geom_boxplot(aes(fill = "white"), width = 0.15, outlier.shape = NA, alpha = alpha_val, position = position_dodge(width = 0.9), show.legend = FALSE, fill = "white") +
+#   scale_x_discrete(labels = c("Group" = "Gr", "Individual" = "Ind")) +
+#   scale_fill_manual(values = c("Neutral" = colors[10])) +
+#   labs(x = "(a) Fixed", y = "Subjective rating", fill = "C") +
+#   scale_x_discrete(labels = c("Neutral" = "Group")) +
+#   facet_wrap(~ D, ncol = 2) +
+#   common_theme + 
+#   scale_y_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1))
+title1 <- "Subjective rating"
+pQ1bF <-ggplot(data_fixed, aes(x = D, y = Q1b, fill = D)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE, position = position_dodge(width = 0.9)) +
+  geom_boxplot(aes(fill = "white"), width = 0.15, outlier.shape = NA, alpha = alpha_val, position = position_dodge(width = 0.9), show.legend = FALSE, fill = "white") +
+  scale_fill_manual(values = c("Dancer" = colors[1],"Musician" = colors[1])) +
+  labs(x = "(a) Fixed", y = title1, fill = "D") +
+  scale_x_discrete(labels = c("Neutral" = "Matched")) +
+  facet_wrap(~ C, labeller = labeller(C = c(Neutral = "Matched")), ncol = 2) +
+  common_theme + 
+  scale_y_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1))
+
+
+grid.arrange(
+  # First column with plots p1, p2, and p3
+  pQ1bF, pQ1bM, pQ1bI, ncol = 3
+  
+)
+
+#### Flow ##### 
+
+pQ3I <- ggplot(data_impro, aes(x = C, y = Q3, fill = C)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE, position = position_dodge(width = 0.9)) +
+  #geom_boxplot(aes(fill = C), width = 0.12, outlier.shape = NA, alpha = alpha_val, position = position_dodge(width = 0.9), show.legend = FALSE) +
+  geom_boxplot(aes(fill = "white"), width = 0.15, outlier.shape = NA, alpha = alpha_val, position = position_dodge(width = 0.9), show.legend = FALSE, fill = "white") +
+  scale_fill_manual(values = c("Individual" = colors[2], "Group" = colors[1])) +
+  scale_x_discrete(labels = c("Group" = "Matched", "Individual" = "Unmatched")) +
+  labs(x = " (c) Improvised ", y = "", fill = "C") +
+  facet_wrap(~ D, ncol = 2) +
+  common_theme + 
+  scale_y_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1))
+
+
+pQ3M <- ggplot(data_mixed, aes(x = C, y = Q3, fill = C)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE, position = position_dodge(width = 0.9)) +
+  #geom_boxplot(aes(fill = C), width = 0.12, outlier.shape = NA, alpha = alpha_val, position = position_dodge(width = 0.9), show.legend = FALSE) +
+  geom_boxplot(aes(fill = "white"), width = 0.15, outlier.shape = NA, alpha = alpha_val, position = position_dodge(width = 0.9), show.legend = FALSE, fill = "white") +
+  scale_fill_manual(values = c("Individual" = colors[2], "Group" = colors[1])) +
+  scale_x_discrete(labels = c("Group" = "Matched", "Individual" = "Unmatched")) +
+  labs(x = "(b) Mixed", y = "", fill = "C") +
+  facet_wrap(~ D, ncol = 2) +
+  common_theme + 
+  scale_y_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1))
+
+pQ3F <-ggplot(data_fixed, aes(x = D, y = Q3, fill = D)) +
+  geom_violin(alpha = alpha_val, scale = "count", show.legend = FALSE, position = position_dodge(width = 0.9)) +
+  geom_boxplot(aes(fill = "white"), width = 0.15, outlier.shape = NA, alpha = alpha_val, position = position_dodge(width = 0.9), show.legend = FALSE, fill = "white") +
+  scale_fill_manual(values = c("Dancer" = colors[1],"Musician" = colors[1])) +
+  labs(x = "(a) Fixed", y = title1, fill = "D") +
+  scale_x_discrete(labels = c("Neutral" = "Matched")) +
+  facet_wrap(~ C, labeller = labeller(C = c(Neutral = "Matched")), ncol = 2) +
+  common_theme + 
+  scale_y_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1))
+
+
+grid.arrange(
+  # First column with plots p1, p2, and p3
+  pQ3F, pQ3M, pQ3I, ncol = 3
+  
+)
 
 

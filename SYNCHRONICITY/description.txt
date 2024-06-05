@@ -67,5 +67,19 @@ Example of recurrence analysis on sine function, also using PyRQA
 trying out getting same time_length of video and audio data. Simple time-delay function to create a multi-dimensional time series. 
 
 
+## openPose.py
+
+Extracting location x,y of different body parts. 
+
+
+## media_pipe.py
+Analyses single video. Provides body parts from media pipe as an output .csv. Also stores two images with landmarks. One for the first frame one for the middle of the video.
+
+
+## media_pipe_video.py
+Same as media_pipe.py but also stores a video for landmarks. Should probably merge the two. 
+
+
+
 
 

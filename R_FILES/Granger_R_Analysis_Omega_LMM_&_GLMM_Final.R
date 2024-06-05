@@ -953,7 +953,8 @@ m01 = lmer(Q3 ~   Q1b   + Abs_Av  + Q4a + Q6b +  (1  + Q4a | Participant) + (1 |
 
 tab_model(m00, m01,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
           pred.labels =c("(Intercept)", "Quality of improvisation","Absorption by activity", "Connection with partner","Rhythmic complexity"),
-          dv.labels=c("model 1","model 2"), digits = 5,
+          dv.labels=c("model 1","model 2"), digits = 5)
+,
         file = "/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_models_draft2.html"
           )
 library(webshot)
@@ -995,10 +996,11 @@ webshot("/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_model
 colors <- c("#8DD3C7", "#FFFFB3", "#BEBADA", "#FB8072", "#80B1D3", "#FDB462", "#B3DE69", "#FCCDE5", "#00008B", "#BC80BD")
 new_colors <- c("#5BB8A0", "#8C8AFF", "#FFA500", "#E30B5C")
 darker_colors <- c("#348770", "#4F4D9E", "#f19e07ff", "#A50741")
+new_colors <- c("#5acfdbff", '#ff5130ff', "#FFA500","#8DD3C7")
 
 common_theme <- theme(
-  axis.text.y = element_text(size = 14),   # Adjust y-axis text size
-  axis.text.x = element_text(size = 14),   # Adjust y-axis text size
+  axis.text.y = element_text(size = 16),   # Adjust y-axis text size
+  axis.text.x = element_text(size = 16),   # Adjust y-axis text size
   strip.text = element_text(size = 16),     # Adjust facet titles size
   axis.title.x = element_text(size = 16),
   axis.title.y = element_text(size = 16),
@@ -1064,7 +1066,7 @@ Plot_fe_Q4a
 
 Plot_fe_Q1b <- effect_plot(Flamenco_model.lm, pred = Q1b, interval = TRUE, partial.residuals = TRUE, plot.points = TRUE, 
                            jitter = 0.00, point.size = 1.2, colors = new_colors[2], cat.geom = 'line') +
-  labs(x= "Creavity", y = "", title = "") + 
+  labs(x= "Creativity", y = "", title = "") + 
   scale_y_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1)) +
   scale_x_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1))+ 
   common_theme
@@ -1072,7 +1074,7 @@ Plot_fe_Q1b <- effect_plot(Flamenco_model.lm, pred = Q1b, interval = TRUE, parti
 Plot_fe_Q1b
 
 x_values <- data.frame(Abs_Av = seq(1, 7, 0.1))
-predicted_line <- predict(Flamenco_model.lm, newdata = x_values)
+#predicted_line <- predict(Flamenco_model.lm, newdata = x_values)
 
 Plot_fe_Abs_Av <- effect_plot(Flamenco_model.lm, pred = Abs_Av, interval = TRUE, partial.residuals = TRUE, plot.points = TRUE, 
                               jitter = 0.00, point.size = 1.2, colors = new_colors[3]) +
@@ -1108,22 +1110,23 @@ grid.arrange(
 
 
 ##### Plots draft 2, 20.02.2024
-model1 <-  lmer(Q3 ~   Q1b + Abs_Av + Q4a +   (1 + Abs_Av  | Participant) + (1 | Pair), data = data_ole)
-
-# Extract participant-level predictions from the model
-predicted_participant <- data.frame(PredictValue = predict(model1, re.form = ~1 | Participant))
-
-# Merge participant-level predictions with original data
-data_with_predictions_participant <- merge(data_ole, predicted_participant, by = "Participant")
-
-# Plot line for each participant
-ggplot(data_with_predictions_participant, aes(x = Q3, y = predict)) +
-  geom_line(aes(group = Participant, color = as.factor(Participant))) +
-  geom_point(aes(color = as.factor(Participant))) +
-  labs(x = "Q3", y = "Predicted Values") +
-  ggtitle("Line Plot of Predicted Values by Participant") +
-  theme_minimal()
-
+### Does not seem to run
+# model1 <-  lmer(Q3 ~   Q1b + Abs_Av + Q4a +   (1 + Abs_Av  | Participant) + (1 | Pair), data = data_ole)
+# 
+# # Extract participant-level predictions from the model
+# predicted_participant <- data.frame(PredictValue = predict(model1, re.form = ~1 | Participant))
+# 
+# # Merge participant-level predictions with original data
+# data_with_predictions_participant <- merge(data_ole, predicted_participant, by = "Participant")
+# 
+# # Plot line for each participant
+# ggplot(data_with_predictions_participant, aes(x = Q3, y = predict)) +
+#   geom_line(aes(group = Participant, color = as.factor(Participant))) +
+#   geom_point(aes(color = as.factor(Participant))) +
+#   labs(x = "Q3", y = "Predicted Values") +
+#   ggtitle("Line Plot of Predicted Values by Participant") +
+#   theme_minimal()
+# 
 
 
 summary(m00)
