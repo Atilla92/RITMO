@@ -44,6 +44,7 @@ def estimateVelocity (x_array, y_array, z_array, time ):
     z_angles = []
     y_angles = []
     x_angles = []
+    rotations = []
 
     # Iterate through the position data to calculate velocities
     for i in range(len(x_array) - 1):  # Iterate up to the second-to-last index
@@ -59,10 +60,12 @@ def estimateVelocity (x_array, y_array, z_array, time ):
         # Estimation of rotatin matrix
         #'https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.transform.Rotation.align_vectors.html'
         rot, _ = R.align_vectors(v1, v2)
-        angles = rot.as_euler('zyx', degrees = True)     
+        angles = rot.as_euler('zyx', degrees = False)     
         z_angles.append(angles[0])
         y_angles.append(angles[1])
         x_angles.append(angles[2])
+        rot_mat = rot.as_matrix()
+        rotations.append(rot_mat)
         # Get Euler angles of rotation matrix
 
         
@@ -89,17 +92,12 @@ def estimateVelocity (x_array, y_array, z_array, time ):
         
 
     velocity = np.sqrt(np.array(velocities_x)**2 + np.array(velocities_y) **2 + np.array(velocities_z) ** 2)
+    return velocities_x, velocities_y, velocities_z, velocity, x_angles, y_angles, z_angles, rotations 
 
 
 
-
-
-    return velocities_x, velocities_y, velocities_z, velocity, x_angles, y_angles, z_angles 
-
-
-
-vx, vy, vz, v_tot = estimateVelocity(df['NOSE_X'], df['NOSE_Y'], df['NOSE_Z'], time)
-vx_filt, vy_filt, vz_filt, v_tot_filtered = estimateVelocity(filtered_data_x, filtered_data_y, filtered_data_z, time)
+vx, vy, vz, v_tot, angle_x, angle_y, angle_z, rot_mat = estimateVelocity(df['NOSE_X'], df['NOSE_Y'], df['NOSE_Z'], time)
+vx_filt, vy_filt, vz_filt, v_tot_filtered, angle_x_filt, angle_y_filt, angle_z_filt, rot_mat_filtered = estimateVelocity(filtered_data_x, filtered_data_y, filtered_data_z, time)
 
 
 
@@ -131,6 +129,9 @@ axs[0, 1].set_ylabel('v_tot')
 axs[0, 2].plot(time_3, acc_tot)
 axs[0, 2].set_xlabel('Time')
 axs[0, 2].set_ylabel('acc_tot')
+axs[0, 3].plot(time_2, angle_x)  # Use red for pitch
+axs[0,3].plot(time_2, angle_y)
+axs[0,3].plot(time_2, angle_z)
 
 
 axs[1, 1].plot(time_2, v_tot_filtered)
@@ -139,6 +140,9 @@ axs[1, 1].set_ylabel('v_tot_filt')
 axs[1, 2].plot(time_3, acc_tot_filtered)
 axs[1, 2].set_xlabel('Time')
 axs[1, 2].set_ylabel('acc_tot_filt')
+axs[1, 3].plot(time_2, angle_x_filt)  # Use red for pitch
+axs[1,3].plot(time_2, angle_y_filt)
+axs[1,3].plot(time_2, angle_z_filt)
 
 # First row - Plot of vx, vy, vz
 ax_3d = fig.add_subplot(2, 4, 5, projection='3d')  # This is the first subplot in a 2x4 grid
@@ -157,6 +161,145 @@ plt.subplots_adjust(wspace=0.5, hspace=0.3, left=0.1, right=0.9)
 
 # Display the plot
 plt.show()
+
+
+
+
+# Assuming you have a list of rotation matrices called rotation_matrices
+rotation_matrices = rot_mat_filtered
+# Create a sphere
+u = np.linspace(0, 2 * np.pi, 100)
+v = np.linspace(0, np.pi, 50)
+x = np.outer(np.cos(u), np.sin(v))
+y = np.outer(np.sin(u), np.sin(v))
+z = np.outer(np.ones(np.size(u)), np.cos(v))
+
+# Create a 3D plot
+fig = plt.figure(figsize=(12, 8))
+
+# Add the subplots
+ax1 = fig.add_subplot(2, 4, 1, projection='3d')
+ax2 = fig.add_subplot(2, 4, 2)
+ax3 = fig.add_subplot(2, 4, 3)
+ax4 = fig.add_subplot(2, 4, 4, projection='3d')  # This will contain the rotation plot
+
+
+# First row - Plot of vx, vy, vz
+ax1.scatter(df['NOSE_X'], df['NOSE_Y'], df['NOSE_Z'], s=2, alpha=0.5)
+ax1.set_xlabel('X Position')
+ax1.set_ylabel('Y Position')
+ax1.set_zlabel('Z Position')
+
+ax2.plot(time_2, v_tot)
+ax2.set_xlabel('Time')
+ax2.set_ylabel('v_tot')
+
+ax3.plot(time_3, acc_tot)
+ax3.set_xlabel('Time')
+ax3.set_ylabel('acc_tot')
+
+# Plot the rotation matrices in the fourth column
+ax4.plot_surface(x, y, z, color='b', alpha=0.3)
+for R in rotation_matrices:
+    vector_end = R.dot([1, 0, 0])
+    ax4.scatter(vector_end[0], vector_end[1], vector_end[2], color='r')
+
+# Set the aspect of the rotation plot axes to be equal
+ax4.set_box_aspect([1, 1, 1])
+
+# Adjust the spacing and margin between subplots
+plt.subplots_adjust(wspace=0.5, hspace=0.3, left=0.1, right=0.9)
+
+# Display the plot
+plt.show()
+
+# Assuming you have a list of rotation matrices called rotation_matrices
+rotation_matrices = rot_mat_filtered
+# Create a sphere
+u = np.linspace(0, 2 * np.pi, 100)
+v = np.linspace(0, np.pi, 50)
+x = np.outer(np.cos(u), np.sin(v))
+y = np.outer(np.sin(u), np.sin(v))
+z = np.outer(np.ones(np.size(u)), np.cos(v))
+
+# Create a 3D plot
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+
+# Plot the sphere
+ax.plot_surface(x, y, z, color='b', alpha=0.3)
+
+# Plot the end points of the vectors on the sphere for each rotation matrix
+for R in rotation_matrices:
+    vector_end = R.dot([1, 0, 0])
+    ax.scatter(vector_end[0], vector_end[1], vector_end[2], color='r')
+
+# Set the aspect of the axes to be equal
+ax.set_box_aspect([1, 1, 1])
+
+# Show the plot
+plt.show()
+
+
+
+# # Calculate the Cartesian coordinates for pitch, yaw, and roll angles
+# plt.figure()
+# pitch_x = np.cos(angle_y)
+# pitch_y = np.sin(angle_y)
+
+# yaw_x = np.cos(angle_z)
+# yaw_y = np.sin(angle_z)
+
+# roll_x = np.cos(angle_x)
+# roll_y = np.sin(angle_x)
+
+# # Create a scatter plot for all angles with different colors
+# plt.scatter(pitch_x, pitch_y, c='r', label='Pitch')  # Use red for pitch
+# plt.scatter(yaw_x, yaw_y, c='g', label='Yaw')  # Use green for yaw
+# plt.scatter(roll_x, roll_y, c='b', label='Roll')  # Use blue for roll
+
+# # Plot the unit circle
+# circle = plt.Circle((0, 0), 1, color='black', fill=False)
+# plt.gca().add_artist(circle)
+
+# # Set the aspect ratio to 'equal' to make the plot circular
+# plt.gca().set_aspect('equal', adjustable='box')
+
+# # Add a legend
+# plt.legend()
+
+# # Show the plot
+# plt.show()
+
+
+# plt.figure()
+# pitch_x = np.cos(angle_y)
+# pitch_y = np.sin(angle_y)
+
+# yaw_x = np.cos(angle_z)
+# yaw_y = np.sin(angle_z)
+
+# roll_x = np.cos(angle_x)
+# roll_y = np.sin(angle_x)
+
+# # Create a scatter plot for all angles with different colors
+
+# plt.scatter(roll_x, roll_y, c='b', label='Roll')  # Use blue for roll
+
+# # Plot the unit circle
+# circle = plt.Circle((0, 0), 1, color='black', fill=False)
+# plt.gca().add_artist(circle)
+
+# # Set the aspect ratio to 'equal' to make the plot circular
+# plt.gca().set_aspect('equal', adjustable='box')
+
+# # Add a legend
+# plt.legend()
+
+# # Show the plot
+# plt.show()
+
+
 
 # # Adjust the spacing between subplots
 # plt.subplots_adjust(hspace=0.5)
