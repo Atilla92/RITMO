@@ -30,9 +30,9 @@ normalized_highcut = 5.0 / (fps/2)  # 0.1
 
 
 b, a = butter(order, [normalized_lowcut, normalized_highcut], btype='band')
-filtered_data_x = filtfilt(b, a, df['NOSE_X'])
-filtered_data_y = filtfilt(b, a, df['NOSE_Y'])
-filtered_data_z = filtfilt(b, a, df['NOSE_Z'])
+filtered_data_x = filtfilt(b, a, df['LEFT_HIP_X'])
+filtered_data_y = filtfilt(b, a, df['LEFT_HIP_Y'])
+filtered_data_z = filtfilt(b, a, df['LEFT_HIP_Z'])
 
 
 
@@ -96,7 +96,7 @@ def estimateVelocity (x_array, y_array, z_array, time ):
 
 
 
-vx, vy, vz, v_tot, angle_x, angle_y, angle_z, rot_mat = estimateVelocity(df['NOSE_X'], df['NOSE_Y'], df['NOSE_Z'], time)
+vx, vy, vz, v_tot, angle_x, angle_y, angle_z, rot_mat = estimateVelocity(df['LEFT_HIP_X'], df['LEFT_HIP_Y'], df['LEFT_HIP_Z'], time)
 vx_filt, vy_filt, vz_filt, v_tot_filtered, angle_x_filt, angle_y_filt, angle_z_filt, rot_mat_filtered = estimateVelocity(filtered_data_x, filtered_data_y, filtered_data_z, time)
 
 
@@ -116,7 +116,7 @@ fig, axs = plt.subplots(2, 4, figsize=(12, 8))
 
 # First row - Plot of vx, vy, vz
 ax_3d = fig.add_subplot(2, 4, 1, projection='3d')  # This is the first subplot in a 2x4 grid
-ax_3d.scatter(df['NOSE_X'], df['NOSE_Y'], df['NOSE_Z'], s=2, alpha = 0.5)
+ax_3d.scatter(df['LEFT_HIP_X'], df['LEFT_HIP_Y'], df['LEFT_HIP_Z'], s=2, alpha = 0.5)
 ax_3d.set_xlabel('X Position')
 ax_3d.set_ylabel('Y Position')
 ax_3d.set_zlabel('Z Position')
@@ -165,53 +165,53 @@ plt.show()
 
 
 
-# Assuming you have a list of rotation matrices called rotation_matrices
-rotation_matrices = rot_mat_filtered
-# Create a sphere
-u = np.linspace(0, 2 * np.pi, 100)
-v = np.linspace(0, np.pi, 50)
-x = np.outer(np.cos(u), np.sin(v))
-y = np.outer(np.sin(u), np.sin(v))
-z = np.outer(np.ones(np.size(u)), np.cos(v))
+# # Assuming you have a list of rotation matrices called rotation_matrices
+# rotation_matrices = rot_mat_filtered
+# # Create a sphere
+# u = np.linspace(0, 2 * np.pi, 100)
+# v = np.linspace(0, np.pi, 50)
+# x = np.outer(np.cos(u), np.sin(v))
+# y = np.outer(np.sin(u), np.sin(v))
+# z = np.outer(np.ones(np.size(u)), np.cos(v))
 
-# Create a 3D plot
-fig = plt.figure(figsize=(12, 8))
+# # Create a 3D plot
+# fig = plt.figure(figsize=(12, 8))
 
-# Add the subplots
-ax1 = fig.add_subplot(2, 4, 1, projection='3d')
-ax2 = fig.add_subplot(2, 4, 2)
-ax3 = fig.add_subplot(2, 4, 3)
-ax4 = fig.add_subplot(2, 4, 4, projection='3d')  # This will contain the rotation plot
+# # Add the subplots
+# ax1 = fig.add_subplot(2, 4, 1, projection='3d')
+# ax2 = fig.add_subplot(2, 4, 2)
+# ax3 = fig.add_subplot(2, 4, 3)
+# ax4 = fig.add_subplot(2, 4, 4, projection='3d')  # This will contain the rotation plot
 
 
-# First row - Plot of vx, vy, vz
-ax1.scatter(df['NOSE_X'], df['NOSE_Y'], df['NOSE_Z'], s=2, alpha=0.5)
-ax1.set_xlabel('X Position')
-ax1.set_ylabel('Y Position')
-ax1.set_zlabel('Z Position')
+# # First row - Plot of vx, vy, vz
+# ax1.scatter(df['LEFT_HIP_X'], df['LEFT_HIP_Y'], df['LEFT_HIP_Z'], s=2, alpha=0.5)
+# ax1.set_xlabel('X Position')
+# ax1.set_ylabel('Y Position')
+# ax1.set_zlabel('Z Position')
 
-ax2.plot(time_2, v_tot)
-ax2.set_xlabel('Time')
-ax2.set_ylabel('v_tot')
+# ax2.plot(time_2, v_tot)
+# ax2.set_xlabel('Time')
+# ax2.set_ylabel('v_tot')
 
-ax3.plot(time_3, acc_tot)
-ax3.set_xlabel('Time')
-ax3.set_ylabel('acc_tot')
+# ax3.plot(time_3, acc_tot)
+# ax3.set_xlabel('Time')
+# ax3.set_ylabel('acc_tot')
 
-# Plot the rotation matrices in the fourth column
-ax4.plot_surface(x, y, z, color='b', alpha=0.3)
-for R in rotation_matrices:
-    vector_end = R.dot([1, 0, 0])
-    ax4.scatter(vector_end[0], vector_end[1], vector_end[2], color='r')
+# # Plot the rotation matrices in the fourth column
+# ax4.plot_surface(x, y, z, color='b', alpha=0.3)
+# for R in rotation_matrices:
+#     vector_end = R.dot([1, 0, 0])
+#     ax4.scatter(vector_end[0], vector_end[1], vector_end[2], color='r')
 
-# Set the aspect of the rotation plot axes to be equal
-ax4.set_box_aspect([1, 1, 1])
+# # Set the aspect of the rotation plot axes to be equal
+# ax4.set_box_aspect([1, 1, 1])
 
-# Adjust the spacing and margin between subplots
-plt.subplots_adjust(wspace=0.5, hspace=0.3, left=0.1, right=0.9)
+# # Adjust the spacing and margin between subplots
+# plt.subplots_adjust(wspace=0.5, hspace=0.3, left=0.1, right=0.9)
 
-# Display the plot
-plt.show()
+# # Display the plot
+# plt.show()
 
 # Assuming you have a list of rotation matrices called rotation_matrices
 rotation_matrices = rot_mat_filtered
@@ -325,7 +325,7 @@ plt.show()
 #     plt.plot(time, df[list[i]], label= list[i])
 #     plt.plot(time, df[list[i+1]], label= list[i+1])
 #     plt.plot(time, df[list[i+2]], label= list[i+2])
-#     # plt.plot(time, list[i+2], label='NOSE_Z')
+#     # plt.plot(time, list[i+2], label='LEFT_HIP_Z')
 
 #     # Add labels and title
 #     plt.xlabel('Time (s)')

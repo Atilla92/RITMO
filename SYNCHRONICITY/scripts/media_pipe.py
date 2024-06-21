@@ -25,11 +25,7 @@ num_poses = 2
 # Initialize MediaPipe Pose and Drawing utilities with custom parameters
 mp_pose = mp.solutions.pose
 mp_drawing = mp.solutions.drawing_utils
-pose = mp_pose.Pose()
-
-
-
-
+pose = mp_pose.Pose(model_complexity = 2, smooth_landmarks = True)
 
 BaseOptions = mp.tasks.BaseOptions
 PoseLandmarker = mp.tasks.vision.PoseLandmarker
