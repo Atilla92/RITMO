@@ -2,7 +2,9 @@
 import pandas as pd
 import json
 from classes import Model, Participant, Segment, Joint
-
+from functions import KineticEnergy, PotentialEnergy
+import matplotlib.pyplot as plt
+import numpy as np
 # Steps
 # Create a dictionnary list, that maps joints to numbers
 # String split at last _, if new name create new name in dictionarry, else add new element to list with name after _ and number: _ as the i-th iteration. 'Store name as well'. Store as a json to inspect. Either you can add the i-th iteration as name, or you can loop though dictionary and add element, from another dictionnarie's match. Could store that information in the general DF. If name of element matches JOINT_NAME_MP fetch JOINT_ID_MP    
@@ -21,6 +23,9 @@ from classes import Model, Participant, Segment, Joint
 
 # And probably something to determine whether we are analysing guitarist or dancer. or both. Analyse string 
 
+
+## Day 4##
+# Need to plot energies, figure out whether we would like to have change in potential energy, or potential energy, since limb will become a negative Epot sometimes for segment. 
 
 # Example usage
 file_name = 'P3_D1_G1_M1_R2_T1'
@@ -42,7 +47,7 @@ participant = Participant("P3", False, info_path= participant_path)
 # Display participant information
 participant.display_info()
 
-model = Model('Dancer', 'whole_body', filter = True) # Set filter to treue if you want to apply a bandpass filter. 
+model = Model('Dancer', 'center', filter = True) # Set filter to treue if you want to apply a bandpass filter. 
 model.fps = info['fps']
 model.data_path = data_input_path
 model.display_info()
@@ -50,26 +55,76 @@ model.display_info()
 
 
 # Create Segment, Joint Prox, Dist. Need to loop over Model.segment_array later.  
-segment = Segment(participant, model, 1 )
 
-segment.display_info()
+E_pot_mat = []
+E_rot_mat = []
+E_trans_mat = []
+E_kin_mat = []
+E_pot_tot = []
+E_trans_tot = []
+E_rot_tot = []
+E_kin_tot = []
 
+for i, item in enumerate(model.segment_array):
+    segment = Segment(participant, model, item )
 
-joint_prox = Joint(segment.j_prox, model)
-joint_dist = Joint(segment.j_dist, model )
+    segment.display_info()
+    joint_prox = Joint(segment.j_prox, model)
+    joint_dist = Joint(segment.j_dist, model )
 
-joint_prox.meanVelocity()
-joint_prox.display_info()
+    joint_prox.meanVelocity()
+    joint_dist.meanVelocity()
+    joint_dist.display_info()
 
+    KineticEnergy(joint_prox, joint_dist, segment, participant)
+    PotentialEnergy(joint_prox, joint_dist, segment, participant)
 
+    E_pot_mat.append(segment.E_pot)
+    E_trans_mat.append(segment.E_trans)
+    E_rot_mat.append(segment.E_rot)
+    E_kin_mat.append(segment.E_kin)
 
+    E_pot_tot.append(segment.E_pot_tot)
+    E_kin_tot.append(segment.E_kin_tot)
+    E_rot_tot.append(segment.E_rot_tot)
+    E_trans_tot.append(segment.E_trans_tot)
+
+    # plt.figure()
+    # time1 = np.arange(len(segment.E_pot)) / model.fps
+    # time2 = np.arange(len(segment.E_trans)) / model.fps
+    # plt.plot(time1, segment.E_pot - np.mean(segment.E_pot))
+    # #plt.plot(time1, joint_prox.pos_y)
+    # #plt.plot(time1, joint_dist.pos_y)
+    # plt.plot(time2, segment.E_trans)
+    # plt.plot(time2, segment.E_rot)
+    # plt.show()
+    plt.figure()
+    plt.plot(joint_dist.vel_norm)
+    plt.plot(joint_prox.vel_norm)
+    plt.show()
 
 # Apply Bandpass if needed. 
 
 # Bandpass filter parameters
 
+time1 = np.arange(len(segment.E_pot)) / model.fps
+time2 = np.arange(len(segment.E_trans)) / model.fps
+E_pot_mat = np.array(E_pot_mat)
+E_rot_mat = np.array(E_rot_mat)
+E_trans_mat = np.array(E_trans_mat)
+E_kin_mat = np.array(E_kin_mat)
 
+E_pot_sum = np.sum(E_pot_mat, axis = 0)
+E_rot_sum = np.sum(E_rot_mat, axis = 0)
+E_trans_sum = np.sum(E_trans_mat, axis = 0)
+E_kin_sum = np.sum(E_kin_mat, axis = 0)
 
+print(E_kin_sum.shape)
+# plt.figure
+
+plt.plot(time2, E_kin_sum)
+plt.plot(time1, E_pot_sum)
+plt.show()
 
 # def normVelocity (Segment):
 # # Initialize empty lists to store velocities

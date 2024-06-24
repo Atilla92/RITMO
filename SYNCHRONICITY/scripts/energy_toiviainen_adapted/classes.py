@@ -4,6 +4,7 @@
 import pandas as pd
 import json
 from scipy.signal import butter, filtfilt
+import numpy as np
 
 
 class Segment: 
@@ -18,9 +19,14 @@ class Segment:
         self.rogcg = None
         self.length = None
         self.body_side = None
-        self.pos_x = []
-        self.pos_y= []
-        self.pos_z = []
+        self.E_trans = None
+        self.E_trans_tot = None
+        self.E_rot = None
+        self.E_rot_tot = None
+        self.E_kin = None
+        self.E_kin_tot = None
+        self.E_pot = None
+        self.E_pot_tot = None
 
         if Participant.gender == 'F':
             df = pd.read_csv(Model.model_female)
@@ -43,6 +49,7 @@ class Segment:
             self.length = participant_row['length'].iloc[0]
             self.body_side = participant_row['body_side'].iloc[0]
 
+
     def display_info(self):
         print("Segment ID:", self.id)
         print("Joint Prox:", self.j_prox)
@@ -53,9 +60,6 @@ class Segment:
         print("ROGCG:", self.rogcg)
         print("Length:", self.length)
         print("Body Side:", self.body_side)
-        print("Position (X):", self.pos_x)
-        print("Position (Y):", self.pos_y)
-        print("Position (Z):", self.pos_z)
 
 
 class Joint:
@@ -63,13 +67,14 @@ class Joint:
         self.id = ID
         self.pos_x = []
         self.pos_y = []
+        self.delta_pos_y = []
         self.pos_z = []
         self.vel_x = []
         self.vel_y = []
         self.vel_z = []
         self.length_array = None
         self.fps = Model.fps
-        self.mean_vel = []
+        self.vel_norm = []
 
         with open(Model.data_path) as json_file:
             json_data = json.load(json_file)
@@ -94,26 +99,43 @@ class Joint:
                 normalized_lowcut = Model.lowcut / (fps/2)  # 0.01
                 normalized_highcut = Model.highcut / (fps/2)  # 0.1
                 b, a = butter(Model.order, [normalized_lowcut, normalized_highcut], btype='band')
+
+                # Center the data around the mean
+                mean_pos_x = np.mean(self.pos_x)
+                mean_pos_y = np.mean(self.pos_y)
+                mean_pos_z = np.mean(self.pos_z)
+                self.pos_x = self.pos_x - mean_pos_x
+                self.pos_y = self.pos_y - mean_pos_y
+                self.pos_z = self.pos_z - mean_pos_z
+
+                # Apply the bandpass filter
                 self.pos_x = filtfilt(b, a, self.pos_x)
                 self.pos_y = filtfilt(b, a, self.pos_y)
                 self.pos_z = filtfilt(b, a, self.pos_z)
-        self.length_array = len(self.pos_x)
 
+                # Restore the mean
+                self.pos_x = self.pos_x + mean_pos_x
+                self.pos_y = self.pos_y + mean_pos_y
+                self.pos_z = self.pos_z + mean_pos_z
+                # self.pos_x = filtfilt(b, a, self.pos_x)
+                # self.pos_y = filtfilt(b, a, self.pos_y)
+                # self.pos_z = filtfilt(b, a, self.pos_z)
+        self.length_array = len(self.pos_x)
     
     def meanVelocity(self):
         delta_t = 1/self.fps
         for i in range(self.length_array - 1):
 
             # Calculate velocities using the first derivative formula
-
-            self.vel_x.append((self.pos_x[i + 1] - self.pos_x[i]) / delta_t)
-            #velocity_x = np.diff(x_array)/delta_t
-            self.vel_y.append((self.pos_y[i + 1] - self.pos_y[i]) / delta_t)
-            self.vel_z.append((self.pos_y[i + 1] - self.pos_y[i]) / delta_t)
-            # Need to change to vel_x, vel_y, vel_z and then append so you can use each variable to estimate mean_vel.
-            #self.mean_vel.append
-
-
+            vel_x = (self.pos_x[i + 1] - self.pos_x[i]) / delta_t
+            self.vel_x.append(vel_x)
+            vel_y = (self.pos_y[i + 1] - self.pos_y[i]) / delta_t
+            self.vel_y.append(vel_y)
+            vel_z = (self.pos_y[i + 1] - self.pos_y[i]) / delta_t
+            self.vel_z.append(vel_z)
+            delta_pos_y = self.pos_y[i + 1] - self.pos_y[i]
+            self.delta_pos_y.append(delta_pos_y)
+            self.vel_norm.append(np.sqrt(vel_x**2 + vel_y ** 2 + vel_z **2))
 
     def display_info(self):
         print("Joint ID:", self.id)
@@ -121,10 +143,11 @@ class Joint:
         print("Position (Y):", len(self.pos_y))
         print("Position (Z):", len(self.pos_z))
         print("Velocity (Z):", len(self.vel_z))
+        print("Velocity Norm:", len(self.vel_norm))
 
 
 class Model:
-    def __init__(self, artist, segment_array=None, model_male = None, model_female = None, filter = False, lowcut = 0.5, highcut = 10, order = 2):
+    def __init__(self, artist, segment_array=None, model_male = None, model_female = None, filter = False, lowcut = 0.5, highcut = 20, order = 2):
         self.artist = artist
         self.filter = filter
         self.fps = None
