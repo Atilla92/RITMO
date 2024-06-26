@@ -5,6 +5,7 @@ import pandas as pd
 import json
 from scipy.signal import butter, filtfilt
 import numpy as np
+from scipy.signal import savgol_filter
 
 
 class Segment: 
@@ -89,37 +90,40 @@ class Joint:
                         if "X" in value:
                             self.pos_x = value["X"]
                         if "Y" in value:
-                            self.pos_y = value["Y"]
+                            self.pos_y = [1 - val for val in value["Y"]]
                         if "Z" in value:
                             self.pos_z = value["Z"]
                         break  # Exit the method once the matching element is found
-        if Model.filter: 
-                print('Bandpass filter has been applied to data')
-                fps = Model.fps
-                normalized_lowcut = Model.lowcut / (fps/2)  # 0.01
-                normalized_highcut = Model.highcut / (fps/2)  # 0.1
-                b, a = butter(Model.order, [normalized_lowcut, normalized_highcut], btype='band')
+        if Model.filter == 'bandpass': 
+            print('Bandpass filter has been applied to data')
+            fps = Model.fps
+            normalized_lowcut = Model.lowcut / (fps/2)  # 0.01
+            normalized_highcut = Model.highcut / (fps/2)  # 0.1
+            b, a = butter(Model.order, [normalized_lowcut, normalized_highcut], btype='band')
 
-                # Center the data around the mean
-                mean_pos_x = np.mean(self.pos_x)
-                mean_pos_y = np.mean(self.pos_y)
-                mean_pos_z = np.mean(self.pos_z)
-                self.pos_x = self.pos_x - mean_pos_x
-                self.pos_y = self.pos_y - mean_pos_y
-                self.pos_z = self.pos_z - mean_pos_z
+            # Center the data around the mean
+            mean_pos_x = np.mean(self.pos_x)
+            mean_pos_y = np.mean(self.pos_y)
+            mean_pos_z = np.mean(self.pos_z)
+            self.pos_x = self.pos_x - mean_pos_x
+            self.pos_y = self.pos_y - mean_pos_y
+            self.pos_z = self.pos_z - mean_pos_z
 
-                # Apply the bandpass filter
-                self.pos_x = filtfilt(b, a, self.pos_x)
-                self.pos_y = filtfilt(b, a, self.pos_y)
-                self.pos_z = filtfilt(b, a, self.pos_z)
+            # Apply the bandpass filter
+            self.pos_x = filtfilt(b, a, self.pos_x)
+            self.pos_y = filtfilt(b, a, self.pos_y)
+            self.pos_z = filtfilt(b, a, self.pos_z)
 
-                # Restore the mean
-                self.pos_x = self.pos_x + mean_pos_x
-                self.pos_y = self.pos_y + mean_pos_y
-                self.pos_z = self.pos_z + mean_pos_z
-                # self.pos_x = filtfilt(b, a, self.pos_x)
-                # self.pos_y = filtfilt(b, a, self.pos_y)
-                # self.pos_z = filtfilt(b, a, self.pos_z)
+            # Restore the mean
+            self.pos_x = self.pos_x + mean_pos_x
+            self.pos_y = self.pos_y + mean_pos_y
+            self.pos_z = self.pos_z + mean_pos_z
+
+        if Model.filter == 'savgol':
+            self.pos_x = savgol_filter(self.pos_x, window_length=20, polyorder=2) 
+            self.pos_y = savgol_filter(self.pos_y, window_length=20, polyorder=2) 
+            self.pos_z = savgol_filter(self.pos_z, window_length=20, polyorder=2) 
+        
         self.length_array = len(self.pos_x)
     
     def meanVelocity(self):
@@ -147,7 +151,7 @@ class Joint:
 
 
 class Model:
-    def __init__(self, artist, segment_array=None, model_male = None, model_female = None, filter = False, lowcut = 0.5, highcut = 20, order = 2):
+    def __init__(self, artist, segment_array=None, model_male = None, model_female = None, filter = False, lowcut = 0.5, highcut = 10, order = 2):
         self.artist = artist
         self.filter = filter
         self.fps = None

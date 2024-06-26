@@ -37,7 +37,9 @@ with open('/Users/atillajv/CODE/RITMO/SYNCHRONICITY/output/node_output/pose_data
 
 participant_path = '/Users/atillajv/CODE/RITMO/SYNCHRONICITY/scripts/energy_toiviainen_adapted/models/participants_info.csv'
 
-data_input_path = '/Users/atillajv/CODE/RITMO/SYNCHRONICITY/output/node_output/pose_data/dict_pose_data_'+ file_name +'.json'
+#date = '260624_'
+date = ''
+data_input_path = '/Users/atillajv/CODE/RITMO/SYNCHRONICITY/output/node_output/pose_data/'+date +'dict_pose_data_'+ file_name +'.json'
 
 
 
@@ -47,7 +49,7 @@ participant = Participant("P3", False, info_path= participant_path)
 # Display participant information
 participant.display_info()
 
-model = Model('Dancer', 'center', filter = True) # Set filter to treue if you want to apply a bandpass filter. 
+model = Model('Dancer', 'whole_body', filter = 'bandpass') # Set filter to treue if you want to apply a bandpass filter. 
 model.fps = info['fps']
 model.data_path = data_input_path
 model.display_info()
@@ -98,10 +100,12 @@ for i, item in enumerate(model.segment_array):
     # plt.plot(time2, segment.E_trans)
     # plt.plot(time2, segment.E_rot)
     # plt.show()
-    plt.figure()
-    plt.plot(joint_dist.vel_norm)
-    plt.plot(joint_prox.vel_norm)
-    plt.show()
+
+    # Plotting joints position
+    # plt.figure()
+    # plt.plot(joint_dist.pos_x)
+    # plt.plot(joint_dist.pos_y)
+    # plt.show()
 
 # Apply Bandpass if needed. 
 
@@ -119,11 +123,25 @@ E_rot_sum = np.sum(E_rot_mat, axis = 0)
 E_trans_sum = np.sum(E_trans_mat, axis = 0)
 E_kin_sum = np.sum(E_kin_mat, axis = 0)
 
-print(E_kin_sum.shape)
-# plt.figure
+E_tot = np.sum(E_kin_sum) + np.sum(E_pot_sum)
+prop_E_kin = np.sum(E_kin_sum)/ E_tot * 100
+prop_E_pot = np.sum(E_pot_sum)/ E_tot * 100
+prop_E_rot = np.sum(E_rot_sum)/ np.sum(E_kin_sum) * 100
+
+print('Kin prop:', prop_E_kin, 'Pot prop:', prop_E_pot, 'Rot prop:', prop_E_rot)
+plt.figure()
 
 plt.plot(time2, E_kin_sum)
 plt.plot(time1, E_pot_sum)
+plt.show()
+
+dt = 1/model.fps
+dt_E_pot= np.gradient(E_pot_sum, dt)
+dt_E_kin = np.gradient(E_kin_sum, dt)
+
+plt.figure()
+plt.plot(time2, dt_E_kin)
+plt.plot(time1, dt_E_pot)
 plt.show()
 
 # def normVelocity (Segment):

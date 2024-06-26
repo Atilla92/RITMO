@@ -20,11 +20,13 @@ def KineticEnergy(j_prox, j_dist, segment, participant):
 
 
 def PotentialEnergy (j_prox, j_dist, segment, participant):
-
+    # Potential energy as a function of pixel/ image height
     cog_y = np.array(j_prox.pos_y) + segment.rproxd * (np.array(j_dist.pos_y)- np.array(j_prox.pos_y)) 
 
-    # Change in altitude as measure for potential energy
-    #cog_y = np.array(j_prox.delta_pos_y) + segment.rproxd * (np.array(j_dist.delta_pos_y)- np.array(j_prox.delta_pos_y)) 
+    # Change in pixel height as measure for potential energy
+    #cog_y = np.abs(np.array(j_prox.delta_pos_y) + segment.rproxd * (np.array(j_dist.delta_pos_y)- np.array(j_prox.delta_pos_y))) 
+   # Change in pixel height as measure for potential energy
+    #cog_y = np.abs(np.array(j_prox.delta_pos_y) + segment.rproxd * (np.array(j_dist.delta_pos_y)- np.array(j_prox.delta_pos_y))) 
 
     segment.E_pot = participant.mass * segment.mass * 9.81 * cog_y 
     segment.E_pot_tot = sum(segment.E_pot)
