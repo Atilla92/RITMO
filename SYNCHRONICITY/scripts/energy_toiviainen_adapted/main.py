@@ -2,7 +2,7 @@
 import pandas as pd
 import json
 from classes import Model, Participant, Segment, Joint
-from functions import KineticEnergy, PotentialEnergy
+from functions import KineticEnergy, PotentialEnergy, calculate_cumulative_energy, EstimateEnergy
 import matplotlib.pyplot as plt
 import numpy as np
 # Steps
@@ -29,6 +29,7 @@ import numpy as np
 
 # Example usage
 file_name = 'P3_D1_G1_M1_R2_T1'
+output_path = '/Users/atillajv/CODE/RITMO/SYNCHRONICITY/scripts/energy_toiviainen_adapted/output/'
 # Create a participant object
 
 with open('/Users/atillajv/CODE/RITMO/SYNCHRONICITY/output/node_output/pose_data/variables_pose_data_'+ file_name +'.json') as json_file:
@@ -39,110 +40,61 @@ participant_path = '/Users/atillajv/CODE/RITMO/SYNCHRONICITY/scripts/energy_toiv
 
 #date = '260624_'
 date = ''
-data_input_path = '/Users/atillajv/CODE/RITMO/SYNCHRONICITY/output/node_output/pose_data/'+date +'dict_pose_data_'+ file_name +'.json'
+
+analysis = '2' # 0 for dancer, 1 for guitaris, 2 for both
+
+if analysis == '2' :
+    participant_list = [file_name.split('_')[0], file_name.split('_')[2]]
+if analysis == '0':
+    participant_list = [file_name.split('_')[0]]
+
+if analysis == '1':
+    participant_list = [file_name.split('_')[1]]
 
 
 
-# Create Participant, Model,
-participant = Participant("P3", False, info_path= participant_path)
+for i, item in enumerate(participant_list):
 
-# Display participant information
-participant.display_info()
+    data_input_path = '/Users/atillajv/CODE/RITMO/SYNCHRONICITY/output/node_output/pose_data/'+date +'dict_pose_data_'+ item +'_' + file_name +'.json'
 
-model = Model('Dancer', 'whole_body', filter = 'bandpass') # Set filter to treue if you want to apply a bandpass filter. 
-model.fps = info['fps']
-model.data_path = data_input_path
-model.display_info()
+    # Create Participant, Model,
+    participant = Participant(item, False, info_path= participant_path)
 
+    # Display participant information
+    participant.display_info()
 
 
-# Create Segment, Joint Prox, Dist. Need to loop over Model.segment_array later.  
+    model = Model(artist = item, segment_array= 'lower', filter = 'bandpass') # Set filter to treue if you want to apply a bandpass filter. 
+    model.fps = info['fps']
+    model.data_path = data_input_path
+    model.display_info()
 
-E_pot_mat = []
-E_rot_mat = []
-E_trans_mat = []
-E_kin_mat = []
-E_pot_tot = []
-E_trans_tot = []
-E_rot_tot = []
-E_kin_tot = []
+    # Create Segment, Joint Prox, Dist. Need to loop over Model.segment_array later.  
 
-for i, item in enumerate(model.segment_array):
-    segment = Segment(participant, model, item )
+    EstimateEnergy(participant, model, output_path, file_name )
 
-    segment.display_info()
-    joint_prox = Joint(segment.j_prox, model)
-    joint_dist = Joint(segment.j_dist, model )
 
-    joint_prox.meanVelocity()
-    joint_dist.meanVelocity()
-    joint_dist.display_info()
+dict = {
+        'artist': model.artist,
+        'body_parts': model.body_parts,
+        'filter': model.filter,
+        'fps': model.fps,
+        'lowcut': model.lowcut,  # Lower cutoff frequency in Hz
+        'highcut': model.highcut,  # Upper cutoff frequency in Hz
+        'order': model.order,  # Filter order
+        'data_path': model.data_path,
+}
 
-    KineticEnergy(joint_prox, joint_dist, segment, participant)
-    PotentialEnergy(joint_prox, joint_dist, segment, participant)
 
-    E_pot_mat.append(segment.E_pot)
-    E_trans_mat.append(segment.E_trans)
-    E_rot_mat.append(segment.E_rot)
-    E_kin_mat.append(segment.E_kin)
 
-    E_pot_tot.append(segment.E_pot_tot)
-    E_kin_tot.append(segment.E_kin_tot)
-    E_rot_tot.append(segment.E_rot_tot)
-    E_trans_tot.append(segment.E_trans_tot)
+# Store the dictionary in a JSON file
+filename = 'model_' + model.body_parts + '.json'
+with open(output_path + filename, 'w') as file:
+    json.dump(dict, file)
 
-    # plt.figure()
-    # time1 = np.arange(len(segment.E_pot)) / model.fps
-    # time2 = np.arange(len(segment.E_trans)) / model.fps
-    # plt.plot(time1, segment.E_pot - np.mean(segment.E_pot))
-    # #plt.plot(time1, joint_prox.pos_y)
-    # #plt.plot(time1, joint_dist.pos_y)
-    # plt.plot(time2, segment.E_trans)
-    # plt.plot(time2, segment.E_rot)
-    # plt.show()
+print(f"Data has been stored in {filename}.")
 
-    # Plotting joints position
-    # plt.figure()
-    # plt.plot(joint_dist.pos_x)
-    # plt.plot(joint_dist.pos_y)
-    # plt.show()
 
-# Apply Bandpass if needed. 
-
-# Bandpass filter parameters
-
-time1 = np.arange(len(segment.E_pot)) / model.fps
-time2 = np.arange(len(segment.E_trans)) / model.fps
-E_pot_mat = np.array(E_pot_mat)
-E_rot_mat = np.array(E_rot_mat)
-E_trans_mat = np.array(E_trans_mat)
-E_kin_mat = np.array(E_kin_mat)
-
-E_pot_sum = np.sum(E_pot_mat, axis = 0)
-E_rot_sum = np.sum(E_rot_mat, axis = 0)
-E_trans_sum = np.sum(E_trans_mat, axis = 0)
-E_kin_sum = np.sum(E_kin_mat, axis = 0)
-
-E_tot = np.sum(E_kin_sum) + np.sum(E_pot_sum)
-prop_E_kin = np.sum(E_kin_sum)/ E_tot * 100
-prop_E_pot = np.sum(E_pot_sum)/ E_tot * 100
-prop_E_rot = np.sum(E_rot_sum)/ np.sum(E_kin_sum) * 100
-
-print('Kin prop:', prop_E_kin, 'Pot prop:', prop_E_pot, 'Rot prop:', prop_E_rot)
-plt.figure()
-
-plt.plot(time2, E_kin_sum)
-plt.plot(time1, E_pot_sum)
-plt.show()
-
-dt = 1/model.fps
-dt_E_pot= np.gradient(E_pot_sum, dt)
-dt_E_kin = np.gradient(E_kin_sum, dt)
-
-plt.figure()
-plt.plot(time2, dt_E_kin)
-plt.plot(time1, dt_E_pot)
-plt.show()
 
 # def normVelocity (Segment):
 # # Initialize empty lists to store velocities

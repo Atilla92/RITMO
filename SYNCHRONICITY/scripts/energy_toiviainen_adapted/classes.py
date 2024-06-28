@@ -28,6 +28,8 @@ class Segment:
         self.E_kin_tot = None
         self.E_pot = None
         self.E_pot_tot = None
+        self.vel_cog = None
+        self.cog_y = None
 
         if Participant.gender == 'F':
             df = pd.read_csv(Model.model_female)
@@ -153,6 +155,7 @@ class Joint:
 class Model:
     def __init__(self, artist, segment_array=None, model_male = None, model_female = None, filter = False, lowcut = 0.5, highcut = 10, order = 2):
         self.artist = artist
+        self.body_parts = segment_array
         self.filter = filter
         self.fps = None
         self.lowcut = lowcut  # Lower cutoff frequency in Hz
@@ -163,7 +166,7 @@ class Model:
         if model_male: 
             self.model_male = model_male
         else:
-            model_male = '/Users/atillajv/CODE/RITMO/SYNCHRONICITY/scripts/energy_toiviainen_adapted/models/body_model_plagenhoef_1993_male.csv'
+            self.model_male = '/Users/atillajv/CODE/RITMO/SYNCHRONICITY/scripts/energy_toiviainen_adapted/models/body_model_plagenhoef_1993_male.csv'
         
         if model_female:
             self.model_female = model_female
@@ -179,11 +182,17 @@ class Model:
         elif segment_array == "right_side":
             self.segment_array = [1,2,3,5,6,7]  # Default right side segment array
         
-        elif segment_array == 'left_side:':
+        elif segment_array == 'left_side':
             self.segment_array = [14,15,16,18,19,20]
         
         elif segment_array == 'center':
             self.segment_array = [9, 10, 11, 12, 13]
+        
+        elif segment_array == 'lower':
+            self.segment_array = [5,6,7,18,19,20]
+        
+        elif segment_array == 'upper':
+            self.segment_array = [1,2,3, 14,15,16]
         
         else:
             self.segment_array = segment_array
@@ -192,6 +201,7 @@ class Model:
         print("Artist:", self.artist)
         print("Segment Array:", self.segment_array)
         print("Filter:", self.filter)
+        print("Model Male:", self.model_male)
 
 class Participant:
     def __init__(self, participant_id, default_values, info_path):

@@ -1,10 +1,10 @@
 import pandas as pd
 import json
 
-date = '260624'
-name_file = 'P3_D1_G1_M1_R2_T1'
+date = ''
+name_file = 'G1_P3_D1_G1_M1_R2_T1'
 input_folder = '/Users/atillajv/CODE/RITMO/SYNCHRONICITY/output/node_output/pose_data/'
-data = pd.read_csv(input_folder + date+'_pose_data_' + name_file +'.csv')
+data = pd.read_csv(input_folder + date+'pose_data_' + name_file +'.csv')
 
 
 df = data.iloc[:, 1:-1]
@@ -62,7 +62,7 @@ for column_name in column_names:
 print(dictionary.keys)
 
 # Store the dictionary as JSON
-with open(input_folder + date +'_dict_pose_data_' + name_file + '.json', 'w') as file:
+with open(input_folder + date +'dict_pose_data_' + name_file + '.json', 'w') as file:
     json.dump(dictionary, file, indent=4)
 
 print("Dictionary stored as JSON'")
