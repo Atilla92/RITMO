@@ -22,9 +22,6 @@ start = time.time()
 # pose = mp_pose.Pose()
 
 
-
-
-
 # Initialize MediaPipe Pose and Drawing utilities with custom parameters
 mp_pose = mp.solutions.pose
 mp_drawing = mp.solutions.drawing_utils

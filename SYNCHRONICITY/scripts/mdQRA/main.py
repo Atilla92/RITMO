@@ -4,13 +4,16 @@ import matplotlib.pyplot as plt
 import scipy
 from scipy.io.wavfile import read
 
-from takensEmbedding import find_optimal_delay, find_optional_dimension
+from SYNCHRONICITY.scripts.mdQRA.takensEmbedding import find_optimal_delay, find_optional_dimension
 from multiSyncPy import synchrony_metrics as sm
 import musicalgestures
 
 # import plotly.express as px
 # import plotly.graph_objects as go
 # from sktime.datasets import load_airline, load_shampoo_sales, load_lynx
+
+
+# Audio input, raw or entropy
 
 
 input_path = '/Users/atillajv/CODE/RITMO/ONSET/output_drums/'
