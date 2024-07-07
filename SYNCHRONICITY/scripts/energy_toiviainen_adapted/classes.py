@@ -68,6 +68,9 @@ class Segment:
 class Joint:
     def __init__(self, ID, Model):
         self.id = ID
+        self.raw_x = []
+        self.raw_y = []
+        self.raw_z = []
         self.pos_x = []
         self.pos_y = []
         self.delta_pos_y = []
@@ -91,17 +94,27 @@ class Joint:
                         print('TRUE')
                         if "X" in value:
                             self.pos_x = value["X"]
+                            self.raw_x = value["X"]
                         if "Y" in value:
                             self.pos_y = [1 - val for val in value["Y"]]
+                            self.raw_y = [1 - val for val in value["Y"]]
+                            
                         if "Z" in value:
                             self.pos_z = value["Z"]
+                            self.raw_z = value["Z"]
                         break  # Exit the method once the matching element is found
-        if Model.filter == 'bandpass': 
+        if Model.filter == 'bandpass' or Model.filter == 'lowpass': 
             print('Bandpass filter has been applied to data')
             fps = Model.fps
             normalized_lowcut = Model.lowcut / (fps/2)  # 0.01
-            normalized_highcut = Model.highcut / (fps/2)  # 0.1
-            b, a = butter(Model.order, [normalized_lowcut, normalized_highcut], btype='band')
+
+            if Model.filter == 'bandpass':
+         
+                normalized_highcut = Model.highcut / (fps/2)  # 0.1
+                b, a = butter(Model.order, [normalized_lowcut, normalized_highcut], btype='band')
+            
+            if Model.filter == 'lowpass':
+                b, a = butter(Model.order, normalized_lowcut, btype='lowpass')
 
             # Center the data around the mean
             mean_pos_x = np.mean(self.pos_x)
@@ -122,9 +135,9 @@ class Joint:
             self.pos_z = self.pos_z + mean_pos_z
 
         if Model.filter == 'savgol':
-            self.pos_x = savgol_filter(self.pos_x, window_length=20, polyorder=2) 
-            self.pos_y = savgol_filter(self.pos_y, window_length=20, polyorder=2) 
-            self.pos_z = savgol_filter(self.pos_z, window_length=20, polyorder=2) 
+            self.pos_x = savgol_filter(self.pos_x, window_length=Model.window_savgol, polyorder=Model.or_savgol) 
+            self.pos_y = savgol_filter(self.pos_y, window_length=Model.window_savgol, polyorder=Model.or_savgol) 
+            self.pos_z = savgol_filter(self.pos_z, window_length=Model.window_savgol, polyorder=Model.or_savgol) 
         
         self.length_array = len(self.pos_x)
     
@@ -153,7 +166,7 @@ class Joint:
 
 
 class Model:
-    def __init__(self, artist, segment_array=None, model_male = None, model_female = None, filter = False, lowcut = 0.5, highcut = 10, order = 2):
+    def __init__(self, artist, segment_array=None, model_male = None, model_female = None, filter = False, lowcut = 0.5, highcut = 10, order = 2, window_savgol = 20, or_savgol = 2):
         self.artist = artist
         self.body_parts = segment_array
         self.filter = filter
@@ -162,6 +175,8 @@ class Model:
         self.highcut = highcut  # Upper cutoff frequency in Hz
         self.order = order  # Filter order
         self.data_path = None
+        self.window_savgol = window_savgol
+        self.or_savgol = or_savgol
 
         if model_male: 
             self.model_male = model_male
