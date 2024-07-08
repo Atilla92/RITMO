@@ -302,8 +302,8 @@ anova(m00,m01)
 # m00 = lmer(Q3 ~ Q1b * Condition + (1 |Pair) + (1 | Participant), data = data_ole)
 # m01 = lmer(Q3 ~ Q4a * Condition +  (1 |Pair) + (1 | Participant), data = data_ole)
 
-m00 = lmer(Q2a ~ 1 + (1 |Pair) + (1 | Participant), data = data_ole)
-m01  = lmer(Q2a ~  instruction_2 + (1 |Pair) + (1 | Participant), data = data_ole )
+m00 = lmer(Q1b ~ 1 + (1 |Pair) + (1 | Participant), data = data_ole)
+m01  = lmer(Q1b ~  instruction_2 + (1 |Pair) + (1 | Participant), data = data_ole )
 
 tab_model(m00, m01, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
           dv.labels=c("m00","m01"), digits = 5 )
@@ -1055,6 +1055,8 @@ grid.arrange(
 
 Flamenco_model.lm <- lmer(Q3 ~   Q1b   + Abs_Av  + Q4a + Q6b +  (1  + Q4a | Participant) + (1 | Pair), data = data_filtered_Q6a)
 
+#Flamenco_model.lm <- lmer(Q3 ~   poly(Q1b, degree = 2)   + Abs_Av  + Q4a + Q6b +  (1  + Q4a | Participant) + (1 | Pair), data = data_filtered_Q6a)
+
 Plot_fe_Q4a <- effect_plot(Flamenco_model.lm, pred = Q4a, interval = TRUE, partial.residuals = TRUE, plot.points = TRUE, 
                            jitter = 0.00, point.size = 1.2, colors = new_colors[1]) +
   labs(x= "Connection", y = "Flow", title = "") + 
@@ -1062,7 +1064,10 @@ Plot_fe_Q4a <- effect_plot(Flamenco_model.lm, pred = Q4a, interval = TRUE, parti
   scale_x_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1)) + 
   common_theme
 
-Plot_fe_Q4a
+
+
+
+
 
 Plot_fe_Q1b <- effect_plot(Flamenco_model.lm, pred = Q1b, interval = TRUE, partial.residuals = TRUE, plot.points = TRUE, 
                            jitter = 0.00, point.size = 1.2, colors = new_colors[2], cat.geom = 'line') +
@@ -1478,6 +1483,66 @@ txt <- paste(r, cor_test_star, sep = " ")
 cex.cor <- 0.8/strwidth(txt)
 text(0.5, 0.5, txt, cex = cex.cor*r)
 
+
+## Inspecting residuals
+Flamenco_model.lm <- lmer(Q3 ~   Q1b + Abs_Av +   (1 + Abs_Av  | Participant) + (1 | Pair), data = data_ole)
+
+data_filtered_Q6a_na <- na.omit(data_filtered_Q6a)
+
+Flamenco_model.lm <- lmer(Q3 ~   Q1a + Q1b + Abs_Av + Perf_Av + Q4a + Q4b + Q4c  + Q5a + Q5b + Q6a+ Q6b +  (1 | Participant) + (1 | Pair), data = data_filtered_Q6a, na.action = na.omit)
+
+res <- dredge(Flamenco_model.lm, trace=2, na.action = na.exclude)
+
+library(MuMIn)
+eval(metafor:::.MuMIn)
+full <- rma(Q3, mods =  )
+
+options(na.action = "na.exclude") 
+cols_with_na <- c("GMSI","GDSI","Fam","Q1a","Q3","Q4a", "Q1b","Perf_Av", "Abs_Av", "Q4b" , "Q4c","Q6a", "Q6b", "Q5a", "Q5b", "Participant", "Pair", "Artist")  # Specify the column names with missing values
+
+data_filtered_Q6a_complete <- na.omit(data_ole[, cols_with_na])
+model = lmer(Q3 ~  Q1a + Q1b + Fam + GDSI + GMSI + Artist   + Q4a + Abs_Av + Perf_Av + Q4b + Q4c + Q6a + Q6b+ Q5a + Q5b +  (1  | Participant) + (1 | Pair), data = data_filtered_Q6a_complete,na.action = na.fail)
+model = lmer(Q3 ~  Q1b + Artist + Q4a + Artist+  (1  | Participant) + (1 | Pair), data = data_filtered_Q6a_complete,na.action = na.fail)
+model = lmer(Q3 ~   Q1b  + Abs_Av + Q4a + Q6b + (1 + Q4a  | Participant) + (1 | Pair), data = data_filtered_Q6a)
+
+res <- dredge(model, trace=2)
+subset(res, delta <= 2, recalc.weights=FALSE)
+summary(model.avg(res))
+sw(res)
+
+
+
+model2 = lmer(Q3 ~   Q1b  + Abs_Av + Q4a + Q6b + (1 + Q4a  | Participant) + (1 | Pair), data = data_filtered_Q6a)
+
+Flamenco_model.lm <- lmer(Q3 ~   Q1b   + Abs_Av  + Q4a + Q6b +  (1  + Q4a | Participant) + (1 | Pair), data = data_filtered_Q6a)
+
+
+summary(Flamenco_model.lm)
+#Flamenco_model.lm <- lmer(Q3 ~   poly(Q1b, degree = 2)   + Abs_Av  + Q4a + Q6b +  (1  + Q4a | Participant) + (1 | Pair), data = data_filtered_Q6a)
+
+Plot_fe_Q4a <- effect_plot(Flamenco_model.lm, pred = Q4a, interval = TRUE, partial.residuals = TRUE, plot.points = TRUE, 
+                           jitter = 0.00, point.size = 1.2, colors = new_colors[1]) +
+  labs(x= "Connection", y = "Flow", title = "") + 
+  scale_y_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1)) +
+  scale_x_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1)) + 
+  common_theme
+
+plot(Flamenco_model.lm, xlab = "Abs_Av", resid = TRUE, partial.resid = TRUE)
+plot_fe <- effect_plot(Flamenco_model.lm, pred = Q4a, partial.residuals = TRUE) 
+plot_fe
+
+# Create the marginal effects plot with partial residuals for the predictor variable "Days"
+marginal_plot <- ggpredict(Flamenco_model.lm, terms = c("Abs_Av", "Q1b"), type = "re")
+plot(marginal_plot)
+
+
+plot(Flamenco_model.lm, xlab = "Rating", resid = TRUE, partial.resid = TRUE, type = "p")
+
+mydf <- ggpredict(Flamenco_model.lm, terms = "Q6b", type = "re")
+ggplot(mydf, aes(x, predicted)) +
+  geom_line() +
+  geom_point(aes(x, predicted)) +
+  geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .1)
 
 
 
