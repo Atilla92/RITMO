@@ -54,6 +54,17 @@ data_ole$GMSI <- ifelse(data_ole$Participant == "G7", 5, data_ole$GMSI)
 data_ole$GDSI <- ifelse(data_ole$Participant == "G7", 3.65, data_ole$GDSI)
 data_ole$Fam <- ifelse(data_ole$Participant %in% c("G4", "P8"), 1, data_ole$Fam)
 
+filtered_data <- data_ole[!is.na(data_ole$Q3a), ]
+
+# Get unique Participants who have answered Q6b
+unique_participants <- unique(filtered_data$Participant)
+
+# Count the number of unique Participants
+unique_participants_count <- length(unique_participants)
+
+# Print the result
+print(unique_participants_count)
+
 
 # Create a new column with concatenated strings
 data_ole$instruction <- paste(data_ole$Condition, data_ole$Artist, sep = "_")
@@ -271,6 +282,9 @@ data_ole_q1a_pair
 
 
 
+
+
+
 m00  = lmer(Perf_Av ~  instruction_2 + (1 | Participant), data = data_ole )
 m01  = lmer(Perf_Av ~ 1 +  (1 | Participant), data = data_ole )
 anova(m00, m01)
@@ -304,6 +318,51 @@ anova(m00,m01)
 
 m00 = lmer(Q1b ~ 1 + (1 |Pair) + (1 | Participant), data = data_ole)
 m01  = lmer(Q1b ~  instruction_2 + (1 |Pair) + (1 | Participant), data = data_ole )
+
+## Sanity check 03.09.2024
+m00 = lmer(Q1a ~ 1 + (1 |Pair) + (1 | Participant), data = data_ole)
+m01  = lmer(Q1a ~  instruction_2 + (1 |Pair) + (1 | Participant), data = data_ole )
+#Quality of improvisation
+m00 = lmer(Q1b ~ 1 + (1 |Pair) + (1 | Participant), data = data_ole)
+m01  = lmer(Q1b ~  instruction_2 + (1 |Pair) + (1 | Participant), data = data_ole )
+# Feeling rightly challenged
+m00 = lmer(Q2a ~ 1 + (1 |Pair) + (1 | Participant), data = data_ole)
+m01  = lmer(Q2a ~  instruction_2 + (1 |Pair) + (1 | Participant), data = data_ole )
+#Flow
+m00 = lmer(Q3 ~ 1 + (1 |Pair) + (1 | Participant), data = data_ole)
+m01  = lmer(Q3 ~  instruction_2 + (1 |Pair) + (1 | Participant), data = data_ole )
+#Connection with partner
+m00 = lmer(Q4a ~ 1 + (1 |Pair) + (1 | Participant), data = data_ole)
+m01  = lmer(Q4a ~  instruction_2 + (1 |Pair) + (1 | Participant), data = data_ole )
+#Coordination with partner
+m00 = lmer(Q4b ~ 1 + (1 |Pair) + (1 | Participant), data = data_ole)
+m01  = lmer(Q4b ~  instruction_2 + (1 |Pair) + (1 | Participant), data = data_ole )
+#Connection with oneself
+m00 = lmer(Q4c ~ 1 + (1 |Pair) + (1 | Participant), data = data_ole)
+m01  = lmer(Q4c ~  instruction_2 + (1 |Pair) + (1 | Participant), data = data_ole )
+#Maintaining the beat
+m00 = lmer(Q5a ~ 1 + (1 |Pair) + (1 | Participant), data = data_ole)
+m01  = lmer(Q5a ~  instruction_2 + (1 |Pair) + (1 | Participant), data = data_ole )
+
+
+
+#Complexity of piece
+m00 = lmer(Q6a ~ 1 + (1 |Pair) + (1 | Participant), data = data_ole)
+m01  = lmer(Q6a ~  instruction_2 + (1 |Pair) + (1 | Participant), data = data_ole )
+
+
+
+m00 = lmer(Q6b ~ 1 + (1 |Pair) + (1 | Participant), data = data_ole)
+m01  = lmer(Q6b ~  instruction_2 + (1 |Pair) + (1 | Participant), data = data_ole )
+# Absorption
+m00 = lmer(Abs_Av ~ 1 + (1 |Pair) + (1 | Participant), data = data_ole)
+m01  = lmer(Abs_Av ~  instruction_2 + (1 |Pair) + (1 | Participant), data = data_ole )
+# Fluency of Performance
+m00 = lmer(Perf_Av ~ 1 + (1 |Pair) + (1 | Participant), data = data_ole)
+m01  = lmer(Perf_Av ~  instruction_2 + (1 |Pair) + (1 | Participant), data = data_ole )
+
+
+
 
 tab_model(m00, m01, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
           dv.labels=c("m00","m01"), digits = 5 )
@@ -781,50 +840,58 @@ webshot("/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_table
 
 library(sjPlot)
 
-m00 = lmer(Q3 ~  Q1a +  (1 |Pair/Participant), data = data_ole)
-m01 = lmer(Q3 ~  Q1b +  (1 |Pair/Participant), data = data_ole)
-m02 = lmer(Q3 ~  Q4a +  (1 |Participant), data = data_ole)
-m03 = lmer(Q3 ~  Q4b +  (1 |Participant), data = data_ole)
-m04 = lmer(Q3 ~  Q5a +  (1 |Participant), data = data_ole)
-m05 = lmer(Q3 ~  Q5b +  (1 |Pair/Participant), data = data_ole)
-m06 = lmer(Q3 ~  Q6a +  (1 |Participant), data = data_ole)
-m07 = lmer(Q3 ~  Q6b +  (1 |Participant), data = data_ole)
-m08 = lmer(Q3 ~  Perf_Av +  (1 |Pair/Participant), data = data_ole)
-m09 = lmer(Q3 ~  Abs_Av +  (1 |Pair/Participant), data = data_ole)
-m10 = lmer(Q3 ~  GDSI +  (1 |Pair/Participant), data = data_ole)
-m11 = lmer(Q3 ~  GMSI +  (1 |Pair/Participant), data = data_ole)
-m12 = lmer(Q3 ~  Fam +  (1 |Pair/Participant), data = data_ole)
+m00 = lmer(Q3 ~  Q1a +  (1 |Pair)+ (1|Participant), data = data_ole)
+m01 = lmer(Q3 ~  Q1b +  (1 |Pair)+ (1|Participant), data = data_ole)#singular
+m02 = lmer(Q3 ~  Q4a +  (1 |Pair)+ (1|Participant), data = data_ole)#singular
+m03 = lmer(Q3 ~  Q4b +  (1 |Pair)+ (1|Participant), data = data_ole)#singular
+m04 = lmer(Q3 ~  Q5a +  (1 |Pair)+ (1|Participant), data = data_ole)#singular
+m05 = lmer(Q3 ~  Q5b +  (1 |Pair)+ (1|Participant), data = data_ole)#singular
+m06 = lmer(Q3 ~  Q6a +  (1 |Pair)+ (1|Participant), data = data_ole)#singular
+m07 = lmer(Q3 ~  Q6b +  (1 |Pair)+ (1|Participant), data = data_ole)#singular
+m08 = lmer(Q3 ~  Perf_Av +  (1 |Pair)+ (1|Participant), data = data_ole)
+m09 = lmer(Q3 ~  Abs_Av +  (1 |Pair)+ (1|Participant), data = data_ole)#singular
+m10 = lmer(Q3 ~  GDSI +  (1 |Pair)+ (1|Participant), data = data_ole)
+m11 = lmer(Q3 ~  GMSI +  (1 |Pair)+ (1|Participant), data = data_ole)
+m12 = lmer(Q3 ~  Fam +  (1 |Pair)+ (1|Participant), data = data_ole)
+m13 = lmer(Q3 ~  Artist +  (1 |Pair)+ (1|Participant), data = data_ole)
+m14 = lmer(Q3 ~  Palo +  (1 |Pair)+ (1|Participant), data = data_ole)
 
-tab_model(m00, m01, m02,  m03, m04, m05, m06, m07, m08, m09, m10, m11,m12,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
-          dv.labels=c("Flow","Flow", "Flow", "Flow","Flow","Flow", "Flow", "Flow","Flow","Flow", "Flow", "Flow", "Flow"),
+tab_model(m00, m01, m02,  m03, m04, m05, m06, m07, m08, m09, m10, m11,m12, m13, m14, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("Flow","Flow [sing.]", "Flow [sing.]", "Flow [sing.]","Flow [sing.]","Flow [sing.]", "Flow [sing.]", "Flow [sing.]","Flow","Flow [sing.]", "Flow", "Flow", "Flow", "Flow", "Flow"),
           digits = 5,
-          file = "/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_model3_table.html"
+          file = "/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_model3_table_all_singular.html"
 )
 library(webshot)
-webshot("/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_model3_table.html", "/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_model3_table.png")
+webshot("/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_model3_table_all_singular.html", "/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_model3_table_all_singular.png")
 
-m00 = lmer(Q3 ~  Q1a +  (1 |Participant), data = data_filtered_Q6a)
-m01 = lmer(Q3 ~  Q1b +  (1 |Participant), data = data_filtered_Q6a)
-m02 = lmer(Q3 ~  Q4a +  (1 |Participant), data = data_filtered_Q6a)
-m03 = lmer(Q3 ~  Q4b +  (1 |Participant), data = data_filtered_Q6a)
-m04 = lmer(Q3 ~  Q5a +  (1 |Participant), data = data_filtered_Q6a)
-m05 = lmer(Q3 ~  Q5b +  (1 |Participant), data = data_filtered_Q6a)
-m06 = lmer(Q3 ~  Q6a +  (1 |Participant), data = data_filtered_Q6a)
-m07 = lmer(Q3 ~  Q6b +  (1 |Participant), data = data_filtered_Q6a)
-m08 = lmer(Q3 ~  Perf_Av +  (1 |Participant), data = data_filtered_Q6a)
-m09 = lmer(Q3 ~  Abs_Av +  (1 |Participant), data = data_filtered_Q6a)
-m10 = lmer(Q3 ~  GDSI +  (1 |Participant), data = data_filtered_Q6a)
-m11 = lmer(Q3 ~  GMSI +  (1 |Participant), data = data_filtered_Q6a)
-m12 = lmer(Q3 ~  Fam +  (1 |Participant), data = data_filtered_Q6a)
+m00 = lmer(Q3 ~  Q1a +  (1 |Participant)+  (1 |Pair), data = data_filtered_Q6a)
+m01 = lmer(Q3 ~  Q1b +  (1 |Participant)+  (1 |Pair), data = data_filtered_Q6a)#sing
+m02 = lmer(Q3 ~  Q4a +  (1 |Participant)+  (1 |Pair), data = data_filtered_Q6a)
+m03 = lmer(Q3 ~  Q4b +  (1 |Participant)+  (1 |Pair), data = data_filtered_Q6a)
+m04 = lmer(Q3 ~  Q5a +  (1 |Participant)+  (1 |Pair), data = data_filtered_Q6a)
+m05 = lmer(Q3 ~  Q5b +  (1 |Participant)+  (1 |Pair), data = data_filtered_Q6a)
+m06 = lmer(Q3 ~  Q6a +  (1 |Participant)+  (1 |Pair), data = data_filtered_Q6a)
+m07 = lmer(Q3 ~  Q6b +  (1 |Participant)+  (1 |Pair), data = data_filtered_Q6a)
+m08 = lmer(Q3 ~  Perf_Av +  (1 |Participant)+  (1 |Pair), data = data_filtered_Q6a)
+m09 = lmer(Q3 ~  Abs_Av +  (1 |Participant)+  (1 |Pair), data = data_filtered_Q6a)
+m10 = lmer(Q3 ~  GDSI +  (1 |Participant)+  (1 |Pair), data = data_filtered_Q6a)
+m11 = lmer(Q3 ~  GMSI +  (1 |Participant)+  (1 |Pair), data = data_filtered_Q6a)
+m12 = lmer(Q3 ~  Fam +  (1 |Participant)+  (1 |Pair), data = data_filtered_Q6a) #OK
+m13 = lmer(Q3 ~  Artist +  (1 |Pair)+ (1|Participant), data = data_filtered_Q6a)
 anova(m00, m01)
-
+tab_model(m00, m01, m02,  m03, m04, m05, m06, m07, m08, m09, m10, m11,m12, m13, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("Flow","Flow [sing.]", "Flow [sing.]", "Flow [sing.]","Flow [sing.]","Flow [sing.]", "Flow [sing.]", "Flow [sing.]","Flow","Flow [sing.]", "Flow [sing.]", "Flow [sing.]", "Flow", "Flow [sing.]"),
+          digits = 5)
+,
+          file = "/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_model3_table_all_singular.html"
+)
 
 # Second part of models
-m01 = lmer(Q3 ~  MIXvsIMP +  (1 |Pair/Participant), data = data_ole)
-m02 = lmer(Q3 ~  FIXvsOther +  (1 |Pair/Participant), data = data_ole)
-m03 = lmer(Q3 ~  Palo +  (1 |Pair/Participant), data = data_ole)
-m04 = lmer(Q3 ~  Artist +  (1 |Pair/Participant), data = data_ole)
-m04 = lmer(Q3 ~  Artist +  (1 |Pair/Participant), data = data_ole)
+m01 = lmer(Q3 ~  MIXvsIMP +  (1 |Participant) + (1 |Pair),  data = data_ole)
+m02 = lmer(Q3 ~  FIXvsOther +  (1 |Pair) + (1 |Pair), data = data_ole)
+m03 = lmer(Q3 ~  Palo +  (1 |Pair) + (1 |Participant), data = data_ole)
+m04 = lmer(Q3 ~  Artist +  (1 |Participant) + (1 |Pair), data = data_ole)
+
 
 anova(m00a,m01a)
 
@@ -948,8 +1015,11 @@ anova(m00, m03)
 
 
 ###Final models
+m00 = lmer(Q3 ~    Abs_Av  + Q4a + Artist + Q1b +  (1 + Abs_Av  | Participant) + (1 | Pair), data = data_ole)
 m00 = lmer(Q3 ~   Q1b + Abs_Av + Q4a +   (1 + Abs_Av  | Participant) + (1 | Pair), data = data_ole)
 m01 = lmer(Q3 ~   Q1b   + Abs_Av  + Q4a + Q6b +  (1  + Q4a | Participant) + (1 | Pair), data = data_filtered_Q6a)
+
+
 
 tab_model(m00, m01,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
           pred.labels =c("(Intercept)", "Quality of improvisation","Absorption by activity", "Connection with partner","Rhythmic complexity"),
@@ -1449,7 +1519,10 @@ ad.test(data_ole$Perf_Av)
 ad.test(data_ole$Abs_Av)
 
 
-corr_mat <- data_ole[, c("Q1a", "Q1b", "Q3a", "Q3b", "Q4a", "Q4b", "Q5a", "Q5b", "Q6a", "Q6b", "Perf_Av", "Abs_Av")]
+corr_mat <- data_ole[, c("Q1a", "Q1b", "Q3", "Q4a", "Q4b", "Q5a", "Q5b", "Q6a", "Q6b", "Perf_Av", "Abs_Av")]
+custom_labels <- c("Improvisational quantity", "Improvisational creativity", "Flow", "Connection with partner", "Coordination with partner", "Rhythmic timing", "Rhythmic creativity", "Performance complexity", "Rhythmic complexity", "Fluency of performance", "Absorption by activity")
+
+
 corr_mat <- data_ole[, c( "Q1b", "Q3b", "Q4a", "Q6a")]
 
 corr_mat <- data_ole[, c("Q1a", "Q1b", "Q3a", "Q3b")]
@@ -1457,18 +1530,44 @@ corr_mat <- data_ole[, c("Q1a", "Q1b", "Q3a", "Q3b")]
 
 # Compute correlation matrix
 M <- cor(corr_mat, use = 'complete.obs', method='spearman')
-
-
+p.mat <- corr.test(M)$p
+corr_ordered <- corrplot::corrMatOrder(M, order = "AOE")
 # Plot correlation matrix
 corrplot(M, order = "AOE", tl.col = "black", tl.srt = 45, p.mat = corr.test(corr_mat)$p, insig = 'label_sig', sig.level = c(.001, .01, .05),
          pch.cex = 1.2, pch.col = 'red', 
-         addCoef.col = "white", # add correlation values as text labels
+         addCoef.col = "black", # add correlation values as text labels
          title = paste('Correlation Plot (', name_plot , ')'), cex.main = 1.8,
          mar=c(0,0,2,0))
+
+corrplot(M[corr_ordered, corr_ordered], order = 'original', type = "lower", tl.col = "black", tl.srt = 45,
+         addCoef.col = "black",
+         title = paste('Correlation Plot (', name_plot , ')'), cex.main = 1.8,
+         mar=c(0,0,2,0))
+
+name_plot <- "All Factors"
+# Order the correlation matrix
+corr_ordered <- corrplot::corrMatOrder(M, order = "AOE")
+M_ordered <- M[corr_ordered, corr_ordered]
+p_ordered <- p.mat[corr_ordered, corr_ordered]
+rownames(M_ordered) <- colnames(M_ordered) <- custom_labels[corr_ordered]
+
+corrplot(M_ordered, order = 'original', type = "lower", method = 'shade',
+         tl.col = "black", tl.srt = 45, diag = FALSE, 
+         p.mat = p_values, insig = 'label_sig', sig.level = c(.001, .01, .05),
+         addCoef.col = "black",
+         ##title = paste('Correlation Plot (', name_plot , ')'), cex.main = 1.8,
+         mar=c(0,0,2,0))
+
+# Apply custom labels
+
+
+p_values <- p.mat[corr_ordered, corr_ordered]
+
 
 # Save plot as image file
 png(filename = paste("/Users/atillajv/CODE/RITMO/ENTROPY/output/plots/Stats/R/corr_", name_plot, '_AOE.png'), 
     width = 865, height = 636)
+
 corrplot(M, order = "AOE", tl.col = "black", tl.srt = 45, p.mat = corr.test(corr_mat)$p, insig = 'label_sig', sig.level = c(.001, .01, .05),
          pch.cex = 0.8, pch.col = 'red',
          title = paste('Correlation Plot (', name_plot , ')'),
@@ -1482,6 +1581,33 @@ r = round(cor(corr_mat, use = 'complete.obs', method='spearman'), digits = 2)
 txt <- paste(r, cor_test_star, sep = " ")
 cex.cor <- 0.8/strwidth(txt)
 text(0.5, 0.5, txt, cex = cex.cor*r)
+
+
+sig_levels <- c(0.001, 0.01, 0.05)
+significance_stars <- function(p_value) {
+  if (p_value < sig_levels[1]) {
+    return("***")
+  } else if (p_value < sig_levels[2]) {
+    return("**")
+  } else if (p_value < sig_levels[3]) {
+    return("*")
+  } else {
+    return("")
+  }
+}
+
+# Redraw the significance stars at the bottom
+p_values <- p.mat[corr_ordered, corr_ordered]
+for (i in seq_len(nrow(p_values))) {
+  for (j in seq_len(ncol(p_values))) {
+    if (i > j) {
+      star_label <- significance_stars(p_values[i, j])
+      if (star_label != "") {
+        text(x = j - 0.5, y = nrow(p_values) - i, labels = star_label, col = 'red', cex = 1.2, pos = 1)
+      }
+    }
+  }
+}
 
 
 ## Inspecting residuals
@@ -1511,8 +1637,24 @@ summary(model.avg(res))
 sw(res)
 
 
+# Bets model from step-up
+m00 =  lmer(Q3 ~   Q1b + (1   | Participant) + (1 | Pair), data = data_filtered_Q6a)
+m01 =  lmer(Q3 ~   Q1b  + Abs_Av + (1 | Participant) + (1 | Pair), data = data_filtered_Q6a)
+m02 =  lmer(Q3 ~   Q1b  + Abs_Av + Q4a + (1  | Participant) + (1 | Pair), data = data_filtered_Q6a)
+m03=  lmer(Q3 ~   Q1b  + Abs_Av + Q4a + Q6b + (1  | Participant) + (1 | Pair), data = data_filtered_Q6a)
+m04=  lmer(Q3 ~   Q1b  + Q4a + Q6b + (1  | Participant) + (1 | Pair), data = data_filtered_Q6a)
+m05 = lmer(Q3 ~   Q1b  + Q4a + Q6b + (1 + Q4a  | Participant) + (1 | Pair), data = data_filtered_Q6a)
+m06 = lmer(Q3 ~   Q1b  + Abs_Av + Q4a + Q6b + (1 + Q4a  | Participant) + (1 | Pair), data = data_filtered_Q6a)
 
-model2 = lmer(Q3 ~   Q1b  + Abs_Av + Q4a + Q6b + (1 + Q4a  | Participant) + (1 | Pair), data = data_filtered_Q6a)
+tab_model(m00, m01, m02,  m03, m04,m05,m06,  p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("m1 [sing.]","m2 [sing.]", "m3 [sing.]", "m4 [sing.]", "m5 [sing.]", "m6[sing.]", "Final Model"), digits = 5 )
+
+summary(m06)
+
+# Best model from Mumin
+model1 = lmer(Q3 ~   Q1b + Q4a + Q6b + Artist + (1  | Participant) + (1 | Pair), data = data_filtered_Q6a)
+
+anova(model1, model2)
 
 Flamenco_model.lm <- lmer(Q3 ~   Q1b   + Abs_Av  + Q4a + Q6b +  (1  + Q4a | Participant) + (1 | Pair), data = data_filtered_Q6a)
 
@@ -1543,6 +1685,524 @@ ggplot(mydf, aes(x, predicted)) +
   geom_line() +
   geom_point(aes(x, predicted)) +
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .1)
+
+
+
+### Checking random effects
+
+m00 = lmer(Q3 ~    Abs_Av +  (1 | Pair/Participant), data = data_ole)
+m01 = lmer(Q3 ~    Abs_Av +  (0 + Abs_Av | Pair/Participant), data = data_ole)
+m02 = lmer(Q3 ~    Abs_Av + ( 0 + Abs_Av | Pair:Participant) + (1 | Pair), data = data_ole)
+m03 = lmer(Q3 ~    Abs_Av + (1| Pair:Participant) + (1 + Abs_Av  | Pair), data = data_ole)
+m04 = lmer(Q3 ~    Abs_Av + (1| Participant) + (1 + Abs_Av  | Pair), data = data_ole)
+
+
+
+
+m00 = lmer(Q3 ~ Q1b + Q4a + Abs_Av + (1 | Participant) + (1 | Pair), data = data_ole)
+m01 = lmer(Q3 ~ 1 +  (1 | Pair) + (1 | Participant), data = data_ole)
+
+
+
+
+
+### July 2024, one more time ####
+
+m00 = lmer(Q3 ~  Q1a +  (1 |Pair)+ (1|Participant), data = data_ole)
+m01 = lmer(Q3 ~  Q1b +  (1 |Pair)+ (1|Participant), data = data_ole)#singular
+m02 = lmer(Q3 ~  Perf_Av +  (1 |Pair)+ (1|Participant), data = data_ole)
+m03 = lmer(Q3 ~  Abs_Av +  (1 |Pair)+ (1|Participant), data = data_ole)#singular
+m04 = lmer(Q3 ~  GDSI +  (1 |Pair)+ (1|Participant), data = data_ole)
+m05 = lmer(Q3 ~  GMSI +  (1 |Pair)+ (1|Participant), data = data_ole)
+m06 = lmer(Q3 ~  Fam +  (1 |Pair)+ (1|Participant), data = data_ole)
+m07 = lmer(Q3 ~  Artist +  (1 |Pair)+ (1|Participant), data = data_ole)
+m08 = lmer(Q3 ~  Palo +  (1 |Pair)+ (1|Participant), data = data_ole)
+m09 = lmer(Q3 ~  Q4a +  (1 |Pair)+ (1|Participant), data = data_ole)#singular
+m10 = lmer(Q3 ~  Q4b +  (1 |Pair)+ (1|Participant), data = data_ole)#singular
+m11 = lmer(Q3 ~  Q5a +  (1 |Pair)+ (1|Participant), data = data_ole)#singular
+m12 = lmer(Q3 ~  Q5b +  (1 |Pair)+ (1|Participant), data = data_ole)#singular
+m13 = lmer(Q3 ~  Q6a +  (1 |Pair)+ (1|Participant), data = data_ole)#singular
+m14 = lmer(Q3 ~  Q6b +  (1 |Pair)+ (1|Participant), data = data_ole)#singular
+
+tab_model(m00, m01, m02,  m03, m04, m05, m06, m07, m08, m09, m10, m11,m12, m13, m14, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("Flow","Flow [sing.]", "Flow [sing.]", "Flow [sing.]","Flow [sing.]","Flow [sing.]", "Flow [sing.]", "Flow [sing.]","Flow","Flow [sing.]", "Flow", "Flow", "Flow", "Flow", "Flow"),
+          digits = 5)
+,
+          file = "/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_model3_table_all_singular.html"
+)
+library(webshot)
+webshot("/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_model3_table_all_singular.html", "/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_model3_table_all_singular.png")
+
+
+
+m00 = lmer(Q3 ~  Q1a +  (1 |Pair)+ (1|Participant), data = data_ole)
+m01 = lmer(Q3 ~  Q1a + Q1b +  (1 |Pair)+ (1|Participant), data = data_ole)#singular
+m02 = lmer(Q3 ~  Q1b + Abs_Av +  (1 |Pair)+ (1|Participant), data = data_ole)
+m03 = lmer(Q3 ~  Q1b + Abs_Av + Perf_Av +  (1 |Pair) + (1|Participant), data = data_ole)
+m04 = lmer(Q3 ~  Q1b + Abs_Av + Perf_Av + Artist +   (1 |Pair)+ (1|Participant), data = data_ole)
+m05 = lmer(Q3 ~  Q1b + Abs_Av + Perf_Av + Palo +   (1 |Pair)+ (1|Participant), data = data_ole)
+m06 = lmer(Q3 ~  Q1b + Abs_Av + Perf_Av + GDSI +   (1 |Pair)+ (1|Participant), data = data_ole)
+m07 = lmer(Q3 ~  Q1b + Abs_Av + Perf_Av + GDSI + GMSI +  (1 |Pair)+ (1|Participant), data = data_ole)
+m08 = lmer(Q3 ~  Q1b + Abs_Av + Perf_Av + GDSI + Fam +  (1 |Pair)+ (1|Participant), data = data_ole)
+
+tab_model(m00, m01, m02,  m03, m04, m05, m06, m07, m08, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("Flow","Flow [sing.]", "Flow [sing.]", "Flow [sing.]","Flow [sing.]","Flow [sing.]", "Flow [sing.]", "Flow [sing.]","Flow"),
+          digits = 5)
+
+
+m09 = lmer(Q3 ~  Q1b + Abs_Av + Perf_Av + (1+ Perf_Av |Participant) +  (1 |Pair), data = data_ole)# Singular
+anova(m03, m09)
+
+
+
+m00 = lmer(Q3 ~  Q1a +  (1 |Pair)+ (1 + Perf_Av|Participant), data = data_ole)
+m01 = lmer(Q3 ~  Q1a + Q1b +  (1 |Pair)+ (1+ Perf_Av|Participant), data = data_ole)#singular
+m02 = lmer(Q3 ~  Q1b + Abs_Av +  (1 |Pair)+ (1+ Perf_Av|Participant), data = data_ole)
+m03 = lmer(Q3 ~  Q1b + Abs_Av + Perf_Av +  (1 |Pair) + (1+ Perf_Av|Participant), data = data_ole)
+m04 = lmer(Q3 ~  Q1b + Abs_Av + Perf_Av + Artist +   (1 |Pair)+ (1+ Perf_Av|Participant), data = data_ole)
+m05 = lmer(Q3 ~  Q1b + Abs_Av + Perf_Av + Palo +   (1 |Pair)+ (1+ Perf_Av|Participant), data = data_ole)
+m06 = lmer(Q3 ~  Q1b + Abs_Av + Perf_Av + GDSI +   (1 |Pair)+ (1+ Perf_Av|Participant), data = data_ole)
+m07 = lmer(Q3 ~  Q1b + Abs_Av + Perf_Av + GDSI + GMSI +  (1 |Pair)+ (1+ Perf_Av|Participant), data = data_ole)
+m08 = lmer(Q3 ~  Q1b + Abs_Av + Perf_Av + GDSI + Fam +  (1 |Pair)+ (1+ Perf_Av|Participant), data = data_ole)
+
+anova(m00,m01,m02,m03,m04,m05,m06,m07,m08)
+anova(m03,m04)
+
+library(MuMIn)
+eval(metafor:::.MuMIn)
+#full <- rma(Q3, mods =  )
+
+options(na.action = "na.exclude") 
+cols_with_na <- c("GMSI","GDSI","Fam","Q1a","Q3", "Q1b","Perf_Av", "Abs_Av", "Participant", "Pair", "Artist", "Palo")  # Specify the column names with missing values
+
+data_filtered_Q6a_complete <- na.omit(data_ole[, cols_with_na])
+model = lmer(Q3 ~  Q1a + Q1b + Fam + GDSI + GMSI + Artist   + Abs_Av + Perf_Av +Palo +   (1 + Q1a | Participant) + (1 | Pair), data = data_filtered_Q6a_complete,na.action = na.fail)
+model = lmer(Q3 ~  Q1b + Artist + Q4a + Artist+  (1  | Participant) + (1 | Pair), data = data_filtered_Q6a_complete,na.action = na.fail)
+model = lmer(Q3 ~   Q1b  + Abs_Av + Q4a + Q6b + (1 + Q4a  | Participant) + (1 | Pair), data = data_filtered_Q6a)
+
+res <- dredge(model, trace=2)
+subset(res, delta <= 2, recalc.weights=FALSE)
+summary(model.avg(res))
+sw(res)
+
+
+
+# From MuMIn
+
+m00 =  lmer(Q3 ~  Q1a + Q1b +  Artist   + Abs_Av + Perf_Av+  (1 + Abs_Av | Participant) + (1 | Pair), data = data_ole,na.action = na.fail) #sing
+m01 = lmer(Q3 ~ Q1b    + Abs_Av + Perf_Av+  (1 + Perf_Av | Participant) + (1 | Pair), data = data_ole,na.action = na.fail)
+m02 = lmer(Q3 ~ Q1b    + Q1b + Perf_Av +  (1 + Q1a | Participant) + (1 | Pair), data = data_ole,na.action = na.fail) #sing
+m03 = lmer(Q3 ~ Q1b    + Q1b + Perf_Av +  Artist + (1 + Q1b | Participant) + (1 | Pair), data = data_ole,na.action = na.fail) #sing
+
+# From other analysis
+m04 = lmer(Q3 ~  Q1b + Abs_Av + Perf_Av + Artist +   (1 |Pair)+ (1+ Perf_Av|Participant), data = data_ole, na.action = na.fail)
+
+#We get the same result, given all of the other run into singularity issues. 
+anova(m01,m04)
+anova(m00,m01,m02,m03,m04)
+
+m04 = lmer(Q3 ~  Q5a +  (1 |Pair)+ (1|Participant), data = data_ole)#singular
+m05 = lmer(Q3 ~  Q5b +  (1 |Pair)+ (1|Participant), data = data_ole)#singular
+m06 = lmer(Q3 ~  Q6a +  (1 |Pair)+ (1|Participant), data = data_ole)#singular
+m07 = lmer(Q3 ~  Q6b +  (1 |Pair)+ (1|Participant), data = data_ole)#singular
+m08 = lmer(Q3 ~  Perf_Av +  (1 |Pair)+ (1|Participant), data = data_ole)
+m09 = lmer(Q3 ~  Abs_Av +  (1 |Pair)+ (1|Participant), data = data_ole)#singular
+m10 = lmer(Q3 ~  GDSI +  (1 |Pair)+ (1|Participant), data = data_ole)
+m11 = lmer(Q3 ~  GMSI +  (1 |Pair)+ (1|Participant), data = data_ole)
+m12 = lmer(Q3 ~  Fam +  (1 |Pair)+ (1|Participant), data = data_ole)
+m13 = lmer(Q3 ~  Artist +  (1 |Pair)+ (1|Participant), data = data_ole)
+m14 = lmer(Q3 ~  Palo +  (1 |Pair)+ (1|Participant), data = data_ole)
+
+
+
+
+tab_model(m00, m01, m02,  m03, m04, m05, m06, m07, m08, m09, m10, m11,m12, m13, m14, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("Flow","Flow [sing.]", "Flow [sing.]", "Flow [sing.]","Flow [sing.]","Flow [sing.]", "Flow [sing.]", "Flow [sing.]","Flow","Flow [sing.]", "Flow", "Flow", "Flow", "Flow", "Flow"),
+          digits = 5)
+
+          file = "/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_model3_table_all_singular.html"
+)
+
+
+### Including Q4
+m00 = lmer(Q3 ~  Q1a +  (1 |Pair)+ (1|Participant), data = data_filtered_Q4a)
+m01 = lmer(Q3 ~  Q1b +  (1 |Pair)+ (1|Participant), data = data_filtered_Q4a)#singular
+m02 = lmer(Q3 ~  Q4a +  (1 |Pair)+ (1|Participant), data = data_filtered_Q4a)#singular
+m03 = lmer(Q3 ~  Q4b +  (1 |Pair)+ (1|Participant), data = data_filtered_Q4a)#singular
+m04 = lmer(Q3 ~  Q5a +  (1 |Pair)+ (1|Participant), data = data_filtered_Q4a)#singular
+m05 = lmer(Q3 ~  Q5b +  (1 |Pair)+ (1|Participant), data = data_filtered_Q4a)#singular
+m06 = lmer(Q3 ~  Q6a +  (1 |Pair)+ (1|Participant), data = data_filtered_Q4a)#singular
+m07 = lmer(Q3 ~  Q6b +  (1 |Pair)+ (1|Participant), data = data_filtered_Q4a)#singular
+m08 = lmer(Q3 ~  Perf_Av +  (1 |Pair)+ (1|Participant), data = data_filtered_Q4a)
+m09 = lmer(Q3 ~  Abs_Av +  (1 |Pair)+ (1|Participant), data = data_filtered_Q4a)#singular
+m10 = lmer(Q3 ~  GDSI +  (1 |Pair)+ (1|Participant), data = data_filtered_Q4a)
+m11 = lmer(Q3 ~  GMSI +  (1 |Pair)+ (1|Participant), data = data_filtered_Q4a)
+m12 = lmer(Q3 ~  Fam +  (1 |Pair)+ (1|Participant), data = data_filtered_Q4a)
+m13 = lmer(Q3 ~  Artist +  (1 |Pair)+ (1|Participant), data = data_filtered_Q4a)
+m14 = lmer(Q3 ~  Palo +  (1 |Pair)+ (1|Participant), data = data_filtered_Q4a)
+
+tab_model(m00, m01, m02,  m03, m04, m05, m06, m07, m08, m09, m10, m11,m12, m13, m14, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("Flow","Flow [sing.]", "Flow [sing.]", "Flow [sing.]","Flow [sing.]","Flow [sing.]", "Flow [sing.]", "Flow [sing.]","Flow","Flow [sing.]", "Flow", "Flow", "Flow", "Flow", "Flow"),
+          digits = 5)
+
+
+m00 = lmer(Q3 ~  Q1b  +   (1 |Pair)+ (1  |Participant), data = data_filtered_Q4a) #singular
+m01 = lmer(Q3 ~  Q1b + Q4a + (1 |Pair)+ (1|Participant), data = data_filtered_Q4a)#singular
+m02 = lmer(Q3 ~  Q1b + Q4a + Abs_Av +  (1 |Pair)+ (1|Participant), data = data_filtered_Q4a)#singular
+m03 = lmer(Q3 ~  Q1b + Q4b + Abs_Av + Perf_Av +   (1 |Pair)+ (1|Participant), data = data_filtered_Q4a)#singular
+m04 = lmer(Q3 ~  Q1b + Q4b + Abs_Av + Perf_Av + GDSI + (1 |Pair)+ (1|Participant), data = data_filtered_Q4a)#singular
+m05 = lmer(Q3 ~  Q1b + Q4b + Abs_Av + Perf_Av  + GDSI + Fam  +  (1 |Pair)+ (1|Participant), data = data_filtered_Q4a)#singular
+m06 = lmer(Q3 ~  Q1b + Q4b + Perf_Av  + GDSI  +  (1 |Pair)+ (1|Participant), data = data_filtered_Q4a)#singular
+
+
+tab_model(m00, m01, m02,  m03, m04, m05, m06, m07, m08, m09, m10, m11,m12, m13, m14, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("Flow","Flow [sing.]", "Flow [sing.]", "Flow [sing.]","Flow [sing.]","Flow [sing.]", "Flow [sing.]", "Flow [sing.]","Flow","Flow [sing.]", "Flow", "Flow", "Flow", "Flow", "Flow"),
+          digits = 5)
+
+model = lmer(Q3 ~  1  +   (1 |Pair)+ (1 |Participant), data = data_filtered_Q4a) #Singular
+m00 = lmer(Q3 ~  1  +   (1 |Pair)+ (1  + Q1b |Participant), data = data_filtered_Q4a) #Singular
+m01 = lmer(Q3 ~  1  +   (1 |Pair)+ (1  + Abs_Av |Participant), data = data_filtered_Q4a)
+m02 = lmer(Q3 ~  1  +   (1 |Pair)+ (1  + Perf_Av |Participant), data = data_filtered_Q4a)
+m03 = lmer(Q3 ~  1  +   (1 |Pair)+ (1  + Q1a |Participant), data = data_filtered_Q4a)
+m04 = lmer(Q3 ~  1  +   (1 |Pair)+ (1  + Q4a |Participant), data = data_filtered_Q4a) #singular
+m05 = lmer(Q3 ~  1  +   (1 |Pair)+ (1  + Q4b |Participant), data = data_filtered_Q4a)
+
+anova(model, m01,m02,m03,m05)
+anova(model, m02)
+anova(model, m03)
+anova(model,m04)
+anova(model,m05)
+
+
+
+m04 = lmer(Q3 ~  Q1b + Abs_Av + Perf_Av + Artist +   (1 |Pair)+ (1+ Perf_Av|Participant), data = data_ole, na.action = na.fail)
+
+
+m00 = lmer(Q3 ~  Q1b + Q4a + Abs_Av +  (1 |Pair)+ (1 |Participant), data = data_filtered_Q4a)#singular
+m01 = lmer(Q3 ~  Q1b + Q4a + Abs_Av +  (1 |Pair)+ (1 + Q1b |Participant), data = data_filtered_Q4a)#singular
+m02 = lmer(Q3 ~  Q1b + Q4a + Abs_Av +  (1 |Pair)+ (1 + Abs_Av |Participant), data = data_filtered_Q4a)#singular
+m03 = lmer(Q3 ~  Q1b + Q4a + Abs_Av +  (1 |Pair)+ (1 + Q4a |Participant), data = data_filtered_Q4a)#singular
+m04 = lmer(Q3 ~  Q1b + Q4a + Abs_Av +  (1 |Pair)+ (1 + Perf_Av |Participant), data = data_filtered_Q4a)#singular
+
+m00 = lmer(Q3 ~  Q1b + Q4a  +  (1 |Pair)+ (1 |Participant), data = data_filtered_Q4a)#singular
+m01 = lmer(Q3 ~  Q1b + Q4a  +  (1 |Pair)+ (1 + Q1b |Participant), data = data_filtered_Q4a)#singular
+m02 = lmer(Q3 ~  Q1b + Q4a  +  (1 |Pair)+ (1 + Abs_Av |Participant), data = data_filtered_Q4a)#singular
+m03 = lmer(Q3 ~  Q1b + Q4a  +  (1 |Pair)+ (1 + Q4a |Participant), data = data_filtered_Q4a)#singular
+m04 = lmer(Q3 ~  Q1b + Q4a  +  (1 |Pair)+ (1 + Perf_Av |Participant), data = data_filtered_Q4a)#singular
+
+
+
+anova( m00, m01)
+anova(m01, m02)
+anova(m02,m03)
+anova(m02,m04)
+anova(m02,m05)
+anova(m02,m06)
+anova(m00,m01,m02,m03,m04)
+
+# Only non singular one. 
+
+m02 = lmer(Q3 ~  Q1b + Q4a  +  (1 |Pair)+ (1 + Abs_Av |Participant), data = data_filtered_Q4a)#singular
+
+
+
+#Run MumIn with Abs_Av
+library(MuMIn)
+eval(metafor:::.MuMIn)
+#full <- rma(Q3, mods =  )
+
+options(na.action = "na.exclude") 
+cols_with_na <- c("GMSI","GDSI","Fam","Q1a","Q3", "Q1b","Perf_Av", "Abs_Av", "Participant", "Pair", "Artist", "Palo", "Q4a", "Q4b")  # Specify the column names with missing values
+
+data_filtered_Q6a_complete <- na.omit(data_ole[, cols_with_na])
+model = lmer(Q3 ~  Q1a + Q1b + Fam + GDSI + GMSI + Artist   + Abs_Av + Perf_Av +Palo + Q4a + Q4b +  (1  | Participant) + (1 | Pair), data = data_filtered_Q6a_complete,na.action = na.fail)
+model = lmer(Q3 ~  Q1b + Artist + Q4a + Artist+  (1  | Participant) + (1 | Pair), data = data_filtered_Q6a_complete,na.action = na.fail)
+model = lmer(Q3 ~   Q1b  + Abs_Av + Q4a + Q6b + (1 + Q4a  | Participant) + (1 | Pair), data = data_filtered_Q6a)
+
+res <- dredge(model, trace=2)
+subset(res, delta <= 2, recalc.weights=FALSE)
+summary(model.avg(res))
+sw(res)
+
+
+# Only non singular one. 
+
+m00 = lmer(Q3 ~  Q1b + Q4a  +  (1 |Pair)+ (1 + Abs_Av |Participant), data = data_filtered_Q4a)
+m01 = lmer(Q3 ~  Q1b + Q4a  + Perf_Av + Artist +  (1 |Pair)+ (1 + Abs_Av |Participant), data = data_filtered_Q4a)#singular
+m02 = lmer(Q3 ~  Q1b + Q4a  + Abs_Av + Q1a + (1 |Pair)+ (1  |Participant), data = data_filtered_Q4a)#singular
+
+anova(m01,m02)
+summary(m01)
+
+# Trying with Q6
+
+m00 = lmer(Q3 ~  Q1b + Abs_Av + Perf_Av + Artist + (1 |Pair)+ (1 + Perf_Av  |Participant), data = data_filtered_Q6a) #singular
+m01 = lmer(Q3 ~  Q1b + Q4a + (1 |Pair)+ (1|Participant), data = data_filtered_Q6a)#singular
+m02 = lmer(Q3 ~  Q1b + Q4a + Abs_Av +  (1 |Pair)+ (1|Participant), data = data_filtered_Q6a)#singular
+m03 = lmer(Q3 ~  Q1b + Q4a + Abs_Av + Perf_Av +   (1 |Pair)+ (1|Participant), data = data_filtered_Q6a)#singular
+m04 = lmer(Q3 ~  Q1b + Q4a + Abs_Av  + GDSI + (1 |Pair)+ (1|Participant), data = data_filtered_Q6a)#singular
+m05 = lmer(Q3 ~  Q1b + Q4a + Abs_Av  + Fam  +  (1 |Pair)+ (1|Participant), data = data_filtered_Q6a)#singular
+m06 = lmer(Q3 ~  Q1b + Q4a + Perf_Av  + GDSI  +  (1 |Pair)+ (1|Participant), data = data_filtered_Q6a)#singular
+m07 = lmer(Q3 ~  Q1b + Q4a  + Q6a + Abs_Av +  (1 |Pair)+ (1|Participant), data = data_filtered_Q6a)#singular
+m08 = lmer(Q3 ~  Q1b + Q4a + Abs_Av  + GDSI  + Q6b +  (1 |Pair)+ (1|Participant), data = data_filtered_Q6a)#singular
+m09 = lmer(Q3 ~  Q1b + Q4a  + Q6b + Abs_Av + (1 |Pair)+ (1|Participant), data = data_filtered_Q6a)#singular
+m10 = lmer(Q3 ~  Q1b + Q4a + Q6b + Perf_Av + (1 |Pair)+ (1|Participant), data = data_filtered_Q6a)#singular
+m11 = lmer(Q3 ~  Q1b + Q4a  + Q6b + (1 |Pair)+ (1|Participant), data = data_filtered_Q6a)#singularm11 = lmer(Q3 ~  Q1b + Q4a  + Q6b + Abs_Av + (1 |Pair)+ (1|Participant), data = data_filtered_Q6a)#singular
+m12 = lmer(Q3 ~  Q1b + Q4a  + Q6b + Artist + (1 |Pair)+ (1|Participant), data = data_filtered_Q6a)#singularm11 = lmer(Q3 ~  Q1b + Q4a  + Q6b + Abs_Av + (1 |Pair)+ (1|Participant), data = data_filtered_Q6a)#singular
+m13 = lmer(Q3 ~  Q1b + Abs_Av +  Q4a  + Q6b + Artist + (1 |Pair)+ (1|Participant), data = data_filtered_Q6a)#singularm11 = lmer(Q3 ~  Q1b + Q4a  + Q6b + Abs_Av + (1 |Pair)+ (1|Participant), data = data_filtered_Q6a)#singular
+m14 = lmer(Q3 ~  Q1b + Abs_Av +  Q4a  + Q6b + Palo + (1 |Pair)+ (1|Participant), data = data_filtered_Q6a)#singularm11 = lmer(Q3 ~  Q1b + Q4a  + Q6b + Abs_Av + (1 |Pair)+ (1|Participant), data = data_filtered_Q6a)#singular
+
+
+tab_model(m00, m01, m02,  m03, m04, m05, m06, m07, m08, m09, m10, m11,m12, m13, m14, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("Flow","Flow [sing.]", "Flow [sing.]", "Flow [sing.]","Flow [sing.]","Flow [sing.]", "Flow [sing.]", "Flow [sing.]","Flow","Flow [sing.]", "Flow", "Flow", "Flow", "Flow", "Flow"),
+          digits = 5)
+
+anova(m01,m02, m03, m04, m05, m06)
+anova(m02,m10)
+
+
+m00 = lmer(Q3 ~  Q1b + Q4a + Abs_Av +  (1 |Pair)+ (1 + Q1b|Participant), data = data_filtered_Q6a)#singular
+m01 = lmer(Q3 ~  Q1b + Q4a + Abs_Av +  (1 |Pair)+ (1 + Abs_Av|Participant), data = data_filtered_Q6a)#singular
+m02 = lmer(Q3 ~  Q1b + Q4a + Abs_Av +  (1 |Pair)+ (1 + Q4a |Participant), data = data_filtered_Q6a)#singular
+m03 = lmer(Q3 ~  Q1b + Q4a + Abs_Av +  (1 |Pair)+ (1 + Perf_Av |Participant), data = data_filtered_Q6a)#singular
+
+
+m00 = lmer(Q3 ~  Q1b + Q4b + Abs_Av + (1 + Perf_Av |Pair)+ (1|Participant), data = data_filtered_Q6a)#singular
+m01 = lmer(Q3 ~  Q1b + Q4b + Abs_Av + Perf_Av + GDSI + (1 + Q1b |Pair)+ (1|Participant), data = data_filtered_Q6a)#singular
+m02 = lmer(Q3 ~  Q1b + Q4b + Abs_Av + (1 + Q4b |Pair)+ (1|Participant), data = data_filtered_Q6a)#singular
+m03 = lmer(Q3 ~  Q1b + Q4b + Abs_Av + Perf_Av + GDSI + (1 + Abs_Av|Pair)+ (1|Participant), data = data_filtered_Q6a)#singular
+m04 = lmer(Q3 ~  Q1b + Q4b + Abs_Av + Perf_Av + (1 + GDSI |Pair)+ (1|Participant), data = data_filtered_Q6a)#singular
+
+
+m00 = lmer(Q3 ~  Q1b + Q4b + Perf_Av  + GDSI  + Q6b +  (1 |Pair)+ (1|Participant), data = data_filtered_Q6a)#singular
+m01 = lmer(Q3 ~  Q1b + Q4a  + Q6b + Abs_Av + (1 |Pair)+ (1|Participant), data = data_filtered_Q6a)#singular
+
+m02 = lmer(Q3 ~  Q1b + Q4a  + Q6b + (1 |Pair)+ (1|Participant), data = data_filtered_Q6a)#singularm11 = lmer(Q3 ~  Q1b + Q4a  + Q6b + Abs_Av + (1 |Pair)+ (1|Participant), data = data_filtered_Q6a)#singular
+anova(m02,m01)
+
+
+m00 = lmer(Q3 ~  Q1b +Abs_Av +  Q4a  + Q6b  + (1 |Pair)+ (1 + Abs_Av|Participant), data = data_filtered_Q6a)#singular
+m01 = lmer(Q3 ~  Q1b + Abs_Av + Q4a  + Q6b + (1 |Pair)+ (1 + Q4a|Participant), data = data_filtered_Q6a)#singular
+
+anova(m00, m01)
+
+
+
+m00 = lmer(Q3 ~  Q1b + Abs_Av + Perf_Av + Artist + (1+ Perf_Av|Participant) +   (1 |Pair), data = data_ole, na.action = na.fail) #From large dataset
+
+m01 = lmer(Q3 ~   Q1b  + Abs_Av + Q4a + Q6b + (1 + Q4a  | Participant) + (1 | Pair), data = data_filtered_Q6a) #From small dataset
+
+tab_model(m00,m01,
+          p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          pred.labels =c("(Intercept)", "Quality of improvisation","Absorption by activity" ,'Fluency of performance','Domain [Dancer]', "Connection with partner","Rhythmic Complexity"),
+          dv.labels=c("Flow model 1","Flow model 2"), digits = 5)
+
+          file = "/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_models_table_draft3_1.html")
+
+
+library(webshot)
+webshot("/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_models_table_draft3_1.html", 
+        "/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_models_table_draft3_1.png")
+
+
+
+
+
+
+### Plotting partial residuals
+darker_colors <- c("#348770", "#4F4D9E", "#f19e07ff", "#A50741")
+new_colors <- c("#5acfdbff", '#ff5130ff', "#FFA500","#8DD3C7",'#b4a7d6ff')
+common_theme <- theme(
+  axis.text.y = element_text(size = 16),   # Adjust y-axis text size
+  axis.text.x = element_text(size = 16),   # Adjust y-axis text size
+  strip.text = element_text(size = 16),     # Adjust facet titles size
+  axis.title.x = element_text(size = 16),
+  axis.title.y = element_text(size = 16),
+  panel.grid = element_blank(),
+  plot.title = element_text(hjust = 0.5),
+  panel.background = element_rect(fill = "white", color = "grey70", size = 1)
+)  # Center the title
+#plot.margin = margin(1, 1, 1, 1, "cm")
+
+
+
+Flamenco_model.lm <- lmer(Q3 ~  Q1b + Abs_Av + Perf_Av + Artist + (1+ Perf_Av|Participant) +   (1 |Pair), data = data_ole, na.action = na.fail)
+
+#Flamenco_model.lm <- lmer(Q3 ~   poly(Q1b, degree = 2)   + Abs_Av  + Q4a + Q6b +  (1  + Q4a | Participant) + (1 | Pair), data = data_filtered_Q6a)
+
+Plot_fe_Q4a <- effect_plot(Flamenco_model.lm, pred = Q1b, interval = TRUE, partial.residuals = TRUE, plot.points = TRUE, 
+                           jitter = 0.00, point.size = 1.2, colors = new_colors[1]) +
+  labs(x= "Creativity", y = "Flow", title = "") + 
+  scale_y_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1)) +
+  scale_x_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1)) + 
+  common_theme
+
+
+
+
+
+
+Plot_fe_Q1b <- effect_plot(Flamenco_model.lm, pred = Abs_Av, interval = TRUE, partial.residuals = TRUE, plot.points = TRUE, 
+                           jitter = 0.00, point.size = 1.2, colors = new_colors[2], cat.geom = 'line') +
+  labs(x= "Absorption", y = "", title = "") + 
+  scale_y_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1)) +
+  scale_x_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1))+ 
+  common_theme
+
+Plot_fe_Q1b
+
+x_values <- data.frame(Abs_Av = seq(1, 7, 0.1))
+#predicted_line <- predict(Flamenco_model.lm, newdata = x_values)
+
+Plot_fe_Abs_Av <- effect_plot(Flamenco_model.lm, pred = Perf_Av, interval = TRUE, partial.residuals = TRUE, plot.points = TRUE, 
+                              jitter = 0.00, point.size = 1.2, colors = new_colors[3]) +
+  labs(x= "Fluency", y = "", title = "") + 
+  geom_line(color = darker_colors[3], size =1.2) +  # Set color for the predicted line
+  scale_y_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1)) +
+  scale_x_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1))+ 
+  common_theme
+
+Plot_fe_Abs_Av
+
+
+
+Plot_fe_Q6b <- effect_plot(Flamenco_model.lm, pred = Artist, interval = TRUE, partial.residuals = TRUE, plot.points = TRUE, 
+                           jitter = 0.00, point.size = 1.2, colors = new_colors[5]) +
+  labs(x= "Domain", y = "", title = "") + 
+  scale_y_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1)) +
+#  scale_x_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1))+ 
+  scale_x_discrete(labels = c("G" = "Musician", "P" = "Dancer")) +
+  common_theme
+
+Plot_fe_Q6b
+
+
+
+library(gridExtra)
+grid.arrange(
+  # First column with plots p1, p2, and p3
+  Plot_fe_Q4a, Plot_fe_Q1b, Plot_fe_Abs_Av, Plot_fe_Q6b, ncol = 4
+  
+)
+
+
+### Model 2####
+Flamenco_model.lm <-lmer(Q3 ~   Q1b  + Abs_Av + Q4a + Q6b + (1 + Q4a  | Participant) + (1 | Pair), data = data_filtered_Q6a) #From small dataset
+
+#Flamenco_model.lm <- lmer(Q3 ~   poly(Q1b, degree = 2)   + Abs_Av  + Q4a + Q6b +  (1  + Q4a | Participant) + (1 | Pair), data = data_filtered_Q6a)
+
+Plot_fe_Q4a <- effect_plot(Flamenco_model.lm, pred = Q1b, interval = TRUE, partial.residuals = TRUE, plot.points = TRUE, 
+                           jitter = 0.00, point.size = 1.2, colors = new_colors[1]) +
+  labs(x= "Creativity", y = "Flow", title = "") + 
+  scale_y_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1)) +
+  scale_x_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1)) + 
+  common_theme
+
+
+
+Plot_fe_Q1b <- effect_plot(Flamenco_model.lm, pred = Abs_Av, interval = TRUE, partial.residuals = TRUE, plot.points = TRUE, 
+                           jitter = 0.00, point.size = 1.2, colors = new_colors[2], cat.geom = 'line') +
+  labs(x= "Absorption", y = "", title = "") + 
+  scale_y_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1)) +
+  scale_x_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1))+ 
+  common_theme
+
+Plot_fe_Q1b
+
+x_values <- data.frame(Abs_Av = seq(1, 7, 0.1))
+#predicted_line <- predict(Flamenco_model.lm, newdata = x_values)
+
+Plot_fe_Abs_Av <- effect_plot(Flamenco_model.lm, pred = Q4a, interval = TRUE, partial.residuals = TRUE, plot.points = TRUE, 
+                              jitter = 0.00, point.size = 1.2, colors = new_colors[3]) +
+  labs(x= "Connection", y = "", title = "") + 
+  geom_line(color = darker_colors[3], size =1.2) +  # Set color for the predicted line
+  scale_y_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1)) +
+  scale_x_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1))+ 
+  common_theme
+
+Plot_fe_Abs_Av
+
+
+
+Plot_fe_Q6b <- effect_plot(Flamenco_model.lm, pred = Q6b, interval = TRUE, partial.residuals = TRUE, plot.points = TRUE, 
+                           jitter = 0.00, point.size = 1.2, colors = new_colors[4]) +
+  labs(x= "Complexity", y = "", title = "") + 
+  scale_y_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1)) +
+  scale_x_continuous(limits = c(1, 7 + 1), breaks = seq(1, 7, 1))+ 
+  common_theme
+
+Plot_fe_Q6b
+
+
+
+library(gridExtra)
+grid.arrange(
+  # First column with plots p1, p2, and p3
+  Plot_fe_Q4a, Plot_fe_Q1b, Plot_fe_Abs_Av, Plot_fe_Q6b, ncol = 4
+  
+)
+
+
+m00 = lmer(Q3 ~  Artist +  (1 |Pair)+ (1 |Participant), data = data_ole)
+
+summary(m00)
+## Models first analysis to add to Supp Mat. 
+m00 = lmer(Q3 ~  Q1a +  (1 |Pair)+ (1 + Perf_Av|Participant), data = data_ole)
+m01 = lmer(Q3 ~  Q1a + Q1b +  (1 |Pair)+ (1+ Perf_Av|Participant), data = data_ole)#singular
+m02 = lmer(Q3 ~  Q1b + Abs_Av +  (1 |Pair)+ (1+ Perf_Av|Participant), data = data_ole)
+m03 = lmer(Q3 ~  Q1b + Abs_Av + Perf_Av +  (1 |Pair) + (1+ Perf_Av|Participant), data = data_ole)
+m04 = lmer(Q3 ~  Q1b + Abs_Av + Perf_Av + Artist +   (1 |Pair)+ (1+ Perf_Av|Participant), data = data_ole)
+m05 = lmer(Q3 ~  Q1b + Abs_Av + Perf_Av + Palo +   (1 |Pair)+ (1+ Perf_Av|Participant), data = data_ole)
+m06 = lmer(Q3 ~  Q1b + Abs_Av + Perf_Av + GDSI +   (1 |Pair)+ (1+ Perf_Av|Participant), data = data_ole)
+m07 = lmer(Q3 ~  Q1b + Abs_Av + Perf_Av + GDSI + GMSI +  (1 |Pair)+ (1+ Perf_Av|Participant), data = data_ole)
+m08 = lmer(Q3 ~  Q1b + Abs_Av + Perf_Av + GDSI + Fam +  (1 |Pair)+ (1+ Perf_Av|Participant), data = data_ole)
+
+
+summary(m04)
+tab_model(m00, m01, m02,  m03, m04, m05, m06, m07, m08, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("Flow","Flow", "Flow", "Flow","Flow","Flow", "Flow", "Flow","Flow"),
+          pred.labels =c("(Intercept)","Quantity of Improvisation" ," Improvisational creativity", "Absorption by activity","Fluency of performance",'Domain [Dancer]', 'Palo [Solea]',"Dance expertise (GDSI)",'Music expertise (GMSI)', 'Familiarity [yes]'),
+          digits = 5,
+          title = "Table S5: Model 1 - Linear mixed model (LMM) comparison using lme4 package in R" ,
+          file = "/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_models_table_draft4_SuppMat_Models_1.html")
+
+
+library(webshot)
+webshot("/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_models_table_draft4_SuppMat_Models_1.html", 
+        "/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_models_table_draft4_SuppMat_Models_1.pdf",  vwidth = 297 * 4, vheight = 210 * 4)
+
+
+m00 = lmer(Q3 ~  Q1b + + (1 |Pair)+ (1 + Q4a  |Participant), data = data_filtered_Q6a) #singular
+m01 = lmer(Q3 ~  Q1b + Q4a + (1 |Pair)+ (1 + Q4a |Participant), data = data_filtered_Q6a)#singular
+m02 = lmer(Q3 ~  Q1b + Abs_Av + Q4a +  (1 |Pair)+ (1 + Q4a |Participant), data = data_filtered_Q6a)#conv.
+m03 = lmer(Q3 ~  Q1b + Q4a + Abs_Av + Perf_Av +   (1 |Pair)+ (1 + Q4a |Participant), data = data_filtered_Q6a)#singular
+m04 = lmer(Q3 ~  Q1b + Abs_Av  + Q4a +  GDSI + (1 |Pair)+ (1 + Q4a |Participant), data = data_filtered_Q6a)#singular
+m05 = lmer(Q3 ~  Q1b  + Abs_Av  +  Q4a + Fam  +  (1 |Pair)+ (1 + Q4a |Participant), data = data_filtered_Q6a)
+m06 = lmer(Q3 ~  Q1b  + Perf_Av  + Q4a +  GDSI  +  (1 |Pair)+ (1 + Q4a |Participant), data = data_filtered_Q6a)#singular
+m07 = lmer(Q3 ~  Q1b + Abs_Av + Q4a  + Q6a +  (1 |Pair)+ (1 + Q4a |Participant), data = data_filtered_Q6a)#singular
+m08 = lmer(Q3 ~  Q1b + Abs_Av  + Q4a +  GDSI  + Q6b +  (1 |Pair)+ (1 + Q4a | Participant), data = data_filtered_Q6a)
+m09 = lmer(Q3 ~  Q1b + Abs_Av  + Q4a + Q6b + (1 |Pair)+ (1 + Q4a |Participant), data = data_filtered_Q6a)
+m10 = lmer(Q3 ~  Q1b + Perf_Av + Q4a + Q6b + (1 |Pair)+ (1 + Q4a |Participant), data = data_filtered_Q6a)#singular
+m11 = lmer(Q3 ~  Q1b + Q4a  + Q6b + (1 |Pair)+ (1 + Q4a |Participant), data = data_filtered_Q6a)#singularm11 = lmer(Q3 ~  Q1b + Q4a  + Q6b + Abs_Av + (1 |Pair)+ (1|Participant), data = data_filtered_Q6a)#singular
+m12 = lmer(Q3 ~  Q1b + Q4a  + Q6b + Artist + (1 |Pair)+ (1 + Q4a |Participant), data = data_filtered_Q6a)#singularm11 = lmer(Q3 ~  Q1b + Q4a  + Q6b + Abs_Av + (1 |Pair)+ (1|Participant), data = data_filtered_Q6a)#singular
+m13 = lmer(Q3 ~  Q1b + Abs_Av +  Q4a  + Q6b + Artist + (1 |Pair)+ (1 + Q4a |Participant), data = data_filtered_Q6a)#singularm11 = lmer(Q3 ~  Q1b + Q4a  + Q6b + Abs_Av + (1 |Pair)+ (1|Participant), data = data_filtered_Q6a)#singular
+m14 = lmer(Q3 ~  Q1b + Abs_Av +  Q4a  + Q6b + Palo + (1 |Pair)+ (1 + Q4a |Participant), data = data_filtered_Q6a)#singularm11 = lmer(Q3 ~  Q1b + Q4a  + Q6b + Abs_Av + (1 |Pair)+ (1|Participant), data = data_filtered_Q6a)#singular
+
+
+tab_model(m00, m01, m02,  m03, m04, m05, m06, m07, m08, m09, m10, m11,m12, m13, m14, p.style = "stars", show.aic = TRUE, show.ci=FALSE,   show.r2 = FALSE,
+          dv.labels=c("Flow [sing.]","Flow [sing.]", "Flow [sing.]", "Flow [sing.]","Flow","Flow [sing.]", "Flow [sing.]", "Flow","Flow","Flow [sing.]", "Flow [sing.]", "Flow [sing.]", "Flow [sing.]", "Flow [sing.]", "Flow [sing.]"),
+          pred.labels =c("(Intercept)","Improvisational creativity", "Connection with partner","Absorption by activity","Fluency of performance","Dance Expertise (GDSI)",'Familiarity [yes]',"Complexity of performance", "Rhythmic complexity",'Domain [Dancer]','Palo [Solea]'),
+          digits = 5,
+          title = "Table S6: Model 2 - Linear mixed model (LMM) comparison using lme4 package in R" ,
+          file = "/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_models_table_draft4_SuppMat_Models_2.html")
+
+webshot("/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_models_table_draft4_SuppMat_Models_2.html", 
+        "/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_models_table_draft4_SuppMat_Models_2.pdf",  vwidth = 297 * 4, vheight = 210 * 4)
+
+anova(m08,m09)
+anova(m05,m08)
+
+
 
 
 

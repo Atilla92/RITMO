@@ -1,0 +1,3 @@
+
+# mdQRA.py
+Takes the different inputs from guitarist and dancer. Imports them as a dataframe. Then checks the length wrt. the sampling rate of entropy given this is most likely the lowest sampling resolution. 
