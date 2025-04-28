@@ -1,7 +1,5 @@
 "Begin Time - ss.msec","End Time - ss.msec","Duration - ss.msec","Sequence","Bloques","Step","Music_Mode","Category","Baile","Guitarra","Dance_Step"
-3.3,11.9,8.6,"Entrada",,,,,,,
 3.3,12.0,8.7,,"1","17.38","MI","DI","Z1","A3","17.66"
-11.9,32.7,20.8,"Entrada",,,,,,,
 12.0,32.7,20.7,,"1","17.39","MI","DI","Z1","A3","17.67"
 32.7,54.9,22.2,"Entrada","1","17.40","MI","DI","Z1","A3","17.68"
 54.9,73.9,19.0,"Entrada","1","17.41","MI","DI","Z1","A3","17.69"

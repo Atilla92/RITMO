@@ -7,14 +7,15 @@ import json
 #And have to add the response, from csv for subjective ratings. Does that make sense?
 
 # One file or all in a specific folder
-file_name = 'P10_D1_G5_M1_R2_T1' # Name file if loop_on = False
+file_name = 'P3_P3_D5_G1_M5_R1_T1' # Name file if loop_on = False
 loop_on = False # True if you want to loop through folder
 path_files = '/Users/atillajv/CODE/RITMO/FILES/ELAN/cleaned/'
 path_ratings = '/Users/atillajv/CODE/RITMO/FILES/Ratings/'
 #file_output = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_097/' #check that this is the same as input file for entropy
 file_output = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/Test/' #check that this is the same as input file for entropy
+#file_output = '/Users/atillajv/CODE/RITMO/ENTROPY/output/main/all_experiments_07072023_095/' #check that this 
 #name_output = 'all_experimen'
-name_output = 'Test_July'
+name_output = 'Test_14042025'
 # Default settings 
 percentage = 0.1
 frac_round = 1 #Round/frac_round for moving rating to the left 
@@ -36,7 +37,7 @@ if loop_on:
 else:
     list_files = [file_name]
 
-list_files = ['P10_P10_D1_G5_M1_R1_T1', 'G5_P10_D1_G5_M1_R1_T1']
+#list_files = ['P10_P10_D1_G5_M1_R1_T1', 'G5_P10_D1_G5_M1_R1_T1']
 print(list_files)
 
 # Initiate dataframe before loop 

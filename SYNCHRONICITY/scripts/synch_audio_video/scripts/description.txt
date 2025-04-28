@@ -1,0 +1,103 @@
+#### PIPELINE FOR SYNCHRONISATION
+
+# mocap_video_sync.py
+
+    # Define whether you are using dancer or guitarist
+    # Gives a csv output with the 
+
+
+
+All the files for checking that the audio and video are synchronised. 
+
+1. Checking video front and video small.
+    Create two input folders, check the length. 
+
+Need to check the following 4 files:
+P11_D0_G6_M6_R2_T1
+P11_D6_G6_M6_R1_T1, 07-06-2023 front video has not been cut properly, but small is ok. 
+P11_D1_G6_M6_R1_T1, 07-06-2023 small video is not cut properly. NEED TO CHECK ELAN where it has been cut. 
+time start : 26.7 , which is the same as the small video, so should be fine if we identify where the third clap is. 
+W_P12_D6_G7_M6_R2_T1, 09-06-2023
+
+
+2. Checking video small and audio original. 
+
+P6_D5_G1_M5_R1_T1 ok
+P5_D1_G3_M6_R1_T1 needs to be cut to first clap, and whole pipeline--> can just identify the third clap in audio, and write script to adjust. Or cut all three files respectively. 
+P3_D1_G1_M6_R1_T1 end of video small is not cut, but ok if using ELAN
+P11_D6_G6_M6_R1_T1 Small and audio drums ok. 
+P11_D1_G6_M6_R1_T1 is aligned with the cut front video, need to check timing with ELAN. Small video should be cut to first clap. Just find timing for third clap. ELAN is done on unclipped video. 
+P10_D1_G5_M6_R1_T1 small video has not been cut at the end. OK if using ELAN. 
+
+
+3. Check audio orignal and audio half_drums, half_guitar. 
+Some stuff off here with the drums and guitar files for part 2. 
+Original diles and drums are perfectly aligned. How come not the drums and the guitar?
+[
+P11_D1_G6_M1_R1_T1
+P9_D1_G4_M1_R1_T1
+P9_D1_G4_M6_R1_T1
+P9_D6_G4_M6_R1_T1
+P8_D6_G4_M6_R1_T1], 10-06-2023, guitar is not cut properly, need to adjust timing for third clap. 
+
+
+
+This means the drums have not been taken from the same. Need to go through this properly. 
+From P8 onwards, RODE used for feet. Which will be the original. 
+Guitar comes from zoom. Should be aligned with the videos_small. 
+
+
+4. Detect clap in video small. Done with detect_clap_video.py
+
+5. Detect clap in audio guitar. Done with detect_clap_audio.py
+
+6. Compare claps of rebecca and own, see where they are very different. Need to double check the timing of the claps. 
+
+P11_D1_G6_M6_R1_T1, Rebecca has used to proper video (front). Need to check time of motion data length.
+
+P11_D0_G6_M6_R2_T1 Rebecca starts a second after last clap. Atilla has not been cut properly, so need to adjust in ELAN, question is how to align these two. 
+
+
+7. Check mocap video sync. 
+Where A is longer than Rebecca
+
+P10_D1_G5_M1_R2_T1, 183 in mocap, whilst video dancer is 02:47 seconds, which should add up to 167. So where is the extra 16 seconds coming from?  16 cutof original video, shortest file is feet. REBECCA RESEND FILES
+
+
+
+P11_D1_G6_M6_R1_T1, Rebecca has used to proper video (front). Need to check time of motion data length. Dont have the video cropped dancer, not sure what has been used. Cannot check whether it has been cut differently at the end. In video small, not been cut to first clap, and not been cut very well at the end. REBECCA CHECK cut properly.
+
+
+P5_D1_G3_M6_R1_T1, 1:56 in video cropped dancer, but 129s in mocap data. Where do extra 13 seconds come from? Could be cut differently at the end. So looks fine in terms of where it is cut. RERUN
+
+
+mocap<video
+
+P3_D1_G1_M6_R1_T1, time differences, redo? --> check whether it doesnt cut off dancing. 
+P7_D5_G1_M5_R2_T1, corner video is shorter --> ignore corner, rerun 
+P7_D1_G1_M6_R1_T1, not in Rebecca's sheet? --> ignore corner, rerun
+P8_D5_G4_M5_R1_T1, need to redo, and ignore side video? --> use, 280105 version, check whether it is cut properly.
+P8_D1_G4_M6_R1_T1, corner video is short, redo? As in cut wrong? --> check whether it is cut properly
+P11_D6_G6_M6_R1_T1, front video shortest, check whether cut properly at the end for shorter versions -->  
+
+
+4. Need to check the SHA files with the video small files. 
+If these are mostly ok, then need to run demucs on these again. 
+
+
+
+4. Manually get timing last clap of videos small. 
+peak_times_audio_guitar.csv
+peak_times_video_front_small.csv
+
+
+5. Fetch ELAN first time, and get timing of last clap. 
+
+
+### Next steps of analysis. 
+
+1. Run normal ELAN analysis, do some general stats on mocap data and see whether it makes sense. 
+
+2. Run Energy Estimation for all files. Start at the clap time?
+
+So videos should be fine, some of the files that are not good have been added 

@@ -2,7 +2,8 @@ Begin Time - ss.msec;End Time - ss.msec;Duration - ss.msec;Sequence;Bloques;Step
 9.7;21.6;11.9;Introduction;4;2.1;MC;DI;Z1;A3
 21.7;34.1;12.4;Introduction;4;2.2;MC;DI;Z2;A3
 34.2;46.8;12.6;Letra 1;4;2.3;MC;DI;Z2;A3
-46.9;59.7;12.8;Letra 1;4;2.4;MC;DI;Z2;A3
+46.9;49.0;12.8;Letra 1;4;2.4;MC;DI;Z2;A3
+56.0;59.7;12.8;Letra 1;4;2.4;MC;DI;Z2;A3
 59.8;71.5;11.7;Zapateado 1;4;2.5;MC;DC;Z3;A3
 71.5;82.9;11.4;Zapateado 1;4;2.6;MC;DC;Z3;A2
 83.0;94.1;11.1;Zapateado 1;4;2.7;MC;DC;Z3;A2

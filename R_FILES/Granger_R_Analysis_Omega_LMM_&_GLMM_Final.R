@@ -374,6 +374,7 @@ data_ole$Q6b_c <- scale(data_ole$Q6b)
 
 
 levels(data_ole$instruction_2)
+
 # ANOVA with orthogonal planned contrasts: (1) Homophonic vs Polyphonic; (2) Pairing with Melody vs No Melody; (3) Melody-to-Other vs Other-to-Melody
 # Check order of conditions (important for specifying contrast coefficients)
 FlamencoImp_Comp <- lsmeans(m01, "instruction_2")
@@ -2193,11 +2194,40 @@ tab_model(m00, m01, m02,  m03, m04, m05, m06, m07, m08, m09, m10, m11,m12, m13, 
           dv.labels=c("Flow [sing.]","Flow [sing.]", "Flow [sing.]", "Flow [sing.]","Flow","Flow [sing.]", "Flow [sing.]", "Flow","Flow","Flow [sing.]", "Flow [sing.]", "Flow [sing.]", "Flow [sing.]", "Flow [sing.]", "Flow [sing.]"),
           pred.labels =c("(Intercept)","Improvisational creativity", "Connection with partner","Absorption by activity","Fluency of performance","Dance Expertise (GDSI)",'Familiarity [yes]',"Complexity of performance", "Rhythmic complexity",'Domain [Dancer]','Palo [Solea]'),
           digits = 5,
-          title = "Table S6: Model 2 - Linear mixed model (LMM) comparison using lme4 package in R" ,
+          title = "Table S6: Model 2 - Linear mixed model (LMM) comparison using lme4 package in R" )
+,
           file = "/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_models_table_draft4_SuppMat_Models_2.html")
 
 webshot("/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_models_table_draft4_SuppMat_Models_2.html", 
         "/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_models_table_draft4_SuppMat_Models_2.pdf",  vwidth = 297 * 4, vheight = 210 * 4)
+
+# Convert the table to a data frame if necessary
+tbl_df <- as.data.frame(tbl)
+
+require(sjPlot)# Save the table as a CSV file
+write.csv(tbl_df, file = "/Users/atillajv/LaTex/5ec0f6099dc1fe00017f2156/paper1/images/lmer_models_table_draft4_SuppMat_Models_2.csv", row.names = FALSE)
+
+
+# Generate custom data frame from the sjTable object
+extract_stats <- function(model_summary) {
+  # Extract necessary components
+  coef_table <- summary(model_summary)$coefficients
+  aic <- AIC(model_summary)
+  # Combine into a data frame
+  df <- data.frame(Variable = rownames(coef_table),
+                   Estimate = coef_table[, "Estimate"],
+                   Std_Error = coef_table[, "Std. Error"],
+                   t_value = coef_table[, "t value"],
+                   Pr_t = coef_table[, "Pr(>|t|)"],
+                   AIC = aic)
+  return(df)
+}
+
+# Get summaries for all models
+model_summaries <- list(m00, m01, m02,  m03, m04, m05, m06, m07, m08, m09, m10, m11, m12, m13, m14)
+all_models_df <- do.call(rbind, lapply(model_summaries, extract_stats))
+
+write.csv(all_models_df, file = "/Users/atillajv/Downloads/lmer_models_table_draft4_SuppMat_Models_2.csv", row.names = FALSE)
 
 anova(m08,m09)
 anova(m05,m08)

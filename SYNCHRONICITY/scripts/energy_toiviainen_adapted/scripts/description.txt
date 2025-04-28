@@ -1,0 +1,37 @@
+
+
+#csv_to_json.py
+Firs run csv to json file to convert pose_data estimates to json, and arrange correctly. 
+
+# csv_to_json_loop.py
+Last version, loops through Mocap files and creates json files with correct formate for energy estimation. You can specify own list of files to process. 
+
+# csv_to_json_loop_kept.py
+Same as above, but only processes files that are in the kept_files.csv file and not ignored in the ignore_files.csv file. 
+
+
+# main.py
+Run to get energy estimation of all json mocap files. First run a csv_to_json. 
+Also need the json files that belong to the original posedata.csv, to extract fps. 
+Creates plots and output csv. Can define which body parts to focus on. 
+
+
+
+# Next steps 27.03.2025
+
+How to do an inspection if there are real outliers. 
+As in what does the algorithm do. Perhaps have side as well, and then take the average?
+Do some distribution plots. 
+
+What are the hypotheses. In terms of if we look at the feet. Should there
+
+
+
+1. In general difference sbetween improvised and non improvised pieces. Can use ELAN notations here. And then seperate per type of zapateado. In gerneral more energy is used in certain body parts when improvising vs not. 
+
+Can also look at a global level. And then more at granular level. Have different models. 
+
+2. Actually look through how to create a csv with ELAN. Will probably have to adjust with cutting of timings for the mocap data. 
+
+Perhaps should cut it upfront. 
+
